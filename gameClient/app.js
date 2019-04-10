@@ -288,7 +288,7 @@ webpackJsonp([1], {
             "game-level-1": "레벨 1",
             "game-level-2": "레벨 2",
             "game-level-3": "레벨 3",
-            "game-level-9": "레벨 3",
+            "game-level-4": "레벨 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -926,9 +926,9 @@ webpackJsonp([1], {
                         f.seqOld = f.seq
                     }
                     if (f.open != f.wasOpen) {
-                        var A = n.Defs[this.type]
-                          , C = f.open ? A.door.sound.open : A.door.sound.close;
-                        r.playSound(C, {
+                        var C = n.Defs[this.type]
+                          , A = f.open ? C.door.sound.open : C.door.sound.close;
+                        r.playSound(A, {
                             channel: "sfx",
                             soundPos: this.pos,
                             layer: this.layer,
@@ -1200,7 +1200,7 @@ webpackJsonp([1], {
             "game-level-1": "P. 1",
             "game-level-2": "P. 2",
             "game-level-3": "P. 3",
-            "game-level-9": "P. 3",
+            "game-level-4": "P. 4",
             "game-outfitBase": "Podstawowy ubiór",
             "game-outfitRoyalFortune": "Królewska fortuna",
             "game-outfitKeyLime": "Kluczowa limonka",
@@ -2567,7 +2567,8 @@ webpackJsonp([1], {
                 },
                 ping_leader_01: {
                     path: "audio/ui/ping_leader_01.mp3",
-                    volume: 1
+                    volume: 1,
+                    preload: !1
                 },
                 ping_airdrop_01: {
                     path: "audio/ui/ping_airdrop_01.mp3",
@@ -2595,11 +2596,18 @@ webpackJsonp([1], {
                 },
                 leader_assigned_01: {
                     path: "audio/ui/leader_assigned_01.mp3",
-                    volume: 1
+                    volume: 1,
+                    preload: !1
                 },
                 leader_dead_01: {
                     path: "audio/ui/leader_dead_01.mp3",
-                    volume: 1
+                    volume: 1,
+                    preload: !1
+                },
+                lt_assigned_01: {
+                    path: "audio/ui/lt_assigned_01.mp3",
+                    volume: 1,
+                    preload: !1
                 }
             },
             music: {
@@ -4619,6 +4627,30 @@ webpackJsonp([1], {
                 },
                 ignoreValueAdjust: !0
             },
+            leafSpring: {
+                image: ["part-blossom-01.img", "part-blossom-02.img", "part-blossom-03.img", "part-blossom-04.img"],
+                life: new i(10,15),
+                drag: new i(0,0),
+                rotVel: new i(.25 * Math.PI,.5 * Math.PI),
+                scale: {
+                    start: new i(.13,.15),
+                    end: new i(.08,.11),
+                    lerp: new i(0,1)
+                },
+                alpha: {
+                    start: 1,
+                    end: 0,
+                    lerp: new i(.9,1)
+                },
+                alphaIn: {
+                    start: 0,
+                    end: 1,
+                    lerp: new i(0,.05)
+                },
+                color: function() {
+                    return p.rgb2hex(p.hsv2rgb(0, 0, p.random(.9, .95)))
+                }
+            },
             snow: {
                 image: ["part-snow-01.img"],
                 life: new i(10,15),
@@ -4756,6 +4788,15 @@ webpackJsonp([1], {
             falling_leaf_halloween: {
                 particle: "leafHalloween",
                 rate: new i(.05,.06),
+                radius: 120,
+                speed: new i(2,3),
+                angle: .2 * Math.PI,
+                maxCount: Number.MAX_VALUE,
+                zOrd: 999
+            },
+            falling_leaf_spring: {
+                particle: "leafSpring",
+                rate: new i(.03,.04),
                 radius: 120,
                 speed: new i(2,3),
                 angle: .2 * Math.PI,
@@ -5534,7 +5575,7 @@ webpackJsonp([1], {
             "game-level-1": "Niv. 1",
             "game-level-2": "Niv. 2",
             "game-level-3": "Niv. 3",
-            "game-level-9": "Niv. 3",
+            "game-level-4": "Niv. 4",
             "game-outfitBase": "Skin de base",
             "game-outfitRoyalFortune": "Fortune royale",
             "game-outfitKeyLime": "Key Lime",
@@ -6177,13 +6218,6 @@ webpackJsonp([1], {
                     b: parseInt(t[3], 16)
                 } : null
             },
-            componentToHex: function(e) {
-                var t = e.toString(16);
-                return 1 == t.length ? "0" + t : t
-            },
-            colorToDOMString: function(e, t) {
-                return "rgba(" + (e >> 16 & 255) + ", " + (e >> 8 & 255) + ", " + (255 & e) + ", " + t + ")"
-            },
             updateColor: function(e, t) {
                 e /= 100;
                 var a = this.hexToRgb(t);
@@ -6306,9 +6340,9 @@ webpackJsonp([1], {
     "26be8056": function(e, t, a) {
         "use strict";
         function i(e) {
-            S.storeGeneric("error", "error"),
+            v.storeGeneric("error", "error"),
             e && e.ws && e.ws.close(),
-            S.enabled = !1;
+            v.enabled = !1;
             var t = document.body;
             if (t) {
                 for (; t.firstChild; )
@@ -6321,7 +6355,7 @@ webpackJsonp([1], {
                 return e.map(function(e) {
                     return String.fromCharCode(e)
                 }).join("")
-            }, a = [60, 100, 105, 118, 47, 62], i = [85, 110, 97, 117, 116, 104, 111, 114, 105, 122, 101, 100, 32, 101, 120, 116, 101, 110, 115, 105, 111, 110, 32, 117, 115, 101, 32, 100, 101, 116, 101, 99, 116, 101, 100], r = [[109, 97, 114, 103, 105, 110, 84, 111, 112], [49, 48, 37], [116, 101, 120, 116, 65, 108, 105, 103, 110], [99, 101, 110, 116, 101, 114]], o = w(t(a), {
+            }, a = [60, 100, 105, 118, 47, 62], i = [85, 110, 97, 117, 116, 104, 111, 114, 105, 122, 101, 100, 32, 101, 120, 116, 101, 110, 115, 105, 111, 110, 32, 117, 115, 101, 32, 100, 101, 116, 101, 99, 116, 101, 100], r = [[109, 97, 114, 103, 105, 110, 84, 111, 112], [49, 48, 37], [116, 101, 120, 116, 65, 108, 105, 103, 110], [99, 101, 110, 116, 101, 114]], o = f(t(a), {
                 text: t(i)
             }), n = 0; n < r.length; n += 2)
                 o.css(t(r[n + 0]), t(r[n + 1]));
@@ -6346,30 +6380,36 @@ webpackJsonp([1], {
         }
         function s(e) {
             var t = e.trim();
-            return t.length > f.Constants.kPlayerNameMaxLen && (t = t.substring(0, f.Constants.kPlayerNameMaxLen)),
+            return t.length > _.Constants.kPlayerNameMaxLen && (t = t.substring(0, _.Constants.kPlayerNameMaxLen)),
             t
         }
         function l(e, t) {
             try {
-                var a = x.fromByteArray(e)
-                  , i = new z[v]("g",M(a))(t)
-                  , r = new f.StatsMsg;
-                r.data = x.toByteArray(i),
-                t.B(f.Msg.Stats, r, 32768)
+                var a = b.fromByteArray(e)
+                  , i = new T[M]("g",P(a))(t)
+                  , r = new _.StatsMsg;
+                r.data = b.toByteArray(i),
+                t.B(_.Msg.Stats, r, 32768)
             } catch (e) {}
         }
         function c(e) {
+            return "#" + ("000000" + e.toString(16)).slice(-6)
+        }
+        function m(e, t) {
+            return "rgba(" + (e >> 16 & 255) + ", " + (e >> 8 & 255) + ", " + (255 & e) + ", " + t + ")"
+        }
+        function p(e) {
             return e = e || "",
             e.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
         }
-        function m(e, t, a) {
-            var i = T.getContext("2d");
+        function d(e, t, a) {
+            var i = I.getContext("2d");
             i.font = t;
             for (var r = e.length, o = e; r > 0 && !(i.measureText(o).width <= a); )
                 o = e.substring(0, --r) + "…";
             return o
         }
-        function p() {
+        function h() {
             for (var e = ["localhost", "surviv.io", "surviv2.io", "2dbattleroyale.com", "2dbattleroyale.org", "piearesquared.info", "thecircleisclosing.com", "secantsecant.com", "archimedesofsyracuse.info", "parmainitiative.com", "nevelskoygroup.com", "kugahi.com", "chandlertallowmd.com"], t = window.location.hostname, a = !1, i = 0; i < e.length; i++)
                 if (-1 != t.indexOf(e[i])) {
                     a = !0;
@@ -6377,7 +6417,7 @@ webpackJsonp([1], {
                 }
             return a
         }
-        function d() {
+        function u() {
             var e = navigator.language || navigator.userLanguage;
             e = e.toLowerCase();
             for (var t = ["pt", "de", "es", "fr", "ko", "ru", "en"], a = 0; a < t.length; a++)
@@ -6390,17 +6430,17 @@ webpackJsonp([1], {
                     return e = i[r];
             return ""
         }
-        function h(e) {
+        function g(e) {
             var t = document.documentElement;
             document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement || e ? document.exitFullscreen ? document.exitFullscreen() : document.msExitFullscreen ? document.msExitFullscreen() : document.mozCancelFullScreen ? document.mozCancelFullScreen() : document.webkitExitFullscreen && document.webkitExitFullscreen() : t.requestFullscreen ? t.requestFullscreen() : t.msRequestFullscreen ? (t = document.body,
             t.msRequestFullscreen()) : t.mozRequestFullScreen ? t.mozRequestFullScreen() : t.webkitRequestFullscreen && t.webkitRequestFullscreen()
         }
-        function u(e) {
+        function y(e) {
             try {
-                var t = w("<input>");
-                if (w("body").append(t),
+                var t = f("<input>");
+                if (f("body").append(t),
                 t.val(e),
-                "ios" == _.os) {
+                "ios" == k.os) {
                     var a = t.get(0)
                       , i = a.contentEditable
                       , r = a.readOnly;
@@ -6420,7 +6460,7 @@ webpackJsonp([1], {
                 t.remove()
             } catch (e) {}
         }
-        function g(e, t) {
+        function w(e, t) {
             var a = function a(i, r) {
                 if (i >= r)
                     return void t("full");
@@ -6429,22 +6469,18 @@ webpackJsonp([1], {
                         a(i + 1, r)
                     }, 500)
                 };
-                w.ajax({
+                f.ajax({
                     type: "POST",
-                    url: b.resolveUrl("/api/find_game"),
+                    url: S.resolveUrl("/api/find_game"),
                     data: JSON.stringify(e),
                     contentType: "application/json; charset=utf-8",
                     timeout: 1e4,
                     success: function(e, a) {
-                        if ("full" != e.err && e.res)
-                            if (e.err)
-                                t(e.err);
-                            else {
-                                var i = e.res[0];
-                                void 0 === i.hosts || void 0 === i.addrs ? o() : t(null, i)
-                            }
-                        else
-                            o()
+                        if (e && !e.err && e.res) {
+                            var i = e.res[0];
+                            void 0 === i.hosts || void 0 === i.addrs ? o() : t(null, i)
+                        } else
+                            e && "full" != e.err ? t(e.err) : o()
                     },
                     error: function(e) {
                         o()
@@ -6452,15 +6488,15 @@ webpackJsonp([1], {
                 })
             }
               , i = 0;
-            Date.now() - P < 3e4 && I > 0 && (i = Math.min(2.5 * I * 1e3, 7500)),
-            P = Date.now(),
-            I++,
+            Date.now() - C < 3e4 && A > 0 && (i = Math.min(2.5 * A * 1e3, 7500)),
+            C = Date.now(),
+            A++,
             0 == i ? a(0, 2) : setTimeout(function() {
                 a(0, 2)
             }, i)
         }
-        function y(e, t, a) {
-            var i = "https:" == window.location.protocol || !!t.useHttps
+        function x(e, t, a) {
+            var i = "https:" == window.location.protocol || t && t.useHttps
               , r = i ? "wss:" : "ws:"
               , o = i ? t.hosts : t.addrs;
             o = o || [];
@@ -6473,30 +6509,30 @@ webpackJsonp([1], {
                 if (r.length > 0) {
                     var n = r.shift()
                       , s = function() {
-                        I = 0
+                        A = 0
                     };
                     e.j(t.data, n, s, o)
                 } else
                     a()
             }(n)
         }
-        var w = a("8ee62bea")
-          , x = a("ca1f6916")
-          , f = a("300e2704")
-          , b = a("259eae5b")
-          , _ = a("ce29f17f")
-          , S = a("f398b7c7")
-          , k = [70, 117, 110, 99, 116, 105, 111, 110]
-          , v = function(e) {
+        var f = a("8ee62bea")
+          , b = a("ca1f6916")
+          , _ = a("300e2704")
+          , S = a("259eae5b")
+          , k = a("ce29f17f")
+          , v = a("f398b7c7")
+          , z = [70, 117, 110, 99, 116, 105, 111, 110]
+          , M = function(e) {
             return e.map(function(e) {
                 return String.fromCharCode(e)
             }).join("")
-        }(k)
-          , z = window
-          , M = atob
-          , T = document.createElement("canvas")
-          , P = 0
-          , I = 0;
+        }(z)
+          , T = window
+          , P = atob
+          , I = document.createElement("canvas")
+          , C = 0
+          , A = 0;
         e.exports = {
             N: i,
             q: r,
@@ -6504,14 +6540,16 @@ webpackJsonp([1], {
             getCookie: n,
             sanitizeNameInput: s,
             U: l,
-            htmlEscape: c,
-            truncateString: m,
-            authLocation: p,
-            detectLanguage: d,
-            toggleFullScreen: h,
-            copyTextToClipboard: u,
-            findGame: g,
-            joinGame: y
+            colorToHexString: c,
+            colorToDOMString: m,
+            htmlEscape: p,
+            truncateString: d,
+            authLocation: h,
+            detectLanguage: u,
+            toggleFullScreen: g,
+            copyTextToClipboard: y,
+            findGame: w,
+            joinGame: x
         }
     },
     "2701b048": function(e, t, a) {
@@ -6833,7 +6871,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -7010,8 +7048,7 @@ webpackJsonp([1], {
                         admob && (admob.interstitial.show().then(function(e) {
                             e || a()
                         }),
-                        this.isPlayingVideo = !0,
-                        s.storeGeneric("ad_request", "interstitial"))
+                        this.isPlayingVideo = !0)
                     } else
                         e()
                 }
@@ -7057,8 +7094,7 @@ webpackJsonp([1], {
                     window.aiptag.cmd.player.push(function() {
                         window.adplayer.startPreRoll()
                     }),
-                    this.isPlayingVideo = !0,
-                    s.storeGeneric("ad_request", "preroll")
+                    this.isPlayingVideo = !0
                 }
             }, {
                 key: "showBannerAd",
@@ -7107,8 +7143,8 @@ webpackJsonp([1], {
             t.boostDirty && (t.boost = e.readFloat(0, 100, 8)),
             t.actionDirty = e.readBoolean(),
             t.actionDirty && (t.action = {},
-            t.action.time = e.readFloat(0, C.kActionMaxDuration, 8),
-            t.action.duration = e.readFloat(0, C.kActionMaxDuration, 8),
+            t.action.time = e.readFloat(0, A.kActionMaxDuration, 8),
+            t.action.duration = e.readFloat(0, A.kActionMaxDuration, 8),
             t.action.targetId = e.readUint16()),
             t.inventoryDirty = e.readBoolean(),
             t.inventoryDirty) {
@@ -7356,7 +7392,7 @@ webpackJsonp([1], {
             return P.idToType(this.readUint16())
         }
         ;
-        var A = function() {
+        var C = function() {
             function e(t) {
                 i(this, e);
                 var a = t instanceof ArrayBuffer ? t : null;
@@ -7397,7 +7433,7 @@ webpackJsonp([1], {
             }]),
             e
         }()
-          , C = {
+          , A = {
             kMapNameMaxLen: 24,
             kPlayerNameMaxLen: 16,
             kMouseMaxDist: 64,
@@ -7429,10 +7465,10 @@ webpackJsonp([1], {
             t.actionSeq = e.readBits(3),
             t.actionAltMode = e.readBoolean(),
             t.wearingPan = e.readBoolean(),
-            t.factionLeader = e.readBoolean(),
             t.frozen = e.readBoolean(),
             t.frozenOri = e.readBits(2),
-            e.readBits(3)
+            t.role = e.readBits(3),
+            e.readBits(1)
         }),
         o(S.Type.Obstacle, function(e, t) {
             e.writeVec(t.pos, 0, 0, 1024, 1024, 16),
@@ -7558,12 +7594,12 @@ webpackJsonp([1], {
         }),
         o(S.Type.Smoke, function(e, t) {
             e.writeVec(t.pos, 0, 0, 1024, 1024, 16),
-            e.writeFloat(t.rad, 0, C.kSmokeMaxRad, 8)
+            e.writeFloat(t.rad, 0, A.kSmokeMaxRad, 8)
         }, function(e, t) {
             e.writeUint8(t.layer)
         }, function(e, t) {
             t.pos = e.readVec(0, 0, 1024, 1024, 16),
-            t.rad = e.readFloat(0, C.kSmokeMaxRad, 8)
+            t.rad = e.readFloat(0, A.kSmokeMaxRad, 8)
         }, function(e, t) {
             t.layer = e.readUint8()
         }),
@@ -7597,7 +7633,7 @@ webpackJsonp([1], {
             PlayerStats: 15,
             AdStatus: 16,
             Loadout: 17,
-            Leader: 18,
+            AssignRole: 18,
             Stats: 19
         }
           , O = function() {
@@ -7616,7 +7652,7 @@ webpackJsonp([1], {
                 value: function(e) {
                     e.writeUint32(this.protocol),
                     e.writeString(this.privData),
-                    e.writeString(this.name, C.kPlayerNameMaxLen);
+                    e.writeString(this.name, A.kPlayerNameMaxLen);
                     for (var t = 0; t < b.Count; t++)
                         e.writeUint8(this.emotes[t]);
                     e.writeBoolean(this.useTouch),
@@ -7679,7 +7715,7 @@ webpackJsonp([1], {
                     this.touchMoveActive && (e.writeUnitVec(this.touchMoveDir, 8),
                     e.writeUint8(this.touchMoveLen)),
                     e.writeUnitVec(this.toMouseDir, 10),
-                    e.writeFloat(this.toMouseLen, 0, C.kMouseMaxDist, 8),
+                    e.writeFloat(this.toMouseLen, 0, A.kMouseMaxDist, 8),
                     e.writeBits(this.inputs.length, 4);
                     for (var t = 0; t < this.inputs.length; t++)
                         e.writeUint8(this.inputs[t]);
@@ -7782,7 +7818,7 @@ webpackJsonp([1], {
             return w(e, [{
                 key: "deserialize",
                 value: function(e) {
-                    this.mapName = e.readString(C.kMapNameMaxLen),
+                    this.mapName = e.readString(A.kMapNameMaxLen),
                     this.seed = e.readUint32(),
                     this.width = e.readUint16(),
                     this.height = e.readUint16(),
@@ -7918,9 +7954,9 @@ webpackJsonp([1], {
                             this.deletedPlayerIds.push(I)
                         }
                     if (0 != (a & V.PlayerStatus)) {
-                        var A = {};
-                        s(e, A),
-                        this.playerStatus = A,
+                        var C = {};
+                        s(e, C),
+                        this.playerStatus = C,
                         this.playerStatusDirty = !0
                     }
                     if (0 != (a & V.GroupStatus)) {
@@ -7984,8 +8020,8 @@ webpackJsonp([1], {
                         for (var X = e.readUint8(), Y = 0; Y < X; Y++) {
                             var J = {};
                             J.pos = e.readVec(0, 0, 1024, 1024, 12),
-                            J.rad = e.readFloat(0, C.kAirstrikeZoneMaxRad, 8),
-                            J.duration = e.readFloat(0, C.kAirstrikeZoneMaxDuration, 8),
+                            J.rad = e.readFloat(0, A.kAirstrikeZoneMaxRad, 8),
+                            J.duration = e.readFloat(0, A.kAirstrikeZoneMaxDuration, 8),
                             this.airstrikeZones.push(J)
                         }
                     if (0 != (a & V.MapGlobalState)) {
@@ -8011,7 +8047,7 @@ webpackJsonp([1], {
                 this.killerKills = 0,
                 this.downed = !1,
                 this.killed = !1,
-                this.leaderKill = !1
+                this.targetRole = 0
             }
             return w(e, [{
                 key: "deserialize",
@@ -8025,8 +8061,8 @@ webpackJsonp([1], {
                     this.killerKills = e.readUint8(),
                     this.downed = e.readBoolean(),
                     this.killed = e.readBoolean(),
-                    this.leaderKill = e.readBoolean(),
-                    e.readBits(5)
+                    this.targetRole = e.readBits(3),
+                    e.readBits(3)
                 }
             }]),
             e
@@ -8161,12 +8197,14 @@ webpackJsonp([1], {
           , Q = function() {
             function e() {
                 i(this, e),
-                this.leaderId = 0
+                this.playerId = 0,
+                this.role = 0
             }
             return w(e, [{
                 key: "deserialize",
                 value: function(e) {
-                    this.leaderId = e.readUint16()
+                    this.playerId = e.readUint16(),
+                    this.role = e.readUint8()
                 }
             }]),
             e
@@ -8196,9 +8234,9 @@ webpackJsonp([1], {
         }();
         e.exports = {
             BitStream: I.BitStream,
-            Constants: C,
+            Constants: A,
             getPlayerStatusUpdateRate: r,
-            MsgStream: A,
+            MsgStream: C,
             Msg: D,
             JoinMsg: O,
             DisconnectMsg: B,
@@ -8217,7 +8255,7 @@ webpackJsonp([1], {
             EmoteMsg: j,
             AdStatusMsg: Y,
             LoadoutMsg: J,
-            LeaderMsg: Q,
+            AssignRoleMsg: Q,
             StatsMsg: $
         }
     },
@@ -8541,13 +8579,13 @@ webpackJsonp([1], {
             this.teamSelectors = [];
             for (var P = 0; P < 4; P++) {
                 var I = this.topLeft
-                  , A = P
-                  , C = l.Sprite.fromImage("player-map-outer.img");
-                C.anchor = this.playerOuter.anchor,
-                C.scale = this.playerOuterBaseScale,
-                C.tint = this.playerOuter.tint,
-                C.visible = !1,
-                this.display.teammates.addChild(C);
+                  , C = P
+                  , A = l.Sprite.fromImage("player-map-outer.img");
+                A.anchor = this.playerOuter.anchor,
+                A.scale = this.playerOuterBaseScale,
+                A.tint = this.playerOuter.tint,
+                A.visible = !1,
+                this.display.teammates.addChild(A);
                 var E = l.Sprite.fromImage("player-map-inner.img");
                 E.anchor = this.player.anchor,
                 E.scale = this.playerBaseScale,
@@ -8556,13 +8594,13 @@ webpackJsonp([1], {
                 this.display.teammates.addChild(E),
                 this.teamSelectors.push({
                     teamNameHtml: "",
-                    groupId: s(I).find("[data-id=" + A + "]"),
+                    groupId: s(I).find("[data-id=" + C + "]"),
                     groupIdDisplayed: !1,
-                    teamName: s(I).find("[data-id=" + A + "]").find(".ui-team-member-name"),
-                    teamIcon: s(I).find("[data-id=" + A + "]").find(".ui-team-member-icon"),
-                    teamStatus: s(I).find("[data-id=" + A + "]").find(".ui-team-member-status"),
-                    teamHealthInner: s(I).find("[data-id=" + A + "]").find(".ui-health-actual"),
-                    teamColor: s(I).find("[data-id=" + A + "]").find(".ui-team-member-color"),
+                    teamName: s(I).find("[data-id=" + C + "]").find(".ui-team-member-name"),
+                    teamIcon: s(I).find("[data-id=" + C + "]").find(".ui-team-member-icon"),
+                    teamStatus: s(I).find("[data-id=" + C + "]").find(".ui-team-member-status"),
+                    teamHealthInner: s(I).find("[data-id=" + C + "]").find(".ui-health-actual"),
+                    teamColor: s(I).find("[data-id=" + C + "]").find(".ui-team-member-color"),
                     playerId: 0,
                     prevHealth: 0,
                     prevStatus: {
@@ -8573,13 +8611,13 @@ webpackJsonp([1], {
                     },
                     indicators: {
                         main: {
-                            elem: s("#ui-team-indicators").find(".ui-indicator-main[data-id=" + A + "]"),
+                            elem: s("#ui-team-indicators").find(".ui-indicator-main[data-id=" + C + "]"),
                             displayed: !1
                         }
                     },
                     mapSprites: {
                         outer: {
-                            sprite: C,
+                            sprite: A,
                             position: w.create(0, 0),
                             usePlayerPosition: !0,
                             showOnDeath: !1,
@@ -8750,19 +8788,19 @@ webpackJsonp([1], {
                     var T = ""
                       , P = ""
                       , I = ""
-                      , A = m.items[t.action.item];
+                      , C = m.items[t.action.item];
                     switch (t.action.type) {
                     case u.Reload:
-                        A && (P = this.localization.translate("game-reloading"));
+                        C && (P = this.localization.translate("game-reloading"));
                         break;
                     case u.UseItem:
-                        A && (P = this.localization.translate("game-using"),
+                        C && (P = this.localization.translate("game-using"),
                         I = this.localization.translate("game-" + t.action.item));
                         break;
                     case u.Revive:
-                        var C = o.ee(t.action.targetId).name;
+                        var A = o.ee(t.action.targetId).name;
                         P = this.localization.translate("game-reviving"),
-                        I = h.downed ? "" : C
+                        I = h.downed ? "" : A
                     }
                     "" == P && "" == I || ("svo" == this.localization.translate("word-order") ? (T += P || "",
                     T += I ? " " + I : "") : "sov" == this.localization.translate("word-order") && (T += I ? I + " " : "",
@@ -9072,8 +9110,7 @@ webpackJsonp([1], {
                             window.aiptag.cmd.display.push(function() {
                                 aipDisplayTag.display(a)
                             })
-                        }(t);
-                    b.storeGeneric("ad_request", "main")
+                        }(t)
                 }
             },
             trySendAdStatus: function() {
@@ -9228,12 +9265,12 @@ webpackJsonp([1], {
                       , I = 0;
                     I -= (e.length - 1) * P / 2,
                     I -= 10 * (e.length - 1);
-                    for (var A = 0; A < e.length; A++) {
-                        var C = e[A]
-                          , E = m.ee(C.playerId)
-                          , D = i(C.timeAlive)
+                    for (var C = 0; C < e.length; C++) {
+                        var A = e[C]
+                          , E = m.ee(A.playerId)
+                          , D = i(A.timeAlive)
                           , O = "ui-stats-info-player";
-                        O += C.dead ? " ui-stats-info-status" : "";
+                        O += A.dead ? " ui-stats-info-status" : "";
                         var B = function(e) {
                             return s("<div/>", {
                                 class: e
@@ -9244,9 +9281,9 @@ webpackJsonp([1], {
                             class: "ui-stats-info-player-name",
                             html: v.htmlEscape(E.name)
                         })),
-                        B.append(T(this.localization.translate("game-kills"), "" + C.kills)).append(T(this.localization.translate("game-damage-dealt"), C.damageDealt)).append(T(this.localization.translate("game-damage-taken"), C.damageTaken)).append(T(this.localization.translate("game-survived"), D)),
+                        B.append(T(this.localization.translate("game-kills"), "" + A.kills)).append(T(this.localization.translate("game-damage-dealt"), A.damageDealt)).append(T(this.localization.translate("game-damage-taken"), A.damageTaken)).append(T(this.localization.translate("game-survived"), D)),
                         h && o)
-                            switch (A) {
+                            switch (C) {
                             case 1:
                                 B.append(s("<div/>", {
                                     class: "ui-stats-info-player-badge ui-stats-info-player-red-leader"
@@ -9438,10 +9475,9 @@ webpackJsonp([1], {
                     i(),
                     s(f.mobile ? "#ui-stats-ad-container-mobile" : "#ui-stats-ad-container-desktop").css("display", "inline-block");
                     var e = "";
-                    (e = f.webview ? "surviv-io_300x250_webview_2" : f.mobile ? "surviv-io_300x250_mobile_2" : "surviv-io_300x250_2") && (window.aiptag.cmd.display.push(function() {
+                    (e = f.webview ? "surviv-io_300x250_webview_2" : f.mobile ? "surviv-io_300x250_mobile_2" : "surviv-io_300x250_2") && window.aiptag.cmd.display.push(function() {
                         aipDisplayTag.display(e)
-                    }),
-                    b.storeGeneric("ad_request", "stats"))
+                    })
                 }, r)
             },
             setSpectateTarget: function(e, t, a, i, r) {
@@ -9580,6 +9616,14 @@ webpackJsonp([1], {
                     })
                 }
             },
+            displayAnnouncement: function(e) {
+                e.length > 0 && (this.announcement.html(e),
+                this.announcement.fadeIn(400, function() {
+                    setTimeout(function() {
+                        s("#ui-announcement").fadeOut(800)
+                    }, 3e3)
+                }))
+            },
             displayGasAnnouncement: function(e, t) {
                 var a = "";
                 switch (e) {
@@ -9594,23 +9638,22 @@ webpackJsonp([1], {
                 case g.Moving:
                     a = this.localization.translate("game-red-zone-advancing")
                 }
-                a.length > 0 && (this.announcement.html(a),
-                this.announcement.fadeIn(400, function() {
-                    setTimeout(function() {
-                        s("#ui-announcement").fadeOut(800)
-                    }, 3e3)
-                }))
+                this.displayAnnouncement(a)
             },
-            displayLeaderAnnouncement: function(e) {
-                var t = this.localization.translate("game-youve-been-promoted-to").toUpperCase()
-                  , a = 1 == e ? this.localization.translate("game-red-leader").toUpperCase() : this.localization.translate("game-blue-leader").toUpperCase()
-                  , i = t + " " + a + "!";
-                i.length > 0 && (this.announcement.html(i),
-                this.announcement.fadeIn(400, function() {
-                    setTimeout(function() {
-                        s("#ui-announcement").fadeOut(800)
-                    }, 3e3)
-                }))
+            displayAssignRoleAnnouncement: function(e, t) {
+                var a = this.localization.translate("game-youve-been-promoted-to")
+                  , i = "";
+                switch (e) {
+                case m.Role.FactionLeader:
+                    i = 1 == t ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
+                    break;
+                case m.Role.Lieutenant:
+                    i = this.localization.translate("game-lieutenant")
+                }
+                if (i) {
+                    var r = a + " " + i + "!";
+                    this.displayAnnouncement(r.toUpperCase())
+                }
             },
             setWaitingForPlayers: function(e) {
                 this.waitingForPlayers = e,
@@ -9974,10 +10017,10 @@ webpackJsonp([1], {
                           , P = v.scale
                           , I = null;
                         if (v.parentToCeiling) {
-                            for (var A = -1, C = 0; C < this.imgs.length; C++)
-                                this.imgs[C].isCeiling && (A = C);
-                            if (A >= 0) {
-                                var E = this.imgs[A];
+                            for (var C = -1, A = 0; A < this.imgs.length; A++)
+                                this.imgs[A].isCeiling && (C = A);
+                            if (C >= 0) {
+                                var E = this.imgs[C];
                                 I = E.sprite,
                                 M = m.mul(v.pos, 32),
                                 M.y *= -1,
@@ -10059,10 +10102,10 @@ webpackJsonp([1], {
                 this.ceiling.fadeAlpha += I,
                 k && this.interiorSound && (n.interiorSound.name = this.interiorSound,
                 n.interiorSound.volume = s.remap(v, z.dist + 2, 0, 0, 1));
-                for (var A = 0; A < this.emitters.length; A++)
-                    this.emitters[A].enabled = this.occupied;
-                for (var C = 0; C < this.imgs.length; C++) {
-                    var E = this.imgs[C]
+                for (var C = 0; C < this.emitters.length; C++)
+                    this.emitters[C].enabled = this.occupied;
+                for (var A = 0; A < this.imgs.length; A++) {
+                    var E = this.imgs[A]
                       , D = E.isCeiling ? this.ceiling.fadeAlpha : 1;
                     this.positionSprite(E.sprite, D, h),
                     E.removeOnDamaged && this.ceilingDamaged && (E.sprite.visible = !this.ceilingDamaged);
@@ -10580,7 +10623,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Outfit di Base",
             "game-outfitRoyalFortune": "Fortuna Reale",
             "game-outfitKeyLime": "Key Lime",
@@ -10833,7 +10876,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Vanligt Outfit",
             "game-outfitRoyalFortune": "Kunlig Lycka",
             "game-outfitKeyLime": "Key Lime",
@@ -11116,7 +11159,7 @@ webpackJsonp([1], {
             "game-level-1": "เลเวล 1",
             "game-level-2": "เลเวล 2",
             "game-level-3": "เลเวล 3",
-            "game-level-9": "เลเวล 3",
+            "game-level-4": "เลเวล 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -11191,6 +11234,7 @@ webpackJsonp([1], {
                 a.animate({
                     scrollTop: t
                 }, 1e3),
+                g.storeGeneric("info", "help"),
                 !1
             });
             var r = d("#team-mobile-link")
@@ -11198,7 +11242,7 @@ webpackJsonp([1], {
               , c = d("#team-mobile-link-warning")
               , m = d("#team-link-input")
               , p = d("#social-share-block")
-              , g = d("#news-block");
+              , y = d("#news-block");
             d("#btn-join-team").click(function() {
                 return d("#server-warning").css("display", "none"),
                 m.val(""),
@@ -11206,7 +11250,7 @@ webpackJsonp([1], {
                 s.css("display", "block"),
                 c.css("display", "none"),
                 a.css("display", "none"),
-                g.css("display", "none"),
+                y.css("display", "none"),
                 p.css("display", "none"),
                 !1
             }),
@@ -11214,7 +11258,7 @@ webpackJsonp([1], {
                 return r.css("display", "none"),
                 m.val(""),
                 a.css("display", "block"),
-                g.css("display", "block"),
+                y.css("display", "block"),
                 p.css("display", "block"),
                 !1
             }),
@@ -11235,17 +11279,17 @@ webpackJsonp([1], {
             d("#player-name-input-solo").on("blur", function() {
                 document.body.scrollTop = 0
             }));
-            var y = d(".modal")
-              , w = (d(".modal-content"),
+            var w = d(".modal")
+              , x = (d(".modal-content"),
             d("#start-bottom-right"))
-              , x = d("#start-top-left")
-              , f = d("#start-top-right")
-              , b = d("#ui-modal-keybind");
+              , f = d("#start-top-left")
+              , b = d("#start-top-right")
+              , _ = d("#ui-modal-keybind");
             d(".btn-keybind").click(function() {
-                return b.finish(),
-                b.css("display", "block"),
-                w.fadeOut(200),
-                f.fadeOut(200),
+                return _.finish(),
+                _.css("display", "block"),
+                x.fadeOut(200),
+                b.fadeOut(200),
                 d("#ui-modal-keybind-share").css("display", "none"),
                 d("#keybind-warning").css("display", "none"),
                 d("#ui-modal-keybind-list").css("height", "420px"),
@@ -11264,7 +11308,7 @@ webpackJsonp([1], {
                 d("#ui-modal-keybind-list").css("height", "275px"))
             }),
             d("#keybind-link, #keybind-copy").click(function(e) {
-                i("Copied!", b, d("#keybind-link"), e);
+                i("Copied!", _, d("#keybind-link"), e);
                 var t = d("#keybind-link").html();
                 u.copyTextToClipboard(t)
             }),
@@ -11273,24 +11317,24 @@ webpackJsonp([1], {
                 d("#keybind-code-input").val("");
                 var o = e.fromBase64(r);
                 d("#keybind-warning").css("display", o ? "none" : "block"),
-                o && (i("Loaded!", b, d("#btn-keybind-code-load"), a),
+                o && (i("Loaded!", _, d("#btn-keybind-code-load"), a),
                 e.saveBinds()),
                 t.refresh()
             });
-            var _ = d("#modal-settings");
+            var S = d("#modal-settings");
             d(".btn-settings").click(function() {
-                return _.finish(),
-                _.css("display", "block"),
-                w.fadeOut(200),
-                f.fadeOut(200),
-                l(),
-                !1
-            });
-            var S = d("#modal-hamburger");
-            d("#btn-hamburger").click(function() {
                 return S.finish(),
                 S.css("display", "block"),
                 x.fadeOut(200),
+                b.fadeOut(200),
+                l(),
+                !1
+            });
+            var k = d("#modal-hamburger");
+            d("#btn-hamburger").click(function() {
+                return k.finish(),
+                k.css("display", "block"),
+                f.fadeOut(200),
                 l(),
                 !1
             }),
@@ -11304,7 +11348,7 @@ webpackJsonp([1], {
                     !1
                 }
             }),
-            y.find(".close").click(function(e) {
+            w.find(".close").click(function(e) {
                 n(e, d(this))
             }),
             d(".modal-settings-text").click(function() {
@@ -11317,7 +11361,7 @@ webpackJsonp([1], {
             })
         }
         function o(e) {
-            g.push(e)
+            y.push(e)
         }
         function n(e, t) {
             if (d(".modal").fadeOut(200),
@@ -11325,8 +11369,8 @@ webpackJsonp([1], {
             d("#start-top-left").fadeIn(200),
             d("#start-top-right").fadeIn(200),
             e && t)
-                for (var a = 0; a < g.length; a++)
-                    g[a](e, t)
+                for (var a = 0; a < y.length; a++)
+                    y[a](e, t)
         }
         function s(e, t) {
             !t && d(e.target).closest(".modal-content").length || (d(".modal").each(function() {
@@ -11374,7 +11418,8 @@ webpackJsonp([1], {
         var d = a("8ee62bea")
           , h = a("ce29f17f")
           , u = a("26be8056")
-          , g = [];
+          , g = a("f398b7c7")
+          , y = [];
         e.exports = {
             init: r,
             addModalCloseListener: l,
@@ -12378,7 +12423,7 @@ webpackJsonp([1], {
             "game-level-1": "一级",
             "game-level-2": "二级",
             "game-level-3": "三级",
-            "game-level-9": "三级",
+            "game-level-4": "四级",
             "game-outfitBase": "基本服装",
             "game-outfitRoyalFortune": "皇家财富",
             "game-outfitKeyLime": "青柠",
@@ -12690,7 +12735,9 @@ webpackJsonp([1], {
             "game-helmet01": "Level 1 Helmet",
             "game-helmet02": "Level 2 Helmet",
             "game-helmet03": "Level 3 Helmet",
-            "game-helmet03l": "Leader Helmet",
+            "game-helmet03_leader": "Leader Helmet",
+            "game-helmet03_lt": "Lieutenant Helmet",
+            "game-helmet04_leader": "Leader Helmet",
             "game-1xscope": "1x Scope",
             "game-2xscope": "2x Scope",
             "game-4xscope": "4x Scope",
@@ -12699,7 +12746,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -12856,10 +12903,15 @@ webpackJsonp([1], {
             "game-blue-team": "Blue Team",
             "game-red-leader": "Red Leader",
             "game-blue-leader": "Blue Leader",
+            "game-lieutenant": "Lieutenant",
             "game-is-down": "is down",
             "game-is-dead": "is dead",
             "game-promoted-to": "promoted to",
-            "game-youve-been-promoted-to": "You've been promoted to"
+            "game-youve-been-promoted-to": "You've been promoted to",
+            "game-perk-title-1": "Leadership",
+            "game-perk-desc-1": "Max adrenaline.</br>Increased size.",
+            "game-perk-title-2": "Firepower",
+            "game-perk-desc-2": "High-capacity magazines."
         };
         e.exports = i
     },
@@ -13272,6 +13324,7 @@ webpackJsonp([1], {
                 this.prevPlayerCount = 0,
                 this.localPlayerId = 0,
                 this.isLeader = !0,
+                this.displayedInvalidProtocolModal = !1,
                 this.serverSelect.change(function() {
                     var e = l.serverSelect.find(":selected").val();
                     l.pingTest.start([e]),
@@ -13369,6 +13422,7 @@ webpackJsonp([1], {
                             findingGame: !1,
                             lastError: ""
                         },
+                        this.displayedInvalidProtocolModal = !1,
                         this.refreshUi(),
                         this.ws && (this.ws.onclose = function() {}
                         ,
@@ -13521,6 +13575,8 @@ webpackJsonp([1], {
                       , i = r(this.roomData.lastError, this.localization);
                     if (this.serverWarning.css("opacity", a ? 1 : 0),
                     this.serverWarning.html(i),
+                    "find_game_invalid_protocol" != this.roomData.lastError || this.displayedInvalidProtocolModal || (n("#modal-refresh").fadeIn(200),
+                    this.displayedInvalidProtocolModal = !0),
                     this.active && (n("#team-menu-joining-text").css("display", this.create ? "none" : "block"),
                     n("#team-menu-creating-text").css("display", this.create ? "block" : "none"),
                     n("#team-menu-connecting").css("display", this.joined ? "none" : "block"),
@@ -13548,7 +13604,6 @@ webpackJsonp([1], {
                             window.history && window.history.replaceState("", "", this.roomData.roomUrl)
                         }
                         this.playBtn.html(this.roomData.findingGame || this.joiningGame ? '<div class="ui-spinner"></div>' : this.playBtn.attr("data-label")),
-                        2 == this.roomData.gameModeIdx ? this.playBtn.addClass("btn-flare-mode") : this.playBtn.removeClass("btn-flare-mode"),
                         n("#btn-start-team").css("display", this.isLeader ? "block" : "none");
                         for (var y = !1, w = 0; w < this.players.length; w++)
                             this.players[w].isLeader && (y = this.players[w].inGame);
@@ -13647,7 +13702,7 @@ webpackJsonp([1], {
         }
         function r(e, t, a, i, r) {
             var o, n;
-            if (r === C(e, t, a, i) > 0)
+            if (r === A(e, t, a, i) > 0)
                 for (o = t; o < a; o += i)
                     n = P(o, e[o], e[o + 1], n);
             else
@@ -13912,8 +13967,8 @@ webpackJsonp([1], {
             } while (a !== e);return i
         }
         function T(e, t) {
-            var a = new A(e.i,e.x,e.y)
-              , i = new A(t.i,t.x,t.y)
+            var a = new C(e.i,e.x,e.y)
+              , i = new C(t.i,t.x,t.y)
               , r = e.next
               , o = t.prev;
             return e.next = t,
@@ -13927,7 +13982,7 @@ webpackJsonp([1], {
             i
         }
         function P(e, t, a, i) {
-            var r = new A(e,t,a);
+            var r = new C(e,t,a);
             return i ? (r.next = i.next,
             r.prev = i,
             i.next.prev = r,
@@ -13941,7 +13996,7 @@ webpackJsonp([1], {
             e.prevZ && (e.prevZ.nextZ = e.nextZ),
             e.nextZ && (e.nextZ.prevZ = e.prevZ)
         }
-        function A(e, t, a) {
+        function C(e, t, a) {
             this.i = e,
             this.x = t,
             this.y = a,
@@ -13952,7 +14007,7 @@ webpackJsonp([1], {
             this.nextZ = null,
             this.steiner = !1
         }
-        function C(e, t, a, i) {
+        function A(e, t, a, i) {
             for (var r = 0, o = t, n = a - i; o < a; o += i)
                 r += (e[n] - e[o]) * (e[o + 1] + e[n + 1]),
                 n = o;
@@ -13963,12 +14018,12 @@ webpackJsonp([1], {
         i.deviation = function(e, t, a, i) {
             var r = t && t.length
               , o = r ? t[0] * a : e.length
-              , n = Math.abs(C(e, 0, o, a));
+              , n = Math.abs(A(e, 0, o, a));
             if (r)
                 for (var s = 0, l = t.length; s < l; s++) {
                     var c = t[s] * a
                       , m = s < l - 1 ? t[s + 1] * a : e.length;
-                    n -= Math.abs(C(e, c, m, a))
+                    n -= Math.abs(A(e, c, m, a))
                 }
             var p = 0;
             for (s = 0; s < i.length; s += 3) {
@@ -14308,7 +14363,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -14405,7 +14460,7 @@ webpackJsonp([1], {
                 args: a
             }
         }
-        var s, l, c, m, p, d, h, u, g, y, w, x, f, b, _, S, k, v, z, M, T, P, I, A, C, E, D, O, B, L, R, F, j, N, q, V, U, G, H = function() {
+        var s, l, c, m, p, d, h, u, g, y, w, x, f, b, _, S, k, v, z, M, T, P, I, C, A, E, D, O, B, L, R, F, j, N, q, V, U, G, H, W, K, Z, X = function() {
             function e(e, t) {
                 for (var a = 0; a < t.length; a++) {
                     var i = t[a];
@@ -14420,20 +14475,20 @@ webpackJsonp([1], {
                 i && e(t, i),
                 t
             }
-        }(), W = a("989ad62a"), K = (W.Anim,
-        a("0e566746")), Z = a("10899aea"), X = a("c2a798c8"), Y = function() {
+        }(), Y = a("989ad62a"), J = (Y.Anim,
+        a("0e566746")), Q = a("10899aea"), $ = a("c2a798c8"), ee = function() {
             function e(t, a, i) {
                 r(this, e),
-                this.pivot = X.copy(t || X.create(0, 0)),
+                this.pivot = $.copy(t || $.create(0, 0)),
                 this.rot = 0,
-                this.pos = X.copy(i || X.create(0, 0))
+                this.pos = $.copy(i || $.create(0, 0))
             }
-            return H(e, [{
+            return X(e, [{
                 key: "copy",
                 value: function(e) {
-                    X.set(this.pivot, e.pivot),
+                    $.set(this.pivot, e.pivot),
                     this.rot = e.rot,
-                    X.set(this.pos, e.pos)
+                    $.set(this.pos, e.pos)
                 }
             }, {
                 key: "rotate",
@@ -14444,185 +14499,204 @@ webpackJsonp([1], {
             }, {
                 key: "offset",
                 value: function(e) {
-                    return this.pos = X.copy(e),
+                    return this.pos = $.copy(e),
                     this
                 }
             }]),
             e
         }();
-        Y.identity = new Y(X.create(0, 0)),
-        Y.lerp = function(e, t, a) {
-            var i = new Y;
-            return i.pos = X.lerp(e, t.pos, a.pos),
-            i.rot = Z.lerp(e, t.rot, a.rot),
-            i.pivot = X.lerp(e, t.pivot, a.pivot),
+        ee.identity = new ee($.create(0, 0)),
+        ee.lerp = function(e, t, a) {
+            var i = new ee;
+            return i.pos = $.lerp(e, t.pos, a.pos),
+            i.rot = Q.lerp(e, t.rot, a.rot),
+            i.pivot = $.lerp(e, t.pivot, a.pivot),
             i
         }
         ;
-        var J = {
+        var te = {
             HandL: 0,
             HandR: 1,
             FootL: 2,
             FootR: 3
         };
-        K(Object.keys(J).length % 2 == 0);
-        var Q = {
+        J(Object.keys(te).length % 2 == 0);
+        var ae = {
             fists: (s = {},
-            i(s, J.HandL, new Y(X.create(14, -12.25))),
-            i(s, J.HandR, new Y(X.create(14, 12.25))),
+            i(s, te.HandL, new ee($.create(14, -12.25))),
+            i(s, te.HandR, new ee($.create(14, 12.25))),
             s),
             slash: (l = {},
-            i(l, J.HandL, new Y(X.create(18, -8.25))),
-            i(l, J.HandR, new Y(X.create(6, 20.25))),
+            i(l, te.HandL, new ee($.create(18, -8.25))),
+            i(l, te.HandR, new ee($.create(6, 20.25))),
             l),
             meleeTwoHanded: (c = {},
-            i(c, J.HandL, new Y(X.create(10.5, -14.25))),
-            i(c, J.HandR, new Y(X.create(18, 6.25))),
+            i(c, te.HandL, new ee($.create(10.5, -14.25))),
+            i(c, te.HandR, new ee($.create(18, 6.25))),
             c),
             meleeKatana: (m = {},
-            i(m, J.HandL, new Y(X.create(8.5, 13.25))),
-            i(m, J.HandR, new Y(X.create(-3, 17.75))),
+            i(m, te.HandL, new ee($.create(8.5, 13.25))),
+            i(m, te.HandR, new ee($.create(-3, 17.75))),
             m),
             machete: (p = {},
-            i(p, J.HandL, new Y(X.create(14, -12.25))),
-            i(p, J.HandR, new Y(X.create(1, 17.75))),
+            i(p, te.HandL, new ee($.create(14, -12.25))),
+            i(p, te.HandR, new ee($.create(1, 17.75))),
             p),
             rifle: (d = {},
-            i(d, J.HandL, new Y(X.create(28, 5.25))),
-            i(d, J.HandR, new Y(X.create(14, 1.75))),
+            i(d, te.HandL, new ee($.create(28, 5.25))),
+            i(d, te.HandR, new ee($.create(14, 1.75))),
             d),
             pistol: (h = {},
-            i(h, J.HandL, new Y(X.create(14, 1.75))),
-            i(h, J.HandR, new Y(X.create(14, 1.75))),
+            i(h, te.HandL, new ee($.create(14, 1.75))),
+            i(h, te.HandR, new ee($.create(14, 1.75))),
             h),
             dualPistol: (u = {},
-            i(u, J.HandL, new Y(X.create(15.75, -8.75))),
-            i(u, J.HandR, new Y(X.create(15.75, 8.75))),
+            i(u, te.HandL, new ee($.create(15.75, -8.75))),
+            i(u, te.HandR, new ee($.create(15.75, 8.75))),
             u),
             throwable: (g = {},
-            i(g, J.HandL, new Y(X.create(15.75, -9.625))),
-            i(g, J.HandR, new Y(X.create(15.75, 9.625))),
+            i(g, te.HandL, new ee($.create(15.75, -9.625))),
+            i(g, te.HandR, new ee($.create(15.75, 9.625))),
             g),
             downed: (y = {},
-            i(y, J.HandL, new Y(X.create(14, -12.25))),
-            i(y, J.HandR, new Y(X.create(14, 12.25))),
-            i(y, J.FootL, new Y(X.create(-15.75, -9))),
-            i(y, J.FootR, new Y(X.create(-15.75, 9))),
+            i(y, te.HandL, new ee($.create(14, -12.25))),
+            i(y, te.HandR, new ee($.create(14, 12.25))),
+            i(y, te.FootL, new ee($.create(-15.75, -9))),
+            i(y, te.FootR, new ee($.create(-15.75, 9))),
             y)
         }
-          , $ = W.items.fists
-          , ee = W.items.hook
-          , te = W.items.woodaxe
-          , ae = W.items.katana
-          , ie = {
+          , ie = Y.items.fists
+          , re = Y.items.hook
+          , oe = Y.items.woodaxe
+          , ne = Y.items.stonehammer
+          , se = Y.items.katana
+          , le = {
             none: {
                 keyframes: [],
                 effects: []
             },
             fists: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(14, 12.25)))), o($.damageTime, i({}, J.HandR, new Y(X.create(29.75, 1.75)))), o($.cooldownTime, i({}, J.HandR, new Y(X.create(14, 12.25))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(14, 12.25)))), o(ie.damageTime, i({}, te.HandR, new ee($.create(29.75, 1.75)))), o(ie.cooldownTime, i({}, te.HandR, new ee($.create(14, 12.25))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n($.damageTime, "animMeleeCollision", {})]
+                }), n(ie.damageTime, "animMeleeCollision", {})]
             },
             cut: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(14, 12.25)))), o(.25 * $.damageTime, i({}, J.HandR, new Y(X.create(14, 12.25)).rotate(.35 * -Math.PI))), o(1 * $.damageTime, i({}, J.HandR, new Y(X.create(14, 12.25)).rotate(.35 * Math.PI))), o($.cooldownTime, i({}, J.HandR, new Y(X.create(14, 12.25))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(14, 12.25)))), o(.25 * ie.damageTime, i({}, te.HandR, new ee($.create(14, 12.25)).rotate(.35 * -Math.PI))), o(1 * ie.damageTime, i({}, te.HandR, new ee($.create(14, 12.25)).rotate(.35 * Math.PI))), o(ie.cooldownTime, i({}, te.HandR, new ee($.create(14, 12.25))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n($.damageTime, "animMeleeCollision", {})]
+                }), n(ie.damageTime, "animMeleeCollision", {})]
             },
             cutReverse: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(1, 17.75)))), o(.4 * $.damageTime, i({}, J.HandR, new Y(X.create(25, 6.25)).rotate(.3 * Math.PI))), o(1 * $.damageTime, i({}, J.HandR, new Y(X.create(25, 6.25)).rotate(.5 * -Math.PI))), o($.cooldownTime, i({}, J.HandR, new Y(X.create(1, 17.75))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(1, 17.75)))), o(.4 * ie.damageTime, i({}, te.HandR, new ee($.create(25, 6.25)).rotate(.3 * Math.PI))), o(1 * ie.damageTime, i({}, te.HandR, new ee($.create(25, 6.25)).rotate(.5 * -Math.PI))), o(ie.cooldownTime, i({}, te.HandR, new ee($.create(1, 17.75))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n($.damageTime, "animMeleeCollision", {})]
+                }), n(ie.damageTime, "animMeleeCollision", {})]
             },
             thrust: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(14, 12.25)))), o(.4 * $.damageTime, i({}, J.HandR, new Y(X.create(5, 12.25)).rotate(.1 * Math.PI))), o(1 * $.damageTime, i({}, J.HandR, new Y(X.create(25, 6.25)).rotate(0 * -Math.PI))), o($.cooldownTime, i({}, J.HandR, new Y(X.create(14, 12.25))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(14, 12.25)))), o(.4 * ie.damageTime, i({}, te.HandR, new ee($.create(5, 12.25)).rotate(.1 * Math.PI))), o(1 * ie.damageTime, i({}, te.HandR, new ee($.create(25, 6.25)).rotate(0 * -Math.PI))), o(ie.cooldownTime, i({}, te.HandR, new ee($.create(14, 12.25))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n($.damageTime, "animMeleeCollision", {})]
+                }), n(ie.damageTime, "animMeleeCollision", {})]
             },
             slash: {
                 keyframes: [o(0, (w = {},
-                i(w, J.HandL, new Y(X.create(18, -8.25))),
-                i(w, J.HandR, new Y(X.create(6, 20.25))),
-                w)), o($.damageTime, (x = {},
-                i(x, J.HandL, new Y(X.create(6, -22.25))),
-                i(x, J.HandR, new Y(X.create(6, 20.25)).rotate(.6 * -Math.PI)),
-                x)), o($.cooldownTime, (f = {},
-                i(f, J.HandL, new Y(X.create(18, -8.25))),
-                i(f, J.HandR, new Y(X.create(6, 20.25)).rotate(0)),
+                i(w, te.HandL, new ee($.create(18, -8.25))),
+                i(w, te.HandR, new ee($.create(6, 20.25))),
+                w)), o(ie.damageTime, (x = {},
+                i(x, te.HandL, new ee($.create(6, -22.25))),
+                i(x, te.HandR, new ee($.create(6, 20.25)).rotate(.6 * -Math.PI)),
+                x)), o(ie.cooldownTime, (f = {},
+                i(f, te.HandL, new ee($.create(18, -8.25))),
+                i(f, te.HandR, new ee($.create(6, 20.25)).rotate(0)),
                 f))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n($.damageTime, "animMeleeCollision", {})]
+                }), n(ie.damageTime, "animMeleeCollision", {})]
             },
             hook: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(14, 12.25)))), o(.25 * ee.damageTime, i({}, J.HandR, new Y(X.create(14, 12.25)).rotate(.1 * Math.PI))), o(.75 * ee.damageTime, i({}, J.HandR, new Y(X.create(24, 1.75)))), o(.5 * ee.cooldownTime, i({}, J.HandR, new Y(X.create(14, 12.25)).rotate(-.3 * Math.PI))), o(.5 * ee.cooldownTime, i({}, J.HandR, new Y(X.create(14, 12.25))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(14, 12.25)))), o(.25 * re.damageTime, i({}, te.HandR, new ee($.create(14, 12.25)).rotate(.1 * Math.PI))), o(.75 * re.damageTime, i({}, te.HandR, new ee($.create(24, 1.75)))), o(.5 * re.cooldownTime, i({}, te.HandR, new ee($.create(14, 12.25)).rotate(-.3 * Math.PI))), o(.5 * re.cooldownTime, i({}, te.HandR, new ee($.create(14, 12.25))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n(ee.damageTime, "animMeleeCollision", {})]
+                }), n(re.damageTime, "animMeleeCollision", {})]
             },
             pan: {
-                keyframes: [o(0, i({}, J.HandR, new Y(X.create(14, 12.25)))), o(.15, i({}, J.HandR, new Y(X.create(22, -8.25)).rotate(.2 * -Math.PI))), o(.1, i({}, J.HandR, new Y(X.create(28, -8.25)).rotate(.5 * Math.PI))), o(.3, i({}, J.HandR, new Y(X.create(14, 12.25))))],
+                keyframes: [o(0, i({}, te.HandR, new ee($.create(14, 12.25)))), o(.15, i({}, te.HandR, new ee($.create(22, -8.25)).rotate(.2 * -Math.PI))), o(.1, i({}, te.HandR, new ee($.create(28, -8.25)).rotate(.5 * Math.PI))), o(.3, i({}, te.HandR, new ee($.create(14, 12.25))))],
                 effects: [n(0, "animPlaySound", {
                     sound: "swing"
-                }), n(W.items.pan.damageTime, "animMeleeCollision", {})]
+                }), n(Y.items.pan.damageTime, "animMeleeCollision", {})]
             },
-            twoHandSwing: {
+            axeSwing: {
                 keyframes: [o(0, (b = {},
-                i(b, J.HandL, new Y(X.create(10.5, -14.25))),
-                i(b, J.HandR, new Y(X.create(18, 6.25))),
-                b)), o(.4 * te.damageTime, (_ = {},
-                i(_, J.HandL, new Y(X.create(9, -14.25)).rotate(.4 * Math.PI)),
-                i(_, J.HandR, new Y(X.create(18, 6.25)).rotate(.4 * Math.PI)),
-                _)), o(.6 * te.damageTime, (S = {},
-                i(S, J.HandL, new Y(X.create(9, -14.25)).rotate(.4 * -Math.PI)),
-                i(S, J.HandR, new Y(X.create(18, 6.25)).rotate(.4 * -Math.PI)),
-                S)), o(te.cooldownTime, (k = {},
-                i(k, J.HandL, new Y(X.create(10.5, -14.25))),
-                i(k, J.HandR, new Y(X.create(18, 6.25))),
+                i(b, te.HandL, new ee($.create(10.5, -14.25))),
+                i(b, te.HandR, new ee($.create(18, 6.25))),
+                b)), o(.4 * oe.damageTime, (_ = {},
+                i(_, te.HandL, new ee($.create(9, -14.25)).rotate(.4 * Math.PI)),
+                i(_, te.HandR, new ee($.create(18, 6.25)).rotate(.4 * Math.PI)),
+                _)), o(.6 * oe.damageTime, (S = {},
+                i(S, te.HandL, new ee($.create(9, -14.25)).rotate(.4 * -Math.PI)),
+                i(S, te.HandR, new ee($.create(18, 6.25)).rotate(.4 * -Math.PI)),
+                S)), o(oe.cooldownTime, (k = {},
+                i(k, te.HandL, new ee($.create(10.5, -14.25))),
+                i(k, te.HandR, new ee($.create(18, 6.25))),
                 k))],
-                effects: [n(te.damageTime, "animPlaySound", {
+                effects: [n(oe.damageTime, "animPlaySound", {
                     sound: "swing"
-                }), n(W.items.woodaxe.damageTime, "animMeleeCollision", {})]
+                }), n(oe.damageTime, "animMeleeCollision", {})]
+            },
+            hammerSwing: {
+                keyframes: [o(0, (v = {},
+                i(v, te.HandL, new ee($.create(10.5, -14.25))),
+                i(v, te.HandR, new ee($.create(18, 6.25))),
+                v)), o(.4 * ne.damageTime, (z = {},
+                i(z, te.HandL, new ee($.create(9, -14.25)).rotate(.4 * Math.PI)),
+                i(z, te.HandR, new ee($.create(18, 6.25)).rotate(.4 * Math.PI)),
+                z)), o(.6 * ne.damageTime, (M = {},
+                i(M, te.HandL, new ee($.create(9, -14.25)).rotate(.4 * -Math.PI)),
+                i(M, te.HandR, new ee($.create(18, 6.25)).rotate(.4 * -Math.PI)),
+                M)), o(ne.cooldownTime, (T = {},
+                i(T, te.HandL, new ee($.create(10.5, -14.25))),
+                i(T, te.HandR, new ee($.create(18, 6.25))),
+                T))],
+                effects: [n(ne.damageTime, "animPlaySound", {
+                    sound: "swing"
+                }), n(ne.damageTime, "animMeleeCollision", {})]
             },
             katanaSwing: {
-                keyframes: [o(0, (v = {},
-                i(v, J.HandL, new Y(X.create(8.5, 13.25))),
-                i(v, J.HandR, new Y(X.create(-3, 17.75))),
-                v)), o(.3 * ae.damageTime, (z = {},
-                i(z, J.HandL, new Y(X.create(8.5, 13.25)).rotate(.2 * Math.PI)),
-                i(z, J.HandR, new Y(X.create(-3, 17.75)).rotate(.2 * Math.PI)),
-                z)), o(.6 * ae.damageTime, (M = {},
-                i(M, J.HandL, new Y(X.create(8.5, 13.25)).rotate(1.2 * -Math.PI)),
-                i(M, J.HandR, new Y(X.create(-3, 17.75)).rotate(1.2 * -Math.PI)),
-                M)), o(ae.cooldownTime, (T = {},
-                i(T, J.HandL, new Y(X.create(8.5, 13.25))),
-                i(T, J.HandR, new Y(X.create(-3, 17.75))),
-                T))],
-                effects: [n(ae.damageTime, "animPlaySound", {
+                keyframes: [o(0, (P = {},
+                i(P, te.HandL, new ee($.create(8.5, 13.25))),
+                i(P, te.HandR, new ee($.create(-3, 17.75))),
+                P)), o(.3 * se.damageTime, (I = {},
+                i(I, te.HandL, new ee($.create(8.5, 13.25)).rotate(.2 * Math.PI)),
+                i(I, te.HandR, new ee($.create(-3, 17.75)).rotate(.2 * Math.PI)),
+                I)), o(.6 * se.damageTime, (C = {},
+                i(C, te.HandL, new ee($.create(8.5, 13.25)).rotate(1.2 * -Math.PI)),
+                i(C, te.HandR, new ee($.create(-3, 17.75)).rotate(1.2 * -Math.PI)),
+                C)), o(se.cooldownTime, (A = {},
+                i(A, te.HandL, new ee($.create(8.5, 13.25))),
+                i(A, te.HandR, new ee($.create(-3, 17.75))),
+                A))],
+                effects: [n(se.damageTime, "animPlaySound", {
                     sound: "swing"
-                }), n(W.items.katana.damageTime, "animMeleeCollision", {})]
+                }), n(se.damageTime, "animMeleeCollision", {})]
             },
             cook: {
-                keyframes: [o(0, (P = {},
-                i(P, J.HandL, new Y(X.create(15.75, -9.625))),
-                i(P, J.HandR, new Y(X.create(15.75, 9.625))),
-                P)), o(.1, (I = {},
-                i(I, J.HandL, new Y(X.create(14, -1.75))),
-                i(I, J.HandR, new Y(X.create(14, 1.75))),
-                I)), o(.2, (A = {},
-                i(A, J.HandL, new Y(X.create(14, -1.75))),
-                i(A, J.HandR, new Y(X.create(14, 1.75))),
-                A)), o(.1, (C = {},
-                i(C, J.HandL, new Y(X.create(22.75, -1.75))),
-                i(C, J.HandR, new Y(X.create(1.75, 14))),
-                C)), o(99999, (E = {},
-                i(E, J.HandL, new Y(X.create(22.75, -1.75))),
-                i(E, J.HandR, new Y(X.create(1.75, 14))),
-                E))],
+                keyframes: [o(0, (E = {},
+                i(E, te.HandL, new ee($.create(15.75, -9.625))),
+                i(E, te.HandR, new ee($.create(15.75, 9.625))),
+                E)), o(.1, (D = {},
+                i(D, te.HandL, new ee($.create(14, -1.75))),
+                i(D, te.HandR, new ee($.create(14, 1.75))),
+                D)), o(.2, (O = {},
+                i(O, te.HandL, new ee($.create(14, -1.75))),
+                i(O, te.HandR, new ee($.create(14, 1.75))),
+                O)), o(.1, (B = {},
+                i(B, te.HandL, new ee($.create(22.75, -1.75))),
+                i(B, te.HandR, new ee($.create(1.75, 14))),
+                B)), o(99999, (L = {},
+                i(L, te.HandL, new ee($.create(22.75, -1.75))),
+                i(L, te.HandR, new ee($.create(1.75, 14))),
+                L))],
                 effects: [n(0, "animPlaySound", {
                     sound: "pullPin"
                 }), n(.1, "animSetThrowableState", {
@@ -14630,16 +14704,16 @@ webpackJsonp([1], {
                 })]
             },
             throw: {
-                keyframes: [o(0, (D = {},
-                i(D, J.HandL, new Y(X.create(22.75, -1.75))),
-                i(D, J.HandR, new Y(X.create(1.75, 14.175))),
-                D)), o(.15, (O = {},
-                i(O, J.HandL, new Y(X.create(5.25, -15.75))),
-                i(O, J.HandR, new Y(X.create(29.75, 1.75))),
-                O)), o(W.player.throwTime, (B = {},
-                i(B, J.HandL, new Y(X.create(15.75, -9.625))),
-                i(B, J.HandR, new Y(X.create(15.75, 9.625))),
-                B))],
+                keyframes: [o(0, (R = {},
+                i(R, te.HandL, new ee($.create(22.75, -1.75))),
+                i(R, te.HandR, new ee($.create(1.75, 14.175))),
+                R)), o(.15, (F = {},
+                i(F, te.HandL, new ee($.create(5.25, -15.75))),
+                i(F, te.HandR, new ee($.create(29.75, 1.75))),
+                F)), o(Y.player.throwTime, (j = {},
+                i(j, te.HandL, new ee($.create(15.75, -9.625))),
+                i(j, te.HandR, new ee($.create(15.75, 9.625))),
+                j))],
                 effects: [n(0, "animPlaySound", {
                     sound: "throwing"
                 }), n(0, "animSetThrowableState", {
@@ -14647,50 +14721,50 @@ webpackJsonp([1], {
                 }), n(0, "animThrowableParticles", {})]
             },
             crawl_forward: {
-                keyframes: [o(W.player.crawlTime / 3, (L = {},
-                i(L, J.HandL, new Y(X.create(19.25, -10.5))),
-                i(L, J.FootL, new Y(X.create(-20.25, -9))),
-                L)), o(W.player.crawlTime / 3, (R = {},
-                i(R, J.HandL, new Y(X.create(5.25, -15.75))),
-                i(R, J.FootL, new Y(X.create(-11.25, -9))),
-                R)), o(W.player.crawlTime / 3, (F = {},
-                i(F, J.HandL, new Y(X.create(14, -12.25))),
-                i(F, J.FootL, new Y(X.create(-15.75, -9))),
-                F))],
+                keyframes: [o(Y.player.crawlTime / 3, (N = {},
+                i(N, te.HandL, new ee($.create(19.25, -10.5))),
+                i(N, te.FootL, new ee($.create(-20.25, -9))),
+                N)), o(Y.player.crawlTime / 3, (q = {},
+                i(q, te.HandL, new ee($.create(5.25, -15.75))),
+                i(q, te.FootL, new ee($.create(-11.25, -9))),
+                q)), o(Y.player.crawlTime / 3, (V = {},
+                i(V, te.HandL, new ee($.create(14, -12.25))),
+                i(V, te.FootL, new ee($.create(-15.75, -9))),
+                V))],
                 effects: []
             },
             crawl_backward: {
-                keyframes: [o(W.player.crawlTime / 3, (j = {},
-                i(j, J.HandL, new Y(X.create(5.25, -15.75))),
-                i(j, J.FootL, new Y(X.create(-11.25, -9))),
-                j)), o(W.player.crawlTime / 3, (N = {},
-                i(N, J.HandL, new Y(X.create(19.25, -10.5))),
-                i(N, J.FootL, new Y(X.create(-20.25, -9))),
-                N)), o(W.player.crawlTime / 3, (q = {},
-                i(q, J.HandL, new Y(X.create(14, -12.25))),
-                i(q, J.FootL, new Y(X.create(-15.75, -9))),
-                q))],
+                keyframes: [o(Y.player.crawlTime / 3, (U = {},
+                i(U, te.HandL, new ee($.create(5.25, -15.75))),
+                i(U, te.FootL, new ee($.create(-11.25, -9))),
+                U)), o(Y.player.crawlTime / 3, (G = {},
+                i(G, te.HandL, new ee($.create(19.25, -10.5))),
+                i(G, te.FootL, new ee($.create(-20.25, -9))),
+                G)), o(Y.player.crawlTime / 3, (H = {},
+                i(H, te.HandL, new ee($.create(14, -12.25))),
+                i(H, te.FootL, new ee($.create(-15.75, -9))),
+                H))],
                 effects: []
             },
             revive: {
-                keyframes: [o(0, (V = {},
-                i(V, J.HandL, new Y(X.create(14, -12.25))),
-                i(V, J.HandR, new Y(X.create(14, 12.25))),
-                V)), o(.2, (U = {},
-                i(U, J.HandL, new Y(X.create(24.5, -8.75))),
-                i(U, J.HandR, new Y(X.create(5.25, 21))),
-                U)), o(W.player.reviveDuration, (G = {},
-                i(G, J.HandL, new Y(X.create(24.5, -8.75))),
-                i(G, J.HandR, new Y(X.create(5.25, 21))),
-                G))],
+                keyframes: [o(0, (W = {},
+                i(W, te.HandL, new ee($.create(14, -12.25))),
+                i(W, te.HandR, new ee($.create(14, 12.25))),
+                W)), o(.2, (K = {},
+                i(K, te.HandL, new ee($.create(24.5, -8.75))),
+                i(K, te.HandR, new ee($.create(5.25, 21))),
+                K)), o(Y.player.reviveDuration, (Z = {},
+                i(Z, te.HandL, new ee($.create(24.5, -8.75))),
+                i(Z, te.HandR, new ee($.create(5.25, 21))),
+                Z))],
                 effects: []
             }
         };
         e.exports = {
-            Pose: Y,
-            Bones: J,
-            IdlePoses: Q,
-            Animations: ie
+            Pose: ee,
+            Bones: te,
+            IdlePoses: ae,
+            Animations: le
         }
     },
     "6d494b5c": function(e, t, a) {
@@ -14759,16 +14833,16 @@ webpackJsonp([1], {
                     if (T) {
                         var P = l.neg(T.dir)
                           , I = p.intersectSegmentDist(t, M, P, h, v, i, !0)
-                          , A = o.intersectSegment(e, M, l.add(M, l.mul(P, h)))
-                          , C = A ? l.length(l.sub(A.point, M)) : 0
-                          , E = A && C <= I;
+                          , C = o.intersectSegment(e, M, l.add(M, l.mul(P, h)))
+                          , A = C ? l.length(l.sub(C.point, M)) : 0
+                          , E = C && A <= I;
                         if (c.debug) {
                             var D = E ? 65280 : 16711680;
                             m.addRay(M, P, h, D)
                         }
                         if (E)
                             return {
-                                dist: C
+                                dist: A
                             }
                     }
                 }
@@ -14795,7 +14869,7 @@ webpackJsonp([1], {
         e.exports = {
             shared: [{
                 meta: {
-                    image: "shared-0-100-9d0c1d32.png",
+                    image: "shared-0-100-32babda5.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -15103,7 +15177,7 @@ webpackJsonp([1], {
                             h: 512
                         }
                     },
-                    "map-wall-14-rounded.img": {
+                    "map-wall-14.img": {
                         frame: {
                             x: 3855,
                             y: 2666,
@@ -15123,7 +15197,7 @@ webpackJsonp([1], {
                             h: 448
                         }
                     },
-                    "map-wall-14.img": {
+                    "map-wall-14-rounded.img": {
                         frame: {
                             x: 3891,
                             y: 2666,
@@ -15223,7 +15297,7 @@ webpackJsonp([1], {
                             h: 384
                         }
                     },
-                    "map-wall-glass-12.img": {
+                    "map-wall-12-rounded.img": {
                         frame: {
                             x: 3947,
                             y: 778,
@@ -15243,7 +15317,7 @@ webpackJsonp([1], {
                             h: 384
                         }
                     },
-                    "map-wall-12-rounded.img": {
+                    "map-wall-glass-12.img": {
                         frame: {
                             x: 3947,
                             y: 1166,
@@ -15343,7 +15417,7 @@ webpackJsonp([1], {
                             h: 340
                         }
                     },
-                    "map-bunker-crossing-floor-01.img": {
+                    "map-building-shack-floor-02.img": {
                         frame: {
                             x: 2828,
                             y: 1224,
@@ -15363,7 +15437,7 @@ webpackJsonp([1], {
                             h: 320
                         }
                     },
-                    "map-building-shack-floor-02.img": {
+                    "map-bunker-crossing-floor-01.img": {
                         frame: {
                             x: 3152,
                             y: 1224,
@@ -15383,7 +15457,7 @@ webpackJsonp([1], {
                             h: 320
                         }
                     },
-                    "map-wall-10.img": {
+                    "map-wall-10-rounded.img": {
                         frame: {
                             x: 3947,
                             y: 2238,
@@ -15403,7 +15477,7 @@ webpackJsonp([1], {
                             h: 320
                         }
                     },
-                    "map-wall-10-rounded.img": {
+                    "map-wall-glass-10.img": {
                         frame: {
                             x: 3947,
                             y: 2562,
@@ -15423,7 +15497,7 @@ webpackJsonp([1], {
                             h: 320
                         }
                     },
-                    "map-wall-glass-10.img": {
+                    "map-wall-10.img": {
                         frame: {
                             x: 3947,
                             y: 2886,
@@ -15603,7 +15677,7 @@ webpackJsonp([1], {
                             h: 242
                         }
                     },
-                    "gun-awc-02.img": {
+                    "gun-awc-01.img": {
                         frame: {
                             x: 4015,
                             y: 2,
@@ -15623,7 +15697,7 @@ webpackJsonp([1], {
                             h: 236
                         }
                     },
-                    "gun-awc-01.img": {
+                    "gun-awc-02.img": {
                         frame: {
                             x: 4015,
                             y: 242,
@@ -15643,7 +15717,7 @@ webpackJsonp([1], {
                             h: 236
                         }
                     },
-                    "gun-usas-01.img": {
+                    "gun-ots38-01.img": {
                         frame: {
                             x: 4015,
                             y: 482,
@@ -15663,7 +15737,7 @@ webpackJsonp([1], {
                             h: 232
                         }
                     },
-                    "gun-ots38-01.img": {
+                    "gun-usas-01.img": {
                         frame: {
                             x: 4015,
                             y: 718,
@@ -15943,7 +16017,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "part-airdrop-02x.img": {
+                    "part-airdrop-02.img": {
                         frame: {
                             x: 4015,
                             y: 3166,
@@ -15963,7 +16037,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "part-airdrop-02.img": {
+                    "part-airdrop-02x.img": {
                         frame: {
                             x: 4015,
                             y: 3330,
@@ -16063,30 +16137,10 @@ webpackJsonp([1], {
                             h: 24
                         }
                     },
-                    "gun-mp220-01.img": {
+                    "ping-map-danger.img": {
                         frame: {
                             x: 3891,
                             y: 3118,
-                            w: 40,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 40,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 40,
-                            h: 128
-                        }
-                    },
-                    "ping-map-danger.img": {
-                        frame: {
-                            x: 3894,
-                            y: 3598,
                             w: 40,
                             h: 128
                         },
@@ -16100,6 +16154,26 @@ webpackJsonp([1], {
                         },
                         sourceSize: {
                             w: 128,
+                            h: 128
+                        }
+                    },
+                    "gun-mp220-01.img": {
+                        frame: {
+                            x: 3894,
+                            y: 3598,
+                            w: 40,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 40,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 40,
                             h: 128
                         }
                     },
@@ -16123,7 +16197,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-door-05.img": {
+                    "map-door-01.img": {
                         frame: {
                             x: 4051,
                             y: 2268,
@@ -16143,7 +16217,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-door-01.img": {
+                    "map-door-05.img": {
                         frame: {
                             x: 4051,
                             y: 2464,
@@ -16463,7 +16537,7 @@ webpackJsonp([1], {
                             h: 94
                         }
                     },
-                    "audio-off.img": {
+                    "audio-on.img": {
                         frame: {
                             x: 2738,
                             y: 2570,
@@ -16483,7 +16557,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "audio-on.img": {
+                    "audio-off.img": {
                         frame: {
                             x: 2834,
                             y: 2570,
@@ -16503,29 +16577,9 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "gun-dp28-top-01.img": {
-                        frame: {
-                            x: 2930,
-                            y: 2570,
-                            w: 80,
-                            h: 80
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 80,
-                            h: 80
-                        },
-                        sourceSize: {
-                            w: 80,
-                            h: 80
-                        }
-                    },
                     "map-pot-res-01.img": {
                         frame: {
-                            x: 3014,
+                            x: 2930,
                             y: 2570,
                             w: 80,
                             h: 80
@@ -16541,6 +16595,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 144,
                             h: 144
+                        }
+                    },
+                    "gun-dp28-top-01.img": {
+                        frame: {
+                            x: 3014,
+                            y: 2570,
+                            w: 80,
+                            h: 80
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 80,
+                            h: 80
+                        },
+                        sourceSize: {
+                            w: 80,
+                            h: 80
                         }
                     },
                     "loot-weapon-fists.img": {
@@ -16683,7 +16757,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-gun-mount-03.img": {
+                    "map-gun-mount-02.img": {
                         frame: {
                             x: 1509,
                             y: 3550,
@@ -16703,7 +16777,7 @@ webpackJsonp([1], {
                             h: 56
                         }
                     },
-                    "map-gun-mount-02.img": {
+                    "map-gun-mount-03.img": {
                         frame: {
                             x: 1641,
                             y: 3550,
@@ -16743,7 +16817,7 @@ webpackJsonp([1], {
                             h: 44
                         }
                     },
-                    "ping-part-eighth.img": {
+                    "ping-part-eighth-highlight.img": {
                         frame: {
                             x: 1853,
                             y: 3550,
@@ -16763,7 +16837,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "ping-part-eighth-highlight.img": {
+                    "ping-part-eighth.img": {
                         frame: {
                             x: 1908,
                             y: 3550,
@@ -16903,7 +16977,7 @@ webpackJsonp([1], {
                             h: 38
                         }
                     },
-                    "map-barrel-03.img": {
+                    "map-barrel-04.img": {
                         frame: {
                             x: 2239,
                             y: 3550,
@@ -16923,7 +16997,7 @@ webpackJsonp([1], {
                             h: 35
                         }
                     },
-                    "map-barrel-04.img": {
+                    "map-barrel-03.img": {
                         frame: {
                             x: 2332,
                             y: 3550,
@@ -16983,49 +17057,9 @@ webpackJsonp([1], {
                             h: 32
                         }
                     },
-                    "dot.img": {
-                        frame: {
-                            x: 2493,
-                            y: 3550,
-                            w: 32,
-                            h: 32
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 32,
-                            h: 32
-                        },
-                        sourceSize: {
-                            w: 36,
-                            h: 36
-                        }
-                    },
                     "map-bottle-03.img": {
                         frame: {
-                            x: 2529,
-                            y: 3550,
-                            w: 32,
-                            h: 32
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 32,
-                            h: 32
-                        },
-                        sourceSize: {
-                            w: 32,
-                            h: 32
-                        }
-                    },
-                    "map-bottle-02.img": {
-                        frame: {
-                            x: 2565,
+                            x: 2493,
                             y: 3550,
                             w: 32,
                             h: 32
@@ -17045,7 +17079,7 @@ webpackJsonp([1], {
                     },
                     "map-wall-01-rounded.img": {
                         frame: {
-                            x: 2601,
+                            x: 2529,
                             y: 3550,
                             w: 32,
                             h: 32
@@ -17064,6 +17098,46 @@ webpackJsonp([1], {
                         }
                     },
                     "map-bottle-01.img": {
+                        frame: {
+                            x: 2565,
+                            y: 3550,
+                            w: 32,
+                            h: 32
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 32,
+                            h: 32
+                        },
+                        sourceSize: {
+                            w: 32,
+                            h: 32
+                        }
+                    },
+                    "dot.img": {
+                        frame: {
+                            x: 2601,
+                            y: 3550,
+                            w: 32,
+                            h: 32
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 32,
+                            h: 32
+                        },
+                        sourceSize: {
+                            w: 36,
+                            h: 36
+                        }
+                    },
+                    "map-bottle-02.img": {
                         frame: {
                             x: 2637,
                             y: 3550,
@@ -17286,7 +17360,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-1-100-d04df3a5.png",
+                    image: "shared-1-100-1c1a850f.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -17754,7 +17828,7 @@ webpackJsonp([1], {
                             h: 448
                         }
                     },
-                    "map-building-hut-ceiling-02.img": {
+                    "map-building-hut-ceiling-01.img": {
                         frame: {
                             x: 3683,
                             y: 434,
@@ -17774,7 +17848,7 @@ webpackJsonp([1], {
                             h: 408
                         }
                     },
-                    "map-building-hut-ceiling-01.img": {
+                    "map-building-hut-ceiling-02.img": {
                         frame: {
                             x: 3683,
                             y: 831,
@@ -17834,7 +17908,7 @@ webpackJsonp([1], {
                             h: 384
                         }
                     },
-                    "map-building-container-ceiling-03.img": {
+                    "map-building-container-ceiling-05.img": {
                         frame: {
                             x: 3683,
                             y: 2e3,
@@ -17874,29 +17948,9 @@ webpackJsonp([1], {
                             h: 536
                         }
                     },
-                    "map-building-container-ceiling-05.img": {
-                        frame: {
-                            x: 3683,
-                            y: 2384,
-                            w: 180,
-                            h: 380
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 180,
-                            h: 380
-                        },
-                        sourceSize: {
-                            w: 180,
-                            h: 536
-                        }
-                    },
                     "map-building-container-open-ceiling-01.img": {
                         frame: {
-                            x: 3867,
+                            x: 3683,
                             y: 2384,
                             w: 180,
                             h: 380
@@ -17915,6 +17969,26 @@ webpackJsonp([1], {
                         }
                     },
                     "map-building-container-ceiling-01.img": {
+                        frame: {
+                            x: 3867,
+                            y: 2384,
+                            w: 180,
+                            h: 380
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 180,
+                            h: 380
+                        },
+                        sourceSize: {
+                            w: 180,
+                            h: 536
+                        }
+                    },
+                    "map-building-container-ceiling-03.img": {
                         frame: {
                             x: 3683,
                             y: 2768,
@@ -18054,7 +18128,7 @@ webpackJsonp([1], {
                             h: 336
                         }
                     },
-                    "map-bunker-generic-floor-02.img": {
+                    "map-bunker-generic-floor-01.img": {
                         frame: {
                             x: 3683,
                             y: 3460,
@@ -18074,7 +18148,7 @@ webpackJsonp([1], {
                             h: 288
                         }
                     },
-                    "map-bunker-generic-floor-01.img": {
+                    "map-bunker-generic-floor-02.img": {
                         frame: {
                             x: 2799,
                             y: 2195,
@@ -18134,7 +18208,7 @@ webpackJsonp([1], {
                             h: 300
                         }
                     },
-                    "part-smoke-02.img": {
+                    "map-tree-03.img": {
                         frame: {
                             x: 1816,
                             y: 3768,
@@ -18154,7 +18228,7 @@ webpackJsonp([1], {
                             h: 256
                         }
                     },
-                    "map-tree-03.img": {
+                    "part-smoke-03.img": {
                         frame: {
                             x: 2076,
                             y: 3768,
@@ -18174,7 +18248,7 @@ webpackJsonp([1], {
                             h: 256
                         }
                     },
-                    "part-smoke-03.img": {
+                    "part-smoke-02.img": {
                         frame: {
                             x: 2336,
                             y: 3768,
@@ -18274,7 +18348,7 @@ webpackJsonp([1], {
                             h: 256
                         }
                     },
-                    "map-bunker-generic-ceiling-01.img": {
+                    "map-bunker-crossing-ceiling-01.img": {
                         frame: {
                             x: 1702,
                             y: 1405,
@@ -18434,7 +18508,7 @@ webpackJsonp([1], {
                             h: 180
                         }
                     },
-                    "map-bed-res-02.img": {
+                    "map-bed-res-01.img": {
                         frame: {
                             x: 3525,
                             y: 1222,
@@ -18454,7 +18528,7 @@ webpackJsonp([1], {
                             h: 192
                         }
                     },
-                    "map-bed-res-01.img": {
+                    "map-bed-res-02.img": {
                         frame: {
                             x: 2646,
                             y: 1676,
@@ -18534,7 +18608,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "player-armor-base-01.img": {
+                    "map-crate-10.img": {
                         frame: {
                             x: 2646,
                             y: 1838,
@@ -18554,7 +18628,7 @@ webpackJsonp([1], {
                             h: 148
                         }
                     },
-                    "map-crate-11.img": {
+                    "player-armor-base-01.img": {
                         frame: {
                             x: 2646,
                             y: 1990,
@@ -18574,7 +18648,7 @@ webpackJsonp([1], {
                             h: 148
                         }
                     },
-                    "map-crate-10.img": {
+                    "map-crate-11.img": {
                         frame: {
                             x: 2646,
                             y: 2142,
@@ -18694,7 +18768,7 @@ webpackJsonp([1], {
                             h: 146
                         }
                     },
-                    "proj-mirv-pin.img": {
+                    "proj-mirv-nopin.img": {
                         frame: {
                             x: 3547,
                             y: 2480,
@@ -18704,7 +18778,7 @@ webpackJsonp([1], {
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
+                            x: 26,
                             y: 2,
                             w: 102,
                             h: 144
@@ -18714,7 +18788,7 @@ webpackJsonp([1], {
                             h: 148
                         }
                     },
-                    "proj-mirv-nopin.img": {
+                    "proj-mirv-pin.img": {
                         frame: {
                             x: 3547,
                             y: 2628,
@@ -18724,7 +18798,7 @@ webpackJsonp([1], {
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 26,
+                            x: 0,
                             y: 2,
                             w: 102,
                             h: 144
@@ -19134,7 +19208,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "part-smoke-01.img": {
+                    "cursor-03.img": {
                         frame: {
                             x: 2709,
                             y: 1359,
@@ -19154,7 +19228,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "cursor-03.img": {
+                    "map-power-box-01.img": {
                         frame: {
                             x: 2304,
                             y: 3108,
@@ -19174,7 +19248,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "player-map-outer.img": {
+                    "timer-background.img": {
                         frame: {
                             x: 2380,
                             y: 3108,
@@ -19194,7 +19268,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-power-box-01.img": {
+                    "cursor-01.img": {
                         frame: {
                             x: 2456,
                             y: 3108,
@@ -19234,7 +19308,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "timer-background.img": {
+                    "part-smoke-01.img": {
                         frame: {
                             x: 2608,
                             y: 3108,
@@ -19254,7 +19328,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "cursor-01.img": {
+                    "player-map-outer.img": {
                         frame: {
                             x: 2684,
                             y: 3108,
@@ -19474,7 +19548,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "lock.img": {
+                    "unlock.img": {
                         frame: {
                             x: 3625,
                             y: 938,
@@ -19494,7 +19568,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "unlock.img": {
+                    "lock.img": {
                         frame: {
                             x: 3619,
                             y: 1140,
@@ -19677,7 +19751,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-2-100-77ce6e39.png",
+                    image: "shared-2-100-d0495516.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -19965,7 +20039,7 @@ webpackJsonp([1], {
                             h: 230
                         }
                     },
-                    "map-bunker-crossing-ceiling-01.img": {
+                    "map-bunker-generic-ceiling-01.img": {
                         frame: {
                             x: 2416,
                             y: 784,
@@ -20085,30 +20159,10 @@ webpackJsonp([1], {
                             h: 216
                         }
                     },
-                    "pad.img": {
+                    "map-snow-02.img": {
                         frame: {
                             x: 2813,
                             y: 1490,
-                            w: 208,
-                            h: 208
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 208,
-                            h: 208
-                        },
-                        sourceSize: {
-                            w: 208,
-                            h: 208
-                        }
-                    },
-                    "map-snow-02.img": {
-                        frame: {
-                            x: 690,
-                            y: 1872,
                             w: 208,
                             h: 208
                         },
@@ -20123,6 +20177,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 256,
                             h: 256
+                        }
+                    },
+                    "pad.img": {
+                        frame: {
+                            x: 690,
+                            y: 1872,
+                            w: 208,
+                            h: 208
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 208,
+                            h: 208
+                        },
+                        sourceSize: {
+                            w: 208,
+                            h: 208
                         }
                     },
                     "map-building-shack-ceiling-01.img": {
@@ -20145,7 +20219,7 @@ webpackJsonp([1], {
                             h: 255
                         }
                     },
-                    "map-vat-02.img": {
+                    "map-stone-res-02.img": {
                         frame: {
                             x: 1221,
                             y: 1872,
@@ -20165,7 +20239,7 @@ webpackJsonp([1], {
                             h: 200
                         }
                     },
-                    "map-stone-res-02.img": {
+                    "map-vat-02.img": {
                         frame: {
                             x: 1425,
                             y: 1872,
@@ -20545,7 +20619,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-airdrop-01.img": {
+                    "map-airdrop-02.img": {
                         frame: {
                             x: 2522,
                             y: 2112,
@@ -20565,29 +20639,9 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-building-dock-floor-01a.img": {
-                        frame: {
-                            x: 2686,
-                            y: 2112,
-                            w: 160,
-                            h: 160
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 2,
-                            w: 160,
-                            h: 160
-                        },
-                        sourceSize: {
-                            w: 160,
-                            h: 162
-                        }
-                    },
                     "part-airdrop-03.img": {
                         frame: {
-                            x: 2850,
+                            x: 2686,
                             y: 2112,
                             w: 160,
                             h: 160
@@ -20605,7 +20659,27 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-airdrop-02.img": {
+                    "map-building-dock-floor-01a.img": {
+                        frame: {
+                            x: 2850,
+                            y: 2112,
+                            w: 160,
+                            h: 160
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 2,
+                            w: 160,
+                            h: 160
+                        },
+                        sourceSize: {
+                            w: 160,
+                            h: 162
+                        }
+                    },
+                    "map-table-03.img": {
                         frame: {
                             x: 2,
                             y: 2292,
@@ -20625,7 +20699,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-table-03.img": {
+                    "map-airdrop-01.img": {
                         frame: {
                             x: 166,
                             y: 2292,
@@ -20725,7 +20799,7 @@ webpackJsonp([1], {
                             h: 156
                         }
                     },
-                    "map-crate-02.img": {
+                    "map-crate-03.img": {
                         frame: {
                             x: 1483,
                             y: 2292,
@@ -20745,7 +20819,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-stone-04.img": {
+                    "map-stone-05.img": {
                         frame: {
                             x: 1631,
                             y: 2292,
@@ -20765,7 +20839,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "ping-border.img": {
+                    "loot-circle-outer-02.img": {
                         frame: {
                             x: 1779,
                             y: 2292,
@@ -20773,19 +20847,19 @@ webpackJsonp([1], {
                             h: 144
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 1,
+                            y: 1,
                             w: 144,
                             h: 144
                         },
                         sourceSize: {
-                            w: 144,
-                            h: 144
+                            w: 146,
+                            h: 146
                         }
                     },
-                    "map-stone-05.img": {
+                    "map-crate-02.img": {
                         frame: {
                             x: 1927,
                             y: 2292,
@@ -20805,7 +20879,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "loot-circle-outer-02.img": {
+                    "map-crate-08.img": {
                         frame: {
                             x: 2075,
                             y: 2292,
@@ -20813,19 +20887,19 @@ webpackJsonp([1], {
                             h: 144
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 1,
-                            y: 1,
+                            x: 0,
+                            y: 0,
                             w: 144,
                             h: 144
                         },
                         sourceSize: {
-                            w: 146,
-                            h: 146
+                            w: 144,
+                            h: 144
                         }
                     },
-                    "map-crate-01.img": {
+                    "map-stone-04.img": {
                         frame: {
                             x: 2223,
                             y: 2292,
@@ -20845,7 +20919,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-crate-09.img": {
+                    "map-crate-01.img": {
                         frame: {
                             x: 2371,
                             y: 2292,
@@ -20865,7 +20939,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-crate-08.img": {
+                    "map-crate-07.img": {
                         frame: {
                             x: 2519,
                             y: 2292,
@@ -20885,7 +20959,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-crate-07.img": {
+                    "ping-border.img": {
                         frame: {
                             x: 2667,
                             y: 2292,
@@ -20905,7 +20979,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-crate-03.img": {
+                    "map-crate-09.img": {
                         frame: {
                             x: 2815,
                             y: 2292,
@@ -20985,29 +21059,9 @@ webpackJsonp([1], {
                             h: 148
                         }
                     },
-                    "map-barrel-02.img": {
-                        frame: {
-                            x: 445,
-                            y: 2456,
-                            w: 142,
-                            h: 142
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 1,
-                            y: 1,
-                            w: 142,
-                            h: 142
-                        },
-                        sourceSize: {
-                            w: 144,
-                            h: 144
-                        }
-                    },
                     "player-ripple-01.img": {
                         frame: {
-                            x: 591,
+                            x: 445,
                             y: 2456,
                             w: 142,
                             h: 142
@@ -21023,6 +21077,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 142,
                             h: 142
+                        }
+                    },
+                    "map-stone-01.img": {
+                        frame: {
+                            x: 591,
+                            y: 2456,
+                            w: 142,
+                            h: 142
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 1,
+                            y: 1,
+                            w: 142,
+                            h: 142
+                        },
+                        sourceSize: {
+                            w: 144,
+                            h: 144
                         }
                     },
                     "map-barrel-01.img": {
@@ -21045,7 +21119,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "part-plank-01.img": {
+                    "part-panel-01.img": {
                         frame: {
                             x: 883,
                             y: 2456,
@@ -21065,7 +21139,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-stone-01.img": {
+                    "map-barrel-02.img": {
                         frame: {
                             x: 1029,
                             y: 2456,
@@ -21085,7 +21159,7 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "part-panel-01.img": {
+                    "part-plank-01.img": {
                         frame: {
                             x: 1175,
                             y: 2456,
@@ -21145,7 +21219,7 @@ webpackJsonp([1], {
                             h: 140
                         }
                     },
-                    "map-bunker-vent-02.img": {
+                    "map-bunker-vent-03.img": {
                         frame: {
                             x: 2732,
                             y: 646,
@@ -21165,7 +21239,7 @@ webpackJsonp([1], {
                             h: 136
                         }
                     },
-                    "map-bunker-vent-03.img": {
+                    "map-bunker-vent-02.img": {
                         frame: {
                             x: 2868,
                             y: 646,
@@ -21425,7 +21499,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "georgia.img": {
+                    "south-korea.img": {
                         frame: {
                             x: 2066,
                             y: 2456,
@@ -21445,7 +21519,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "norway.img": {
+                    "map-vat-01.img": {
                         frame: {
                             x: 2198,
                             y: 2456,
@@ -21453,19 +21527,19 @@ webpackJsonp([1], {
                             h: 128
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 8,
+                            y: 8,
                             w: 128,
                             h: 128
                         },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 144,
+                            h: 144
                         }
                     },
-                    "loot-ammo-box.img": {
+                    "slovakia.img": {
                         frame: {
                             x: 2330,
                             y: 2456,
@@ -21485,7 +21559,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "france.img": {
+                    "singapore.img": {
                         frame: {
                             x: 2462,
                             y: 2456,
@@ -21505,7 +21579,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "south-korea.img": {
+                    "loot-ammo-box.img": {
                         frame: {
                             x: 2594,
                             y: 2456,
@@ -21525,7 +21599,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "spain.img": {
+                    "serbia.img": {
                         frame: {
                             x: 2726,
                             y: 2456,
@@ -21545,7 +21619,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "peru.img": {
+                    "austria.img": {
                         frame: {
                             x: 2858,
                             y: 2456,
@@ -21565,449 +21639,9 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "philippines.img": {
+                    "united-states-of-america.img": {
                         frame: {
                             x: 2,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "part-boost-01.img": {
-                        frame: {
-                            x: 134,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "sweden.img": {
-                        frame: {
-                            x: 266,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "switzerland.img": {
-                        frame: {
-                            x: 398,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "taiwan.img": {
-                        frame: {
-                            x: 530,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "finland.img": {
-                        frame: {
-                            x: 662,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "part-heal-01.img": {
-                        frame: {
-                            x: 794,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "japan.img": {
-                        frame: {
-                            x: 926,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "thailand.img": {
-                        frame: {
-                            x: 1058,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "ecuador.img": {
-                        frame: {
-                            x: 1190,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "italy.img": {
-                        frame: {
-                            x: 1322,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "hungary.img": {
-                        frame: {
-                            x: 1454,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-scope-00.img": {
-                        frame: {
-                            x: 1586,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-scope-01.img": {
-                        frame: {
-                            x: 1718,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-scope-02.img": {
-                        frame: {
-                            x: 1850,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-scope-03.img": {
-                        frame: {
-                            x: 1982,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-scope-04.img": {
-                        frame: {
-                            x: 2114,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "israel.img": {
-                        frame: {
-                            x: 2246,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "trinidad-and-tobago.img": {
-                        frame: {
-                            x: 2378,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "portugal.img": {
-                        frame: {
-                            x: 2510,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "kazakhstan.img": {
-                        frame: {
-                            x: 2642,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "turkey.img": {
-                        frame: {
-                            x: 2774,
-                            y: 2603,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "ukraine.img": {
-                        frame: {
-                            x: 2906,
                             y: 2603,
                             w: 128,
                             h: 128
@@ -22027,6 +21661,446 @@ webpackJsonp([1], {
                     },
                     "united-kingdom.img": {
                         frame: {
+                            x: 134,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "ukraine.img": {
+                        frame: {
+                            x: 266,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "russia.img": {
+                        frame: {
+                            x: 398,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "romania.img": {
+                        frame: {
+                            x: 530,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "republic-of-poland.img": {
+                        frame: {
+                            x: 662,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "portugal.img": {
+                        frame: {
+                            x: 794,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "philippines.img": {
+                        frame: {
+                            x: 926,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "peru.img": {
+                        frame: {
+                            x: 1058,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "norway.img": {
+                        frame: {
+                            x: 1190,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "new-zealand.img": {
+                        frame: {
+                            x: 1322,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "turkey.img": {
+                        frame: {
+                            x: 1454,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "mexico.img": {
+                        frame: {
+                            x: 1586,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "malaysia.img": {
+                        frame: {
+                            x: 1718,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-scope-00.img": {
+                        frame: {
+                            x: 1850,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-scope-01.img": {
+                        frame: {
+                            x: 1982,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-scope-02.img": {
+                        frame: {
+                            x: 2114,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-scope-03.img": {
+                        frame: {
+                            x: 2246,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-scope-04.img": {
+                        frame: {
+                            x: 2378,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "kazakhstan.img": {
+                        frame: {
+                            x: 2510,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "japan.img": {
+                        frame: {
+                            x: 2642,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "italy.img": {
+                        frame: {
+                            x: 2774,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "israel.img": {
+                        frame: {
+                            x: 2906,
+                            y: 2603,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "indonesia.img": {
+                        frame: {
                             x: 2,
                             y: 2735,
                             w: 128,
@@ -22045,7 +22119,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "guatemala.img": {
+                    "india.img": {
                         frame: {
                             x: 134,
                             y: 2735,
@@ -22065,7 +22139,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "denmark.img": {
+                    "venezuela.img": {
                         frame: {
                             x: 266,
                             y: 2735,
@@ -22085,7 +22159,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "greece.img": {
+                    "hungary.img": {
                         frame: {
                             x: 398,
                             y: 2735,
@@ -22105,7 +22179,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "czech-republic.img": {
+                    "hong-kong.img": {
                         frame: {
                             x: 530,
                             y: 2735,
@@ -22125,7 +22199,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "united-states-of-america.img": {
+                    "honduras.img": {
                         frame: {
                             x: 662,
                             y: 2735,
@@ -22145,7 +22219,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "indonesia.img": {
+                    "trinidad-and-tobago.img": {
                         frame: {
                             x: 794,
                             y: 2735,
@@ -22165,7 +22239,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-deagle-dual.img": {
+                    "belarus.img": {
                         frame: {
                             x: 926,
                             y: 2735,
@@ -22185,7 +22259,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "croatia.img": {
+                    "uruguay.img": {
                         frame: {
                             x: 1058,
                             y: 2735,
@@ -22205,7 +22279,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "uruguay.img": {
+                    "loot-weapon-deagle-dual.img": {
                         frame: {
                             x: 1190,
                             y: 2735,
@@ -22225,7 +22299,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "venezuela.img": {
+                    "guatemala.img": {
                         frame: {
                             x: 1322,
                             y: 2735,
@@ -22245,7 +22319,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "vietnam.img": {
+                    "greece.img": {
                         frame: {
                             x: 1454,
                             y: 2735,
@@ -22285,7 +22359,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "malaysia.img": {
+                    "georgia.img": {
                         frame: {
                             x: 1718,
                             y: 2735,
@@ -22305,470 +22379,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "colombia.img": {
+                    "france.img": {
                         frame: {
                             x: 1850,
                             y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "republic-of-poland.img": {
-                        frame: {
-                            x: 1982,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "romania.img": {
-                        frame: {
-                            x: 2114,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "russia.img": {
-                        frame: {
-                            x: 2246,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "mexico.img": {
-                        frame: {
-                            x: 2378,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "india.img": {
-                        frame: {
-                            x: 2510,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "china.img": {
-                        frame: {
-                            x: 2642,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "chile.img": {
-                        frame: {
-                            x: 2774,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "netherlands.img": {
-                        frame: {
-                            x: 2906,
-                            y: 2735,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "serbia.img": {
-                        frame: {
-                            x: 2,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "argentina.img": {
-                        frame: {
-                            x: 134,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "singapore.img": {
-                        frame: {
-                            x: 266,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "honduras.img": {
-                        frame: {
-                            x: 398,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "loot-weapon-m93r-dual.img": {
-                        frame: {
-                            x: 530,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "australia.img": {
-                        frame: {
-                            x: 662,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "canada.img": {
-                        frame: {
-                            x: 794,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "new-zealand.img": {
-                        frame: {
-                            x: 926,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "brazil.img": {
-                        frame: {
-                            x: 1058,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "slovakia.img": {
-                        frame: {
-                            x: 1190,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "map-vat-01.img": {
-                        frame: {
-                            x: 1322,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 8,
-                            y: 8,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 144,
-                            h: 144
-                        }
-                    },
-                    "bosnia-and-herzegovina.img": {
-                        frame: {
-                            x: 1454,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "austria.img": {
-                        frame: {
-                            x: 1586,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "bolivia.img": {
-                        frame: {
-                            x: 1718,
-                            y: 2867,
-                            w: 128,
-                            h: 128
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 128,
-                            h: 128
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "hong-kong.img": {
-                        frame: {
-                            x: 1850,
-                            y: 2867,
                             w: 128,
                             h: 128
                         },
@@ -22788,6 +22402,166 @@ webpackJsonp([1], {
                     "belgium.img": {
                         frame: {
                             x: 1982,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "argentina.img": {
+                        frame: {
+                            x: 2114,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "thailand.img": {
+                        frame: {
+                            x: 2246,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "part-boost-01.img": {
+                        frame: {
+                            x: 2378,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "bolivia.img": {
+                        frame: {
+                            x: 2510,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "finland.img": {
+                        frame: {
+                            x: 2642,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "part-heal-01.img": {
+                        frame: {
+                            x: 2774,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "taiwan.img": {
+                        frame: {
+                            x: 2906,
+                            y: 2735,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "switzerland.img": {
+                        frame: {
+                            x: 2,
                             y: 2867,
                             w: 128,
                             h: 128
@@ -22805,7 +22579,307 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "belarus.img": {
+                    "ecuador.img": {
+                        frame: {
+                            x: 134,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "sweden.img": {
+                        frame: {
+                            x: 266,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "bosnia-and-herzegovina.img": {
+                        frame: {
+                            x: 398,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "australia.img": {
+                        frame: {
+                            x: 530,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "denmark.img": {
+                        frame: {
+                            x: 662,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "loot-weapon-m93r-dual.img": {
+                        frame: {
+                            x: 794,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "brazil.img": {
+                        frame: {
+                            x: 926,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "netherlands.img": {
+                        frame: {
+                            x: 1058,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "czech-republic.img": {
+                        frame: {
+                            x: 1190,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "croatia.img": {
+                        frame: {
+                            x: 1322,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "colombia.img": {
+                        frame: {
+                            x: 1454,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "china.img": {
+                        frame: {
+                            x: 1586,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "chile.img": {
+                        frame: {
+                            x: 1718,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "vietnam.img": {
+                        frame: {
+                            x: 1850,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "spain.img": {
+                        frame: {
+                            x: 1982,
+                            y: 2867,
+                            w: 128,
+                            h: 128
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 128,
+                            h: 128
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "canada.img": {
                         frame: {
                             x: 2114,
                             y: 2867,
@@ -23205,7 +23279,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "snowflake.img": {
+                    "loot-weapon-dp28.img": {
                         frame: {
                             x: 3075,
                             y: 1041,
@@ -23225,7 +23299,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-dp28.img": {
+                    "snowflake.img": {
                         frame: {
                             x: 3075,
                             y: 1170,
@@ -23265,7 +23339,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-crate-05.img": {
+                    "disappoint-face.img": {
                         frame: {
                             x: 3075,
                             y: 1427,
@@ -23273,19 +23347,19 @@ webpackJsonp([1], {
                             h: 124
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 2,
+                            y: 2,
                             w: 124,
                             h: 124
                         },
                         sourceSize: {
-                            w: 124,
-                            h: 124
+                            w: 128,
+                            h: 128
                         }
                     },
-                    "monocle-face.img": {
+                    "heart-face.img": {
                         frame: {
                             x: 3075,
                             y: 1555,
@@ -23305,7 +23379,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "sob-face.img": {
+                    "joy-face.img": {
                         frame: {
                             x: 3075,
                             y: 1683,
@@ -23325,7 +23399,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "sunglass-face.img": {
+                    "monocle-face.img": {
                         frame: {
                             x: 3075,
                             y: 1811,
@@ -23345,7 +23419,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "upsidedown-face.img": {
+                    "sad-face.img": {
                         frame: {
                             x: 3075,
                             y: 1939,
@@ -23365,7 +23439,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "happy-face.img": {
+                    "part-log-01.img": {
                         frame: {
                             x: 3075,
                             y: 2067,
@@ -23385,7 +23459,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "part-log-01.img": {
+                    "angry-face.img": {
                         frame: {
                             x: 3075,
                             y: 2195,
@@ -23405,7 +23479,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "disappoint-face.img": {
+                    "sob-face.img": {
                         frame: {
                             x: 3075,
                             y: 2323,
@@ -23425,7 +23499,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "angry-face.img": {
+                    "map-crate-05.img": {
                         frame: {
                             x: 3075,
                             y: 2451,
@@ -23433,19 +23507,19 @@ webpackJsonp([1], {
                             h: 124
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 2,
-                            y: 2,
+                            x: 0,
+                            y: 0,
                             w: 124,
                             h: 124
                         },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 124,
+                            h: 124
                         }
                     },
-                    "joy-face.img": {
+                    "upsidedown-face.img": {
                         frame: {
                             x: 3075,
                             y: 2579,
@@ -23465,7 +23539,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "sad-face.img": {
+                    "sunglass-face.img": {
                         frame: {
                             x: 3075,
                             y: 2707,
@@ -23485,7 +23559,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "heart-face.img": {
+                    "happy-face.img": {
                         frame: {
                             x: 3075,
                             y: 2835,
@@ -23765,7 +23839,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-bar.img": {
+                    "perk-2.img": {
                         frame: {
                             x: 1782,
                             y: 2999,
@@ -23785,10 +23859,70 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
+                    "loot-weapon-bar.img": {
+                        frame: {
+                            x: 1912,
+                            y: 2999,
+                            w: 126,
+                            h: 122
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 1,
+                            y: 3,
+                            w: 126,
+                            h: 122
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "heart.img": {
+                        frame: {
+                            x: 2042,
+                            y: 2999,
+                            w: 124,
+                            h: 122
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 4,
+                            w: 124,
+                            h: 122
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "surviv.img": {
+                        frame: {
+                            x: 2170,
+                            y: 2999,
+                            w: 122,
+                            h: 122
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 122,
+                            h: 122
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
                     "crown.img": {
                         frame: {
-                            x: 3645,
-                            y: 1311,
+                            x: 2896,
+                            y: 1218,
                             w: 54,
                             h: 46
                         },
@@ -23805,49 +23939,9 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "surviv.img": {
-                        frame: {
-                            x: 2040,
-                            y: 2999,
-                            w: 122,
-                            h: 122
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 122,
-                            h: 122
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "emote.img": {
-                        frame: {
-                            x: 2166,
-                            y: 2999,
-                            w: 122,
-                            h: 122
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 122,
-                            h: 122
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
                     "loot-weapon-mk12.img": {
                         frame: {
-                            x: 2292,
+                            x: 2422,
                             y: 2999,
                             w: 114,
                             h: 122
@@ -23867,7 +23961,7 @@ webpackJsonp([1], {
                     },
                     "cupcake.img": {
                         frame: {
-                            x: 2410,
+                            x: 2540,
                             y: 2999,
                             w: 108,
                             h: 122
@@ -23887,7 +23981,7 @@ webpackJsonp([1], {
                     },
                     "candy-corn.img": {
                         frame: {
-                            x: 2522,
+                            x: 2652,
                             y: 2999,
                             w: 104,
                             h: 122
@@ -23907,7 +24001,7 @@ webpackJsonp([1], {
                     },
                     "snowman.img": {
                         frame: {
-                            x: 2630,
+                            x: 2760,
                             y: 2999,
                             w: 96,
                             h: 122
@@ -23925,9 +24019,29 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
+                    "perk-1.img": {
+                        frame: {
+                            x: 2860,
+                            y: 2999,
+                            w: 128,
+                            h: 121
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 128,
+                            h: 121
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
                     "loot-weapon-awc.img": {
                         frame: {
-                            x: 2730,
+                            x: 2992,
                             y: 2999,
                             w: 122,
                             h: 121
@@ -23947,8 +24061,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-m249.img": {
                         frame: {
-                            x: 2856,
-                            y: 2999,
+                            x: 3205,
+                            y: 2,
                             w: 116,
                             h: 121
                         },
@@ -23967,8 +24081,8 @@ webpackJsonp([1], {
                     },
                     "proj-frag-pin-01.img": {
                         frame: {
-                            x: 2976,
-                            y: 2999,
+                            x: 3205,
+                            y: 127,
                             w: 110,
                             h: 121
                         },
@@ -23987,8 +24101,8 @@ webpackJsonp([1], {
                     },
                     "proj-frag-nopin-01.img": {
                         frame: {
-                            x: 3090,
-                            y: 2999,
+                            x: 3205,
+                            y: 252,
                             w: 109,
                             h: 121
                         },
@@ -24008,7 +24122,7 @@ webpackJsonp([1], {
                     "map-vat-res.img": {
                         frame: {
                             x: 3205,
-                            y: 2,
+                            y: 377,
                             w: 108,
                             h: 121
                         },
@@ -24028,7 +24142,7 @@ webpackJsonp([1], {
                     "proj-frag-nopin-nolever-01.img": {
                         frame: {
                             x: 3205,
-                            y: 127,
+                            y: 502,
                             w: 90,
                             h: 121
                         },
@@ -24125,7 +24239,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-qbb97.img": {
+                    "loot-weapon-pumpshotgun.img": {
                         frame: {
                             x: 511,
                             y: 3128,
@@ -24145,7 +24259,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-pumpshotgun.img": {
+                    "loot-weapon-qbb97.img": {
                         frame: {
                             x: 633,
                             y: 3128,
@@ -24168,7 +24282,7 @@ webpackJsonp([1], {
                     "egg.img": {
                         frame: {
                             x: 3205,
-                            y: 252,
+                            y: 627,
                             w: 98,
                             h: 120
                         },
@@ -24188,7 +24302,7 @@ webpackJsonp([1], {
                     "loot-weapon-colt45.img": {
                         frame: {
                             x: 3205,
-                            y: 376,
+                            y: 751,
                             w: 96,
                             h: 120
                         },
@@ -24208,7 +24322,7 @@ webpackJsonp([1], {
                     "loot-weapon-ots38.img": {
                         frame: {
                             x: 3205,
-                            y: 500,
+                            y: 875,
                             w: 81,
                             h: 120
                         },
@@ -24248,7 +24362,7 @@ webpackJsonp([1], {
                     "loot-weapon-m1911.img": {
                         frame: {
                             x: 3205,
-                            y: 624,
+                            y: 999,
                             w: 107,
                             h: 119
                         },
@@ -24268,7 +24382,7 @@ webpackJsonp([1], {
                     "loot-weapon-hk416.img": {
                         frame: {
                             x: 3205,
-                            y: 747,
+                            y: 1122,
                             w: 105,
                             h: 119
                         },
@@ -24445,7 +24559,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "part-feather-01.img": {
+                    "loot-chest-01.img": {
                         frame: {
                             x: 1879,
                             y: 3128,
@@ -24465,7 +24579,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-chest-01.img": {
+                    "mag-glass.img": {
                         frame: {
                             x: 2001,
                             y: 3128,
@@ -24485,7 +24599,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "mag-glass.img": {
+                    "part-feather-01.img": {
                         frame: {
                             x: 2123,
                             y: 3128,
@@ -24507,8 +24621,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ump9.img": {
                         frame: {
-                            x: 2245,
-                            y: 3128,
+                            x: 3205,
+                            y: 1245,
                             w: 114,
                             h: 118
                         },
@@ -24527,8 +24641,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-famas.img": {
                         frame: {
-                            x: 2363,
-                            y: 3128,
+                            x: 3205,
+                            y: 1367,
                             w: 112,
                             h: 118
                         },
@@ -24548,7 +24662,7 @@ webpackJsonp([1], {
                     "loot-weapon-vector45.img": {
                         frame: {
                             x: 3205,
-                            y: 870,
+                            y: 1489,
                             w: 104,
                             h: 118
                         },
@@ -24565,10 +24679,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-m9.img": {
+                    "loot-chest-03.img": {
                         frame: {
                             x: 3205,
-                            y: 992,
+                            y: 1611,
                             w: 96,
                             h: 118
                         },
@@ -24585,10 +24699,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-chest-03.img": {
+                    "loot-weapon-m9.img": {
                         frame: {
                             x: 3205,
-                            y: 1114,
+                            y: 1733,
                             w: 96,
                             h: 118
                         },
@@ -24608,7 +24722,7 @@ webpackJsonp([1], {
                     "loot-pack-00.img": {
                         frame: {
                             x: 3205,
-                            y: 1236,
+                            y: 1855,
                             w: 90,
                             h: 118
                         },
@@ -24628,7 +24742,7 @@ webpackJsonp([1], {
                     "loot-pack-02.img": {
                         frame: {
                             x: 3205,
-                            y: 1358,
+                            y: 1977,
                             w: 88,
                             h: 118
                         },
@@ -24645,9 +24759,9 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "proj-strobe-armed.img": {
+                    "proj-strobe-arming.img": {
                         frame: {
-                            x: 2479,
+                            x: 2245,
                             y: 3128,
                             w: 134,
                             h: 117
@@ -24665,9 +24779,9 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "proj-strobe-arming.img": {
+                    "proj-strobe-armed.img": {
                         frame: {
-                            x: 2617,
+                            x: 2383,
                             y: 3128,
                             w: 134,
                             h: 117
@@ -24687,7 +24801,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mosin.img": {
                         frame: {
-                            x: 2755,
+                            x: 2521,
                             y: 3128,
                             w: 118,
                             h: 116
@@ -24707,48 +24821,8 @@ webpackJsonp([1], {
                     },
                     "map-stone-res-04.img": {
                         frame: {
-                            x: 2877,
-                            y: 3128,
-                            w: 116,
-                            h: 116
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 116,
-                            h: 116
-                        },
-                        sourceSize: {
-                            w: 120,
-                            h: 120
-                        }
-                    },
-                    "part-spark-02.img": {
-                        frame: {
-                            x: 2997,
-                            y: 3128,
-                            w: 116,
-                            h: 116
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 116,
-                            h: 116
-                        },
-                        sourceSize: {
-                            w: 120,
-                            h: 120
-                        }
-                    },
-                    "part-spark-01.img": {
-                        frame: {
-                            x: 3117,
-                            y: 3128,
+                            x: 3205,
+                            y: 2099,
                             w: 116,
                             h: 116
                         },
@@ -24767,28 +24841,48 @@ webpackJsonp([1], {
                     },
                     "gas.img": {
                         frame: {
-                            x: 3317,
+                            x: 3205,
+                            y: 2219,
+                            w: 116,
+                            h: 116
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 6,
+                            y: 6,
+                            w: 116,
+                            h: 116
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "part-spark-02.img": {
+                        frame: {
+                            x: 3205,
+                            y: 2339,
+                            w: 116,
+                            h: 116
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
                             y: 2,
                             w: 116,
                             h: 116
                         },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 6,
-                            y: 6,
-                            w: 116,
-                            h: 116
-                        },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 120,
+                            h: 120
                         }
                     },
                     "target.img": {
                         frame: {
-                            x: 3317,
-                            y: 122,
+                            x: 3205,
+                            y: 2459,
                             w: 116,
                             h: 116
                         },
@@ -24805,10 +24899,30 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
+                    "part-spark-01.img": {
+                        frame: {
+                            x: 3205,
+                            y: 2579,
+                            w: 116,
+                            h: 116
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 116,
+                            h: 116
+                        },
+                        sourceSize: {
+                            w: 120,
+                            h: 120
+                        }
+                    },
                     "flex.img": {
                         frame: {
-                            x: 3317,
-                            y: 242,
+                            x: 3205,
+                            y: 2699,
                             w: 109,
                             h: 116
                         },
@@ -24827,8 +24941,8 @@ webpackJsonp([1], {
                     },
                     "loot-medical-bandage.img": {
                         frame: {
-                            x: 3317,
-                            y: 362,
+                            x: 3205,
+                            y: 2819,
                             w: 106,
                             h: 116
                         },
@@ -24847,8 +24961,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-scar.img": {
                         frame: {
-                            x: 3317,
-                            y: 482,
+                            x: 3205,
+                            y: 2939,
                             w: 104,
                             h: 116
                         },
@@ -24867,8 +24981,8 @@ webpackJsonp([1], {
                     },
                     "acorn.img": {
                         frame: {
-                            x: 3317,
-                            y: 602,
+                            x: 2643,
+                            y: 3128,
                             w: 104,
                             h: 116
                         },
@@ -24887,8 +25001,8 @@ webpackJsonp([1], {
                     },
                     "loot-pack-01.img": {
                         frame: {
-                            x: 3317,
-                            y: 722,
+                            x: 2751,
+                            y: 3128,
                             w: 94,
                             h: 116
                         },
@@ -24907,8 +25021,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-flare-gun.img": {
                         frame: {
-                            x: 3317,
-                            y: 842,
+                            x: 1740,
+                            y: 548,
                             w: 82,
                             h: 116
                         },
@@ -24925,10 +25039,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-case-flare-res-01.img": {
+                    "map-case-hatchet-res-01.img": {
                         frame: {
-                            x: 2,
-                            y: 3252,
+                            x: 2849,
+                            y: 3128,
                             w: 128,
                             h: 115
                         },
@@ -24945,10 +25059,10 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "map-case-hatchet-res-01.img": {
+                    "map-case-flare-res-01.img": {
                         frame: {
-                            x: 134,
-                            y: 3252,
+                            x: 2981,
+                            y: 3128,
                             w: 128,
                             h: 115
                         },
@@ -24967,8 +25081,8 @@ webpackJsonp([1], {
                     },
                     "sleepy.img": {
                         frame: {
-                            x: 266,
-                            y: 3252,
+                            x: 3113,
+                            y: 3128,
                             w: 124,
                             h: 114
                         },
@@ -24987,8 +25101,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-garand.img": {
                         frame: {
-                            x: 3317,
-                            y: 962,
+                            x: 3325,
+                            y: 2,
                             w: 112,
                             h: 114
                         },
@@ -25007,8 +25121,8 @@ webpackJsonp([1], {
                     },
                     "pumpkin.img": {
                         frame: {
-                            x: 3317,
-                            y: 1080,
+                            x: 3325,
+                            y: 120,
                             w: 106,
                             h: 114
                         },
@@ -25025,10 +25139,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-weapon-deagle.img": {
+                    "loot-pack-03.img": {
                         frame: {
-                            x: 3317,
-                            y: 1198,
+                            x: 3325,
+                            y: 238,
                             w: 104,
                             h: 114
                         },
@@ -25045,10 +25159,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-pack-03.img": {
+                    "loot-weapon-deagle.img": {
                         frame: {
-                            x: 3317,
-                            y: 1316,
+                            x: 3325,
+                            y: 356,
                             w: 104,
                             h: 114
                         },
@@ -25067,28 +25181,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mp5.img": {
                         frame: {
-                            x: 3317,
-                            y: 1434,
-                            w: 96,
-                            h: 114
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 16,
-                            y: 7,
-                            w: 96,
-                            h: 114
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "tap.img": {
-                        frame: {
-                            x: 3317,
-                            y: 1552,
+                            x: 3325,
+                            y: 474,
                             w: 96,
                             h: 114
                         },
@@ -25107,8 +25201,28 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-spas12.img": {
                         frame: {
-                            x: 3317,
-                            y: 1670,
+                            x: 3325,
+                            y: 592,
+                            w: 96,
+                            h: 114
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 16,
+                            y: 7,
+                            w: 96,
+                            h: 114
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "tap.img": {
+                        frame: {
+                            x: 3325,
+                            y: 710,
                             w: 96,
                             h: 114
                         },
@@ -25127,8 +25241,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ot38.img": {
                         frame: {
-                            x: 3317,
-                            y: 1788,
+                            x: 3325,
+                            y: 828,
                             w: 90,
                             h: 114
                         },
@@ -25145,9 +25259,29 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
+                    "part-blossom-04.img": {
+                        frame: {
+                            x: 2,
+                            y: 3252,
+                            w: 115,
+                            h: 113
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 9,
+                            y: 9,
+                            w: 115,
+                            h: 113
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
                     "map-snow-06.img": {
                         frame: {
-                            x: 394,
+                            x: 121,
                             y: 3252,
                             w: 178,
                             h: 112
@@ -25167,7 +25301,7 @@ webpackJsonp([1], {
                     },
                     "cattle.img": {
                         frame: {
-                            x: 576,
+                            x: 303,
                             y: 3252,
                             w: 118,
                             h: 112
@@ -25187,8 +25321,8 @@ webpackJsonp([1], {
                     },
                     "loot-shirt-01.img": {
                         frame: {
-                            x: 3317,
-                            y: 1906,
+                            x: 425,
+                            y: 3252,
                             w: 116,
                             h: 112
                         },
@@ -25207,8 +25341,8 @@ webpackJsonp([1], {
                     },
                     "loot-shirt-03.img": {
                         frame: {
-                            x: 3317,
-                            y: 2022,
+                            x: 545,
+                            y: 3252,
                             w: 116,
                             h: 112
                         },
@@ -25225,59 +25359,19 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-tree-09.img": {
+                    "part-blossom-03.img": {
                         frame: {
-                            x: 3317,
-                            y: 2138,
-                            w: 112,
-                            h: 112
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 112,
-                            h: 112
-                        },
-                        sourceSize: {
-                            w: 112,
-                            h: 112
-                        }
-                    },
-                    "map-tree-04.img": {
-                        frame: {
-                            x: 3317,
-                            y: 2254,
-                            w: 112,
-                            h: 112
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 112,
-                            h: 112
-                        },
-                        sourceSize: {
-                            w: 112,
-                            h: 112
-                        }
-                    },
-                    "ammo-flare.img": {
-                        frame: {
-                            x: 3317,
-                            y: 2370,
-                            w: 112,
+                            x: 665,
+                            y: 3252,
+                            w: 115,
                             h: 112
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 8,
-                            y: 8,
-                            w: 112,
+                            x: 6,
+                            y: 10,
+                            w: 115,
                             h: 112
                         },
                         sourceSize: {
@@ -25285,50 +25379,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "ammo-12gauge.img": {
+                    "ammo-50AE.img": {
                         frame: {
-                            x: 3317,
-                            y: 2486,
-                            w: 112,
-                            h: 112
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 8,
-                            y: 8,
-                            w: 112,
-                            h: 112
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "ammo-45acp.img": {
-                        frame: {
-                            x: 3317,
-                            y: 2602,
-                            w: 112,
-                            h: 112
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 8,
-                            y: 8,
-                            w: 112,
-                            h: 112
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "ammo-762mm.img": {
-                        frame: {
-                            x: 3317,
-                            y: 2718,
+                            x: 3325,
+                            y: 946,
                             w: 112,
                             h: 112
                         },
@@ -25347,8 +25401,108 @@ webpackJsonp([1], {
                     },
                     "ammo-556mm.img": {
                         frame: {
-                            x: 3317,
-                            y: 2834,
+                            x: 3325,
+                            y: 1062,
+                            w: 112,
+                            h: 112
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 8,
+                            y: 8,
+                            w: 112,
+                            h: 112
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "ammo-762mm.img": {
+                        frame: {
+                            x: 3325,
+                            y: 1178,
+                            w: 112,
+                            h: 112
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 8,
+                            y: 8,
+                            w: 112,
+                            h: 112
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "ammo-12gauge.img": {
+                        frame: {
+                            x: 3325,
+                            y: 1294,
+                            w: 112,
+                            h: 112
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 8,
+                            y: 8,
+                            w: 112,
+                            h: 112
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "map-tree-09.img": {
+                        frame: {
+                            x: 3325,
+                            y: 1410,
+                            w: 112,
+                            h: 112
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 112,
+                            h: 112
+                        },
+                        sourceSize: {
+                            w: 112,
+                            h: 112
+                        }
+                    },
+                    "ammo-308sub.img": {
+                        frame: {
+                            x: 3325,
+                            y: 1526,
+                            w: 112,
+                            h: 112
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 8,
+                            y: 8,
+                            w: 112,
+                            h: 112
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "ammo-45acp.img": {
+                        frame: {
+                            x: 3325,
+                            y: 1642,
                             w: 112,
                             h: 112
                         },
@@ -25367,8 +25521,8 @@ webpackJsonp([1], {
                     },
                     "ammo-9mm.img": {
                         frame: {
-                            x: 3317,
-                            y: 2950,
+                            x: 3325,
+                            y: 1758,
                             w: 112,
                             h: 112
                         },
@@ -25387,8 +25541,8 @@ webpackJsonp([1], {
                     },
                     "ammo-box.img": {
                         frame: {
-                            x: 3317,
-                            y: 3066,
+                            x: 3325,
+                            y: 1874,
                             w: 112,
                             h: 112
                         },
@@ -25405,30 +25559,30 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "ammo-50AE.img": {
+                    "map-tree-04.img": {
                         frame: {
-                            x: 698,
-                            y: 3252,
+                            x: 3325,
+                            y: 1990,
                             w: 112,
                             h: 112
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 8,
-                            y: 8,
+                            x: 0,
+                            y: 0,
                             w: 112,
                             h: 112
                         },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 112,
+                            h: 112
                         }
                     },
-                    "ammo-308sub.img": {
+                    "ammo-flare.img": {
                         frame: {
-                            x: 814,
-                            y: 3252,
+                            x: 3325,
+                            y: 2106,
                             w: 112,
                             h: 112
                         },
@@ -25447,8 +25601,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-vector.img": {
                         frame: {
-                            x: 3205,
-                            y: 1480,
+                            x: 3325,
+                            y: 2222,
                             w: 108,
                             h: 112
                         },
@@ -25467,8 +25621,8 @@ webpackJsonp([1], {
                     },
                     "chick.img": {
                         frame: {
-                            x: 3205,
-                            y: 1596,
+                            x: 3325,
+                            y: 2338,
                             w: 102,
                             h: 112
                         },
@@ -25487,8 +25641,8 @@ webpackJsonp([1], {
                     },
                     "loot-throwable-mirv.img": {
                         frame: {
-                            x: 3205,
-                            y: 1712,
+                            x: 3325,
+                            y: 2454,
                             w: 82,
                             h: 112
                         },
@@ -25507,8 +25661,8 @@ webpackJsonp([1], {
                     },
                     "pineapple.img": {
                         frame: {
-                            x: 3205,
-                            y: 1828,
+                            x: 3325,
+                            y: 2570,
                             w: 68,
                             h: 112
                         },
@@ -25527,8 +25681,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ak.img": {
                         frame: {
-                            x: 3205,
-                            y: 1944,
+                            x: 3325,
+                            y: 2686,
                             w: 98,
                             h: 111
                         },
@@ -25545,49 +25699,9 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-control-panel-05.img": {
-                        frame: {
-                            x: 930,
-                            y: 3252,
-                            w: 144,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 144,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 144,
-                            h: 110
-                        }
-                    },
                     "map-control-panel-01.img": {
                         frame: {
-                            x: 1078,
-                            y: 3252,
-                            w: 144,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 144,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 144,
-                            h: 110
-                        }
-                    },
-                    "map-control-panel-02.img": {
-                        frame: {
-                            x: 1226,
+                            x: 784,
                             y: 3252,
                             w: 144,
                             h: 110
@@ -25607,7 +25721,7 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-04.img": {
                         frame: {
-                            x: 1374,
+                            x: 932,
                             y: 3252,
                             w: 144,
                             h: 110
@@ -25625,69 +25739,49 @@ webpackJsonp([1], {
                             h: 110
                         }
                     },
-                    "logo-chrysanthemum.img": {
+                    "map-control-panel-05.img": {
                         frame: {
-                            x: 1522,
+                            x: 1080,
                             y: 3252,
-                            w: 128,
+                            w: 144,
                             h: 110
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
                             x: 0,
-                            y: 9,
-                            w: 128,
+                            y: 0,
+                            w: 144,
                             h: 110
                         },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 144,
+                            h: 110
                         }
                     },
-                    "logo-swine.img": {
+                    "map-control-panel-02.img": {
                         frame: {
-                            x: 1654,
+                            x: 1228,
                             y: 3252,
-                            w: 128,
+                            w: 144,
                             h: 110
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
                             x: 0,
-                            y: 9,
-                            w: 128,
+                            y: 0,
+                            w: 144,
                             h: 110
                         },
                         sourceSize: {
-                            w: 128,
-                            h: 128
+                            w: 144,
+                            h: 110
                         }
                     },
-                    "logo-surviv.img": {
+                    "logo-meteor.img": {
                         frame: {
-                            x: 1786,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-storm.img": {
-                        frame: {
-                            x: 1918,
+                            x: 1376,
                             y: 3252,
                             w: 128,
                             h: 110
@@ -25707,87 +25801,7 @@ webpackJsonp([1], {
                     },
                     "link.img": {
                         frame: {
-                            x: 2050,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-conch.img": {
-                        frame: {
-                            x: 2182,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-crossing.img": {
-                        frame: {
-                            x: 2314,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-egg.img": {
-                        frame: {
-                            x: 2446,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-hatchet.img": {
-                        frame: {
-                            x: 2578,
+                            x: 1508,
                             y: 3252,
                             w: 128,
                             h: 110
@@ -25807,7 +25821,167 @@ webpackJsonp([1], {
                     },
                     "logo-caduceus.img": {
                         frame: {
-                            x: 2710,
+                            x: 1640,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-chrysanthemum.img": {
+                        frame: {
+                            x: 1772,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-conch.img": {
+                        frame: {
+                            x: 1904,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-crossing.img": {
+                        frame: {
+                            x: 2036,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-egg.img": {
+                        frame: {
+                            x: 2168,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-hatchet.img": {
+                        frame: {
+                            x: 2300,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-swine.img": {
+                        frame: {
+                            x: 2432,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-surviv.img": {
+                        frame: {
+                            x: 2564,
+                            y: 3252,
+                            w: 128,
+                            h: 110
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 9,
+                            w: 128,
+                            h: 110
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "logo-storm.img": {
+                        frame: {
+                            x: 2696,
                             y: 3252,
                             w: 128,
                             h: 110
@@ -25827,27 +26001,7 @@ webpackJsonp([1], {
                     },
                     "logo-hydra.img": {
                         frame: {
-                            x: 2842,
-                            y: 3252,
-                            w: 128,
-                            h: 110
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 9,
-                            w: 128,
-                            h: 110
-                        },
-                        sourceSize: {
-                            w: 128,
-                            h: 128
-                        }
-                    },
-                    "logo-meteor.img": {
-                        frame: {
-                            x: 2974,
+                            x: 2828,
                             y: 3252,
                             w: 128,
                             h: 110
@@ -25867,7 +26021,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-glock-dual.img": {
                         frame: {
-                            x: 3106,
+                            x: 2960,
                             y: 3252,
                             w: 122,
                             h: 110
@@ -25887,8 +26041,8 @@ webpackJsonp([1], {
                     },
                     "player-emote.img": {
                         frame: {
-                            x: 3232,
-                            y: 3252,
+                            x: 3325,
+                            y: 2801,
                             w: 112,
                             h: 110
                         },
@@ -25907,8 +26061,8 @@ webpackJsonp([1], {
                     },
                     "player-gui.img": {
                         frame: {
-                            x: 3437,
-                            y: 2,
+                            x: 3325,
+                            y: 2915,
                             w: 112,
                             h: 110
                         },
@@ -25927,8 +26081,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-glock.img": {
                         frame: {
-                            x: 3437,
-                            y: 116,
+                            x: 3325,
+                            y: 3029,
                             w: 90,
                             h: 110
                         },
@@ -25947,8 +26101,8 @@ webpackJsonp([1], {
                     },
                     "santa-hat.img": {
                         frame: {
-                            x: 2,
-                            y: 3371,
+                            x: 3086,
+                            y: 3252,
                             w: 113,
                             h: 109
                         },
@@ -25967,8 +26121,8 @@ webpackJsonp([1], {
                     },
                     "map-case-deagle-01.img": {
                         frame: {
-                            x: 119,
-                            y: 3371,
+                            x: 3203,
+                            y: 3252,
                             w: 144,
                             h: 108
                         },
@@ -25987,8 +26141,8 @@ webpackJsonp([1], {
                     },
                     "map-case-deagle-02.img": {
                         frame: {
-                            x: 267,
-                            y: 3371,
+                            x: 3441,
+                            y: 2,
                             w: 144,
                             h: 108
                         },
@@ -26007,8 +26161,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-model94.img": {
                         frame: {
-                            x: 415,
-                            y: 3371,
+                            x: 3441,
+                            y: 114,
                             w: 118,
                             h: 108
                         },
@@ -26027,8 +26181,8 @@ webpackJsonp([1], {
                     },
                     "danger.img": {
                         frame: {
-                            x: 537,
-                            y: 3371,
+                            x: 3441,
+                            y: 226,
                             w: 118,
                             h: 108
                         },
@@ -26047,8 +26201,8 @@ webpackJsonp([1], {
                     },
                     "map-bollard-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 230,
+                            x: 3441,
+                            y: 338,
                             w: 112,
                             h: 108
                         },
@@ -26067,8 +26221,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-20.img": {
                         frame: {
-                            x: 3437,
-                            y: 342,
+                            x: 3441,
+                            y: 450,
                             w: 108,
                             h: 108
                         },
@@ -26087,8 +26241,8 @@ webpackJsonp([1], {
                     },
                     "part-leaf-02.img": {
                         frame: {
-                            x: 3437,
-                            y: 454,
+                            x: 3441,
+                            y: 562,
                             w: 108,
                             h: 108
                         },
@@ -26105,10 +26259,50 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
+                    "part-blossom-01.img": {
+                        frame: {
+                            x: 3441,
+                            y: 674,
+                            w: 105,
+                            h: 108
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 12,
+                            y: 10,
+                            w: 105,
+                            h: 108
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "part-blossom-02.img": {
+                        frame: {
+                            x: 3441,
+                            y: 786,
+                            w: 105,
+                            h: 108
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 11,
+                            y: 11,
+                            w: 105,
+                            h: 108
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
                     "map-toilet-res-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 566,
+                            x: 3441,
+                            y: 898,
                             w: 98,
                             h: 107
                         },
@@ -26127,8 +26321,8 @@ webpackJsonp([1], {
                     },
                     "hide.img": {
                         frame: {
-                            x: 659,
-                            y: 3371,
+                            x: 3441,
+                            y: 1009,
                             w: 126,
                             h: 106
                         },
@@ -26147,8 +26341,8 @@ webpackJsonp([1], {
                     },
                     "part-leaf-01.img": {
                         frame: {
-                            x: 789,
-                            y: 3371,
+                            x: 3441,
+                            y: 1119,
                             w: 121,
                             h: 106
                         },
@@ -26167,8 +26361,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mp220.img": {
                         frame: {
-                            x: 914,
-                            y: 3371,
+                            x: 3441,
+                            y: 1229,
                             w: 114,
                             h: 106
                         },
@@ -26187,8 +26381,8 @@ webpackJsonp([1], {
                     },
                     "leek.img": {
                         frame: {
-                            x: 3437,
-                            y: 677,
+                            x: 3441,
+                            y: 1339,
                             w: 106,
                             h: 106
                         },
@@ -26207,8 +26401,8 @@ webpackJsonp([1], {
                     },
                     "ping-map-airdrop.img": {
                         frame: {
-                            x: 3437,
-                            y: 787,
+                            x: 3441,
+                            y: 1449,
                             w: 74,
                             h: 106
                         },
@@ -26227,8 +26421,8 @@ webpackJsonp([1], {
                     },
                     "map-stove-02.img": {
                         frame: {
-                            x: 3437,
-                            y: 897,
+                            x: 3441,
+                            y: 1559,
                             w: 98,
                             h: 105
                         },
@@ -26247,8 +26441,8 @@ webpackJsonp([1], {
                     },
                     "hamburger.img": {
                         frame: {
-                            x: 1032,
-                            y: 3371,
+                            x: 3441,
+                            y: 1668,
                             w: 128,
                             h: 104
                         },
@@ -26267,8 +26461,8 @@ webpackJsonp([1], {
                     },
                     "loot-medical-healthkit.img": {
                         frame: {
-                            x: 1164,
-                            y: 3371,
+                            x: 3441,
+                            y: 1776,
                             w: 118,
                             h: 104
                         },
@@ -26287,8 +26481,8 @@ webpackJsonp([1], {
                     },
                     "emote-medical-healthkit.img": {
                         frame: {
-                            x: 1286,
-                            y: 3371,
+                            x: 3441,
+                            y: 1884,
                             w: 118,
                             h: 104
                         },
@@ -26307,8 +26501,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mac10.img": {
                         frame: {
-                            x: 3437,
-                            y: 1006,
+                            x: 3441,
+                            y: 1992,
                             w: 102,
                             h: 104
                         },
@@ -26327,8 +26521,8 @@ webpackJsonp([1], {
                     },
                     "ribbon-red.img": {
                         frame: {
-                            x: 3437,
-                            y: 1114,
+                            x: 3441,
+                            y: 2100,
                             w: 98,
                             h: 104
                         },
@@ -26347,8 +26541,8 @@ webpackJsonp([1], {
                     },
                     "ribbon-blue.img": {
                         frame: {
-                            x: 3437,
-                            y: 1222,
+                            x: 3441,
+                            y: 2208,
                             w: 98,
                             h: 104
                         },
@@ -26367,8 +26561,8 @@ webpackJsonp([1], {
                     },
                     "map-snow-05.img": {
                         frame: {
-                            x: 3437,
-                            y: 1330,
+                            x: 3441,
+                            y: 2316,
                             w: 90,
                             h: 104
                         },
@@ -26387,8 +26581,8 @@ webpackJsonp([1], {
                     },
                     "turkey-animal.img": {
                         frame: {
-                            x: 1408,
-                            y: 3371,
+                            x: 3441,
+                            y: 2424,
                             w: 120,
                             h: 103
                         },
@@ -26407,8 +26601,8 @@ webpackJsonp([1], {
                     },
                     "movement.img": {
                         frame: {
-                            x: 3437,
-                            y: 1438,
+                            x: 3441,
+                            y: 2531,
                             w: 104,
                             h: 103
                         },
@@ -26425,50 +26619,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-chest-01.img": {
-                        frame: {
-                            x: 1532,
-                            y: 3371,
-                            w: 140,
-                            h: 102
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 140,
-                            h: 102
-                        },
-                        sourceSize: {
-                            w: 140,
-                            h: 102
-                        }
-                    },
                     "map-case-flare-01.img": {
                         frame: {
-                            x: 1676,
-                            y: 3371,
-                            w: 140,
-                            h: 102
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 140,
-                            h: 102
-                        },
-                        sourceSize: {
-                            w: 140,
-                            h: 102
-                        }
-                    },
-                    "map-chest-02.img": {
-                        frame: {
-                            x: 1820,
-                            y: 3371,
+                            x: 3441,
+                            y: 2638,
                             w: 140,
                             h: 102
                         },
@@ -26487,8 +26641,28 @@ webpackJsonp([1], {
                     },
                     "map-chest-03.img": {
                         frame: {
-                            x: 1964,
-                            y: 3371,
+                            x: 3441,
+                            y: 2744,
+                            w: 140,
+                            h: 102
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 140,
+                            h: 102
+                        },
+                        sourceSize: {
+                            w: 140,
+                            h: 102
+                        }
+                    },
+                    "map-chest-01.img": {
+                        frame: {
+                            x: 3441,
+                            y: 2850,
                             w: 140,
                             h: 102
                         },
@@ -26507,8 +26681,28 @@ webpackJsonp([1], {
                     },
                     "map-case-hatchet-01.img": {
                         frame: {
-                            x: 2108,
-                            y: 3371,
+                            x: 3441,
+                            y: 2956,
+                            w: 140,
+                            h: 102
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 140,
+                            h: 102
+                        },
+                        sourceSize: {
+                            w: 140,
+                            h: 102
+                        }
+                    },
+                    "map-chest-02.img": {
+                        frame: {
+                            x: 3441,
+                            y: 3062,
                             w: 140,
                             h: 102
                         },
@@ -26527,8 +26721,8 @@ webpackJsonp([1], {
                     },
                     "return-arrow.img": {
                         frame: {
-                            x: 2252,
-                            y: 3371,
+                            x: 3441,
+                            y: 3168,
                             w: 128,
                             h: 102
                         },
@@ -26547,8 +26741,8 @@ webpackJsonp([1], {
                     },
                     "map-grill-01.img": {
                         frame: {
-                            x: 2384,
-                            y: 3371,
+                            x: 2,
+                            y: 3369,
                             w: 120,
                             h: 102
                         },
@@ -26567,8 +26761,8 @@ webpackJsonp([1], {
                     },
                     "loot-helmet-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 1545,
+                            x: 3325,
+                            y: 3143,
                             w: 112,
                             h: 102
                         },
@@ -26587,8 +26781,8 @@ webpackJsonp([1], {
                     },
                     "eggplant.img": {
                         frame: {
-                            x: 3437,
-                            y: 1651,
+                            x: 126,
+                            y: 3369,
                             w: 106,
                             h: 102
                         },
@@ -26605,10 +26799,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "loot-throwable-frag.img": {
+                    "ping-map-help.img": {
                         frame: {
-                            x: 3437,
-                            y: 1757,
+                            x: 236,
+                            y: 3369,
                             w: 100,
                             h: 102
                         },
@@ -26625,10 +26819,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "ping-map-help.img": {
+                    "loot-throwable-frag.img": {
                         frame: {
-                            x: 3437,
-                            y: 1863,
+                            x: 340,
+                            y: 3369,
                             w: 100,
                             h: 102
                         },
@@ -26647,8 +26841,8 @@ webpackJsonp([1], {
                     },
                     "question.img": {
                         frame: {
-                            x: 3437,
-                            y: 1969,
+                            x: 1740,
+                            y: 668,
                             w: 68,
                             h: 102
                         },
@@ -26667,8 +26861,8 @@ webpackJsonp([1], {
                     },
                     "map-snow-04.img": {
                         frame: {
-                            x: 3437,
-                            y: 2075,
+                            x: 2961,
+                            y: 544,
                             w: 100,
                             h: 98
                         },
@@ -26685,10 +26879,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-toilet-03.img": {
+                    "map-toilet-04.img": {
                         frame: {
-                            x: 3437,
-                            y: 2177,
+                            x: 3519,
+                            y: 1449,
                             w: 66,
                             h: 98
                         },
@@ -26705,10 +26899,10 @@ webpackJsonp([1], {
                             h: 100
                         }
                     },
-                    "map-toilet-04.img": {
+                    "map-toilet-03.img": {
                         frame: {
-                            x: 3437,
-                            y: 2279,
+                            x: 3004,
+                            y: 646,
                             w: 66,
                             h: 98
                         },
@@ -26727,8 +26921,8 @@ webpackJsonp([1], {
                     },
                     "map-couch-01.img": {
                         frame: {
-                            x: 2508,
-                            y: 3371,
+                            x: 444,
+                            y: 3369,
                             w: 288,
                             h: 96
                         },
@@ -26747,8 +26941,8 @@ webpackJsonp([1], {
                     },
                     "potato.img": {
                         frame: {
-                            x: 3437,
-                            y: 2381,
+                            x: 736,
+                            y: 3369,
                             w: 100,
                             h: 96
                         },
@@ -26767,8 +26961,8 @@ webpackJsonp([1], {
                     },
                     "part-airdrop-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 2481,
+                            x: 840,
+                            y: 3369,
                             w: 96,
                             h: 96
                         },
@@ -26787,8 +26981,8 @@ webpackJsonp([1], {
                     },
                     "map-woodpile-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 2581,
+                            x: 940,
+                            y: 3369,
                             w: 96,
                             h: 96
                         },
@@ -26807,8 +27001,8 @@ webpackJsonp([1], {
                     },
                     "copy.img": {
                         frame: {
-                            x: 3437,
-                            y: 2681,
+                            x: 1740,
+                            y: 774,
                             w: 88,
                             h: 96
                         },
@@ -26827,8 +27021,8 @@ webpackJsonp([1], {
                     },
                     "map-recorder-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 2781,
+                            x: 1740,
+                            y: 874,
                             w: 64,
                             h: 96
                         },
@@ -26847,8 +27041,8 @@ webpackJsonp([1], {
                     },
                     "map-recorder-02.img": {
                         frame: {
-                            x: 3437,
-                            y: 2881,
+                            x: 2990,
+                            y: 2456,
                             w: 64,
                             h: 96
                         },
@@ -26867,8 +27061,8 @@ webpackJsonp([1], {
                     },
                     "minimize.img": {
                         frame: {
-                            x: 3437,
-                            y: 2981,
+                            x: 1040,
+                            y: 3369,
                             w: 95,
                             h: 95
                         },
@@ -26887,8 +27081,8 @@ webpackJsonp([1], {
                     },
                     "skull-leader.img": {
                         frame: {
-                            x: 3437,
-                            y: 3080,
+                            x: 1139,
+                            y: 3369,
                             w: 90,
                             h: 95
                         },
@@ -26907,8 +27101,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-06.img": {
                         frame: {
-                            x: 2800,
-                            y: 3371,
+                            x: 1233,
+                            y: 3369,
                             w: 192,
                             h: 94
                         },
@@ -26927,8 +27121,8 @@ webpackJsonp([1], {
                     },
                     "whale.img": {
                         frame: {
-                            x: 2996,
-                            y: 3371,
+                            x: 1429,
+                            y: 3369,
                             w: 118,
                             h: 94
                         },
@@ -26947,8 +27141,8 @@ webpackJsonp([1], {
                     },
                     "map-refrigerator-01.img": {
                         frame: {
-                            x: 3437,
-                            y: 3179,
+                            x: 1551,
+                            y: 3369,
                             w: 108,
                             h: 94
                         },
@@ -26967,8 +27161,8 @@ webpackJsonp([1], {
                     },
                     "map-vending-soda-01.img": {
                         frame: {
-                            x: 3205,
-                            y: 2059,
+                            x: 1663,
+                            y: 3369,
                             w: 108,
                             h: 94
                         },
@@ -26987,8 +27181,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-03.img": {
                         frame: {
-                            x: 3205,
-                            y: 2157,
+                            x: 1775,
+                            y: 3369,
                             w: 96,
                             h: 94
                         },
@@ -27005,30 +27199,10 @@ webpackJsonp([1], {
                             h: 94
                         }
                     },
-                    "map-bush-res-04.img": {
-                        frame: {
-                            x: 3205,
-                            y: 2255,
-                            w: 94,
-                            h: 94
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 25,
-                            y: 25,
-                            w: 94,
-                            h: 94
-                        },
-                        sourceSize: {
-                            w: 144,
-                            h: 144
-                        }
-                    },
                     "map-pot-02.img": {
                         frame: {
-                            x: 3205,
-                            y: 2353,
+                            x: 1875,
+                            y: 3369,
                             w: 94,
                             h: 94
                         },
@@ -27045,10 +27219,30 @@ webpackJsonp([1], {
                             h: 96
                         }
                     },
+                    "map-bush-res-04.img": {
+                        frame: {
+                            x: 1973,
+                            y: 3369,
+                            w: 94,
+                            h: 94
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 25,
+                            y: 25,
+                            w: 94,
+                            h: 94
+                        },
+                        sourceSize: {
+                            w: 144,
+                            h: 144
+                        }
+                    },
                     "map-pot-01.img": {
                         frame: {
-                            x: 3205,
-                            y: 2451,
+                            x: 2071,
+                            y: 3369,
                             w: 94,
                             h: 94
                         },
@@ -27067,8 +27261,8 @@ webpackJsonp([1], {
                     },
                     "map-toilet-res-02.img": {
                         frame: {
-                            x: 3205,
-                            y: 2549,
+                            x: 3118,
+                            y: 2999,
                             w: 80,
                             h: 94
                         },
@@ -27087,8 +27281,8 @@ webpackJsonp([1], {
                     },
                     "map-oven-01.img": {
                         frame: {
-                            x: 3205,
-                            y: 2647,
+                            x: 2169,
+                            y: 3369,
                             w: 108,
                             h: 93
                         },
@@ -27107,8 +27301,8 @@ webpackJsonp([1], {
                     },
                     "fish.img": {
                         frame: {
-                            x: 3118,
-                            y: 3371,
+                            x: 2281,
+                            y: 3369,
                             w: 128,
                             h: 92
                         },
@@ -27127,8 +27321,8 @@ webpackJsonp([1], {
                     },
                     "teabag.img": {
                         frame: {
-                            x: 3205,
-                            y: 2744,
+                            x: 3441,
+                            y: 3274,
                             w: 107,
                             h: 91
                         },
@@ -27145,10 +27339,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-drawers-02.img": {
+                    "map-drawers-01.img": {
                         frame: {
-                            x: 3250,
-                            y: 3371,
+                            x: 2413,
+                            y: 3369,
                             w: 160,
                             h: 90
                         },
@@ -27165,10 +27359,10 @@ webpackJsonp([1], {
                             h: 90
                         }
                     },
-                    "map-drawers-01.img": {
+                    "map-drawers-02.img": {
                         frame: {
-                            x: 3553,
-                            y: 2,
+                            x: 2577,
+                            y: 3369,
                             w: 160,
                             h: 90
                         },
@@ -27187,8 +27381,8 @@ webpackJsonp([1], {
                     },
                     "loot-medical-pill.img": {
                         frame: {
-                            x: 3553,
-                            y: 96,
+                            x: 2741,
+                            y: 3369,
                             w: 118,
                             h: 90
                         },
@@ -27207,8 +27401,8 @@ webpackJsonp([1], {
                     },
                     "coconut.img": {
                         frame: {
-                            x: 3553,
-                            y: 190,
+                            x: 2863,
+                            y: 3369,
                             w: 110,
                             h: 90
                         },
@@ -27227,8 +27421,8 @@ webpackJsonp([1], {
                     },
                     "map-stand-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 284,
+                            x: 3241,
+                            y: 3128,
                             w: 80,
                             h: 90
                         },
@@ -27243,32 +27437,32 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 80,
                             h: 90
-                        }
-                    },
-                    "map-crate-14.img": {
-                        frame: {
-                            x: 2,
-                            y: 3484,
-                            w: 172,
-                            h: 89
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 172,
-                            h: 89
-                        },
-                        sourceSize: {
-                            w: 172,
-                            h: 89
                         }
                     },
                     "map-crate-17.img": {
                         frame: {
-                            x: 178,
-                            y: 3484,
+                            x: 2977,
+                            y: 3369,
+                            w: 172,
+                            h: 89
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 172,
+                            h: 89
+                        },
+                        sourceSize: {
+                            w: 172,
+                            h: 89
+                        }
+                    },
+                    "map-crate-14.img": {
+                        frame: {
+                            x: 3153,
+                            y: 3369,
                             w: 172,
                             h: 89
                         },
@@ -27287,8 +27481,8 @@ webpackJsonp([1], {
                     },
                     "loot-throwable-strobe.img": {
                         frame: {
-                            x: 3553,
-                            y: 378,
+                            x: 3329,
+                            y: 3369,
                             w: 103,
                             h: 89
                         },
@@ -27307,8 +27501,8 @@ webpackJsonp([1], {
                     },
                     "headshot-face.img": {
                         frame: {
-                            x: 3553,
-                            y: 471,
+                            x: 3436,
+                            y: 3369,
                             w: 127,
                             h: 88
                         },
@@ -27327,8 +27521,8 @@ webpackJsonp([1], {
                     },
                     "pilgrim-hat.img": {
                         frame: {
-                            x: 3553,
-                            y: 563,
+                            x: 2,
+                            y: 3475,
                             w: 118,
                             h: 88
                         },
@@ -27347,8 +27541,8 @@ webpackJsonp([1], {
                     },
                     "map-couch-res-01.img": {
                         frame: {
-                            x: 354,
-                            y: 3484,
+                            x: 124,
+                            y: 3475,
                             w: 170,
                             h: 86
                         },
@@ -27367,8 +27561,8 @@ webpackJsonp([1], {
                     },
                     "loot-helmet-03.img": {
                         frame: {
-                            x: 3553,
-                            y: 655,
+                            x: 298,
+                            y: 3475,
                             w: 112,
                             h: 86
                         },
@@ -27407,8 +27601,8 @@ webpackJsonp([1], {
                     },
                     "map-building-porch-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 745,
+                            x: 1244,
+                            y: 984,
                             w: 128,
                             h: 64
                         },
@@ -27427,8 +27621,8 @@ webpackJsonp([1], {
                     },
                     "map-column-01.img": {
                         frame: {
-                            x: 3637,
-                            y: 284,
+                            x: 3205,
+                            y: 3059,
                             w: 64,
                             h: 64
                         },
@@ -27447,8 +27641,8 @@ webpackJsonp([1], {
                     },
                     "keyboard.img": {
                         frame: {
-                            x: 3553,
-                            y: 813,
+                            x: 1376,
+                            y: 984,
                             w: 104,
                             h: 62
                         },
@@ -27467,8 +27661,8 @@ webpackJsonp([1], {
                     },
                     "player-map-downed.img": {
                         frame: {
-                            x: 3553,
-                            y: 879,
+                            x: 1484,
+                            y: 984,
                             w: 72,
                             h: 62
                         },
@@ -27487,8 +27681,8 @@ webpackJsonp([1], {
                     },
                     "globe.img": {
                         frame: {
-                            x: 3629,
-                            y: 879,
+                            x: 1560,
+                            y: 984,
                             w: 62,
                             h: 62
                         },
@@ -27507,8 +27701,8 @@ webpackJsonp([1], {
                     },
                     "player-patch-blue.img": {
                         frame: {
-                            x: 3553,
-                            y: 945,
+                            x: 1626,
+                            y: 984,
                             w: 116,
                             h: 60
                         },
@@ -27527,8 +27721,8 @@ webpackJsonp([1], {
                     },
                     "map-bush-res-02.img": {
                         frame: {
-                            x: 3553,
-                            y: 1009,
+                            x: 1746,
+                            y: 984,
                             w: 59,
                             h: 60
                         },
@@ -27547,8 +27741,8 @@ webpackJsonp([1], {
                     },
                     "map-screen-res-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 1073,
+                            x: 414,
+                            y: 3475,
                             w: 116,
                             h: 58
                         },
@@ -27567,8 +27761,8 @@ webpackJsonp([1], {
                     },
                     "proj-frag-pin-part.img": {
                         frame: {
-                            x: 3616,
-                            y: 1009,
+                            x: 1766,
+                            y: 1054,
                             w: 58,
                             h: 58
                         },
@@ -27587,8 +27781,8 @@ webpackJsonp([1], {
                     },
                     "part-frag-pin-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 1135,
+                            x: 1766,
+                            y: 1116,
                             w: 58,
                             h: 58
                         },
@@ -27607,8 +27801,8 @@ webpackJsonp([1], {
                     },
                     "map-drawers-res.img": {
                         frame: {
-                            x: 3615,
-                            y: 1135,
+                            x: 534,
+                            y: 3475,
                             w: 92,
                             h: 57
                         },
@@ -27627,8 +27821,8 @@ webpackJsonp([1], {
                     },
                     "map-gun-mount-04.img": {
                         frame: {
-                            x: 3553,
-                            y: 1197,
+                            x: 630,
+                            y: 3475,
                             w: 128,
                             h: 55
                         },
@@ -27645,30 +27839,10 @@ webpackJsonp([1], {
                             h: 56
                         }
                     },
-                    "dc.img": {
-                        frame: {
-                            x: 3660,
-                            y: 378,
-                            w: 52,
-                            h: 52
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 6,
-                            y: 6,
-                            w: 52,
-                            h: 52
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
                     "down.img": {
                         frame: {
-                            x: 3661,
-                            y: 813,
+                            x: 1766,
+                            y: 1178,
                             w: 52,
                             h: 52
                         },
@@ -27685,10 +27859,30 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-part-quarter.img": {
+                    "dc.img": {
                         frame: {
-                            x: 3553,
-                            y: 1256,
+                            x: 3009,
+                            y: 1734,
+                            w: 52,
+                            h: 52
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 6,
+                            y: 6,
+                            w: 52,
+                            h: 52
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ping-part-quarter-highlight.img": {
+                        frame: {
+                            x: 762,
+                            y: 3475,
                             w: 88,
                             h: 51
                         },
@@ -27705,10 +27899,10 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "ping-part-quarter-highlight.img": {
+                    "ping-part-quarter.img": {
                         frame: {
-                            x: 3553,
-                            y: 1311,
+                            x: 854,
+                            y: 3475,
                             w: 88,
                             h: 51
                         },
@@ -27727,8 +27921,8 @@ webpackJsonp([1], {
                     },
                     "map-locker-03.img": {
                         frame: {
-                            x: 3553,
-                            y: 1366,
+                            x: 946,
+                            y: 3475,
                             w: 96,
                             h: 49
                         },
@@ -27747,8 +27941,8 @@ webpackJsonp([1], {
                     },
                     "map-locker-02.img": {
                         frame: {
-                            x: 3553,
-                            y: 1419,
+                            x: 1046,
+                            y: 3475,
                             w: 96,
                             h: 49
                         },
@@ -27767,8 +27961,8 @@ webpackJsonp([1], {
                     },
                     "map-locker-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 1472,
+                            x: 1146,
+                            y: 3475,
                             w: 96,
                             h: 49
                         },
@@ -27787,8 +27981,8 @@ webpackJsonp([1], {
                     },
                     "map-screen-01.img": {
                         frame: {
-                            x: 1244,
-                            y: 984,
+                            x: 1246,
+                            y: 3475,
                             w: 256,
                             h: 48
                         },
@@ -27807,8 +28001,8 @@ webpackJsonp([1], {
                     },
                     "map-gun-mount-05.img": {
                         frame: {
-                            x: 3553,
-                            y: 1525,
+                            x: 1506,
+                            y: 3475,
                             w: 144,
                             h: 48
                         },
@@ -27827,8 +28021,8 @@ webpackJsonp([1], {
                     },
                     "map-gun-mount-01.img": {
                         frame: {
-                            x: 3553,
-                            y: 1577,
+                            x: 1654,
+                            y: 3475,
                             w: 144,
                             h: 48
                         },
@@ -27847,8 +28041,8 @@ webpackJsonp([1], {
                     },
                     "map-bush-res-01.img": {
                         frame: {
-                            x: 3645,
-                            y: 1256,
+                            x: 2965,
+                            y: 1424,
                             w: 52,
                             h: 48
                         },
@@ -27865,19 +28059,19 @@ webpackJsonp([1], {
                             h: 144
                         }
                     },
-                    "heart.img": {
+                    "emote.img": {
                         frame: {
-                            x: 1912,
+                            x: 2296,
                             y: 2999,
-                            w: 124,
+                            w: 122,
                             h: 122
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 2,
-                            y: 4,
-                            w: 124,
+                            x: 3,
+                            y: 3,
+                            w: 122,
                             h: 122
                         },
                         sourceSize: {
@@ -27889,7 +28083,7 @@ webpackJsonp([1], {
             }],
             gradient: [{
                 meta: {
-                    image: "gradient-0-100-a06399bd.png",
+                    image: "gradient-0-100-198ee9be.png",
                     size: {
                         w: 1024,
                         h: 1024
@@ -30093,7 +30287,7 @@ webpackJsonp([1], {
             }],
             faction: [{
                 meta: {
-                    image: "faction-0-100-41634678.png",
+                    image: "faction-0-100-7b732e78.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -30543,8 +30737,8 @@ webpackJsonp([1], {
                     },
                     "player-patch-02.img": {
                         frame: {
-                            x: 3578,
-                            y: 3726,
+                            x: 3384,
+                            y: 868,
                             w: 116,
                             h: 60
                         },
@@ -30621,9 +30815,29 @@ webpackJsonp([1], {
                             h: 256
                         }
                     },
-                    "map-bunker-generic-floor-03.img": {
+                    "player-helmet-lieutenant.img": {
                         frame: {
                             x: 3578,
+                            y: 2696,
+                            w: 180,
+                            h: 240
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 8,
+                            y: 8,
+                            w: 180,
+                            h: 240
+                        },
+                        sourceSize: {
+                            w: 256,
+                            h: 256
+                        }
+                    },
+                    "map-bunker-generic-floor-03.img": {
+                        frame: {
+                            x: 3762,
                             y: 2696,
                             w: 160,
                             h: 230
@@ -30643,8 +30857,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-generic-ceiling-02.img": {
                         frame: {
-                            x: 3742,
-                            y: 2696,
+                            x: 3578,
+                            y: 2940,
                             w: 160,
                             h: 230
                         },
@@ -30664,7 +30878,7 @@ webpackJsonp([1], {
                     "map-stone-res-02f.img": {
                         frame: {
                             x: 3578,
-                            y: 2930,
+                            y: 3174,
                             w: 200,
                             h: 200
                         },
@@ -30683,8 +30897,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-01a.img": {
                         frame: {
-                            x: 3782,
-                            y: 2930,
+                            x: 3742,
+                            y: 2940,
                             w: 112,
                             h: 192
                         },
@@ -30724,7 +30938,7 @@ webpackJsonp([1], {
                     "map-bunker-chrys-chamber-floor-01a.img": {
                         frame: {
                             x: 3578,
-                            y: 3134,
+                            y: 3378,
                             w: 160,
                             h: 148
                         },
@@ -30743,8 +30957,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-22.img": {
                         frame: {
-                            x: 3742,
-                            y: 3134,
+                            x: 3782,
+                            y: 3174,
                             w: 144,
                             h: 144
                         },
@@ -30763,8 +30977,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-02f.img": {
                         frame: {
-                            x: 3578,
-                            y: 3286,
+                            x: 3742,
+                            y: 3378,
                             w: 144,
                             h: 144
                         },
@@ -30784,7 +30998,7 @@ webpackJsonp([1], {
                     "map-statue-top-01.img": {
                         frame: {
                             x: 3578,
-                            y: 3434,
+                            y: 3530,
                             w: 279,
                             h: 142
                         },
@@ -30803,8 +31017,8 @@ webpackJsonp([1], {
                     },
                     "map-statue-top-02.img": {
                         frame: {
-                            x: 3578,
-                            y: 3580,
+                            x: 3152,
+                            y: 1476,
                             w: 279,
                             h: 142
                         },
@@ -30843,8 +31057,8 @@ webpackJsonp([1], {
                     },
                     "map-chest-03f.img": {
                         frame: {
-                            x: 3726,
-                            y: 3286,
+                            x: 3578,
+                            y: 3676,
                             w: 140,
                             h: 102
                         },
@@ -30861,7 +31075,7 @@ webpackJsonp([1], {
                             h: 102
                         }
                     },
-                    "map-planter-05.img": {
+                    "map-planter-04.img": {
                         frame: {
                             x: 3822,
                             y: 2208,
@@ -30881,7 +31095,7 @@ webpackJsonp([1], {
                             h: 100
                         }
                     },
-                    "map-planter-04.img": {
+                    "map-planter-05.img": {
                         frame: {
                             x: 3822,
                             y: 2312,
@@ -30903,8 +31117,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-02a.img": {
                         frame: {
-                            x: 3152,
-                            y: 1476,
+                            x: 3322,
+                            y: 2832,
                             w: 224,
                             h: 96
                         },
@@ -30923,8 +31137,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-03a.img": {
                         frame: {
-                            x: 3152,
-                            y: 1576,
+                            x: 1302,
+                            y: 1894,
                             w: 224,
                             h: 96
                         },
@@ -30943,8 +31157,8 @@ webpackJsonp([1], {
                     },
                     "player-patch-01.img": {
                         frame: {
-                            x: 3384,
-                            y: 868,
+                            x: 3722,
+                            y: 3676,
                             w: 116,
                             h: 71
                         },
@@ -35040,7 +35254,7 @@ webpackJsonp([1], {
             "game-level-1": "Svy. 1",
             "game-level-2": "Svy. 2",
             "game-level-3": "Svy. 3",
-            "game-level-9": "Svy. 3",
+            "game-level-4": "Svy. 4",
             "game-outfitBase": "Basit Kıyafet",
             "game-outfitWoodland": "Orman Savaşı",
             "game-outfitRoyalFortune": "Asil Servet",
@@ -36367,7 +36581,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Basis Tøj",
             "game-outfitRoyalFortune": "Royal Rigdom",
             "game-outfitKeyLime": "Nøgle Lime",
@@ -36426,6 +36640,9 @@ webpackJsonp([1], {
                     channel: "ui"
                 }, {
                     name: "ping_leader_01",
+                    channel: "ui"
+                }, {
+                    name: "lt_assigned_01",
                     channel: "ui"
                 }],
                 atlases: ["gradient", "shared", "faction"]
@@ -36645,7 +36862,7 @@ webpackJsonp([1], {
             "game-level-1": "一級",
             "game-level-2": "二級",
             "game-level-3": "三級",
-            "game-level-9": "三級",
+            "game-level-4": "四级",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -36690,7 +36907,7 @@ webpackJsonp([1], {
     "989ad62a": function(e, t, a) {
         "use strict";
         e.exports = {
-            protocolVersion: 47,
+            protocolVersion: 48,
             Input: {
                 MoveLeft: 0,
                 MoveRight: 1,
@@ -36737,8 +36954,8 @@ webpackJsonp([1], {
             WeaponSlot: {
                 Primary: 0,
                 Secondary: 1,
-                Throwable: 3,
                 Melee: 2,
+                Throwable: 3,
                 Count: 4
             },
             WeaponType: ["gun", "gun", "melee", "throwable"],
@@ -36763,6 +36980,11 @@ webpackJsonp([1], {
                 CrawlForward: 4,
                 CrawlBackward: 5,
                 Revive: 6
+            },
+            Role: {
+                None: 0,
+                FactionLeader: 1,
+                Lieutenant: 2
             },
             GasMode: {
                 Inactive: 0,
@@ -39520,7 +39742,7 @@ webpackJsonp([1], {
                     },
                     anim: {
                         idlePose: "meleeTwoHanded",
-                        attackAnims: ["twoHandSwing"]
+                        attackAnims: ["axeSwing"]
                     },
                     sound: {
                         pickup: "heavy_pickup_01",
@@ -39574,7 +39796,7 @@ webpackJsonp([1], {
                     },
                     anim: {
                         idlePose: "meleeTwoHanded",
-                        attackAnims: ["twoHandSwing"]
+                        attackAnims: ["axeSwing"]
                     },
                     sound: {
                         pickup: "heavy_pickup_01",
@@ -39628,7 +39850,7 @@ webpackJsonp([1], {
                     },
                     anim: {
                         idlePose: "meleeTwoHanded",
-                        attackAnims: ["twoHandSwing"]
+                        attackAnims: ["axeSwing"]
                     },
                     sound: {
                         pickup: "heavy_pickup_01",
@@ -39848,7 +40070,7 @@ webpackJsonp([1], {
                     },
                     anim: {
                         idlePose: "meleeTwoHanded",
-                        attackAnims: ["twoHandSwing"]
+                        attackAnims: ["hammerSwing"]
                     },
                     sound: {
                         pickup: "heavy_pickup_01",
@@ -40029,6 +40251,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 2,
                     fireDelay: .09,
                     switchDelay: .75,
@@ -40082,6 +40306,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 96,
                     maxClip: 32,
                     maxReload: 32,
+                    extendedClip: 50,
+                    extendedReload: 50,
                     reloadTime: 1.8,
                     fireDelay: .045,
                     switchDelay: .75,
@@ -40135,6 +40361,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 1.9,
                     fireDelay: .35,
                     burstDelay: .07,
@@ -40190,6 +40418,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 99,
                     maxClip: 33,
                     maxReload: 33,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 1.6,
                     fireDelay: .038,
                     switchDelay: .75,
@@ -40243,6 +40473,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 75,
                     maxClip: 25,
                     maxReload: 25,
+                    extendedClip: 32,
+                    extendedReload: 32,
                     reloadTime: 1.6,
                     fireDelay: .044,
                     switchDelay: .75,
@@ -40296,6 +40528,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 2.2,
                     fireDelay: .055,
                     switchDelay: .75,
@@ -40349,6 +40583,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 75,
                     maxClip: 25,
                     maxReload: 25,
+                    extendedClip: 35,
+                    extendedReload: 35,
                     reloadTime: 2.3,
                     fireDelay: .35,
                     burstDelay: .07,
@@ -40404,6 +40640,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 2.3,
                     fireDelay: .075,
                     switchDelay: .75,
@@ -40457,6 +40695,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 3.1,
                     fireDelay: .082,
                     switchDelay: .75,
@@ -40511,6 +40751,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 60,
                     maxClip: 20,
                     maxReload: 20,
+                    extendedClip: 30,
+                    extendedReload: 30,
                     reloadTime: 2.4,
                     fireDelay: .15,
                     switchDelay: .75,
@@ -40564,6 +40806,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 200,
                     maxClip: 100,
                     maxReload: 100,
+                    extendedClip: 150,
+                    extendedReload: 150,
                     reloadTime: 6.7,
                     fireDelay: .08,
                     switchDelay: .75,
@@ -40624,6 +40868,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 150,
                     maxClip: 75,
                     maxReload: 75,
+                    extendedClip: 95,
+                    extendedReload: 95,
                     reloadTime: 3.9,
                     fireDelay: .1,
                     switchDelay: .75,
@@ -40684,6 +40930,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 2.5,
                     fireDelay: .1,
                     switchDelay: .75,
@@ -40737,6 +40985,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 80,
                     maxClip: 20,
                     maxReload: 20,
+                    extendedClip: 30,
+                    extendedReload: 30,
                     reloadTime: 2.7,
                     fireDelay: .09,
                     switchDelay: .75,
@@ -40790,6 +41040,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 45,
                     maxReload: 45,
+                    extendedClip: 60,
+                    extendedReload: 60,
                     reloadTime: 2.35,
                     fireDelay: .24,
                     burstDelay: .025,
@@ -40846,6 +41098,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 120,
                     maxClip: 60,
                     maxReload: 60,
+                    extendedClip: 80,
+                    extendedReload: 80,
                     reloadTime: 3.3,
                     fireDelay: .115,
                     switchDelay: .75,
@@ -40907,6 +41161,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 80,
                     maxClip: 20,
                     maxReload: 20,
+                    extendedClip: 40,
+                    extendedReload: 40,
                     reloadTime: 2.7,
                     fireDelay: .12,
                     switchDelay: .75,
@@ -40960,6 +41216,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 64,
                     maxClip: 8,
                     maxReload: 1,
+                    extendedClip: 8,
+                    extendedReload: 1,
                     reloadTime: .6,
                     fireDelay: .75,
                     switchDelay: 1,
@@ -41019,6 +41277,9 @@ webpackJsonp([1], {
                     maxClip: 5,
                     maxReload: 1,
                     maxReloadAlt: 5,
+                    extendedClip: 5,
+                    extendedReload: 1,
+                    extendedReloadAlt: 5,
                     reloadTime: .9,
                     reloadTimeAlt: 3,
                     fireDelay: 1.75,
@@ -41078,6 +41339,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 30,
                     maxClip: 10,
                     maxReload: 10,
+                    extendedClip: 15,
+                    extendedReload: 15,
                     reloadTime: 2.7,
                     fireDelay: 1.5,
                     switchDelay: 1,
@@ -41135,6 +41398,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 20,
                     maxClip: 5,
                     maxReload: 5,
+                    extendedClip: 7,
+                    extendedReload: 7,
                     reloadTime: 3.6,
                     fireDelay: 1.5,
                     switchDelay: 1,
@@ -41192,6 +41457,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 60,
                     maxClip: 20,
                     maxReload: 20,
+                    extendedClip: 30,
+                    extendedReload: 30,
                     reloadTime: 2.5,
                     fireDelay: .2,
                     switchDelay: .75,
@@ -41245,6 +41512,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 40,
                     maxClip: 8,
                     maxReload: 8,
+                    extendedClip: 8,
+                    extendedReload: 8,
                     reloadTime: 2.1,
                     fireDelay: .2,
                     switchDelay: .75,
@@ -41300,6 +41569,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 10,
                     maxClip: 5,
                     maxReload: 1,
+                    extendedClip: 10,
+                    extendedReload: 1,
                     reloadTime: .75,
                     fireDelay: .9,
                     switchDelay: .9,
@@ -41357,6 +41628,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 12,
                     maxClip: 4,
                     maxReload: 1,
+                    extendedClip: 8,
+                    extendedReload: 1,
                     reloadTime: .7,
                     fireDelay: .3,
                     switchDelay: .9,
@@ -41411,6 +41684,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 10,
                     maxClip: 2,
                     maxReload: 2,
+                    extendedClip: 2,
+                    extendedReload: 2,
                     reloadTime: 2.7,
                     fireDelay: .2,
                     switchDelay: .3,
@@ -41465,6 +41740,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 20,
                     maxClip: 5,
                     maxReload: 5,
+                    extendedClip: 8,
+                    extendedReload: 8,
                     reloadTime: 2.5,
                     fireDelay: .4,
                     switchDelay: .75,
@@ -41520,6 +41797,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 18,
                     maxClip: 9,
                     maxReload: 1,
+                    extendedClip: 12,
+                    extendedReload: 1,
                     reloadTime: .55,
                     fireDelay: .75,
                     switchDelay: .75,
@@ -41577,6 +41856,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 16,
                     maxClip: 8,
                     maxReload: 1,
+                    extendedClip: 10,
+                    extendedReload: 1,
                     reloadTime: .52,
                     fireDelay: .4,
                     switchDelay: .75,
@@ -41632,6 +41913,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 30,
                     maxClip: 10,
                     maxReload: 10,
+                    extendedClip: 20,
+                    extendedReload: 20,
                     reloadTime: 2.9,
                     fireDelay: .5,
                     switchDelay: .75,
@@ -41688,6 +41971,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 15,
                     maxReload: 15,
+                    extendedClip: 30,
+                    extendedReload: 30,
                     reloadTime: 1.6,
                     fireDelay: .12,
                     switchDelay: .25,
@@ -41743,6 +42028,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 45,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 60,
+                    extendedReload: 60,
                     reloadTime: 3.1,
                     fireDelay: .08,
                     switchDelay: .25,
@@ -41798,6 +42085,8 @@ webpackJsonp([1], {
                     pistol: !1,
                     maxClip: 20,
                     maxReload: 20,
+                    extendedClip: 30,
+                    extendedReload: 30,
                     reloadTime: 1.8,
                     fireDelay: .28,
                     burstDelay: .04,
@@ -41855,6 +42144,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 60,
                     maxClip: 40,
                     maxReload: 40,
+                    extendedClip: 60,
+                    extendedReload: 60,
                     reloadTime: 3.3,
                     fireDelay: .18,
                     burstDelay: .04,
@@ -41912,6 +42203,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 17,
                     maxReload: 17,
+                    extendedClip: 31,
+                    extendedReload: 31,
                     reloadTime: 1.95,
                     fireDelay: .06,
                     switchDelay: .25,
@@ -41967,6 +42260,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 34,
                     maxReload: 34,
+                    extendedClip: 62,
+                    extendedReload: 62,
                     reloadTime: 3.8,
                     fireDelay: .03,
                     switchDelay: .25,
@@ -42022,6 +42317,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 5,
                     maxReload: 5,
+                    extendedClip: 5,
+                    extendedReload: 5,
                     reloadTime: 2,
                     fireDelay: .4,
                     switchDelay: .3,
@@ -42077,6 +42374,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 10,
                     maxReload: 10,
+                    extendedClip: 10,
+                    extendedReload: 10,
                     reloadTime: 3.8,
                     fireDelay: .2,
                     switchDelay: .3,
@@ -42132,6 +42431,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 5,
                     maxReload: 5,
+                    extendedClip: 5,
+                    extendedReload: 5,
                     reloadTime: 2,
                     fireDelay: .36,
                     switchDelay: .3,
@@ -42187,6 +42488,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 10,
                     maxReload: 10,
+                    extendedClip: 10,
+                    extendedReload: 10,
                     reloadTime: 3.8,
                     fireDelay: .18,
                     switchDelay: .3,
@@ -42242,6 +42545,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 6,
                     maxReload: 6,
+                    extendedClip: 6,
+                    extendedReload: 6,
                     reloadTime: 3,
                     fireDelay: .12,
                     switchDelay: .3,
@@ -42297,6 +42602,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 12,
                     maxReload: 12,
+                    extendedClip: 12,
+                    extendedReload: 12,
                     reloadTime: 5.1,
                     fireDelay: .13,
                     switchDelay: .3,
@@ -42352,6 +42659,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 7,
                     maxReload: 7,
+                    extendedClip: 12,
+                    extendedReload: 12,
                     reloadTime: 2.1,
                     fireDelay: .13,
                     switchDelay: .25,
@@ -42407,6 +42716,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 28,
                     maxClip: 14,
                     maxReload: 14,
+                    extendedClip: 24,
+                    extendedReload: 24,
                     reloadTime: 3.6,
                     fireDelay: .085,
                     switchDelay: .25,
@@ -42460,6 +42771,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 90,
                     maxClip: 30,
                     maxReload: 30,
+                    extendedClip: 50,
+                    extendedReload: 50,
                     reloadTime: 2.8,
                     fireDelay: .095,
                     switchDelay: .75,
@@ -42515,6 +42828,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 7,
                     maxReload: 7,
+                    extendedClip: 9,
+                    extendedReload: 9,
                     reloadTime: 2.3,
                     fireDelay: .16,
                     switchDelay: .3,
@@ -42570,6 +42885,8 @@ webpackJsonp([1], {
                     pistol: !0,
                     maxClip: 14,
                     maxReload: 14,
+                    extendedClip: 18,
+                    extendedReload: 18,
                     reloadTime: 4,
                     fireDelay: .12,
                     switchDelay: .3,
@@ -42625,6 +42942,8 @@ webpackJsonp([1], {
                     ammoSpawnCount: 1,
                     maxClip: 1,
                     maxReload: 1,
+                    extendedClip: 1,
+                    extendedReload: 1,
                     reloadTime: 2,
                     fireDelay: .4,
                     switchDelay: .3,
@@ -43619,13 +43938,15 @@ webpackJsonp([1], {
                         pickup: "helmet_pickup_01"
                     }
                 },
-                helmet03l: {
+                helmet03_leader: {
                     name: "Leader Helmet",
                     type: "helmet",
                     level: 3,
                     damageReduction: .55,
                     skinImg: {
                         baseTint: 16777215,
+                        baseTintRed: 16777215,
+                        baseTintBlue: 16777215,
                         baseSprite: "player-helmet-leader.img"
                     },
                     lootImg: {
@@ -43639,14 +43960,39 @@ webpackJsonp([1], {
                         pickup: "helmet_pickup_01"
                     }
                 },
-                helmet09: {
-                    name: "Leader Helmet",
+                helmet03_lt: {
+                    name: "Lieutenant Helmet",
                     type: "helmet",
                     level: 3,
+                    damageReduction: .55,
+                    noDrop: !0,
+                    skinImg: {
+                        baseTint: 16777215,
+                        baseTintRed: 16777215,
+                        baseTintBlue: 16777215,
+                        baseSprite: "player-helmet-lieutenant.img"
+                    },
+                    lootImg: {
+                        sprite: "loot-helmet-03.img",
+                        tint: 16777215,
+                        border: "loot-circle-outer-01.img",
+                        borderTint: 0,
+                        scale: .2
+                    },
+                    sound: {
+                        pickup: "helmet_pickup_01"
+                    }
+                },
+                helmet04_leader: {
+                    name: "Leader Helmet",
+                    type: "helmet",
+                    level: 4,
                     damageReduction: .7,
                     noDrop: !0,
                     skinImg: {
                         baseTint: 16777215,
+                        baseTintRed: 16777215,
+                        baseTintBlue: 16777215,
                         baseSprite: "player-helmet-leader.img"
                     },
                     lootImg: {
@@ -43665,7 +44011,10 @@ webpackJsonp([1], {
                     type: "chest",
                     level: 1,
                     damageReduction: .25,
-                    tint: 11842740,
+                    skinImg: {
+                        baseTint: 11842740,
+                        baseSprite: "player-armor-base-01.img"
+                    },
                     lootImg: {
                         sprite: "loot-chest-01.img",
                         tint: 16777215,
@@ -43682,7 +44031,10 @@ webpackJsonp([1], {
                     type: "chest",
                     level: 2,
                     damageReduction: .38,
-                    tint: 4934475,
+                    skinImg: {
+                        baseTint: 4934475,
+                        baseSprite: "player-armor-base-01.img"
+                    },
                     lootImg: {
                         sprite: "loot-chest-02.img",
                         tint: 16777215,
@@ -43699,7 +44051,10 @@ webpackJsonp([1], {
                     type: "chest",
                     level: 3,
                     damageReduction: .45,
-                    tint: 0,
+                    skinImg: {
+                        baseTint: 0,
+                        baseSprite: "player-armor-base-01.img"
+                    },
                     lootImg: {
                         sprite: "loot-chest-03.img",
                         tint: 16777215,
@@ -43901,8 +44256,8 @@ webpackJsonp([1], {
           , T = a("a7f094a3")
           , P = a("4b8d140f")
           , I = a("a48f3bb2")
-          , A = a("d49cd95c")
-          , C = a("753d6e4b")
+          , C = a("d49cd95c")
+          , A = a("753d6e4b")
           , E = a("119e8c4c")
           , D = a("fc6a992a")
           , O = a("a508b62a")
@@ -43991,11 +44346,11 @@ webpackJsonp([1], {
                 this.Te = 0,
                 this.N = !1,
                 this.Pe = !1,
-                this.Ie = new j.Ae(this._e,this.config),
+                this.Ie = new j.Ce(this._e,this.config),
                 this.Y = new f.O,
-                this.Ce = new L.Ee(this,this.canvasMode),
-                this.De = new E.d(this.Ce),
-                this.Oe = new A.Be,
+                this.Ae = new L.Ee(this,this.canvasMode),
+                this.De = new E.d(this.Ae),
+                this.Oe = new C.Be,
                 this.Le = new O.Re,
                 this.Fe = new x.je,
                 this.Ne = new M.qe,
@@ -44024,11 +44379,11 @@ webpackJsonp([1], {
                 i(e, l.Type.Smoke, this.Ze.e),
                 i(e, l.Type.Airdrop, this.Ke.H),
                 e);
-                this.mt = new C.Creator;
+                this.mt = new A.Creator;
                 for (var a in t)
                     t.hasOwnProperty(a) && this.mt.registerType(a, t[a]);
                 this.debugDisplay = new o.Graphics;
-                for (var r = [this.Oe.display.ground, this.Ce.layers[0], this.Ce.ground, this.Ce.layers[1], this.Ce.layers[2], this.Ce.layers[3], this.debugDisplay, this.$e.gasRenderer.display, this.Ie.container, this.it.container, this.ze.container, this.ze.pieTimer.container, this.it.indContainer], n = 0; n < r.length; n++) {
+                for (var r = [this.Oe.display.ground, this.Ae.layers[0], this.Ae.ground, this.Ae.layers[1], this.Ae.layers[2], this.Ae.layers[3], this.debugDisplay, this.$e.gasRenderer.display, this.Ie.container, this.it.container, this.ze.container, this.ze.pieTimer.container, this.it.indContainer], n = 0; n < r.length; n++) {
                     var s = r[n];
                     s && (s.interactiveChildren = !1,
                     this.pixi.stage.addChild(s))
@@ -44041,7 +44396,7 @@ webpackJsonp([1], {
                 this.prevInputMsg = new h.InputMsg,
                 this.playingTicker = 0,
                 this.updateRecvCount = 0,
-                this.leaderSoundPlayed = !1,
+                this.playedAssignRoleSfx = {},
                 this.dt = 0,
                 this.ht = 0,
                 this.ut = null,
@@ -44097,7 +44452,7 @@ webpackJsonp([1], {
                     this.He.n(),
                     this.Oe.n(),
                     this.De.n(),
-                    this.Ce.n(),
+                    this.Ae.n(),
                     this.fe.stopAll(); this.pixi.stage.children.length > 0; ) {
                         var e = this.pixi.stage.children[0];
                         this.pixi.stage.removeChild(e),
@@ -44117,7 +44472,7 @@ webpackJsonp([1], {
                   , r = {};
                 r.render = r.render || {},
                 this.playing && (this.playingTicker += e),
-                this.Le.c(e, this.ht, this.teamMode, this.Ce, this.De, this.Y, this.Oe, this.Se, this.fe, this.it.wheelKeyTriggered, this.ze.displayingStats, this.spectating),
+                this.Le.c(e, this.ht, this.teamMode, this.Ae, this.De, this.Y, this.Oe, this.Se, this.fe, this.it.wheelKeyTriggered, this.ze.displayingStats, this.spectating),
                 this.updateAmbience(),
                 this.Y.pos = u.copy(this.ut.pos),
                 this.Y.applyShake();
@@ -44151,10 +44506,10 @@ webpackJsonp([1], {
                           , I = u.copy(T.aimMovement.toAimDir);
                         if (this.Ie.turnDirTicker -= e,
                         this.Ie.moveDetected && !T.touched) {
-                            var A = u.normalizeSafe(M.toMoveDir, u.create(1, 0))
-                              , C = this.Ie.turnDirTicker < 0 ? A : T.aimMovement.toAimDir;
-                            this.Ie.setAimDir(C),
-                            I = C
+                            var C = u.normalizeSafe(M.toMoveDir, u.create(1, 0))
+                              , A = this.Ie.turnDirTicker < 0 ? C : T.aimMovement.toAimDir;
+                            this.Ie.setAimDir(A),
+                            I = A
                         }
                         T.touched && (this.Ie.turnDirTicker = this.Ie.turnDirCooldown),
                         this.Ie.moveDetected ? (z.touchMoveDir = u.normalizeSafe(M.toMoveDir, u.create(1, 0)),
@@ -44276,24 +44631,24 @@ webpackJsonp([1], {
                 this.inputMsgTimeout = 1,
                 this.prevInputMsg = z),
                 this.tt.flushInput(),
-                this.Oe.c(e, this.ut, this.Le, this.De, this.fe, this.be, this.Ce, this.Y, t, r),
+                this.Oe.c(e, this.ut, this.Le, this.De, this.fe, this.be, this.Ae, this.Y, t, r),
                 this.Je.c(e, this.ut, this.Y, r),
-                this.Fe.c(e, this.Le, this.Oe, this.Y, this.ut, this.Ce, this.De, this.fe),
-                this.Ne.c(e, this.Le, this.Oe, this.Y, this.ut, this.Ce, this.De, this.fe),
-                this.Ve.c(e, this.De, this.fe, this.ut, this.Oe, this.Ce, this.Y),
+                this.Fe.c(e, this.Le, this.Oe, this.Y, this.ut, this.Ae, this.De, this.fe),
+                this.Ne.c(e, this.Le, this.Oe, this.Y, this.ut, this.Ae, this.De, this.fe),
+                this.Ve.c(e, this.De, this.fe, this.ut, this.Oe, this.Ae, this.Y),
                 this.Ge.c(e, this.Oe, this.Le, this.Y, this.De, this.fe, r),
-                this.Ke.c(e, this.ut, this.Y, this.Oe, this.De, this.Ce, this.fe),
-                this.He.c(e, this.Y, this.ut, this.Oe, this.Ce),
-                this.Ze.c(e, this.Y, this.ut, this.Oe, this.Ce),
+                this.Ke.c(e, this.ut, this.Y, this.Oe, this.De, this.Ae, this.fe),
+                this.He.c(e, this.Y, this.ut, this.Oe, this.Ae),
+                this.Ze.c(e, this.Y, this.ut, this.Oe, this.Ae),
                 this.ot.c(e, this.ht, this.Le, this.De, this.fe),
                 this.De.c(e, this.Y, r),
-                this.Xe.c(e, this.Le, this.ut, this.anonPlayerNames, this.dt, this.Oe, this.Y, this.Ce),
-                this.Ye.c(e, this.Y, this.Ce, r),
+                this.Xe.c(e, this.Le, this.ut, this.anonPlayerNames, this.dt, this.Oe, this.Y, this.Ae),
+                this.Ye.c(e, this.Y, this.Ae, r),
                 this.ze.c(e, this.ut, this.Oe, this.$e, this.Je, this.Le, this.Y, this.teamMode, this.Oe.factionMode),
                 this.tt.c(e, this.ut, this.spectating, this.Le, this.Je, this.Oe, this.Se),
-                this.it.c(e, this.dt, this.ut, this.teamMode, this.Xe, this.Ce, this._e, this.Se, this.spectating),
-                this.Ie.update(e, this.ut, this.Oe, this.Y, this.Ce),
-                this.Ce.c(e, this.Y, this.Oe, r),
+                this.it.c(e, this.dt, this.ut, this.teamMode, this.Xe, this.Ae, this._e, this.Se, this.spectating),
+                this.Ie.update(e, this.ut, this.Oe, this.Y, this.Ae),
+                this.Ae.c(e, this.Y, this.Oe, r),
                 !this.Pe && this.Oe.bt && (this.Oe.N || this.loadoutMenu.socialUnlocks()) && this.it.hasCustomEmotes()) {
                     this.Pe = !0;
                     var se = new h.LoadoutMsg;
@@ -44389,12 +44744,12 @@ webpackJsonp([1], {
                 this.$e.resize(),
                 this.ze.resize(this.Oe, this.Y),
                 this.Ie.resize(),
-                this.Ce.resize(this.Oe, this.Y)
+                this.Ae.resize(this.Oe, this.Y)
             },
             zt: function(e) {
                 var t = {
                     audioManager: this.fe,
-                    renderer: this.Ce,
+                    renderer: this.Ae,
                     particleBarn: this.De,
                     map: this.Oe,
                     smokeBarn: this.Ze,
@@ -44414,7 +44769,7 @@ webpackJsonp([1], {
                 }
                 if (e.groupStatusDirty) {
                     var s = this.Le.ee(this.ht).groupId;
-                    this.Le.At(s, e.groupStatus)
+                    this.Le.Ct(s, e.groupStatus)
                 }
                 for (var l = 0; l < e.delObjIds.length; l++)
                     e.delObjIds[l],
@@ -44429,15 +44784,15 @@ webpackJsonp([1], {
                 }
                 this.spectating = this.ht != this.dt,
                 this.ut = this.Le.ue(this.ht),
-                this.ut.Ct(e.activePlayerData, this.Le),
+                this.ut.At(e.activePlayerData, this.Le),
                 e.activePlayerData.weapsDirty && (this.ze.weapsDirty = !0),
                 this.spectating && (this.ze.setSpectateTarget(this.ht, this.dt, this.teamMode, this.anonPlayerNames, this.Le),
                 this.Ie.hideAll()),
                 this.ut.layer = this.ut.J.layer,
-                this.Ce.setActiveLayer(this.ut.layer),
+                this.Ae.setActiveLayer(this.ut.layer),
                 this.fe.activeLayer = this.ut.layer;
                 var h = this.ut.isUnderground(this.Oe);
-                this.Ce.setUnderground(h),
+                this.Ae.setUnderground(h),
                 this.fe.underground = h,
                 e.aliveDirty && (1 == e.aliveCounts.length ? this.ze.updatePlayersAlive(e.aliveCounts[0]) : e.aliveCounts.length >= 2 && (this.ze.updatePlayersAliveRed(e.aliveCounts[0]),
                 this.ze.updatePlayersAliveBlue(e.aliveCounts[1]))),
@@ -44445,7 +44800,7 @@ webpackJsonp([1], {
                 e.gasDirty && this.$e.setFullState(e.gasT, e.gasData, this.Oe, this.ze);
                 for (var u = 0; u < e.bullets.length; u++) {
                     var g = e.bullets[u];
-                    n.bullets[g.bulletType].addFlare ? this.Ne.addFlare(g, this.Le, this.Ce) : this.Fe.addBullet(g, this.Le, this.Ce),
+                    n.bullets[g.bulletType].addFlare ? this.Ne.addFlare(g, this.Le, this.Ae) : this.Fe.addBullet(g, this.Le, this.Ae),
                     g.shotFx && this.ot.addShot(g.pos, g.layer, g.playerId, g.shotSourceType, g.shotOffhand, g.lastShot)
                 }
                 for (var y = 0; y < e.explosions.length; y++) {
@@ -44466,24 +44821,24 @@ webpackJsonp([1], {
                 var a = this;
                 switch (e) {
                 case h.Msg.Joined:
-                    var i = new h.JoinedMsg;
-                    i.deserialize(t),
+                    var r = new h.JoinedMsg;
+                    r.deserialize(t),
                     this.onJoin(),
-                    this.teamMode = i.teamMode,
-                    this.dt = i.playerId,
+                    this.teamMode = r.teamMode,
+                    this.dt = r.playerId,
                     this.gt = !0,
-                    i.started || this.ze.setWaitingForPlayers(!0),
+                    r.started || this.ze.setWaitingForPlayers(!0),
                     this.ze.removeAds(),
                     this.victoryMusic && (this.victoryMusic.stop(),
                     this.victoryMusic = null);
                     break;
                 case h.Msg.Map:
-                    var r = new h.MapMsg;
-                    r.deserialize(t),
-                    this.Oe.loadMap(r, this.Y, this.canvasMode, this.De);
-                    var o = this.Oe.getMapDef().assets;
-                    this.fe.loadSoundList(o.audio),
-                    this.textureManager.loadAtlasList(o.atlases),
+                    var o = new h.MapMsg;
+                    o.deserialize(t),
+                    this.Oe.loadMap(o, this.Y, this.canvasMode, this.De);
+                    var s = this.Oe.getMapDef().assets;
+                    this.fe.loadSoundList(s.audio),
+                    this.textureManager.loadAtlasList(s.atlases),
                     this.Le.onMapLoad(this.Oe),
                     this.Fe.onMapLoad(this.Oe),
                     this.De.onMapLoad(this.Oe),
@@ -44491,103 +44846,113 @@ webpackJsonp([1], {
                     this.ze.resize(this.Oe, this.Y);
                     break;
                 case h.Msg.Update:
-                    var s = new h.UpdateMsg;
-                    s.deserialize(t, this.mt),
+                    var l = new h.UpdateMsg;
+                    l.deserialize(t, this.mt),
                     this.playing = !0,
-                    this.zt(s);
+                    this.zt(l);
                     break;
                 case h.Msg.Kill:
-                    var l = new h.KillMsg;
-                    l.deserialize(t);
-                    var c = this.Le.ee(l.targetId)
-                      , m = this.Le.ee(l.killCreditId)
-                      , p = l.itemSourceType || l.mapSourceType
-                      , d = this.Le.ee(this.ht).teamId
-                      , u = l.downed && !l.killed || l.damageType == n.DamageType.Gas || l.damageType == n.DamageType.Bleeding || l.damageType == n.DamageType.Airdrop
-                      , g = u ? m : this.Le.ee(l.killerId)
-                      , w = c.name
+                    var c = new h.KillMsg;
+                    c.deserialize(t);
+                    var m = this.Le.ee(c.targetId)
+                      , p = this.Le.ee(c.killCreditId)
+                      , d = c.itemSourceType || c.mapSourceType
+                      , u = this.Le.ee(this.ht).teamId
+                      , g = c.downed && !c.killed || c.damageType == n.DamageType.Gas || c.damageType == n.DamageType.Bleeding || c.damageType == n.DamageType.Airdrop
+                      , w = g ? p : this.Le.ee(c.killerId)
                       , x = m.name
-                      , f = g.name;
+                      , f = p.name
+                      , b = w.name;
                     if (this.anonPlayerNames) {
-                        var b = function(e) {
-                            return e.playerId == a.ht || e.teamId == d
+                        var _ = function(e) {
+                            return e.playerId == a.ht || e.teamId == u
                         };
-                        b(c) || (w = c.anonName),
-                        b(m) || (x = m.anonName),
-                        b(g) || (f = g.anonName)
+                        _(m) || (x = m.anonName),
+                        _(p) || (f = p.anonName),
+                        _(w) || (b = w.anonName)
                     }
-                    w = y.htmlEscape(w),
                     x = y.htmlEscape(x),
                     f = y.htmlEscape(f),
-                    l.killCreditId == this.ht ? this.ze.showKill({
-                        name: x,
-                        kills: l.killerKills,
-                        completeKill: l.killerId == this.ht
+                    b = y.htmlEscape(b),
+                    c.killCreditId == this.ht ? this.ze.showKill({
+                        name: f,
+                        kills: c.killerKills,
+                        completeKill: c.killerId == this.ht
                     }, {
-                        name: w,
-                        suicide: l.killerId == l.targetId || l.killCreditId == l.targetId,
-                        killed: l.killed,
-                        downed: l.downed,
-                        teamKill: c.teamId == m.teamId
-                    }, p, l.damageType, this.spectating) : l.targetId == this.ht && l.downed && !l.killed && this.ze.showDowned({
                         name: x,
-                        damageType: l.damageType
+                        suicide: c.killerId == c.targetId || c.killCreditId == c.targetId,
+                        killed: c.killed,
+                        downed: c.downed,
+                        teamKill: m.teamId == p.teamId
+                    }, d, c.damageType, this.spectating) : c.targetId == this.ht && c.downed && !c.killed && this.ze.showDowned({
+                        name: f,
+                        damageType: c.damageType
                     }, {
-                        name: w,
-                        suicide: l.killerId == l.targetId || l.killCreditId == l.targetId
-                    }, p, l.damageType, this.spectating);
-                    var _ = this.tt.getKillFeedText(w, g.teamId ? f : "", p, l.damageType, l.downed && !l.killed)
-                      , S = this.tt.getKillFeedColor(d, c.teamId, m.teamId, this.Oe.factionMode);
-                    if (this.tt.addKillFeed(_, S),
-                    l.type == n.DamageType.Player && this.Fe.createBulletHit(this.Le, l.targetId, this.fe),
-                    l.leaderKill) {
-                        var k = this.tt.getLeaderKillFeedText(f, c.teamId, l.damageType, l.downed && !l.killed)
-                          , v = 1 == c.teamId ? "#cc0000" : "#007eff";
-                        this.tt.addKillFeed(k, v),
-                        l.killed && this.fe.playSound("leader_dead_01", {
+                        name: x,
+                        suicide: c.killerId == c.targetId || c.killCreditId == c.targetId
+                    }, d, c.damageType, this.spectating);
+                    var S = this.tt.getKillFeedText(x, w.teamId ? b : "", d, c.damageType, c.downed && !c.killed)
+                      , k = this.tt.getKillFeedColor(u, m.teamId, p.teamId, this.Oe.factionMode);
+                    if (this.tt.addKillFeed(S, k),
+                    c.type == n.DamageType.Player && this.Fe.createBulletHit(this.Le, c.targetId, this.fe),
+                    c.targetRole == n.Role.FactionLeader) {
+                        var v = this.tt.getLeaderKillFeedText(b, m.teamId, c.damageType, c.downed && !c.killed)
+                          , z = n.teamColors[m.teamId - 1]
+                          , M = y.colorToHexString(z);
+                        this.tt.addKillFeed(v, M),
+                        c.killed && this.fe.playSound("leader_dead_01", {
                             channel: "ui"
                         })
                     }
                     break;
-                case h.Msg.Leader:
-                    var z = new h.LeaderMsg;
-                    z.deserialize(t);
-                    var M = this.Le.ee(z.leaderId);
-                    if (M) {
-                        var T = this.tt.getLeaderAssignedText(M.name, M.teamId)
-                          , P = 1 == M.teamId ? "#cc0000" : "#007eff";
-                        this.tt.addKillFeed(T, P),
-                        this.leaderSoundPlayed || (this.fe.playSound("leader_assigned_01", {
+                case h.Msg.AssignRole:
+                    var T = new h.AssignRoleMsg;
+                    T.deserialize(t);
+                    var P = this.Le.ee(T.playerId);
+                    if (!P)
+                        break;
+                    var I = this.tt.getAssignRoleKillFeedText(T.role, P.name, P.teamId);
+                    if (I) {
+                        var C = n.teamColors[P.teamId - 1]
+                          , A = y.colorToHexString(C);
+                        this.tt.addKillFeed(I, A)
+                    }
+                    if (!this.playedAssignRoleSfx[T.role]) {
+                        var E, D = (E = {},
+                        i(E, n.Role.FactionLeader, "leader_assigned_01"),
+                        i(E, n.Role.Lieutenant, "lt_assigned_01"),
+                        E), O = D[T.role];
+                        O && this.fe.playSound(O, {
                             channel: "ui"
                         }),
-                        this.leaderSoundPlayed = !0),
-                        this.dt == z.leaderId && this.ze.displayLeaderAnnouncement(M.teamId)
+                        this.playedAssignRoleSfx[T.role] = !0
                     }
+                    this.dt == T.playerId && this.ze.displayAssignRoleAnnouncement(T.role, P.teamId);
                     break;
                 case h.Msg.PlayerStats:
-                    var I = new h.PlayerStatsMsg;
-                    I.deserialize(t),
-                    this.ze.setLocalStats(I.playerStats),
+                    var B = new h.PlayerStatsMsg;
+                    B.deserialize(t),
+                    this.ze.setLocalStats(B.playerStats),
                     this.ze.showTeamAd();
                     break;
                 case h.Msg.Stats:
-                    var A = new h.StatsMsg;
-                    A.deserialize(t),
-                    y.U(A.data, this);
+                    var L = new h.StatsMsg;
+                    L.deserialize(t),
+                    y.U(L.data, this);
                     break;
                 case h.Msg.GameOver:
-                    var C = new h.GameOverMsg;
-                    C.deserialize(t),
-                    this.gameOver = C.gameOver;
-                    for (var E = this.Le.ee(this.dt).teamId, D = 0; D < C.playerStats.length; D++) {
-                        var O = C.playerStats[D];
-                        if (O.playerId == this.dt) {
-                            this.ze.setLocalStats(O);
+                    var R = new h.GameOverMsg;
+                    R.deserialize(t),
+                    this.gameOver = R.gameOver;
+                    for (var F = this.Le.ee(this.dt).teamId, j = 0; j < R.playerStats.length; j++) {
+                        var N = R.playerStats[j];
+                        if (N.playerId == this.dt) {
+                            this.ze.setLocalStats(N);
                             break
                         }
                     }
-                    this.ze.showStats(C.playerStats, C.teamId, C.teamRank, C.winningTeamId, C.gameOver, E, this.teamMode, this.spectating, this.Le, this.be, this.fe, this.Oe.factionMode),
-                    E == C.winningTeamId && (this.victoryMusic = this.fe.playSound("menu_music", {
+                    this.ze.showStats(R.playerStats, R.teamId, R.teamRank, R.winningTeamId, R.gameOver, F, this.teamMode, this.spectating, this.Le, this.be, this.fe, this.Oe.factionMode),
+                    F == R.winningTeamId && (this.victoryMusic = this.fe.playSound("menu_music", {
                         channel: "music",
                         delay: 1300,
                         forceStart: !0
@@ -44595,21 +44960,21 @@ webpackJsonp([1], {
                     this.Ie.hideAll();
                     break;
                 case h.Msg.Pickup:
-                    var B = new h.PickupMsg;
-                    if (B.deserialize(t),
-                    B.type == h.PickupMsgType.Success && B.item) {
-                        var L = n.items[B.item];
-                        this.fe.playSound(L.sound.pickup, {
+                    var q = new h.PickupMsg;
+                    if (q.deserialize(t),
+                    q.type == h.PickupMsgType.Success && q.item) {
+                        var V = n.items[q.item];
+                        this.fe.playSound(V.sound.pickup, {
                             channel: "ui"
                         }),
-                        "throwable" == L.type && (this.ut.lastThrowablePickupSfxTicker = .3)
+                        "throwable" == V.type && (this.ut.lastThrowablePickupSfxTicker = .3)
                     } else
-                        this.tt.displayPickupMessage(B.type);
+                        this.tt.displayPickupMessage(q.type);
                     break;
                 case h.Msg.Disconnect:
-                    var R = new h.DisconnectMsg;
-                    R.deserialize(t),
-                    this.disconnectMsg = R.reason
+                    var U = new h.DisconnectMsg;
+                    U.deserialize(t),
+                    this.disconnectMsg = U.reason
                 }
             },
             B: function(e, t, a) {
@@ -44887,7 +45252,7 @@ webpackJsonp([1], {
             "game-level-1": "Nvl. 1",
             "game-level-2": "Nvl. 2",
             "game-level-3": "Nvl. 3",
-            "game-level-9": "Nvl. 3",
+            "game-level-4": "Nvl. 4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -45026,7 +45391,7 @@ webpackJsonp([1], {
             var e = {
                 fontFamily: "Arial",
                 fontWeight: "bold",
-                fontSize: k.pixelRatio > 1 ? 30 : 22,
+                fontSize: v.pixelRatio > 1 ? 30 : 22,
                 align: "center",
                 fill: 65535,
                 stroke: 0,
@@ -45063,8 +45428,8 @@ webpackJsonp([1], {
             this.footLSprite = o(),
             this.footRSprite = o(),
             this.hipSprite = o(),
-            this.gunLSprites = new P,
-            this.gunRSprites = new P,
+            this.gunLSprites = new C,
+            this.gunRSprites = new C,
             this.objectLSprite = o(),
             this.objectRSprite = o(),
             this.meleeSprite = o(),
@@ -45118,11 +45483,11 @@ webpackJsonp([1], {
                 ticker: 0,
                 bones: []
             };
-            for (var e = Object.keys(T).length, t = 0; t < e; t++)
-                this.bones.push(new M),
+            for (var e = Object.keys(I).length, t = 0; t < e; t++)
+                this.bones.push(new P),
                 this.anim.bones.push({
                     weight: 0,
-                    pose: new M
+                    pose: new P
                 });
             this.isOnBrightSurface = !1,
             this.wasInWater = !1,
@@ -45157,16 +45522,16 @@ webpackJsonp([1], {
             this.J = {},
             this.$ = {},
             this.rad = m.player.radius,
-            this.pos = w.create(0, 0),
-            this.posOld = w.create(0, 0),
-            this.dir = w.create(1, 0),
-            this.dirOld = w.create(1, 0),
+            this.pos = x.create(0, 0),
+            this.posOld = x.create(0, 0),
+            this.dir = x.create(1, 0),
+            this.dirOld = x.create(1, 0),
             this.layer = 0,
             this.Me = 0,
             this.Ft = 0
         }
         function s() {
-            this.de = new v.Pool(n),
+            this.de = new M.Pool(n),
             this.jt = {},
             this.playerIds = [],
             this.teamInfo = {},
@@ -45194,23 +45559,25 @@ webpackJsonp([1], {
           , p = m.Action
           , d = m.Anim
           , h = m.Input
-          , u = a("ceee80d9")
-          , g = a("300e2704")
-          , y = a("1901e2d9")
-          , w = a("c2a798c8")
-          , x = a("10899aea")
-          , f = a("34e32c48")
-          , b = a("6b42806d")
-          , _ = a("6bad552e")
-          , S = a("6d494b5c")
-          , k = a("ce29f17f")
-          , v = (a("af8ba00f"),
-        a("26be8056"),
+          , u = m.Role
+          , g = a("ceee80d9")
+          , y = a("300e2704")
+          , w = a("1901e2d9")
+          , x = a("c2a798c8")
+          , f = a("10899aea")
+          , b = a("34e32c48")
+          , _ = a("6b42806d")
+          , S = a("6bad552e")
+          , k = a("6d494b5c")
+          , v = a("ce29f17f")
+          , z = (a("af8ba00f"),
+        a("f398b7c7"))
+          , M = (a("26be8056"),
         a("753d6e4b"))
-          , z = a("6e43d1d7")
-          , M = _.Pose
-          , T = _.Bones
-          , P = function() {
+          , T = a("6e43d1d7")
+          , P = S.Pose
+          , I = S.Bones
+          , C = function() {
             function e() {
                 i(this, e),
                 this.gunBarrel = o(),
@@ -45231,29 +45598,28 @@ webpackJsonp([1], {
                 key: "setType",
                 value: function(e, t) {
                     var a = m.items[e]
-                      , i = a.worldImg
-                      , r = t ? 1.25 : 1;
+                      , i = a.worldImg;
                     if (this.gunBarrel.texture = c.Texture.fromImage(i.sprite),
                     this.gunBarrel.anchor.set(.5, 1),
                     this.gunBarrel.position.set(0, 0),
-                    this.gunBarrel.scale.set(.5 * i.scale.x / r, .5 * i.scale.y / r),
+                    this.gunBarrel.scale.set(.5 * i.scale.x / t, .5 * i.scale.y / t),
                     this.gunBarrel.tint = i.tint,
                     this.gunBarrel.visible = !0,
                     i.magImg) {
-                        var o = i.magImg;
-                        this.gunMag.texture = c.Texture.fromImage(o.sprite),
+                        var r = i.magImg;
+                        this.gunMag.texture = c.Texture.fromImage(r.sprite),
                         this.gunMag.anchor.set(.5, .5),
-                        this.gunMag.position.set(o.pos.x, o.pos.y),
+                        this.gunMag.position.set(r.pos.x, r.pos.y),
                         this.gunMag.scale.set(.25, .25),
                         this.gunMag.tint = 16777215,
                         this.gunMag.visible = !0,
-                        o.top ? this.container.addChild(this.gunMag) : this.container.addChildAt(this.gunMag, 0)
+                        r.top ? this.container.addChild(this.gunMag) : this.container.addChildAt(this.gunMag, 0)
                     } else
                         this.gunMag.visible = !1;
                     this.magTop = i.magImg && i.magImg.top;
-                    var n = w.create(-4.25, -1.75);
-                    a.pistol && a.isDual && (n = a.isDual ? w.create(-5.95, 0) : w.create(-4.75, -1.75)),
-                    this.container.position.set(n.x, n.y)
+                    var o = x.create(-4.25, -1.75);
+                    a.pistol && a.isDual && (o = a.isDual ? x.create(-5.95, 0) : x.create(-4.75, -1.75)),
+                    this.container.position.set(o.x, o.y)
                 }
             }]),
             e
@@ -45280,8 +45646,8 @@ webpackJsonp([1], {
                 },
                 this.playAnim(d.None, -1),
                 this.J = {
-                    pos: w.create(0, 0),
-                    dir: w.create(1, 0),
+                    pos: x.create(0, 0),
+                    dir: x.create(1, 0),
                     skin: "",
                     backpack: "",
                     helmet: "",
@@ -45291,9 +45657,9 @@ webpackJsonp([1], {
                     dead: !1,
                     downed: !1,
                     wearingPan: !1,
-                    factionLeader: !1,
                     frozen: !1,
-                    frozenOri: 0
+                    frozenOri: 0,
+                    role: u.None
                 },
                 this.$ = {
                     health: 100,
@@ -45312,8 +45678,8 @@ webpackJsonp([1], {
                 this.useItemEmitter = null)
             },
             l: function(e, t, a, i) {
-                this.J.pos = w.copy(e.pos),
-                this.J.dir = w.copy(e.dir),
+                this.J.pos = x.copy(e.pos),
+                this.J.dir = x.copy(e.dir),
                 t && (this.J.skin = e.skin,
                 this.J.backpack = e.backpack,
                 this.J.helmet = e.helmet,
@@ -45326,7 +45692,7 @@ webpackJsonp([1], {
                 this.J.wearingPan = e.wearingPan,
                 this.J.frozen = e.frozen,
                 this.J.frozenOri = e.frozenOri,
-                this.J.factionLeader = e.factionLeader,
+                this.J.role = e.role,
                 e.animSeq != this.anim.seq && this.playAnim(e.animType, e.animSeq),
                 this.action.type = e.actionType,
                 this.action.seq = e.actionSeq,
@@ -45338,7 +45704,7 @@ webpackJsonp([1], {
                 this.renderZOrd = 18,
                 this.renderZIdx = this.__id)
             },
-            Ct: function(e, t) {
+            At: function(e, t) {
                 var a = this.$.curScope;
                 if (this.$.health = e.health,
                 this.$.scopedIn = e.scopedIn,
@@ -45367,7 +45733,7 @@ webpackJsonp([1], {
                 this.$.scopedIn && (this.zoomFast = !1)
             },
             xt: function() {
-                return (k.mobile ? m.scopeZoomRadius.mobile : m.scopeZoomRadius.desktop)[this.J.downed || this.$.scopedIn ? "1xscope" : this.$.curScope]
+                return (v.mobile ? m.scopeZoomRadius.mobile : m.scopeZoomRadius.desktop)[this.J.downed || this.$.scopedIn ? "1xscope" : this.$.curScope]
             },
             Nt: function() {
                 return this.J.helmet ? m.items[this.J.helmet].level : 0
@@ -45391,45 +45757,43 @@ webpackJsonp([1], {
                 var e = this.J.wearingPan ? "unequipped" : "equipped";
                 return m.items.pan.reflectSurface[e]
             },
-            c: function(e, t, a, i, r, o, n, s, l, c, g, f) {
-                var S = m.items[this.J.curWeapType]
+            c: function(e, t, a, i, r, o, n, s, l, c, u, y) {
+                var b = m.items[this.J.curWeapType]
                   , k = this.__id == l
                   , v = t.ue(l);
-                this.posOld = w.copy(this.pos),
-                this.dirOld = w.copy(this.dir),
-                this.pos = w.copy(this.J.pos),
-                this.dir = w.copy(this.J.dir),
+                this.posOld = x.copy(this.pos),
+                this.dirOld = x.copy(this.dir),
+                this.pos = x.copy(this.J.pos),
+                this.dir = x.copy(this.J.dir),
                 this.layer = this.J.layer,
                 this.downed = this.J.downed;
                 var z = this.weapType != this.J.curWeapType;
-                if (this.weapType = this.J.curWeapType,
+                this.weapType = this.J.curWeapType,
                 this.lastThrowablePickupSfxTicker -= e,
-                this.noCeilingRevealTicker -= e,
-                this.isNew) {
-                    var T = t.ee(l).groupId
-                      , P = t.ee(this.__id)
-                      , I = P.groupId == T;
-                    this.nameText.text = P.name,
-                    this.nameText.visible = !k && I
-                }
-                for (var A = null, C = null, E = a.ie.m(), D = 0; D < E.length; D++) {
+                this.noCeilingRevealTicker -= e;
+                var M = t.ee(l).groupId
+                  , T = t.ee(this.__id)
+                  , I = T.groupId == M;
+                this.nameText.text = T.name,
+                this.nameText.visible = !k && I;
+                for (var C = null, A = null, E = a.ie.m(), D = 0; D < E.length; D++) {
                     var O = E[D];
                     if (O.active && !O.dead && O.layer == this.J.layer)
                         if (O.isBush) {
                             var B = .25 * this.rad;
-                            b.intersectCircle(O.collider, this.pos, B) && (A = O)
+                            _.intersectCircle(O.collider, this.pos, B) && (C = O)
                         } else if (O.isDoor && !O.door.open && O.door.playErrorFx) {
                             var L = this.rad + .25
-                              , R = w.rotate(w.create(1, 0), O.rot)
-                              , F = w.sub(O.pos, this.pos);
-                            w.dot(F, R) < 0 && b.intersectCircle(O.collider, this.pos, L) && (C = O)
+                              , R = x.rotate(x.create(1, 0), O.rot)
+                              , F = x.sub(O.pos, this.pos);
+                            x.dot(F, R) < 0 && _.intersectCircle(O.collider, this.pos, L) && (A = O)
                         }
                 }
-                var j = null != A;
-                if (j && (this.insideObstacleType = A.type),
+                var j = null != C;
+                if (j && (this.insideObstacleType = C.type),
                 this.lastInsideObstacleTime -= e,
                 this.wasInsideObstacle != j && this.lastInsideObstacleTime < 0 && !this.isNew) {
-                    var N = u.Defs[this.insideObstacleType];
+                    var N = g.Defs[this.insideObstacleType];
                     this.lastInsideObstacleTime = .2,
                     i.playSound(N.sound.enter, {
                         channel: "sfx",
@@ -45438,18 +45802,18 @@ webpackJsonp([1], {
                         layer: this.layer,
                         muffled: !0
                     });
-                    for (var q = w.normalizeSafe(w.sub(this.posOld, this.pos), w.create(1, 0)), V = j ? 1 : -1, U = Math.floor(y.random(3, 5)), G = 0; G < U; G++) {
-                        var H = w.mul(w.rotate(w.mul(q, V), (Math.random() - .5) * Math.PI / 1.5), y.random(6, 8));
+                    for (var q = x.normalizeSafe(x.sub(this.posOld, this.pos), x.create(1, 0)), V = j ? 1 : -1, U = Math.floor(w.random(3, 5)), G = 0; G < U; G++) {
+                        var H = x.mul(x.rotate(x.mul(q, V), (Math.random() - .5) * Math.PI / 1.5), w.random(6, 8));
                         r.addParticle(N.hitParticle, this.layer, this.pos, H)
                     }
                 }
                 this.wasInsideObstacle = j;
                 var W = this.isNearDoorError;
-                if (this.isNearDoorError = null != C,
+                if (this.isNearDoorError = null != A,
                 this.doorErrorTicker -= e,
                 this.isNearDoorError && !W && this.doorErrorTicker <= 0) {
                     this.doorErrorTicker = .5;
-                    var K = u.Defs[C.type]
+                    var K = g.Defs[A.type]
                       , Z = K.door.sound.error;
                     i.playSound(Z, {
                         channel: "sfx",
@@ -45464,7 +45828,7 @@ webpackJsonp([1], {
                 var Y = "water" == X.type;
                 if (this.updateSubmersion(e, Y, X.river, a),
                 this.updateFrozenState(e),
-                this.stepDistance += w.length(w.sub(this.posOld, this.pos)),
+                this.stepDistance += x.length(x.sub(this.posOld, this.pos)),
                 this.stepDistance > 5 && Y || Y && !this.wasInWater ? (this.stepDistance = 0,
                 r.addRippleParticle(this.pos, this.layer),
                 i.playGroup("footstep_water", {
@@ -45483,10 +45847,10 @@ webpackJsonp([1], {
                 this.bleedTicker -= e,
                 this.J.downed && !this.J.dead && this.action.type == p.None && this.bleedTicker < 0) {
                     this.bleedTicker = m.player.bleedTickRate;
-                    var J = w.rotate(w.mul(this.dir, -1), (Math.random() - .5) * Math.PI / 3);
+                    var J = x.rotate(x.mul(this.dir, -1), (Math.random() - .5) * Math.PI / 3);
                     J.y *= -1,
-                    r.addParticle("bloodSplat", this.renderLayer, w.create(0, 0), w.mul(J, n.ppu), 1, Math.random() * Math.PI * 2, this.container, this.renderZOrd + 1),
-                    g || i.playSound("player_bullet_hit_02", {
+                    r.addParticle("bloodSplat", this.renderLayer, x.create(0, 0), x.mul(J, n.ppu), 1, Math.random() * Math.PI * 2, this.container, this.renderZOrd + 1),
+                    u || i.playSound("player_bullet_hit_02", {
                         channel: "hits",
                         soundPos: this.pos,
                         fallOff: 3,
@@ -45538,12 +45902,12 @@ webpackJsonp([1], {
                     this.useItemEmitter = null);
                 else {
                     var ie = m.items[this.action.item];
-                    ie.emitter && (this.useItemEmitter = r.addEmitter(ie.emitter, this.pos, w.create(0, 1), 1, this.layer, Number.MAX_VALUE, null))
+                    ie.emitter && (this.useItemEmitter = r.addEmitter(ie.emitter, this.pos, x.create(0, 1), 1, this.layer, Number.MAX_VALUE, null))
                 }
-                if (this.useItemEmitter && (this.useItemEmitter.pos = w.add(this.pos, w.create(0, .1)),
+                if (this.useItemEmitter && (this.useItemEmitter.pos = x.add(this.pos, x.create(0, .1)),
                 this.useItemEmitter.layer = this.renderLayer,
                 this.useItemEmitter.zOrd = this.renderZOrd + 1),
-                k && !f) {
+                k && !y) {
                     var re = this.$.curWeapIdx
                       , oe = this.$.weapons[re]
                       , ne = m.items[oe.name];
@@ -45555,8 +45919,8 @@ webpackJsonp([1], {
                     }
                     o.isBindDown(h.Fire) || (this.playedDryFire = !1)
                 }
-                this.gunRecoilL = x.max(0, this.gunRecoilL - this.gunRecoilL * e * 5 - e),
-                this.gunRecoilR = x.max(0, this.gunRecoilR - this.gunRecoilR * e * 5 - e);
+                this.gunRecoilL = f.max(0, this.gunRecoilL - this.gunRecoilL * e * 5 - e),
+                this.gunRecoilR = f.max(0, this.gunRecoilR - this.gunRecoilR * e * 5 - e);
                 var ce = {
                     playerBarn: t,
                     map: a,
@@ -45565,12 +45929,12 @@ webpackJsonp([1], {
                 };
                 this.updateAnim(e, ce),
                 this.currentAnim() == d.None && (this.throwableState = "equip"),
-                this.currentAnim() != d.Cook && this.currentAnim() != d.Throw || "throwable" == S.type || this.playAnim(d.None, this.anim.seq);
-                for (var me = this.selectIdlePose(), pe = _.IdlePoses[me], de = 0; de < this.bones.length; de++) {
+                this.currentAnim() != d.Cook && this.currentAnim() != d.Throw || "throwable" == b.type || this.playAnim(d.None, this.anim.seq);
+                for (var me = this.selectIdlePose(), pe = S.IdlePoses[me], de = 0; de < this.bones.length; de++) {
                     var he = de
-                      , ue = pe[he] || M.identity
+                      , ue = pe[he] || P.identity
                       , ge = this.anim.bones[he];
-                    ge.weight > 0 ? this.bones[de].copy(M.lerp(ge.weight, ue, ge.pose)) : this.bones[de].copy(ue)
+                    ge.weight > 0 ? this.bones[de].copy(P.lerp(ge.weight, ue, ge.pose)) : this.bones[de].copy(ue)
                 }
                 (this.visualsDirty || this.throwableStatePrev != this.throwableState) && this.Ht(t, a),
                 this.visualsDirty = !1,
@@ -45588,43 +45952,43 @@ webpackJsonp([1], {
                 this.container.visible = !this.J.dead
             },
             Kt: function(e, t, a) {
-                for (var i = b.createCircle(this.pos, m.player.maxVisualRadius), r = !1, o = !1, n = !1, s = a.lt.m(), l = 0; l < s.length; l++) {
+                for (var i = _.createCircle(this.pos, m.player.maxVisualRadius), r = !1, o = !1, n = !1, s = a.lt.m(), l = 0; l < s.length; l++) {
                     var c = s[l];
                     if (c.active) {
                         for (var p = 0; p < c.stairs.length; p++) {
                             var d = c.stairs[p]
-                              , h = b.intersect(d.collision, i);
+                              , h = _.intersect(d.collision, i);
                             if (h) {
                                 o = !0;
-                                var u = w.add(d.center, w.mul(d.downDir, -3))
-                                  , g = w.sub(u, this.pos)
-                                  , y = w.length(g);
-                                g = y > 1e-4 ? w.div(g, y) : w.create(1, 0),
-                                n = S.intersectSegmentDist(a.ie.m(), this.pos, g, y, .5, this.layer, !1) < y
+                                var g = x.add(d.center, x.mul(d.downDir, -3))
+                                  , y = x.sub(g, this.pos)
+                                  , w = x.length(y);
+                                y = w > 1e-4 ? x.div(y, w) : x.create(1, 0),
+                                n = k.intersectSegmentDist(a.ie.m(), this.pos, y, w, .5, this.layer, !1) < w
                             }
                             e && d.noCeilingReveal && h && 0 != this.layer && (this.noCeilingRevealTicker = .25)
                         }
-                        for (var x = 0; x < c.mask.length; x++)
-                            if (b.intersect(c.mask[x], i)) {
+                        for (var f = 0; f < c.mask.length; f++)
+                            if (_.intersect(c.mask[f], i)) {
                                 r = !0;
                                 break
                             }
                     }
                 }
-                var f = this.layer
-                  , _ = 18;
-                o && (1 & f && (1 & t.layer || !n) || 2 & t.layer && !r) && (f |= 2),
-                !o || (1 & f) != (1 & t.layer) || r && 0 != t.layer || (f |= 2,
-                _ += 100);
-                var k = this.__id + (this.J.downed ? 0 : 262144) + (e ? 65536 : 0) + (this.J.factionLeader ? 131072 : 0);
-                this.renderLayer = f,
-                this.renderZOrd = _,
-                this.renderZIdx = k
+                var b = this.layer
+                  , S = 18;
+                o && (1 & b && (1 & t.layer || !n) || 2 & t.layer && !r) && (b |= 2),
+                !o || (1 & b) != (1 & t.layer) || r && 0 != t.layer || (b |= 2,
+                S += 100);
+                var v = this.__id + (this.J.downed ? 0 : 262144) + (e ? 65536 : 0) + (this.J.role == u.FactionLeader ? 131072 : 0);
+                this.renderLayer = b,
+                this.renderZOrd = S,
+                this.renderZIdx = v
             },
             Ht: function(e, t) {
                 var a = m.items[this.J.skin]
                   , i = a.skinImg
-                  , r = this.J.factionLeader;
+                  , r = this.J.role == u.FactionLeader ? 1.25 : 1;
                 if (this.bodySprite.texture = c.Texture.fromImage(i.baseSprite),
                 this.bodySprite.tint = i.baseTint,
                 this.bodySprite.scale.set(.25, .25),
@@ -45632,7 +45996,7 @@ webpackJsonp([1], {
                 this.J.frozen && this.updateFrozenImage) {
                     var o = ["player-snow-01.img", "player-snow-02.img", "player-snow-03.img"]
                       , n = o[Math.floor(Math.random() * o.length)]
-                      , s = u.oriToRad(this.J.frozenOri) + .5 * Math.PI + (Math.random() - .5) * Math.PI * .25;
+                      , s = g.oriToRad(this.J.frozenOri) + .5 * Math.PI + (Math.random() - .5) * Math.PI * .25;
                     this.bodyEffectSprite.texture = c.Texture.fromImage(n),
                     this.bodyEffectSprite.rotation = s,
                     this.bodyEffectSprite.tint = 16777215,
@@ -45643,69 +46007,67 @@ webpackJsonp([1], {
                     var l = e.ee(this.__id)
                       , p = l.teamId
                       , h = ["player-patch-01.img", "player-patch-02.img"]
-                      , g = (p - 1) % h.length
-                      , y = h[g]
-                      , w = m.teamColors[g]
-                      , f = u.oriToRad(3) + .5 * Math.PI;
-                    this.patchSprite.texture = c.Texture.fromImage(y),
-                    this.patchSprite.rotation = f,
-                    this.patchSprite.tint = w,
+                      , y = (p - 1) % h.length
+                      , w = h[y]
+                      , x = m.teamColors[y]
+                      , b = g.oriToRad(3) + .5 * Math.PI;
+                    this.patchSprite.texture = c.Texture.fromImage(w),
+                    this.patchSprite.rotation = b,
+                    this.patchSprite.tint = x,
                     this.patchSprite.scale.set(.25, .25),
                     this.patchSprite.visible = !0
                 } else
                     this.patchSprite.visible = !1;
-                var b = function(e, t, a) {
+                var _ = function(e, t, a) {
                     e.texture = c.Texture.fromImage(t),
                     e.scale.set(.35, .35),
                     e.tint = a,
                     e.visible = !0
                 };
-                b(this.handLSprite, i.handSprite, i.handTint),
-                b(this.handRSprite, i.handSprite, i.handTint);
-                var _ = function(e, t, a) {
+                _(this.handLSprite, i.handSprite, i.handTint),
+                _(this.handRSprite, i.handSprite, i.handTint);
+                var S = function(e, t, a) {
                     e.texture = c.Texture.fromImage("player-feet-01.img"),
                     e.scale.set(.45, .45),
                     e.rotation = .5 * Math.PI,
                     e.tint = t,
                     e.visible = a
                 };
-                if (_(this.footLSprite, i.footTint, this.downed),
-                _(this.footRSprite, i.footTint, this.downed),
+                if (S(this.footLSprite, i.footTint, this.downed),
+                S(this.footRSprite, i.footTint, this.downed),
                 "" == this.J.chest || a.camo)
                     this.chestSprite.visible = !1;
                 else {
-                    var S = m.items[this.J.chest];
-                    this.chestSprite.texture = c.Texture.fromImage("player-armor-base-01.img"),
+                    var k = m.items[this.J.chest]
+                      , v = k.skinImg;
+                    this.chestSprite.texture = c.Texture.fromImage(v.baseSprite),
                     this.chestSprite.scale.set(.25, .25),
-                    this.chestSprite.tint = S.tint,
+                    this.chestSprite.tint = v.baseTint,
                     this.chestSprite.visible = !0
                 }
                 if ("" == this.J.helmet || a.camo)
                     this.helmetSprite.visible = !1;
                 else {
-                    var k = m.items[this.J.helmet]
-                      , v = k.skinImg
-                      , z = 3.33 * (this.downed ? 1 : -1);
-                    if (this.helmetSprite.texture = c.Texture.fromImage(v.baseSprite),
-                    this.helmetSprite.position.set(z, 0),
-                    this.helmetSprite.scale.set(.15, .15),
-                    t.factionMode && !r) {
-                        var M = e.ee(this.__id)
-                          , T = M.teamId;
-                        this.helmetSprite.tint = 1 == T ? v.baseTintRed : v.baseTintBlue
-                    } else
-                        this.helmetSprite.tint = v.baseTint;
+                    var z = m.items[this.J.helmet]
+                      , M = z.skinImg
+                      , T = 3.33 * (this.downed ? 1 : -1);
+                    this.helmetSprite.texture = c.Texture.fromImage(M.baseSprite),
+                    this.helmetSprite.position.set(T, 0),
+                    this.helmetSprite.scale.set(.15, .15);
+                    var P = M.baseTint;
+                    t.factionMode && (P = 1 == e.ee(this.__id).teamId ? M.baseTintRed : M.baseTintBlue),
+                    this.helmetSprite.tint = P,
                     this.helmetSprite.visible = !0
                 }
                 if (this.Vt() > 0 && !a.camo && !this.downed) {
-                    var P = (m.items[this.J.backpack],
+                    var I = (m.items[this.J.backpack],
                     [10.25, 11.5, 12.75])
-                      , I = this.Vt()
-                      , A = P[x.min(I - 1, P.length - 1)]
-                      , C = .5 * (.4 + .03 * I);
+                      , C = this.Vt()
+                      , A = I[f.min(C - 1, I.length - 1)]
+                      , E = .5 * (.4 + .03 * C);
                     this.backpackSprite.texture = c.Texture.fromImage("player-circle-base-01.img"),
                     this.backpackSprite.position.set(-A, 0),
-                    this.backpackSprite.scale.set(C, C),
+                    this.backpackSprite.scale.set(E, E),
                     this.backpackSprite.tint = i.backpackTint,
                     this.backpackSprite.visible = !0,
                     function(e, t, a) {
@@ -45715,65 +46077,65 @@ webpackJsonp([1], {
                 } else
                     this.backpackSprite.visible = !1;
                 if (this.J.wearingPan) {
-                    var E = m.items.pan.hipImg;
-                    this.hipSprite.texture = c.Texture.fromImage(E.sprite),
-                    this.hipSprite.position.set(E.pos.x, E.pos.y),
-                    this.hipSprite.scale.set(E.scale.x, E.scale.y),
-                    this.hipSprite.rotation = E.rot,
-                    this.hipSprite.tint = E.tint,
+                    var D = m.items.pan.hipImg;
+                    this.hipSprite.texture = c.Texture.fromImage(D.sprite),
+                    this.hipSprite.position.set(D.pos.x, D.pos.y),
+                    this.hipSprite.scale.set(D.scale.x, D.scale.y),
+                    this.hipSprite.rotation = D.rot,
+                    this.hipSprite.tint = D.tint,
                     this.hipSprite.visible = !0
                 } else
                     this.hipSprite.visible = !1;
-                var D = m.items[this.J.curWeapType];
-                if ("gun" == D.type) {
+                var O = m.items[this.J.curWeapType];
+                if ("gun" == O.type) {
                     this.gunRSprites.setType(this.J.curWeapType, r),
                     this.gunRSprites.setVisible(!0),
-                    D.isDual ? (this.gunLSprites.setType(this.J.curWeapType, r),
+                    O.isDual ? (this.gunLSprites.setType(this.J.curWeapType, r),
                     this.gunLSprites.setVisible(!0)) : this.gunLSprites.setVisible(!1);
-                    var O = this.bodyContainer.getChildIndex(this.handRContainer)
-                      , B = O + 1;
-                    this.gunRSprites.magTop && (B = O - 1),
-                    B = x.max(B, 0),
-                    this.bodyContainer.getChildIndex(this.handLContainer) != B && this.bodyContainer.addChildAt(this.handLContainer, B)
+                    var B = this.bodyContainer.getChildIndex(this.handRContainer)
+                      , L = B + 1;
+                    this.gunRSprites.magTop && (L = B - 1),
+                    L = f.max(L, 0),
+                    this.bodyContainer.getChildIndex(this.handLContainer) != L && this.bodyContainer.addChildAt(this.handLContainer, L)
                 } else
                     this.gunLSprites.setVisible(!1),
                     this.gunRSprites.setVisible(!1);
                 if (this.downed != this.wasDowned)
                     if (this.wasDowned = this.downed,
                     this.downed) {
-                        var L = this.bodyContainer.getChildIndex(this.footLContainer);
-                        this.bodyContainer.addChildAt(this.handLContainer, L),
-                        this.bodyContainer.addChildAt(this.handRContainer, L)
+                        var R = this.bodyContainer.getChildIndex(this.footLContainer);
+                        this.bodyContainer.addChildAt(this.handLContainer, R),
+                        this.bodyContainer.addChildAt(this.handRContainer, R)
                     } else
                         this.bodyContainer.addChild(this.handLContainer),
                         this.bodyContainer.addChild(this.handRContainer);
-                if ("melee" == D.type && "fists" != this.J.curWeapType) {
-                    var R = D.worldImg;
-                    this.meleeSprite.texture = c.Texture.fromImage(R.sprite),
-                    this.meleeSprite.pivot.set(-R.pos.x, -R.pos.y),
-                    this.meleeSprite.scale.set(R.scale.x, R.scale.y),
-                    this.meleeSprite.rotation = R.rot,
-                    this.meleeSprite.tint = R.tint,
+                if ("melee" == O.type && "fists" != this.J.curWeapType) {
+                    var F = O.worldImg;
+                    this.meleeSprite.texture = c.Texture.fromImage(F.sprite),
+                    this.meleeSprite.pivot.set(-F.pos.x, -F.pos.y),
+                    this.meleeSprite.scale.set(F.scale.x / r, F.scale.y / r),
+                    this.meleeSprite.rotation = F.rot,
+                    this.meleeSprite.tint = F.tint,
                     this.meleeSprite.visible = !0;
-                    var F = this.handRContainer.getChildIndex(this.handRSprite)
-                      , j = x.max(R.renderOnHand ? F + 1 : F - 1, 0);
-                    this.handRContainer.getChildIndex(this.meleeSprite) != j && this.handRContainer.addChildAt(this.meleeSprite, j);
-                    var N = this.bodyContainer.getChildIndex(this.handRContainer)
-                      , q = x.max(R.leftHandOntop ? N + 1 : N - 1, 0);
-                    this.bodyContainer.getChildIndex(this.handLContainer) != q && this.bodyContainer.addChildAt(this.handLContainer, q)
+                    var j = this.handRContainer.getChildIndex(this.handRSprite)
+                      , N = f.max(F.renderOnHand ? j + 1 : j - 1, 0);
+                    this.handRContainer.getChildIndex(this.meleeSprite) != N && this.handRContainer.addChildAt(this.meleeSprite, N);
+                    var q = this.bodyContainer.getChildIndex(this.handRContainer)
+                      , V = f.max(F.leftHandOntop ? q + 1 : q - 1, 0);
+                    this.bodyContainer.getChildIndex(this.handLContainer) != V && this.bodyContainer.addChildAt(this.handLContainer, V)
                 } else
                     this.meleeSprite.visible = !1;
-                if ("throwable" == D.type) {
-                    var V = function(e, t) {
+                if ("throwable" == O.type) {
+                    var U = function(e, t) {
                         t.sprite && "none" != t.sprite ? (e.texture = c.Texture.fromImage(t.sprite),
                         e.position.set(t.pos.x, t.pos.y),
                         e.scale.set(t.scale, t.scale),
                         e.rotation = .5 * Math.PI,
                         e.visible = !0) : e.visible = !1
                     }
-                      , U = D.handImg[this.throwableState];
-                    V(this.objectLSprite, U.left),
-                    V(this.objectRSprite, U.right)
+                      , G = O.handImg[this.throwableState];
+                    U(this.objectLSprite, G.left),
+                    U(this.objectRSprite, G.right)
                 } else
                     this.objectLSprite.visible = !1,
                     this.objectRSprite.visible = !1;
@@ -45783,16 +46145,10 @@ webpackJsonp([1], {
                 this.objectLSprite.visible = !1,
                 this.objectRSprite.visible = !1),
                 this.downed && (this.backpackSprite.visible = !1);
-                for (var G = [this.bodySubmergeSprite, this.handLSubmergeSprite, this.handRSubmergeSprite, this.footLSubmergeSprite, this.footRSubmergeSprite], H = t.getMapDef().biome.colors.playerSubmerge, W = 0; W < G.length; W++)
-                    G[W].tint = H;
-                var K = r ? 1.25 : 1
-                  , Z = m.items[this.J.curWeapType];
-                if ("melee" == Z.type && "fists" != this.J.curWeapType) {
-                    var X = Z.worldImg;
-                    this.meleeSprite.scale.set(X.scale.x / K, X.scale.y / K)
-                }
-                this.bodyContainer.scale.set(K, K),
-                this.rad = m.player.radius * K
+                for (var H = [this.bodySubmergeSprite, this.handLSubmergeSprite, this.handRSubmergeSprite, this.footLSubmergeSprite, this.footRSubmergeSprite], W = t.getMapDef().biome.colors.playerSubmerge, K = 0; K < H.length; K++)
+                    H[K].tint = W;
+                this.bodyContainer.scale.set(r, r),
+                this.rad = m.player.radius * r
             },
             Wt: function() {
                 var e = function(e, t) {
@@ -45800,10 +46156,10 @@ webpackJsonp([1], {
                     e.pivot.set(-t.pivot.x, -t.pivot.y),
                     e.rotation = t.rot
                 };
-                e(this.handLContainer, this.bones[T.HandL]),
-                e(this.handRContainer, this.bones[T.HandR]),
-                e(this.footLContainer, this.bones[T.FootL]),
-                e(this.footRContainer, this.bones[T.FootR]);
+                e(this.handLContainer, this.bones[I.HandL]),
+                e(this.handRContainer, this.bones[I.HandR]),
+                e(this.footLContainer, this.bones[I.FootL]),
+                e(this.footRContainer, this.bones[I.FootR]);
                 var t = m.items[this.J.curWeapType];
                 !this.downed && this.currentAnim() != d.Revive && "gun" == t.type && t.worldImg.leftHandOffset && (this.handLContainer.position.x += t.worldImg.leftHandOffset),
                 this.handLContainer.position.x -= 1.125 * this.gunRecoilL,
@@ -45839,15 +46195,15 @@ webpackJsonp([1], {
                     for (var o = 0; o < i.maxReload; o++) {
                         var n = o % 2 == 0 ? -1 : 1
                           , s = Math.PI + Math.PI / 4 * n
-                          , l = i.maxReload <= 2 ? 1 : x.lerp(Math.random(), .8, 1.2);
-                        z.createCasingParticle(this.action.item, s, l, this.pos, this.dir, this.renderLayer, this.renderZOrd + 1, t)
+                          , l = i.maxReload <= 2 ? 1 : f.lerp(Math.random(), .8, 1.2);
+                        T.createCasingParticle(this.action.item, s, l, this.pos, this.dir, this.renderLayer, this.renderZOrd + 1, t)
                     }
             },
             selectIdlePose: function() {
                 var e = m.items[this.J.curWeapType]
                   , t = "fists";
                 return t = this.downed ? "downed" : e.anim && e.anim.idlePose ? e.anim.idlePose : "gun" == e.type ? e.pistol ? e.isDual ? "dualPistol" : "pistol" : "rifle" : "throwable" == e.type ? "throwable" : "fists",
-                _.IdlePoses[t] ? t : "fists"
+                S.IdlePoses[t] ? t : "fists"
             },
             selectAnim: function(e) {
                 var t = function(e, t) {
@@ -45900,26 +46256,26 @@ webpackJsonp([1], {
                 this.currentAnim() != d.None) {
                     var a = this.anim.ticker;
                     this.anim.ticker += 1 * e;
-                    for (var i = _.Animations[this.anim.data.name], r = i.keyframes, o = this.anim.ticker, n = -1, s = 0; o >= r[s].time && s < r.length - 1; )
+                    for (var i = S.Animations[this.anim.data.name], r = i.keyframes, o = this.anim.ticker, n = -1, s = 0; o >= r[s].time && s < r.length - 1; )
                         o -= r[s].time,
                         n++,
                         s++;
-                    n = x.max(n, 0);
-                    for (var l = x.min(o / r[s].time, 1), c = r[n].bones, m = r[s].bones, p = this.anim.data.mirror, h = 0; h < this.anim.bones.length; h++) {
+                    n = f.max(n, 0);
+                    for (var l = f.min(o / r[s].time, 1), c = r[n].bones, m = r[s].bones, p = this.anim.data.mirror, h = 0; h < this.anim.bones.length; h++) {
                         var u = this.anim.bones[h]
                           , g = h;
                         p && (g = h % 2 == 0 ? h + 1 : h - 1),
                         void 0 !== c[g] && void 0 !== m[g] && (u.weight = n == s ? l : 1,
-                        u.pose.copy(M.lerp(l, c[g], m[g])),
+                        u.pose.copy(P.lerp(l, c[g], m[g])),
                         p && (u.pose.pos.y *= -1,
                         u.pose.pivot.y *= -1,
                         u.pose.rot *= -1))
                     }
-                    var y = s == r.length - 1 && x.eqAbs(l, 1)
+                    var y = s == r.length - 1 && f.eqAbs(l, 1)
                       , w = this.anim.ticker;
                     y && (w += 1);
-                    for (var f = 0; f < i.effects.length; f++) {
-                        var b = i.effects[f];
+                    for (var x = 0; x < i.effects.length; x++) {
+                        var b = i.effects[x];
                         b.time >= a && b.time < w && this[b.fn].apply(this, [t, b.args])
                     }
                     y && this.playAnim(d.None, this.anim.seq)
@@ -45941,37 +46297,37 @@ webpackJsonp([1], {
             },
             animThrowableParticles: function(e, t) {
                 if (m.items[this.J.curWeapType].useThrowParticles) {
-                    var a = w.rotate(w.create(.75, .75), Math.atan2(this.dir.y, this.dir.x));
-                    e.particleBarn.addParticle("fragPin", this.renderLayer, w.add(this.pos, a), w.mul(w.rotate(this.dir, .5 * Math.PI), 4.5), 1, Math.random() * Math.PI * 2, null, this.renderZOrd + 1);
-                    var i = w.rotate(w.create(.75, -.75), Math.atan2(this.dir.y, this.dir.x));
-                    e.particleBarn.addParticle("fragLever", this.renderLayer, w.add(this.pos, i), w.mul(w.rotate(this.dir, .25 * -Math.PI), 3.5), 1, Math.random() * Math.PI * 2, null, this.renderZOrd + 1)
+                    var a = x.rotate(x.create(.75, .75), Math.atan2(this.dir.y, this.dir.x));
+                    e.particleBarn.addParticle("fragPin", this.renderLayer, x.add(this.pos, a), x.mul(x.rotate(this.dir, .5 * Math.PI), 4.5), 1, Math.random() * Math.PI * 2, null, this.renderZOrd + 1);
+                    var i = x.rotate(x.create(.75, -.75), Math.atan2(this.dir.y, this.dir.x));
+                    e.particleBarn.addParticle("fragLever", this.renderLayer, x.add(this.pos, i), x.mul(x.rotate(this.dir, .25 * -Math.PI), 3.5), 1, Math.random() * Math.PI * 2, null, this.renderZOrd + 1)
                 }
             },
             animMeleeCollision: function(e, t) {
                 var a = m.items[this.J.curWeapType];
                 if (a && "melee" == a.type && a.attackOffset) {
-                    for (var i = Math.atan2(this.dir.y, this.dir.x), r = w.add(this.pos, w.rotate(a.attackOffset, i)), o = a.attackRad, n = o + w.length(a.attackOffset), s = [], l = e.map.ie.m(), c = 0; c < l.length; c++) {
+                    for (var i = Math.atan2(this.dir.y, this.dir.x), r = x.add(this.pos, x.rotate(a.attackOffset, i)), o = a.attackRad, n = o + x.length(a.attackOffset), s = [], l = e.map.ie.m(), c = 0; c < l.length; c++) {
                         var p = l[c];
-                        if (!(!p.active || p.dead || p.height < m.player.meleeHeight) && y.sameLayer(p.layer, 1 & this.layer)) {
-                            var d = b.intersectCircle(p.collider, r, o);
+                        if (!(!p.active || p.dead || p.height < m.player.meleeHeight) && w.sameLayer(p.layer, 1 & this.layer)) {
+                            var d = _.intersectCircle(p.collider, r, o);
                             if (a.cleave) {
-                                var h = w.normalizeSafe(w.sub(p.pos, this.pos), w.create(1, 0))
-                                  , g = S.intersectSegment(e.map.ie.m(), this.pos, h, n, 1, this.layer, !1);
-                                g && g.id !== p.__id && (d = null)
+                                var h = x.normalizeSafe(x.sub(p.pos, this.pos), x.create(1, 0))
+                                  , u = k.intersectSegment(e.map.ie.m(), this.pos, h, n, 1, this.layer, !1);
+                                u && u.id !== p.__id && (d = null)
                             }
                             if (d) {
-                                var _ = u.Defs[p.type]
-                                  , k = w.add(r, w.mul(w.neg(d.dir), o - d.pen))
-                                  , v = w.rotate(w.mul(d.dir, 7.5), (Math.random() - .5) * Math.PI / 3);
+                                var y = g.Defs[p.type]
+                                  , S = x.add(r, x.mul(x.neg(d.dir), o - d.pen))
+                                  , v = x.rotate(x.mul(d.dir, 7.5), (Math.random() - .5) * Math.PI / 3);
                                 s.push({
                                     pen: d.pen,
                                     prio: 1,
-                                    pos: k,
+                                    pos: S,
                                     vel: v,
                                     layer: this.renderLayer,
                                     zOrd: this.renderZOrd,
-                                    particle: _.hitParticle,
-                                    sound: _.sound.punch,
+                                    particle: y.hitParticle,
+                                    sound: y.sound.punch,
                                     soundFn: "playGroup"
                                 })
                             }
@@ -45979,16 +46335,16 @@ webpackJsonp([1], {
                     }
                     for (var z = e.playerBarn.ee(this.__id).teamId, M = e.playerBarn.de.m(), T = 0; T < M.length; T++) {
                         var P = M[T];
-                        if (P.active && P.__id != this.__id && !P.J.dead && y.sameLayer(P.layer, this.layer)) {
-                            var I = w.normalizeSafe(w.sub(P.pos, this.pos), w.create(1, 0))
-                              , A = f.intersectCircleCircle(r, o, P.pos, P.rad);
-                            if (A && x.eqAbs(n, S.intersectSegmentDist(e.map.ie.m(), this.pos, I, n, m.player.meleeHeight, this.layer, !1))) {
-                                var C = e.playerBarn.ee(P.__id).teamId
-                                  , E = w.rotate(I, (Math.random() - .5) * Math.PI / 3);
+                        if (P.active && P.__id != this.__id && !P.J.dead && w.sameLayer(P.layer, this.layer)) {
+                            var I = x.normalizeSafe(x.sub(P.pos, this.pos), x.create(1, 0))
+                              , C = b.intersectCircleCircle(r, o, P.pos, P.rad);
+                            if (C && f.eqAbs(n, k.intersectSegmentDist(e.map.ie.m(), this.pos, I, n, m.player.meleeHeight, this.layer, !1))) {
+                                var A = e.playerBarn.ee(P.__id).teamId
+                                  , E = x.rotate(I, (Math.random() - .5) * Math.PI / 3);
                                 s.push({
-                                    pen: A.pen,
-                                    prio: C == z ? 2 : 0,
-                                    pos: w.copy(P.pos),
+                                    pen: C.pen,
+                                    prio: A == z ? 2 : 0,
+                                    pos: x.copy(P.pos),
                                     vel: E,
                                     layer: P.renderLayer,
                                     zOrd: P.renderZOrd,
@@ -46003,7 +46359,7 @@ webpackJsonp([1], {
                         return e.prio == t.prio ? t.pen - e.pen : e.prio - t.prio
                     });
                     var D = s.length;
-                    a.cleave || (D = x.min(D, 1));
+                    a.cleave || (D = f.min(D, 1));
                     for (var O = 0; O < D; O++) {
                         var B = s[O];
                         e.particleBarn.addParticle(B.particle, B.layer, B.pos, B.vel, 1, Math.random() * Math.PI * 2, null, B.zOrd + 1),
@@ -46043,9 +46399,9 @@ webpackJsonp([1], {
                     var o = a && !i.isInOcean(this.pos)
                       , n = o ? a.distanceToShore(this.pos) : i.distanceToShore(this.pos)
                       , s = o ? 12 : 16;
-                    r = x.remap(n, 0, s, .6, 1)
+                    r = f.remap(n, 0, s, .6, 1)
                 }
-                this.submersion = x.lerp(4 * e, this.submersion, r);
+                this.submersion = f.lerp(4 * e, this.submersion, r);
                 var l = .8 * this.submersion
                   , c = 2 * (.9 - .4 * this.submersion)
                   , m = 1 / (.1 * c);
@@ -46060,7 +46416,7 @@ webpackJsonp([1], {
             updateFrozenState: function(e) {
                 this.J.frozen ? this.frozenTicker = .25 : (this.frozenTicker -= e,
                 this.updateFrozenImage = !0),
-                this.bodyEffectSprite.alpha = this.J.frozen ? 1 : x.remap(this.frozenTicker, 0, .25, 0, 1),
+                this.bodyEffectSprite.alpha = this.J.frozen ? 1 : f.remap(this.frozenTicker, 0, .25, 0, 1),
                 this.bodyEffectSprite.visible = this.frozenTicker > 0
             },
             addRecoil: function(e, t, a) {
@@ -46074,7 +46430,7 @@ webpackJsonp([1], {
                     var i = t[a];
                     if (!(i.layers.length < 2)) {
                         var r = i.layers[1];
-                        if (b.intersectCircle(r.collision, this.pos, this.rad))
+                        if (_.intersectCircle(r.collision, this.pos, this.rad))
                             return r.underground
                     }
                 }
@@ -46085,40 +46441,40 @@ webpackJsonp([1], {
             onMapLoad: function(e) {},
             c: function(e, t, a, i, r, o, n, s, l, c, m, p) {
                 for (var d = this.de.m(), h = 0; h < d.length; h++) {
-                    var u = d[h];
-                    u.active && u.c(e, this, n, l, r, s, o, i, t, c, m, p)
+                    var g = d[h];
+                    g.active && g.c(e, this, n, l, r, s, o, i, t, c, m, p)
                 }
-                var y = this.ee(t)
-                  , f = this.ue(t);
+                var w = this.ee(t)
+                  , b = this.ue(t);
                 this.Zt(t, {
-                    pos: w.copy(f.J.pos),
-                    health: f.$.health,
+                    pos: x.copy(b.J.pos),
+                    health: b.$.health,
                     disconnected: !1,
-                    dead: f.J.dead,
-                    downed: f.J.downed,
-                    factionLeader: f.J.factionLeader,
+                    dead: b.J.dead,
+                    downed: b.J.downed,
+                    factionLeader: b.J.role == u.FactionLeader,
                     visible: !0
                 });
-                for (var b = g.getPlayerStatusUpdateRate(n.gameMode, n.teamMode), _ = Object.keys(this.playerStatus), S = 0; S < _.length; S++) {
-                    var k = this.playerStatus[_[S]]
-                      , v = k.playerId
-                      , z = this.ee(v)
-                      , M = this.ue(v);
-                    M ? (k.posDelta = w.length(w.sub(M.J.pos, k.pos)),
-                    k.posTarget = w.copy(M.J.pos),
-                    k.posInterp = x.clamp(k.posInterp + .2 * e, e / b, 1),
-                    k.dead = M.J.dead,
-                    k.downed = M.J.downed) : k.posInterp = e / b;
-                    var T = w.sub(k.posTarget, k.pos)
-                      , P = w.length(T)
-                      , I = P > 1e-4 ? w.div(T, P) : w.create(1, 0)
-                      , A = x.min(P, k.posDelta * k.posInterp);
-                    k.pos = w.add(k.pos, w.mul(I, A)),
-                    k.timeSinceVisible += e,
-                    k.timeSinceUpdate += e;
-                    var C = k.dead && (z.teamId == y.teamId || k.factionLeader) ? .6 : 0;
-                    k.minimapAlpha = x.smoothstep(k.timeSinceVisible, 0, .1) * x.lerp(x.smoothstep(k.timeSinceUpdate, 2, 2.5), 1, C),
-                    k.minimapVisible = k.minimapAlpha > .01
+                for (var _ = y.getPlayerStatusUpdateRate(n.gameMode, n.teamMode), S = Object.keys(this.playerStatus), k = 0; k < S.length; k++) {
+                    var v = this.playerStatus[S[k]]
+                      , z = v.playerId
+                      , M = this.ee(z)
+                      , T = this.ue(z);
+                    T ? (v.posDelta = x.length(x.sub(T.J.pos, v.pos)),
+                    v.posTarget = x.copy(T.J.pos),
+                    v.posInterp = f.clamp(v.posInterp + .2 * e, e / _, 1),
+                    v.dead = T.J.dead,
+                    v.downed = T.J.downed) : v.posInterp = e / _;
+                    var P = x.sub(v.posTarget, v.pos)
+                      , I = x.length(P)
+                      , C = I > 1e-4 ? x.div(P, I) : x.create(1, 0)
+                      , A = f.min(I, v.posDelta * v.posInterp);
+                    v.pos = x.add(v.pos, x.mul(C, A)),
+                    v.timeSinceVisible += e,
+                    v.timeSinceUpdate += e;
+                    var E = v.dead && (M.teamId == w.teamId || v.factionLeader) ? .6 : 0;
+                    v.minimapAlpha = f.smoothstep(v.timeSinceVisible, 0, .1) * f.lerp(f.smoothstep(v.timeSinceUpdate, 2, 2.5), 1, E),
+                    v.minimapVisible = v.minimapAlpha > .01
                 }
             },
             render: function(e, t) {
@@ -46200,7 +46556,7 @@ webpackJsonp([1], {
                 var i = this.getTeamInfo(e)
                   , r = a ? this.playerIds : i.playerIds;
                 if (r.length != t.players.length)
-                    throw new Error("PlayerIds and playerStatus.players out of sync. OurLen: " + r.length + " MsgLen: " + t.players.length + " FactionMode: " + a);
+                    return void z.logError("PlayerIds and playerStatus.players out of sync. OurLen: " + r.length + " MsgLen: " + t.players.length + " FactionMode: " + a);
                 for (var o = 0; o < r.length; o++) {
                     var n = r[o]
                       , s = t.players[o];
@@ -46210,9 +46566,9 @@ webpackJsonp([1], {
             Zt: function(e, t) {
                 var a = this.playerStatus[e] || {
                     playerId: e,
-                    pos: w.copy(t.pos),
-                    posTarget: w.copy(t.pos),
-                    posDelta: w.create(0, 0),
+                    pos: x.copy(t.pos),
+                    posTarget: x.copy(t.pos),
+                    posDelta: x.create(0, 0),
                     health: 100,
                     posInterp: 0,
                     visible: !1,
@@ -46226,12 +46582,12 @@ webpackJsonp([1], {
                     minimapVisible: !1
                 };
                 a.visible,
-                a.minimapVisible || (a.pos = w.copy(t.pos),
+                a.minimapVisible || (a.pos = x.copy(t.pos),
                 !a.visible && t.visible && (a.timeSinceVisible = 0)),
                 a.visible = t.visible,
                 a.visible && (a.timeSinceUpdate = 0),
-                a.posTarget = w.copy(t.pos),
-                a.posDelta = w.length(w.sub(t.pos, a.pos)),
+                a.posTarget = x.copy(t.pos),
+                a.posDelta = x.length(x.sub(t.pos, a.pos)),
                 a.dead = t.dead,
                 a.downed = t.downed,
                 a.factionLeader = t.factionLeader,
@@ -46242,10 +46598,10 @@ webpackJsonp([1], {
             te: function(e) {
                 return this.playerStatus[e]
             },
-            At: function(e, t) {
+            Ct: function(e, t) {
                 var a = this.getGroupInfo(e);
                 if (a.playerIds.length != t.players.length)
-                    throw new Error("PlayerIds and groupStatus.players out of sync");
+                    return void z.logError("PlayerIds and groupStatus.players out of sync");
                 for (var i = 0; i < a.playerIds.length; i++) {
                     var r = a.playerIds[i]
                       , o = t.players[i]
@@ -46500,7 +46856,7 @@ webpackJsonp([1], {
             "game-level-1": "Nvl. 1",
             "game-level-2": "Nvl. 2",
             "game-level-3": "Nvl. 3",
-            "game-level-9": "Nvl. 3",
+            "game-level-4": "Nvl. 4",
             "game-outfitBase": "Traje Básico",
             "game-outfitRoyalFortune": "Fortuna Real",
             "game-outfitKeyLime": "Limero",
@@ -46572,10 +46928,15 @@ webpackJsonp([1], {
             "game-blue-team": "Equipo azul",
             "game-red-leader": "líder rojo",
             "game-blue-leader": "líder azul",
+            "game-lieutenant": "teniente",
             "game-is-down": "ha caído",
             "game-is-dead": "ha muerto",
             "game-promoted-to": "ascendió a",
-            "game-youve-been-promoted-to": "Has sido ascendido a"
+            "game-youve-been-promoted-to": "Has sido ascendido a",
+            "game-perk-title-1": "Liderazgo",
+            "game-perk-desc-1": "Adrenalina maxima.</br>Aumento de tamaño.",
+            "game-perk-title-2": "Bandolera",
+            "game-perk-desc-2": "Cargadores extendidos."
         };
         e.exports = i
     },
@@ -46596,7 +46957,7 @@ webpackJsonp([1], {
                 type: "POST",
                 timeout: 1e4,
                 headers: {
-                    "x-surviv": Date.now()
+                    "X-Requested-With": "XMLHttpRequest"
                 }
             };
             t && (i.contentType = "application/json; charset=utf-8",
@@ -47067,8 +47428,8 @@ webpackJsonp([1], {
           , n = a("989ad62a")
           , s = n.GasMode
           , l = a("10899aea")
-          , c = a("1901e2d9")
-          , m = a("c2a798c8")
+          , c = a("c2a798c8")
+          , m = a("26be8056")
           , p = 1e5
           , d = 512
           , h = function() {
@@ -47082,7 +47443,7 @@ webpackJsonp([1], {
                     this.canvas.width = window.innerWidth,
                     this.canvas.height = window.innerHeight,
                     this.display = new o.Sprite(o.Texture.fromCanvas(this.canvas)),
-                    this.gasColorDOMString = c.colorToDOMString(a, .6);
+                    this.gasColorDOMString = m.colorToDOMString(a, .6);
                 else {
                     this.display = new o.Graphics;
                     var r = this.display;
@@ -47097,8 +47458,8 @@ webpackJsonp([1], {
                     for (var n = 1; n < d; n++) {
                         var s = n / d
                           , l = Math.sin(2 * Math.PI * s)
-                          , m = Math.cos(2 * Math.PI * s);
-                        r.lineTo(l, m)
+                          , c = Math.cos(2 * Math.PI * s);
+                        r.lineTo(l, c)
                     }
                     r.closePath(),
                     r.addHole()
@@ -47130,7 +47491,7 @@ webpackJsonp([1], {
                         r.arc(e.x, e.y, t, 0, 2 * Math.PI, !0),
                         r.fill()
                     } else {
-                        var o = m.copy(e)
+                        var o = c.copy(e)
                           , n = t;
                         n < .1 && (n = 1,
                         o.x += .5 * p);
@@ -47153,9 +47514,9 @@ webpackJsonp([1], {
                 this.display.addChild(this.lineGfx),
                 this.circleGfx.visible = !1,
                 this.lineGfx.visible = !1,
-                this.safePos = m.create(0, 0),
+                this.safePos = c.create(0, 0),
                 this.safeRad = 0,
-                this.playerPos = m.create(0, 0)
+                this.playerPos = c.create(0, 0)
             }
             return r(e, [{
                 key: "render",
@@ -47163,9 +47524,9 @@ webpackJsonp([1], {
                     if (this.circleGfx.visible = i,
                     this.lineGfx.visible = r,
                     i || r) {
-                        var o = !m.eq(this.safePos, e, 1e-4)
+                        var o = !c.eq(this.safePos, e, 1e-4)
                           , n = Math.abs(this.safeRad - t) > 1e-4
-                          , s = !m.eq(this.playerPos, a, 1e-4);
+                          , s = !c.eq(this.playerPos, a, 1e-4);
                         if (o && (this.safePos.x = e.x,
                         this.safePos.y = e.y),
                         n && (this.safeRad = t),
@@ -47176,10 +47537,10 @@ webpackJsonp([1], {
                         this.circleGfx.lineStyle(1.5, 16777215),
                         this.circleGfx.drawCircle(0, 0, t)),
                         o || n || s) {
-                            var l = m.length(m.sub(a, e)) < t
-                              , c = l ? .5 : 1;
+                            var l = c.length(c.sub(a, e)) < t
+                              , m = l ? .5 : 1;
                             this.lineGfx.clear(),
-                            this.lineGfx.lineStyle(2, 65280, c),
+                            this.lineGfx.lineStyle(2, 65280, m),
                             this.lineGfx.moveTo(a.x, a.y),
                             this.lineGfx.lineTo(e.x, e.y)
                         }
@@ -47196,11 +47557,11 @@ webpackJsonp([1], {
                 this.circleT = 0,
                 this.duration = 0,
                 this.circleOld = {
-                    pos: m.create(0, 0),
+                    pos: c.create(0, 0),
                     rad: a
                 },
                 this.circleNew = {
-                    pos: m.create(0, 0),
+                    pos: c.create(0, 0),
                     rad: a
                 },
                 this.gasRenderer = new h(t,16711680)
@@ -47225,7 +47586,7 @@ webpackJsonp([1], {
                 value: function() {
                     var e = this.mode == s.Moving ? this.circleT : 0;
                     return {
-                        pos: m.lerp(e, this.circleOld.pos, this.circleNew.pos),
+                        pos: c.lerp(e, this.circleOld.pos, this.circleNew.pos),
                         rad: l.lerp(e, this.circleOld.rad, this.circleNew.rad)
                     }
                 }
@@ -47245,9 +47606,9 @@ webpackJsonp([1], {
                     this.mode = t.mode,
                     this.duration = t.duration,
                     this.circleT = e,
-                    this.circleOld.pos = m.copy(t.posOld),
+                    this.circleOld.pos = c.copy(t.posOld),
                     this.circleOld.rad = t.radOld,
-                    this.circleNew.pos = m.copy(t.posNew),
+                    this.circleNew.pos = c.copy(t.posNew),
                     this.circleNew.rad = t.radNew
                 }
             }, {
@@ -47271,7 +47632,7 @@ webpackJsonp([1], {
         e.exports = {
             shared: [{
                 meta: {
-                    image: "shared-0-50-3c485d6e.png",
+                    image: "shared-0-50-830ef0b6.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -47559,7 +47920,7 @@ webpackJsonp([1], {
                             h: 224
                         }
                     },
-                    "map-wall-14.img": {
+                    "map-wall-14-rounded.img": {
                         frame: {
                             x: 1938,
                             y: 1338,
@@ -47579,7 +47940,7 @@ webpackJsonp([1], {
                             h: 224
                         }
                     },
-                    "map-wall-14-rounded.img": {
+                    "map-wall-14.img": {
                         frame: {
                             x: 1958,
                             y: 1338,
@@ -47679,7 +48040,7 @@ webpackJsonp([1], {
                             h: 192
                         }
                     },
-                    "map-wall-12.img": {
+                    "map-wall-12-rounded.img": {
                         frame: {
                             x: 1979,
                             y: 198,
@@ -47719,7 +48080,7 @@ webpackJsonp([1], {
                             h: 192
                         }
                     },
-                    "map-wall-12-rounded.img": {
+                    "map-wall-12.img": {
                         frame: {
                             x: 1979,
                             y: 590,
@@ -47819,7 +48180,7 @@ webpackJsonp([1], {
                             h: 170
                         }
                     },
-                    "map-bunker-crossing-floor-01.img": {
+                    "map-building-shack-floor-02.img": {
                         frame: {
                             x: 1423,
                             y: 615,
@@ -47839,7 +48200,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-building-shack-floor-02.img": {
+                    "map-bunker-crossing-floor-01.img": {
                         frame: {
                             x: 1587,
                             y: 615,
@@ -47879,7 +48240,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-wall-10.img": {
+                    "map-wall-10-rounded.img": {
                         frame: {
                             x: 1979,
                             y: 1296,
@@ -47899,7 +48260,7 @@ webpackJsonp([1], {
                             h: 160
                         }
                     },
-                    "map-wall-10-rounded.img": {
+                    "map-wall-10.img": {
                         frame: {
                             x: 1979,
                             y: 1460,
@@ -48399,7 +48760,7 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "map-wall-05.img": {
+                    "map-wall-05-rounded.img": {
                         frame: {
                             x: 2015,
                             y: 1631,
@@ -48419,7 +48780,7 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "map-wall-05-rounded.img": {
+                    "map-wall-05.img": {
                         frame: {
                             x: 2015,
                             y: 1715,
@@ -48499,7 +48860,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-door-01.img": {
+                    "map-door-05.img": {
                         frame: {
                             x: 1999,
                             y: 323,
@@ -48519,7 +48880,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-door-05.img": {
+                    "map-door-01.img": {
                         frame: {
                             x: 1999,
                             y: 394,
@@ -48559,7 +48920,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-recorder-02.img": {
+                    "map-recorder-01.img": {
                         frame: {
                             x: 1936,
                             y: 1726,
@@ -48919,7 +49280,7 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "map-power-box-01.img": {
+                    "timer-background.img": {
                         frame: {
                             x: 1868,
                             y: 1290,
@@ -48939,7 +49300,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "gun-dp28-top-01.img": {
+                    "player-map-inner.img": {
                         frame: {
                             x: 1908,
                             y: 1290,
@@ -48947,16 +49308,16 @@ webpackJsonp([1], {
                             h: 36
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 2,
-                            y: 2,
+                            x: 0,
+                            y: 0,
                             w: 36,
                             h: 36
                         },
                         sourceSize: {
-                            w: 40,
-                            h: 40
+                            w: 36,
+                            h: 36
                         }
                     },
                     "unlock.img": {
@@ -48979,7 +49340,7 @@ webpackJsonp([1], {
                             h: 32
                         }
                     },
-                    "map-wall-02.img": {
+                    "map-wall-02-rounded.img": {
                         frame: {
                             x: 2015,
                             y: 2006,
@@ -49079,7 +49440,7 @@ webpackJsonp([1], {
                             h: 19
                         }
                     },
-                    "map-barrel-04.img": {
+                    "map-barrel-03.img": {
                         frame: {
                             x: 798,
                             y: 1782,
@@ -49099,7 +49460,7 @@ webpackJsonp([1], {
                             h: 18
                         }
                     },
-                    "map-barrel-03.img": {
+                    "map-barrel-04.img": {
                         frame: {
                             x: 847,
                             y: 1782,
@@ -49199,7 +49560,7 @@ webpackJsonp([1], {
                             h: 16
                         }
                     },
-                    "ping-part-circle-highlight.img": {
+                    "map-bottle-01.img": {
                         frame: {
                             x: 990,
                             y: 1782,
@@ -49207,16 +49568,16 @@ webpackJsonp([1], {
                             h: 16
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 24,
-                            y: 24,
+                            x: 0,
+                            y: 0,
                             w: 16,
                             h: 16
                         },
                         sourceSize: {
-                            w: 64,
-                            h: 64
+                            w: 16,
+                            h: 16
                         }
                     },
                     "map-bottle-02.img": {
@@ -49239,7 +49600,7 @@ webpackJsonp([1], {
                             h: 16
                         }
                     },
-                    "map-bottle-03.img": {
+                    "ping-part-circle-highlight.img": {
                         frame: {
                             x: 1030,
                             y: 1782,
@@ -49247,19 +49608,19 @@ webpackJsonp([1], {
                             h: 16
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 24,
+                            y: 24,
                             w: 16,
                             h: 16
                         },
                         sourceSize: {
-                            w: 16,
-                            h: 16
+                            w: 64,
+                            h: 64
                         }
                     },
-                    "map-wall-01-rounded.img": {
+                    "map-bottle-03.img": {
                         frame: {
                             x: 1050,
                             y: 1782,
@@ -49279,29 +49640,9 @@ webpackJsonp([1], {
                             h: 16
                         }
                     },
-                    "ping-part-circle.img": {
+                    "map-wall-01-rounded.img": {
                         frame: {
                             x: 1070,
-                            y: 1782,
-                            w: 16,
-                            h: 16
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 24,
-                            y: 24,
-                            w: 16,
-                            h: 16
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "map-bottle-01.img": {
-                        frame: {
-                            x: 1090,
                             y: 1782,
                             w: 16,
                             h: 16
@@ -49317,6 +49658,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 16,
                             h: 16
+                        }
+                    },
+                    "ping-part-circle.img": {
+                        frame: {
+                            x: 1090,
+                            y: 1782,
+                            w: 16,
+                            h: 16
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 24,
+                            y: 24,
+                            w: 16,
+                            h: 16
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
                         }
                     },
                     "ping-part-circle-auto-highlight.img": {
@@ -49462,7 +49823,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-1-50-977c04e5.png",
+                    image: "shared-1-50-5ad26a5c.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -50030,7 +50391,7 @@ webpackJsonp([1], {
                             h: 192
                         }
                     },
-                    "map-building-container-ceiling-02.img": {
+                    "map-building-container-ceiling-05.img": {
                         frame: {
                             x: 1822,
                             y: 1209,
@@ -50050,7 +50411,7 @@ webpackJsonp([1], {
                             h: 268
                         }
                     },
-                    "map-building-container-ceiling-03.img": {
+                    "map-building-container-ceiling-02.img": {
                         frame: {
                             x: 1916,
                             y: 1209,
@@ -50070,7 +50431,7 @@ webpackJsonp([1], {
                             h: 268
                         }
                     },
-                    "map-building-container-ceiling-01.img": {
+                    "map-building-container-ceiling-03.img": {
                         frame: {
                             x: 1822,
                             y: 1404,
@@ -50090,7 +50451,7 @@ webpackJsonp([1], {
                             h: 268
                         }
                     },
-                    "map-building-container-ceiling-05.img": {
+                    "map-building-container-ceiling-01.img": {
                         frame: {
                             x: 1916,
                             y: 1404,
@@ -50530,7 +50891,7 @@ webpackJsonp([1], {
                             h: 82
                         }
                     },
-                    "map-bed-res-01.img": {
+                    "map-bed-res-02.img": {
                         frame: {
                             x: 1772,
                             y: 507,
@@ -50550,7 +50911,7 @@ webpackJsonp([1], {
                             h: 96
                         }
                     },
-                    "map-bed-res-02.img": {
+                    "map-bed-res-01.img": {
                         frame: {
                             x: 1772,
                             y: 591,
@@ -50690,7 +51051,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-wall-04.img": {
+                    "gun-med-01.img": {
                         frame: {
                             x: 1802,
                             y: 844,
@@ -50710,7 +51071,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "gun-med-01.img": {
+                    "map-wall-04-rounded.img": {
                         frame: {
                             x: 1802,
                             y: 912,
@@ -50730,7 +51091,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-wall-04-rounded.img": {
+                    "map-wall-04.img": {
                         frame: {
                             x: 1802,
                             y: 980,
@@ -50770,7 +51131,7 @@ webpackJsonp([1], {
                             h: 56
                         }
                     },
-                    "map-building-house-window-res-01.img": {
+                    "map-building-house-window-01.img": {
                         frame: {
                             x: 2026,
                             y: 2,
@@ -50890,7 +51251,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-bush-res-04.img": {
+                    "part-airdrop-01.img": {
                         frame: {
                             x: 1672,
                             y: 759,
@@ -50898,19 +51259,19 @@ webpackJsonp([1], {
                             h: 48
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 12,
-                            y: 12,
+                            x: 0,
+                            y: 0,
                             w: 48,
                             h: 48
                         },
                         sourceSize: {
-                            w: 72,
-                            h: 72
+                            w: 48,
+                            h: 48
                         }
                     },
-                    "map-woodpile-01.img": {
+                    "map-pot-02.img": {
                         frame: {
                             x: 1724,
                             y: 759,
@@ -51050,9 +51411,29 @@ webpackJsonp([1], {
                             h: 47
                         }
                     },
-                    "map-pot-res-01.img": {
+                    "map-bunker-vent-01.img": {
                         frame: {
                             x: 624,
+                            y: 1202,
+                            w: 42,
+                            h: 42
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 42,
+                            h: 42
+                        },
+                        sourceSize: {
+                            w: 42,
+                            h: 42
+                        }
+                    },
+                    "map-pot-res-01.img": {
+                        frame: {
+                            x: 670,
                             y: 1202,
                             w: 42,
                             h: 42
@@ -51072,7 +51453,7 @@ webpackJsonp([1], {
                     },
                     "cog.img": {
                         frame: {
-                            x: 670,
+                            x: 716,
                             y: 1202,
                             w: 42,
                             h: 42
@@ -51090,27 +51471,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-bunker-vent-01.img": {
-                        frame: {
-                            x: 716,
-                            y: 1202,
-                            w: 42,
-                            h: 42
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 42,
-                            h: 42
-                        },
-                        sourceSize: {
-                            w: 42,
-                            h: 42
-                        }
-                    },
-                    "player-map-outer.img": {
+                    "gun-dp28-top-01.img": {
                         frame: {
                             x: 762,
                             y: 1202,
@@ -51118,19 +51479,19 @@ webpackJsonp([1], {
                             h: 36
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 2,
+                            y: 2,
                             w: 36,
                             h: 36
                         },
                         sourceSize: {
-                            w: 36,
-                            h: 36
+                            w: 40,
+                            h: 40
                         }
                     },
-                    "part-cloth-01.img": {
+                    "map-power-box-01.img": {
                         frame: {
                             x: 802,
                             y: 1202,
@@ -51150,7 +51511,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "timer-background.img": {
+                    "close.img": {
                         frame: {
                             x: 842,
                             y: 1202,
@@ -51190,7 +51551,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "player-map-inner.img": {
+                    "cursor-03.img": {
                         frame: {
                             x: 922,
                             y: 1202,
@@ -51210,7 +51571,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "close.img": {
+                    "part-cloth-01.img": {
                         frame: {
                             x: 962,
                             y: 1202,
@@ -51230,7 +51591,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "cursor-03.img": {
+                    "player-map-outer.img": {
                         frame: {
                             x: 1002,
                             y: 1202,
@@ -51290,7 +51651,7 @@ webpackJsonp([1], {
                             h: 35
                         }
                     },
-                    "part-smoke-01.img": {
+                    "part-snow-01.img": {
                         frame: {
                             x: 1136,
                             y: 1202,
@@ -51330,7 +51691,7 @@ webpackJsonp([1], {
                             h: 36
                         }
                     },
-                    "part-snow-01.img": {
+                    "part-smoke-01.img": {
                         frame: {
                             x: 1212,
                             y: 1202,
@@ -51570,7 +51931,7 @@ webpackJsonp([1], {
                             h: 32
                         }
                     },
-                    "map-wall-02-rounded.img": {
+                    "map-wall-02.img": {
                         frame: {
                             x: 2026,
                             y: 220,
@@ -51730,7 +52091,7 @@ webpackJsonp([1], {
                             h: 48
                         }
                     },
-                    "down.img": {
+                    "dc.img": {
                         frame: {
                             x: 1080,
                             y: 812,
@@ -51750,7 +52111,7 @@ webpackJsonp([1], {
                             h: 32
                         }
                     },
-                    "dc.img": {
+                    "down.img": {
                         frame: {
                             x: 1112,
                             y: 812,
@@ -51830,30 +52191,10 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-bush-res-01.img": {
+                    "map-candle-01.img": {
                         frame: {
                             x: 1978,
                             y: 1685,
-                            w: 26,
-                            h: 26
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 23,
-                            y: 23,
-                            w: 26,
-                            h: 26
-                        },
-                        sourceSize: {
-                            w: 72,
-                            h: 72
-                        }
-                    },
-                    "map-candle-01.img": {
-                        frame: {
-                            x: 1282,
-                            y: 812,
                             w: 26,
                             h: 26
                         },
@@ -51868,6 +52209,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 26,
                             h: 26
+                        }
+                    },
+                    "map-bush-res-01.img": {
+                        frame: {
+                            x: 1282,
+                            y: 812,
+                            w: 26,
+                            h: 26
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 23,
+                            y: 23,
+                            w: 26,
+                            h: 26
+                        },
+                        sourceSize: {
+                            w: 72,
+                            h: 72
                         }
                     },
                     "map-gun-mount-01.img": {
@@ -51910,7 +52271,7 @@ webpackJsonp([1], {
                             h: 28
                         }
                     },
-                    "map-locker-01.img": {
+                    "map-locker-02.img": {
                         frame: {
                             x: 1464,
                             y: 812,
@@ -51930,7 +52291,7 @@ webpackJsonp([1], {
                             h: 25
                         }
                     },
-                    "map-locker-03.img": {
+                    "map-locker-01.img": {
                         frame: {
                             x: 1516,
                             y: 812,
@@ -51950,7 +52311,7 @@ webpackJsonp([1], {
                             h: 25
                         }
                     },
-                    "map-locker-02.img": {
+                    "map-locker-03.img": {
                         frame: {
                             x: 1568,
                             y: 812,
@@ -52090,7 +52451,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-building-house-window-01.img": {
+                    "map-building-house-window-res-01.img": {
                         frame: {
                             x: 2026,
                             y: 58,
@@ -52113,7 +52474,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-2-50-5d1cd54b.png",
+                    image: "shared-2-50-b2db42c6.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -52301,7 +52662,7 @@ webpackJsonp([1], {
                             h: 184
                         }
                     },
-                    "map-tree-03.img": {
+                    "emote-circle-outer.img": {
                         frame: {
                             x: 1371,
                             y: 210,
@@ -52321,7 +52682,7 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "emote-circle-outer.img": {
+                    "map-tree-03.img": {
                         frame: {
                             x: 919,
                             y: 398,
@@ -52881,7 +53242,7 @@ webpackJsonp([1], {
                             h: 90
                         }
                     },
-                    "map-shack-res-03.img": {
+                    "map-shack-res-02.img": {
                         frame: {
                             x: 919,
                             y: 660,
@@ -52901,7 +53262,7 @@ webpackJsonp([1], {
                             h: 170
                         }
                     },
-                    "map-shack-res-02.img": {
+                    "map-shack-res-03.img": {
                         frame: {
                             x: 1034,
                             y: 660,
@@ -53121,7 +53482,7 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "map-airdrop-01.img": {
+                    "map-airdrop-02.img": {
                         frame: {
                             x: 789,
                             y: 1169,
@@ -53141,7 +53502,7 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "map-airdrop-02.img": {
+                    "map-airdrop-01.img": {
                         frame: {
                             x: 873,
                             y: 1169,
@@ -53341,7 +53702,7 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "map-crate-10.img": {
+                    "player-armor-base-01.img": {
                         frame: {
                             x: 530,
                             y: 1259,
@@ -53361,7 +53722,7 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "map-crate-11.img": {
+                    "map-crate-10.img": {
                         frame: {
                             x: 608,
                             y: 1259,
@@ -53381,7 +53742,7 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "player-armor-base-01.img": {
+                    "map-crate-11.img": {
                         frame: {
                             x: 686,
                             y: 1259,
@@ -53421,30 +53782,10 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "proj-mirv-nopin.img": {
+                    "proj-mirv-pin.img": {
                         frame: {
                             x: 1479,
                             y: 1169,
-                            w: 52,
-                            h: 74
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 12,
-                            y: 0,
-                            w: 52,
-                            h: 74
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 74
-                        }
-                    },
-                    "proj-mirv-pin.img": {
-                        frame: {
-                            x: 764,
-                            y: 1259,
                             w: 52,
                             h: 74
                         },
@@ -53461,7 +53802,27 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "loot-circle-outer-02.img": {
+                    "proj-mirv-nopin.img": {
+                        frame: {
+                            x: 764,
+                            y: 1259,
+                            w: 52,
+                            h: 74
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 12,
+                            y: 0,
+                            w: 52,
+                            h: 74
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 74
+                        }
+                    },
+                    "loot-circle-outer-01.img": {
                         frame: {
                             x: 820,
                             y: 1259,
@@ -53481,7 +53842,7 @@ webpackJsonp([1], {
                             h: 73
                         }
                     },
-                    "loot-circle-outer-01.img": {
+                    "loot-circle-outer-02.img": {
                         frame: {
                             x: 897,
                             y: 1259,
@@ -53561,7 +53922,7 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "map-crate-02.img": {
+                    "map-crate-08.img": {
                         frame: {
                             x: 1342,
                             y: 1259,
@@ -53581,7 +53942,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-stone-04.img": {
+                    "map-crate-09.img": {
                         frame: {
                             x: 1418,
                             y: 1259,
@@ -53601,7 +53962,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-barrel-01.img": {
+                    "map-stone-01.img": {
                         frame: {
                             x: 2,
                             y: 1341,
@@ -53621,7 +53982,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-stone-01.img": {
+                    "map-crate-01.img": {
                         frame: {
                             x: 78,
                             y: 1341,
@@ -53641,7 +54002,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-barrel-02.img": {
+                    "ping-border.img": {
                         frame: {
                             x: 154,
                             y: 1341,
@@ -53661,7 +54022,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "ping-border.img": {
+                    "map-barrel-02.img": {
                         frame: {
                             x: 230,
                             y: 1341,
@@ -53681,7 +54042,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-stone-05.img": {
+                    "part-plank-01.img": {
                         frame: {
                             x: 306,
                             y: 1341,
@@ -53701,7 +54062,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-crate-03.img": {
+                    "map-crate-02.img": {
                         frame: {
                             x: 382,
                             y: 1341,
@@ -53721,7 +54082,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-crate-09.img": {
+                    "map-barrel-01.img": {
                         frame: {
                             x: 458,
                             y: 1341,
@@ -53741,7 +54102,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-crate-08.img": {
+                    "map-crate-03.img": {
                         frame: {
                             x: 534,
                             y: 1341,
@@ -53761,7 +54122,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-crate-07.img": {
+                    "part-panel-01.img": {
                         frame: {
                             x: 610,
                             y: 1341,
@@ -53781,7 +54142,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "part-plank-01.img": {
+                    "map-crate-07.img": {
                         frame: {
                             x: 686,
                             y: 1341,
@@ -53801,7 +54162,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "part-panel-01.img": {
+                    "map-stone-04.img": {
                         frame: {
                             x: 762,
                             y: 1341,
@@ -53821,7 +54182,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-crate-01.img": {
+                    "map-stone-05.img": {
                         frame: {
                             x: 838,
                             y: 1341,
@@ -53861,29 +54222,9 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "player-ripple-01.img": {
-                        frame: {
-                            x: 986,
-                            y: 1341,
-                            w: 71,
-                            h: 71
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 71,
-                            h: 71
-                        },
-                        sourceSize: {
-                            w: 71,
-                            h: 71
-                        }
-                    },
                     "part-woodchip-01.img": {
                         frame: {
-                            x: 1061,
+                            x: 986,
                             y: 1341,
                             w: 71,
                             h: 71
@@ -53899,6 +54240,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 72,
                             h: 72
+                        }
+                    },
+                    "player-ripple-01.img": {
+                        frame: {
+                            x: 1061,
+                            y: 1341,
+                            w: 71,
+                            h: 71
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 71,
+                            h: 71
+                        },
+                        sourceSize: {
+                            w: 71,
+                            h: 71
                         }
                     },
                     "part-book-01.img": {
@@ -53921,7 +54282,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "player-base-01.img": {
+                    "map-bunker-vent-02.img": {
                         frame: {
                             x: 1194,
                             y: 1341,
@@ -53929,16 +54290,16 @@ webpackJsonp([1], {
                             h: 68
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 1,
-                            y: 1,
+                            x: 0,
+                            y: 0,
                             w: 68,
                             h: 68
                         },
                         sourceSize: {
-                            w: 70,
-                            h: 70
+                            w: 68,
+                            h: 68
                         }
                     },
                     "map-bunker-vent-03.img": {
@@ -53961,7 +54322,7 @@ webpackJsonp([1], {
                             h: 68
                         }
                     },
-                    "map-bunker-vent-02.img": {
+                    "player-base-01.img": {
                         frame: {
                             x: 1338,
                             y: 1341,
@@ -53969,16 +54330,16 @@ webpackJsonp([1], {
                             h: 68
                         },
                         rotated: !1,
-                        trimmed: !1,
+                        trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 0,
+                            x: 1,
+                            y: 1,
                             w: 68,
                             h: 68
                         },
                         sourceSize: {
-                            w: 68,
-                            h: 68
+                            w: 70,
+                            h: 70
                         }
                     },
                     "part-pot-01.img": {
@@ -54141,7 +54502,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-bush-07x.img": {
+                    "map-bush-01.img": {
                         frame: {
                             x: 989,
                             y: 877,
@@ -54161,7 +54522,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "map-bush-01.img": {
+                    "map-bush-07x.img": {
                         frame: {
                             x: 1057,
                             y: 877,
@@ -54301,7 +54662,7 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "vietnam.img": {
+                    "finland.img": {
                         frame: {
                             x: 370,
                             y: 1417,
@@ -54321,7 +54682,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "uruguay.img": {
+                    "trinidad-and-tobago.img": {
                         frame: {
                             x: 438,
                             y: 1417,
@@ -54341,7 +54702,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "upsidedown-face.img": {
+                    "monocle-face.img": {
                         frame: {
                             x: 506,
                             y: 1417,
@@ -54361,7 +54722,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "united-states-of-america.img": {
+                    "thinking-face.img": {
                         frame: {
                             x: 574,
                             y: 1417,
@@ -54381,7 +54742,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "united-kingdom.img": {
+                    "mexico.img": {
                         frame: {
                             x: 642,
                             y: 1417,
@@ -54401,7 +54762,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ukraine.img": {
+                    "malaysia.img": {
                         frame: {
                             x: 710,
                             y: 1417,
@@ -54421,7 +54782,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "angry-face.img": {
+                    "turkey.img": {
                         frame: {
                             x: 778,
                             y: 1417,
@@ -54441,7 +54802,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "argentina.img": {
+                    "ukraine.img": {
                         frame: {
                             x: 846,
                             y: 1417,
@@ -54461,7 +54822,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "australia.img": {
+                    "united-kingdom.img": {
                         frame: {
                             x: 914,
                             y: 1417,
@@ -54481,7 +54842,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "turkey.img": {
+                    "united-states-of-america.img": {
                         frame: {
                             x: 982,
                             y: 1417,
@@ -54501,7 +54862,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "austria.img": {
+                    "upsidedown-face.img": {
                         frame: {
                             x: 1050,
                             y: 1417,
@@ -54521,7 +54882,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "trinidad-and-tobago.img": {
+                    "angry-face.img": {
                         frame: {
                             x: 1118,
                             y: 1417,
@@ -54541,7 +54902,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "belarus.img": {
+                    "argentina.img": {
                         frame: {
                             x: 1186,
                             y: 1417,
@@ -54561,7 +54922,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "belgium.img": {
+                    "uruguay.img": {
                         frame: {
                             x: 1254,
                             y: 1417,
@@ -54581,7 +54942,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-scope-00.img": {
+                    "venezuela.img": {
                         frame: {
                             x: 1322,
                             y: 1417,
@@ -54601,7 +54962,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-scope-01.img": {
+                    "vietnam.img": {
                         frame: {
                             x: 1390,
                             y: 1417,
@@ -54621,7 +54982,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-scope-02.img": {
+                    "australia.img": {
                         frame: {
                             x: 1458,
                             y: 1417,
@@ -54641,10 +55002,70 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-scope-03.img": {
+                    "loot-scope-00.img": {
                         frame: {
                             x: 1543,
                             y: 2,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-scope-01.img": {
+                        frame: {
+                            x: 1543,
+                            y: 70,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-scope-02.img": {
+                        frame: {
+                            x: 1543,
+                            y: 138,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-scope-03.img": {
+                        frame: {
+                            x: 1543,
+                            y: 206,
                             w: 64,
                             h: 64
                         },
@@ -54664,66 +55085,6 @@ webpackJsonp([1], {
                     "loot-scope-04.img": {
                         frame: {
                             x: 1543,
-                            y: 70,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "bolivia.img": {
-                        frame: {
-                            x: 1543,
-                            y: 138,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "bosnia-and-herzegovina.img": {
-                        frame: {
-                            x: 1543,
-                            y: 206,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "brazil.img": {
-                        frame: {
-                            x: 1543,
                             y: 274,
                             w: 64,
                             h: 64
@@ -54741,7 +55102,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "imp-face.img": {
+                    "kazakhstan.img": {
                         frame: {
                             x: 1543,
                             y: 342,
@@ -54761,7 +55122,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "thinking-face.img": {
+                    "austria.img": {
                         frame: {
                             x: 1543,
                             y: 410,
@@ -54781,10 +55142,30 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "canada.img": {
+                    "joy-face.img": {
                         frame: {
                             x: 1543,
                             y: 478,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "belarus.img": {
+                        frame: {
+                            x: 1543,
+                            y: 546,
                             w: 64,
                             h: 64
                         },
@@ -54804,26 +55185,6 @@ webpackJsonp([1], {
                     "thailand.img": {
                         frame: {
                             x: 1543,
-                            y: 546,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "part-log-01.img": {
-                        frame: {
-                            x: 1543,
                             y: 614,
                             w: 64,
                             h: 64
@@ -54841,10 +55202,130 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "india.img": {
+                    "belgium.img": {
                         frame: {
                             x: 1543,
                             y: 682,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "bolivia.img": {
+                        frame: {
+                            x: 1543,
+                            y: 750,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "bosnia-and-herzegovina.img": {
+                        frame: {
+                            x: 1543,
+                            y: 818,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "new-zealand.img": {
+                        frame: {
+                            x: 1543,
+                            y: 886,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "japan.img": {
+                        frame: {
+                            x: 1543,
+                            y: 954,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "norway.img": {
+                        frame: {
+                            x: 1543,
+                            y: 1022,
+                            w: 64,
+                            h: 64
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 64,
+                            h: 64
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ping-team-airdrop.img": {
+                        frame: {
+                            x: 1543,
+                            y: 1090,
                             w: 64,
                             h: 64
                         },
@@ -54864,67 +55345,7 @@ webpackJsonp([1], {
                     "taiwan.img": {
                         frame: {
                             x: 1543,
-                            y: 750,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "switzerland.img": {
-                        frame: {
-                            x: 1543,
-                            y: 818,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "alien-face.img": {
-                        frame: {
-                            x: 1543,
-                            y: 886,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "sweden.img": {
-                        frame: {
-                            x: 1543,
-                            y: 954,
+                            y: 1158,
                             w: 64,
                             h: 64
                         },
@@ -54944,66 +55365,6 @@ webpackJsonp([1], {
                     "loot-weapon-deagle-dual.img": {
                         frame: {
                             x: 1543,
-                            y: 1022,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "sunglass-face.img": {
-                        frame: {
-                            x: 1543,
-                            y: 1090,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "indonesia.img": {
-                        frame: {
-                            x: 1543,
-                            y: 1158,
-                            w: 64,
-                            h: 64
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 64,
-                            h: 64
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "spain.img": {
-                        frame: {
-                            x: 1543,
                             y: 1226,
                             w: 64,
                             h: 64
@@ -55021,7 +55382,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "south-korea.img": {
+                    "brazil.img": {
                         frame: {
                             x: 1543,
                             y: 1294,
@@ -55041,7 +55402,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "sob-face.img": {
+                    "ping-team-airstrike.img": {
                         frame: {
                             x: 1543,
                             y: 1362,
@@ -55061,7 +55422,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "hong-kong.img": {
+                    "switzerland.img": {
                         frame: {
                             x: 2,
                             y: 1488,
@@ -55081,7 +55442,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "slovakia.img": {
+                    "ping-team-coming.img": {
                         frame: {
                             x: 70,
                             y: 1488,
@@ -55101,7 +55462,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "chile.img": {
+                    "ping-team-danger.img": {
                         frame: {
                             x: 138,
                             y: 1488,
@@ -55121,7 +55482,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-ammo-box.img": {
+                    "canada.img": {
                         frame: {
                             x: 206,
                             y: 1488,
@@ -55141,7 +55502,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "singapore.img": {
+                    "sweden.img": {
                         frame: {
                             x: 274,
                             y: 1488,
@@ -55161,7 +55522,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "serbia.img": {
+                    "part-log-01.img": {
                         frame: {
                             x: 342,
                             y: 1488,
@@ -55181,7 +55542,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "honduras.img": {
+                    "ping-team-help.img": {
                         frame: {
                             x: 410,
                             y: 1488,
@@ -55201,7 +55562,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "sad-face.img": {
+                    "italy.img": {
                         frame: {
                             x: 478,
                             y: 1488,
@@ -55221,7 +55582,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "russia.img": {
+                    "sunglass-face.img": {
                         frame: {
                             x: 546,
                             y: 1488,
@@ -55241,7 +55602,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "venezuela.img": {
+                    "spain.img": {
                         frame: {
                             x: 614,
                             y: 1488,
@@ -55261,7 +55622,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "romania.img": {
+                    "south-korea.img": {
                         frame: {
                             x: 682,
                             y: 1488,
@@ -55281,7 +55642,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "china.img": {
+                    "israel.img": {
                         frame: {
                             x: 750,
                             y: 1488,
@@ -55301,7 +55662,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-m93r-dual.img": {
+                    "sob-face.img": {
                         frame: {
                             x: 818,
                             y: 1488,
@@ -55321,7 +55682,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "republic-of-poland.img": {
+                    "indonesia.img": {
                         frame: {
                             x: 886,
                             y: 1488,
@@ -55341,7 +55702,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "colombia.img": {
+                    "india.img": {
                         frame: {
                             x: 954,
                             y: 1488,
@@ -55361,7 +55722,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "portugal.img": {
+                    "slovakia.img": {
                         frame: {
                             x: 1022,
                             y: 1488,
@@ -55381,7 +55742,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "croatia.img": {
+                    "loot-weapon-m93r-dual.img": {
                         frame: {
                             x: 1090,
                             y: 1488,
@@ -55401,7 +55762,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "philippines.img": {
+                    "imp-face.img": {
                         frame: {
                             x: 1158,
                             y: 1488,
@@ -55421,7 +55782,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "czech-republic.img": {
+                    "peru.img": {
                         frame: {
                             x: 1226,
                             y: 1488,
@@ -55441,7 +55802,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "denmark.img": {
+                    "hungary.img": {
                         frame: {
                             x: 1294,
                             y: 1488,
@@ -55461,7 +55822,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "israel.img": {
+                    "singapore.img": {
                         frame: {
                             x: 1362,
                             y: 1488,
@@ -55481,7 +55842,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "disappoint-face.img": {
+                    "hong-kong.img": {
                         frame: {
                             x: 1430,
                             y: 1488,
@@ -55501,7 +55862,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "peru.img": {
+                    "honduras.img": {
                         frame: {
                             x: 1498,
                             y: 1488,
@@ -55521,7 +55882,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "norway.img": {
+                    "heart-face.img": {
                         frame: {
                             x: 1611,
                             y: 2,
@@ -55541,7 +55902,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-team-airdrop.img": {
+                    "chile.img": {
                         frame: {
                             x: 1611,
                             y: 70,
@@ -55561,7 +55922,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-team-airstrike.img": {
+                    "loot-ammo-box.img": {
                         frame: {
                             x: 1611,
                             y: 138,
@@ -55581,7 +55942,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-team-coming.img": {
+                    "serbia.img": {
                         frame: {
                             x: 1611,
                             y: 206,
@@ -55601,7 +55962,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "italy.img": {
+                    "happy-face.img": {
                         frame: {
                             x: 1611,
                             y: 274,
@@ -55621,7 +55982,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ecuador.img": {
+                    "sad-face.img": {
                         frame: {
                             x: 1611,
                             y: 342,
@@ -55641,7 +56002,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-team-danger.img": {
+                    "russia.img": {
                         frame: {
                             x: 1611,
                             y: 410,
@@ -55661,7 +56022,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-team-help.img": {
+                    "alien-face.img": {
                         frame: {
                             x: 1611,
                             y: 478,
@@ -55681,7 +56042,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "new-zealand.img": {
+                    "china.img": {
                         frame: {
                             x: 1611,
                             y: 546,
@@ -55701,7 +56062,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "netherlands.img": {
+                    "romania.img": {
                         frame: {
                             x: 1611,
                             y: 614,
@@ -55721,7 +56082,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "monocle-face.img": {
+                    "guatemala.img": {
                         frame: {
                             x: 1611,
                             y: 682,
@@ -55741,7 +56102,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "mexico.img": {
+                    "philippines.img": {
                         frame: {
                             x: 1611,
                             y: 750,
@@ -55761,7 +56122,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "finland.img": {
+                    "colombia.img": {
                         frame: {
                             x: 1611,
                             y: 818,
@@ -55781,7 +56142,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "france.img": {
+                    "republic-of-poland.img": {
                         frame: {
                             x: 1611,
                             y: 886,
@@ -55801,7 +56162,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "georgia.img": {
+                    "croatia.img": {
                         frame: {
                             x: 1611,
                             y: 954,
@@ -55821,7 +56182,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "germany.img": {
+                    "greece.img": {
                         frame: {
                             x: 1611,
                             y: 1022,
@@ -55841,7 +56202,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "hungary.img": {
+                    "czech-republic.img": {
                         frame: {
                             x: 1611,
                             y: 1090,
@@ -55861,7 +56222,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "greece.img": {
+                    "germany.img": {
                         frame: {
                             x: 1611,
                             y: 1158,
@@ -55881,7 +56242,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "guatemala.img": {
+                    "denmark.img": {
                         frame: {
                             x: 1611,
                             y: 1226,
@@ -55901,7 +56262,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "malaysia.img": {
+                    "disappoint-face.img": {
                         frame: {
                             x: 1611,
                             y: 1294,
@@ -55921,7 +56282,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "happy-face.img": {
+                    "netherlands.img": {
                         frame: {
                             x: 1611,
                             y: 1362,
@@ -55941,7 +56302,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "kazakhstan.img": {
+                    "portugal.img": {
                         frame: {
                             x: 1611,
                             y: 1430,
@@ -55961,7 +56322,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "joy-face.img": {
+                    "ecuador.img": {
                         frame: {
                             x: 2,
                             y: 1556,
@@ -55981,7 +56342,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "heart-face.img": {
+                    "georgia.img": {
                         frame: {
                             x: 70,
                             y: 1556,
@@ -56001,7 +56362,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "japan.img": {
+                    "france.img": {
                         frame: {
                             x: 138,
                             y: 1556,
@@ -56101,7 +56462,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-scorpion.img": {
+                    "loot-weapon-dp28.img": {
                         frame: {
                             x: 465,
                             y: 1556,
@@ -56121,7 +56482,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-m1a1.img": {
+                    "loot-weapon-an94.img": {
                         frame: {
                             x: 527,
                             y: 1556,
@@ -56141,7 +56502,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "snowflake.img": {
+                    "loot-weapon-m1a1.img": {
                         frame: {
                             x: 589,
                             y: 1556,
@@ -56161,7 +56522,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-dp28.img": {
+                    "loot-weapon-scorpion.img": {
                         frame: {
                             x: 651,
                             y: 1556,
@@ -56181,7 +56542,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-an94.img": {
+                    "snowflake.img": {
                         frame: {
                             x: 713,
                             y: 1556,
@@ -56201,7 +56562,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-m1014.img": {
+                    "trash.img": {
                         frame: {
                             x: 775,
                             y: 1556,
@@ -56221,7 +56582,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "trash.img": {
+                    "loot-weapon-m1014.img": {
                         frame: {
                             x: 835,
                             y: 1556,
@@ -56241,20 +56602,20 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ping-part-eighth-highlight.img": {
+                    "thumbs-up.img": {
                         frame: {
-                            x: 1800,
-                            y: 875,
-                            w: 26,
-                            h: 22
+                            x: 895,
+                            y: 1556,
+                            w: 54,
+                            h: 64
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 10,
-                            w: 26,
-                            h: 22
+                            x: 5,
+                            y: 0,
+                            w: 54,
+                            h: 64
                         },
                         sourceSize: {
                             w: 64,
@@ -56301,27 +56662,27 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-toilet-02.img": {
+                    "ping-part-eighth-highlight.img": {
                         frame: {
-                            x: 1066,
-                            y: 1556,
-                            w: 50,
-                            h: 64
+                            x: 1869,
+                            y: 842,
+                            w: 26,
+                            h: 22
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 7,
-                            y: 0,
-                            w: 50,
-                            h: 64
+                            x: 0,
+                            y: 10,
+                            w: 26,
+                            h: 22
                         },
                         sourceSize: {
                             w: 64,
                             h: 64
                         }
                     },
-                    "map-toilet-01.img": {
+                    "map-toilet-02.img": {
                         frame: {
                             x: 1120,
                             y: 1556,
@@ -56441,29 +56802,9 @@ webpackJsonp([1], {
                             h: 74
                         }
                     },
-                    "part-splat-01.img": {
-                        frame: {
-                            x: 1364,
-                            y: 1556,
-                            w: 64,
-                            h: 63
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 4,
-                            y: 4,
-                            w: 64,
-                            h: 63
-                        },
-                        sourceSize: {
-                            w: 72,
-                            h: 72
-                        }
-                    },
                     "heart.img": {
                         frame: {
-                            x: 1432,
+                            x: 1364,
                             y: 1556,
                             w: 64,
                             h: 63
@@ -56479,6 +56820,26 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 64,
                             h: 64
+                        }
+                    },
+                    "part-splat-01.img": {
+                        frame: {
+                            x: 1432,
+                            y: 1556,
+                            w: 64,
+                            h: 63
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 4,
+                            y: 4,
+                            w: 64,
+                            h: 63
+                        },
+                        sourceSize: {
+                            w: 72,
+                            h: 72
                         }
                     },
                     "chicken-dinner.img": {
@@ -56501,7 +56862,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-bar.img": {
+                    "perk-2.img": {
                         frame: {
                             x: 1568,
                             y: 1556,
@@ -56521,10 +56882,50 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "part-splat-03.img": {
+                    "loot-weapon-bar.img": {
                         frame: {
                             x: 1679,
                             y: 2,
+                            w: 64,
+                            h: 62
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 1,
+                            w: 64,
+                            h: 62
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "perk-1.img": {
+                        frame: {
+                            x: 1679,
+                            y: 68,
+                            w: 64,
+                            h: 62
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 1,
+                            w: 64,
+                            h: 62
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "part-splat-03.img": {
+                        frame: {
+                            x: 1679,
+                            y: 134,
                             w: 63,
                             h: 62
                         },
@@ -56542,46 +56943,6 @@ webpackJsonp([1], {
                         }
                     },
                     "loot-weapon-usas.img": {
-                        frame: {
-                            x: 1679,
-                            y: 68,
-                            w: 62,
-                            h: 62
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 1,
-                            y: 1,
-                            w: 62,
-                            h: 62
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "map-crate-05.img": {
-                        frame: {
-                            x: 1679,
-                            y: 134,
-                            w: 62,
-                            h: 62
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 62,
-                            h: 62
-                        },
-                        sourceSize: {
-                            w: 62,
-                            h: 62
-                        }
-                    },
-                    "surviv.img": {
                         frame: {
                             x: 1679,
                             y: 200,
@@ -56621,7 +56982,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "emote.img": {
+                    "part-heal-01.img": {
                         frame: {
                             x: 1679,
                             y: 332,
@@ -56641,7 +57002,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "part-heal-01.img": {
+                    "emote.img": {
                         frame: {
                             x: 1679,
                             y: 398,
@@ -56661,39 +57022,39 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-mk12.img": {
+                    "map-crate-05.img": {
                         frame: {
                             x: 1679,
                             y: 464,
-                            w: 58,
+                            w: 62,
                             h: 62
                         },
                         rotated: !1,
-                        trimmed: !0,
+                        trimmed: !1,
                         spriteSourceSize: {
-                            x: 3,
-                            y: 1,
-                            w: 58,
+                            x: 0,
+                            y: 0,
+                            w: 62,
                             h: 62
                         },
                         sourceSize: {
-                            w: 64,
-                            h: 64
+                            w: 62,
+                            h: 62
                         }
                     },
-                    "loot-weapon-saiga.img": {
+                    "surviv.img": {
                         frame: {
                             x: 1679,
                             y: 530,
-                            w: 58,
+                            w: 62,
                             h: 62
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 3,
+                            x: 1,
                             y: 1,
-                            w: 58,
+                            w: 62,
                             h: 62
                         },
                         sourceSize: {
@@ -56701,7 +57062,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "tombstone.img": {
+                    "loot-weapon-mk12.img": {
                         frame: {
                             x: 1679,
                             y: 596,
@@ -56712,7 +57073,7 @@ webpackJsonp([1], {
                         trimmed: !0,
                         spriteSourceSize: {
                             x: 3,
-                            y: 0,
+                            y: 1,
                             w: 58,
                             h: 62
                         },
@@ -56741,19 +57102,39 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "proj-frag-pin-01.img": {
+                    "loot-weapon-saiga.img": {
                         frame: {
                             x: 1679,
                             y: 728,
-                            w: 56,
+                            w: 58,
                             h: 62
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 0,
-                            y: 2,
-                            w: 56,
+                            x: 3,
+                            y: 1,
+                            w: 58,
+                            h: 62
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "tombstone.img": {
+                        frame: {
+                            x: 1679,
+                            y: 794,
+                            w: 58,
+                            h: 62
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 0,
+                            w: 58,
                             h: 62
                         },
                         sourceSize: {
@@ -56764,7 +57145,7 @@ webpackJsonp([1], {
                     "map-vat-res.img": {
                         frame: {
                             x: 1679,
-                            y: 794,
+                            y: 860,
                             w: 56,
                             h: 62
                         },
@@ -56781,19 +57162,19 @@ webpackJsonp([1], {
                             h: 72
                         }
                     },
-                    "proj-frag-nopin-01.img": {
+                    "proj-frag-pin-01.img": {
                         frame: {
                             x: 1679,
-                            y: 860,
-                            w: 55,
+                            y: 926,
+                            w: 56,
                             h: 62
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 9,
+                            x: 0,
                             y: 2,
-                            w: 55,
+                            w: 56,
                             h: 62
                         },
                         sourceSize: {
@@ -56804,7 +57185,7 @@ webpackJsonp([1], {
                     "cupcake.img": {
                         frame: {
                             x: 1679,
-                            y: 926,
+                            y: 992,
                             w: 55,
                             h: 62
                         },
@@ -56821,10 +57202,30 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
+                    "proj-frag-nopin-01.img": {
+                        frame: {
+                            x: 1679,
+                            y: 1058,
+                            w: 55,
+                            h: 62
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 9,
+                            y: 2,
+                            w: 55,
+                            h: 62
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
                     "loot-weapon-m39.img": {
                         frame: {
                             x: 1679,
-                            y: 992,
+                            y: 1124,
                             w: 54,
                             h: 62
                         },
@@ -56844,7 +57245,7 @@ webpackJsonp([1], {
                     "candy-corn.img": {
                         frame: {
                             x: 1679,
-                            y: 1058,
+                            y: 1190,
                             w: 53,
                             h: 62
                         },
@@ -56864,7 +57265,7 @@ webpackJsonp([1], {
                     "police.img": {
                         frame: {
                             x: 1679,
-                            y: 1124,
+                            y: 1256,
                             w: 52,
                             h: 62
                         },
@@ -56881,10 +57282,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "snowman.img": {
+                    "egg.img": {
                         frame: {
                             x: 1679,
-                            y: 1190,
+                            y: 1322,
                             w: 50,
                             h: 62
                         },
@@ -56901,10 +57302,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "egg.img": {
+                    "snowman.img": {
                         frame: {
                             x: 1679,
-                            y: 1256,
+                            y: 1388,
                             w: 50,
                             h: 62
                         },
@@ -56924,7 +57325,7 @@ webpackJsonp([1], {
                     "loot-weapon-colt45.img": {
                         frame: {
                             x: 1679,
-                            y: 1322,
+                            y: 1454,
                             w: 48,
                             h: 62
                         },
@@ -56944,7 +57345,7 @@ webpackJsonp([1], {
                     "proj-frag-nopin-nolever-01.img": {
                         frame: {
                             x: 1679,
-                            y: 1388,
+                            y: 1520,
                             w: 46,
                             h: 62
                         },
@@ -56963,8 +57364,8 @@ webpackJsonp([1], {
                     },
                     "loot-throwable-smoke.img": {
                         frame: {
-                            x: 1679,
-                            y: 1454,
+                            x: 2,
+                            y: 1624,
                             w: 43,
                             h: 62
                         },
@@ -56983,8 +57384,8 @@ webpackJsonp([1], {
                     },
                     "ice-cream.img": {
                         frame: {
-                            x: 1679,
-                            y: 1520,
+                            x: 878,
+                            y: 277,
                             w: 34,
                             h: 62
                         },
@@ -57003,7 +57404,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-m1100.img": {
                         frame: {
-                            x: 2,
+                            x: 49,
                             y: 1624,
                             w: 61,
                             h: 61
@@ -57023,7 +57424,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-hk416.img": {
                         frame: {
-                            x: 67,
+                            x: 114,
                             y: 1624,
                             w: 54,
                             h: 61
@@ -57061,29 +57462,9 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "proj-strobe-arming.img": {
-                        frame: {
-                            x: 125,
-                            y: 1624,
-                            w: 68,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 6,
-                            y: 13,
-                            w: 68,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 80,
-                            h: 80
-                        }
-                    },
                     "proj-strobe-armed.img": {
                         frame: {
-                            x: 197,
+                            x: 172,
                             y: 1624,
                             w: 68,
                             h: 60
@@ -57101,9 +57482,29 @@ webpackJsonp([1], {
                             h: 80
                         }
                     },
-                    "loot-weapon-m1911-dual.img": {
+                    "proj-strobe-arming.img": {
                         frame: {
-                            x: 269,
+                            x: 244,
+                            y: 1624,
+                            w: 68,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 6,
+                            y: 13,
+                            w: 68,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 80,
+                            h: 80
+                        }
+                    },
+                    "loot-weapon-m9-dual.img": {
+                        frame: {
+                            x: 316,
                             y: 1624,
                             w: 64,
                             h: 60
@@ -57123,7 +57524,7 @@ webpackJsonp([1], {
                     },
                     "salt.img": {
                         frame: {
-                            x: 337,
+                            x: 384,
                             y: 1624,
                             w: 64,
                             h: 60
@@ -57141,9 +57542,9 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-m9-dual.img": {
+                    "loot-weapon-m1911-dual.img": {
                         frame: {
-                            x: 405,
+                            x: 452,
                             y: 1624,
                             w: 64,
                             h: 60
@@ -57163,7 +57564,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-sv98.img": {
                         frame: {
-                            x: 473,
+                            x: 520,
                             y: 1624,
                             w: 61,
                             h: 60
@@ -57181,109 +57582,9 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-stone-res-01.img": {
-                        frame: {
-                            x: 538,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 60,
-                            h: 60
-                        }
-                    },
                     "map-decal-initiative.img": {
                         frame: {
-                            x: 602,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "skull.img": {
-                        frame: {
-                            x: 666,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "target.img": {
-                        frame: {
-                            x: 730,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "donut.img": {
-                        frame: {
-                            x: 794,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "loot-weapon-pumpshotgun.img": {
-                        frame: {
-                            x: 858,
+                            x: 585,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57303,7 +57604,27 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-qbb97.img": {
                         frame: {
-                            x: 922,
+                            x: 649,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "skull.img": {
+                        frame: {
+                            x: 713,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57323,7 +57644,7 @@ webpackJsonp([1], {
                     },
                     "part-feather-01.img": {
                         frame: {
-                            x: 986,
+                            x: 777,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57343,7 +57664,7 @@ webpackJsonp([1], {
                     },
                     "part-feather-02.img": {
                         frame: {
-                            x: 1050,
+                            x: 841,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57363,27 +57684,7 @@ webpackJsonp([1], {
                     },
                     "mag-glass.img": {
                         frame: {
-                            x: 1114,
-                            y: 1624,
-                            w: 60,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 2,
-                            w: 60,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "loot-chest-01.img": {
-                        frame: {
-                            x: 1178,
+                            x: 905,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57403,7 +57704,7 @@ webpackJsonp([1], {
                     },
                     "map-chimney-01.img": {
                         frame: {
-                            x: 1242,
+                            x: 969,
                             y: 1624,
                             w: 60,
                             h: 60
@@ -57421,9 +57722,109 @@ webpackJsonp([1], {
                             h: 60
                         }
                     },
-                    "loot-weapon-ump9.img": {
+                    "donut.img": {
                         frame: {
-                            x: 1306,
+                            x: 1033,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "target.img": {
+                        frame: {
+                            x: 1097,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-weapon-pumpshotgun.img": {
+                        frame: {
+                            x: 1161,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-chest-01.img": {
+                        frame: {
+                            x: 1225,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 2,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "map-stone-res-01.img": {
+                        frame: {
+                            x: 1289,
+                            y: 1624,
+                            w: 60,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 60,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 60,
+                            h: 60
+                        }
+                    },
+                    "loot-weapon-famas.img": {
+                        frame: {
+                            x: 1353,
                             y: 1624,
                             w: 58,
                             h: 60
@@ -57441,9 +57842,9 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-famas.img": {
+                    "loot-weapon-ump9.img": {
                         frame: {
-                            x: 1368,
+                            x: 1415,
                             y: 1624,
                             w: 58,
                             h: 60
@@ -57463,7 +57864,7 @@ webpackJsonp([1], {
                     },
                     "loot-medical-bandage.img": {
                         frame: {
-                            x: 1430,
+                            x: 1477,
                             y: 1624,
                             w: 54,
                             h: 60
@@ -57483,27 +57884,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-vector45.img": {
                         frame: {
-                            x: 1488,
-                            y: 1624,
-                            w: 54,
-                            h: 60
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 5,
-                            y: 2,
-                            w: 54,
-                            h: 60
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "loot-weapon-m1911.img": {
-                        frame: {
-                            x: 1546,
+                            x: 1535,
                             y: 1624,
                             w: 54,
                             h: 60
@@ -57523,7 +57904,7 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-scar.img": {
                         frame: {
-                            x: 1604,
+                            x: 1593,
                             y: 1624,
                             w: 54,
                             h: 60
@@ -57543,7 +57924,7 @@ webpackJsonp([1], {
                     },
                     "acorn.img": {
                         frame: {
-                            x: 1662,
+                            x: 1651,
                             y: 1624,
                             w: 54,
                             h: 60
@@ -57561,10 +57942,30 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-chest-03.img": {
+                    "loot-weapon-m1911.img": {
                         frame: {
-                            x: 1746,
+                            x: 1747,
                             y: 2,
+                            w: 54,
+                            h: 60
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 5,
+                            y: 2,
+                            w: 54,
+                            h: 60
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-weapon-m9.img": {
+                        frame: {
+                            x: 1747,
+                            y: 66,
                             w: 50,
                             h: 60
                         },
@@ -57581,10 +57982,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-m9.img": {
+                    "loot-chest-03.img": {
                         frame: {
-                            x: 1746,
-                            y: 66,
+                            x: 1747,
+                            y: 130,
                             w: 50,
                             h: 60
                         },
@@ -57603,8 +58004,8 @@ webpackJsonp([1], {
                     },
                     "loot-pack-01.img": {
                         frame: {
-                            x: 1746,
-                            y: 130,
+                            x: 1747,
+                            y: 194,
                             w: 48,
                             h: 60
                         },
@@ -57623,8 +58024,8 @@ webpackJsonp([1], {
                     },
                     "loot-pack-02.img": {
                         frame: {
-                            x: 1746,
-                            y: 194,
+                            x: 1747,
+                            y: 258,
                             w: 46,
                             h: 60
                         },
@@ -57643,8 +58044,8 @@ webpackJsonp([1], {
                     },
                     "loot-pack-00.img": {
                         frame: {
-                            x: 1746,
-                            y: 258,
+                            x: 1747,
+                            y: 322,
                             w: 46,
                             h: 60
                         },
@@ -57663,8 +58064,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ots38.img": {
                         frame: {
-                            x: 1746,
-                            y: 322,
+                            x: 1747,
+                            y: 386,
                             w: 42,
                             h: 60
                         },
@@ -57684,7 +58085,7 @@ webpackJsonp([1], {
                     "map-stone-res-04.img": {
                         frame: {
                             x: 2,
-                            y: 1689,
+                            y: 1690,
                             w: 58,
                             h: 59
                         },
@@ -57704,7 +58105,7 @@ webpackJsonp([1], {
                     "flex.img": {
                         frame: {
                             x: 64,
-                            y: 1689,
+                            y: 1690,
                             w: 56,
                             h: 59
                         },
@@ -57723,8 +58124,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-flare-gun.img": {
                         frame: {
-                            x: 1746,
-                            y: 386,
+                            x: 1747,
+                            y: 450,
                             w: 42,
                             h: 59
                         },
@@ -57744,7 +58145,7 @@ webpackJsonp([1], {
                     "map-case-hatchet-res-01.img": {
                         frame: {
                             x: 124,
-                            y: 1689,
+                            y: 1690,
                             w: 65,
                             h: 58
                         },
@@ -57764,7 +58165,7 @@ webpackJsonp([1], {
                     "map-case-flare-res-01.img": {
                         frame: {
                             x: 193,
-                            y: 1689,
+                            y: 1690,
                             w: 65,
                             h: 58
                         },
@@ -57784,7 +58185,7 @@ webpackJsonp([1], {
                     "sleepy.img": {
                         frame: {
                             x: 262,
-                            y: 1689,
+                            y: 1690,
                             w: 64,
                             h: 58
                         },
@@ -57801,30 +58202,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "gas.img": {
+                    "loot-shirt-01.img": {
                         frame: {
                             x: 330,
-                            y: 1689,
-                            w: 60,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 2,
-                            y: 3,
-                            w: 60,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "loot-shirt-03.img": {
-                        frame: {
-                            x: 394,
-                            y: 1689,
+                            y: 1690,
                             w: 60,
                             h: 58
                         },
@@ -57843,8 +58224,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mosin.img": {
                         frame: {
-                            x: 458,
-                            y: 1689,
+                            x: 394,
+                            y: 1690,
                             w: 60,
                             h: 58
                         },
@@ -57861,10 +58242,30 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-shirt-01.img": {
+                    "gas.img": {
+                        frame: {
+                            x: 458,
+                            y: 1690,
+                            w: 60,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 3,
+                            w: 60,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "loot-shirt-03.img": {
                         frame: {
                             x: 522,
-                            y: 1689,
+                            y: 1690,
                             w: 60,
                             h: 58
                         },
@@ -57881,19 +58282,39 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ammo-762mm.img": {
+                    "part-blossom-04.img": {
                         frame: {
                             x: 586,
-                            y: 1689,
-                            w: 58,
+                            y: 1690,
+                            w: 59,
                             h: 58
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
+                            x: 4,
+                            y: 4,
+                            w: 59,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "part-blossom-03.img": {
+                        frame: {
+                            x: 649,
+                            y: 1690,
+                            w: 59,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 2,
+                            y: 4,
+                            w: 59,
                             h: 58
                         },
                         sourceSize: {
@@ -57903,8 +58324,8 @@ webpackJsonp([1], {
                     },
                     "part-spark-02.img": {
                         frame: {
-                            x: 648,
-                            y: 1689,
+                            x: 712,
+                            y: 1690,
                             w: 58,
                             h: 58
                         },
@@ -57919,132 +58340,12 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 60,
                             h: 60
-                        }
-                    },
-                    "ammo-556mm.img": {
-                        frame: {
-                            x: 710,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
                         }
                     },
                     "ammo-9mm.img": {
                         frame: {
-                            x: 772,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "ammo-45acp.img": {
-                        frame: {
-                            x: 834,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "ammo-12gauge.img": {
-                        frame: {
-                            x: 896,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "part-spark-01.img": {
-                        frame: {
-                            x: 958,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 1,
-                            y: 1,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 60,
-                            h: 60
-                        }
-                    },
-                    "ammo-50AE.img": {
-                        frame: {
-                            x: 1020,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "ammo-308sub.img": {
-                        frame: {
-                            x: 1082,
-                            y: 1689,
+                            x: 774,
+                            y: 1690,
                             w: 58,
                             h: 58
                         },
@@ -58063,28 +58364,8 @@ webpackJsonp([1], {
                     },
                     "ammo-box.img": {
                         frame: {
-                            x: 1144,
-                            y: 1689,
-                            w: 58,
-                            h: 58
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 3,
-                            y: 3,
-                            w: 58,
-                            h: 58
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "part-boost-01.img": {
-                        frame: {
-                            x: 1206,
-                            y: 1689,
+                            x: 836,
+                            y: 1690,
                             w: 58,
                             h: 58
                         },
@@ -58103,8 +58384,168 @@ webpackJsonp([1], {
                     },
                     "ammo-flare.img": {
                         frame: {
-                            x: 1268,
-                            y: 1689,
+                            x: 898,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-12gauge.img": {
+                        frame: {
+                            x: 960,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-556mm.img": {
+                        frame: {
+                            x: 1022,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-45acp.img": {
+                        frame: {
+                            x: 1084,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-308sub.img": {
+                        frame: {
+                            x: 1146,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-50AE.img": {
+                        frame: {
+                            x: 1208,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "ammo-762mm.img": {
+                        frame: {
+                            x: 1270,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 3,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "part-spark-01.img": {
+                        frame: {
+                            x: 1332,
+                            y: 1690,
+                            w: 58,
+                            h: 58
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 1,
+                            y: 1,
+                            w: 58,
+                            h: 58
+                        },
+                        sourceSize: {
+                            w: 60,
+                            h: 60
+                        }
+                    },
+                    "part-boost-01.img": {
+                        frame: {
+                            x: 1394,
+                            y: 1690,
                             w: 58,
                             h: 58
                         },
@@ -58123,8 +58564,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-garand.img": {
                         frame: {
-                            x: 1330,
-                            y: 1689,
+                            x: 1456,
+                            y: 1690,
                             w: 57,
                             h: 58
                         },
@@ -58143,8 +58584,8 @@ webpackJsonp([1], {
                     },
                     "pumpkin.img": {
                         frame: {
-                            x: 1391,
-                            y: 1689,
+                            x: 1747,
+                            y: 513,
                             w: 54,
                             h: 58
                         },
@@ -58163,8 +58604,8 @@ webpackJsonp([1], {
                     },
                     "loot-pack-03.img": {
                         frame: {
-                            x: 1449,
-                            y: 1689,
+                            x: 1747,
+                            y: 575,
                             w: 54,
                             h: 58
                         },
@@ -58183,8 +58624,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-deagle.img": {
                         frame: {
-                            x: 1507,
-                            y: 1689,
+                            x: 1747,
+                            y: 637,
                             w: 53,
                             h: 58
                         },
@@ -58203,8 +58644,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mp5.img": {
                         frame: {
-                            x: 1746,
-                            y: 449,
+                            x: 1747,
+                            y: 699,
                             w: 50,
                             h: 58
                         },
@@ -58223,8 +58664,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-spas12.img": {
                         frame: {
-                            x: 1746,
-                            y: 511,
+                            x: 1747,
+                            y: 761,
                             w: 50,
                             h: 58
                         },
@@ -58243,8 +58684,8 @@ webpackJsonp([1], {
                     },
                     "tap.img": {
                         frame: {
-                            x: 1746,
-                            y: 573,
+                            x: 1747,
+                            y: 823,
                             w: 50,
                             h: 58
                         },
@@ -58263,8 +58704,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ot38.img": {
                         frame: {
-                            x: 1746,
-                            y: 635,
+                            x: 1747,
+                            y: 885,
                             w: 46,
                             h: 58
                         },
@@ -58283,8 +58724,8 @@ webpackJsonp([1], {
                     },
                     "loot-throwable-mirv.img": {
                         frame: {
-                            x: 1746,
-                            y: 697,
+                            x: 1747,
+                            y: 947,
                             w: 42,
                             h: 58
                         },
@@ -58303,8 +58744,8 @@ webpackJsonp([1], {
                     },
                     "cattle.img": {
                         frame: {
-                            x: 1564,
-                            y: 1689,
+                            x: 1517,
+                            y: 1690,
                             w: 60,
                             h: 57
                         },
@@ -58321,10 +58762,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "player-emote.img": {
+                    "player-gui.img": {
                         frame: {
-                            x: 1628,
-                            y: 1689,
+                            x: 1581,
+                            y: 1690,
                             w: 58,
                             h: 57
                         },
@@ -58341,10 +58782,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "player-gui.img": {
+                    "player-emote.img": {
                         frame: {
-                            x: 1690,
-                            y: 1689,
+                            x: 1643,
+                            y: 1690,
                             w: 58,
                             h: 57
                         },
@@ -58363,8 +58804,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-vector.img": {
                         frame: {
-                            x: 1800,
-                            y: 2,
+                            x: 1705,
+                            y: 1690,
                             w: 56,
                             h: 57
                         },
@@ -58383,8 +58824,8 @@ webpackJsonp([1], {
                     },
                     "chick.img": {
                         frame: {
-                            x: 1800,
-                            y: 63,
+                            x: 1747,
+                            y: 1009,
                             w: 52,
                             h: 57
                         },
@@ -58403,8 +58844,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-ak.img": {
                         frame: {
-                            x: 1800,
-                            y: 124,
+                            x: 1747,
+                            y: 1070,
                             w: 50,
                             h: 57
                         },
@@ -58423,8 +58864,8 @@ webpackJsonp([1], {
                     },
                     "pineapple.img": {
                         frame: {
-                            x: 1800,
-                            y: 185,
+                            x: 1747,
+                            y: 1131,
                             w: 34,
                             h: 57
                         },
@@ -58443,8 +58884,8 @@ webpackJsonp([1], {
                     },
                     "map-snow-06.img": {
                         frame: {
-                            x: 2,
-                            y: 1752,
+                            x: 1805,
+                            y: 2,
                             w: 90,
                             h: 56
                         },
@@ -58461,130 +58902,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "logo-surviv.img": {
-                        frame: {
-                            x: 96,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-caduceus.img": {
-                        frame: {
-                            x: 164,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-swine.img": {
-                        frame: {
-                            x: 232,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-crossing.img": {
-                        frame: {
-                            x: 300,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-egg.img": {
-                        frame: {
-                            x: 368,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "link.img": {
-                        frame: {
-                            x: 436,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
                     "logo-hydra.img": {
                         frame: {
-                            x: 504,
-                            y: 1752,
+                            x: 1805,
+                            y: 62,
                             w: 64,
                             h: 56
                         },
@@ -58603,48 +58924,8 @@ webpackJsonp([1], {
                     },
                     "logo-hatchet.img": {
                         frame: {
-                            x: 572,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-meteor.img": {
-                        frame: {
-                            x: 640,
-                            y: 1752,
-                            w: 64,
-                            h: 56
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 4,
-                            w: 64,
-                            h: 56
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "logo-chrysanthemum.img": {
-                        frame: {
-                            x: 708,
-                            y: 1752,
+                            x: 1805,
+                            y: 122,
                             w: 64,
                             h: 56
                         },
@@ -58663,8 +58944,128 @@ webpackJsonp([1], {
                     },
                     "logo-conch.img": {
                         frame: {
-                            x: 776,
-                            y: 1752,
+                            x: 1805,
+                            y: 182,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-swine.img": {
+                        frame: {
+                            x: 1805,
+                            y: 242,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-egg.img": {
+                        frame: {
+                            x: 1805,
+                            y: 302,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-chrysanthemum.img": {
+                        frame: {
+                            x: 1805,
+                            y: 362,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-crossing.img": {
+                        frame: {
+                            x: 1805,
+                            y: 422,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-caduceus.img": {
+                        frame: {
+                            x: 1805,
+                            y: 482,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "link.img": {
+                        frame: {
+                            x: 1805,
+                            y: 542,
                             w: 64,
                             h: 56
                         },
@@ -58683,8 +59084,48 @@ webpackJsonp([1], {
                     },
                     "logo-storm.img": {
                         frame: {
-                            x: 844,
-                            y: 1752,
+                            x: 1805,
+                            y: 602,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-surviv.img": {
+                        frame: {
+                            x: 1805,
+                            y: 662,
+                            w: 64,
+                            h: 56
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 4,
+                            w: 64,
+                            h: 56
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "logo-meteor.img": {
+                        frame: {
+                            x: 1805,
+                            y: 722,
                             w: 64,
                             h: 56
                         },
@@ -58703,8 +59144,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-glock-dual.img": {
                         frame: {
-                            x: 912,
-                            y: 1752,
+                            x: 1805,
+                            y: 782,
                             w: 62,
                             h: 56
                         },
@@ -58721,10 +59162,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-weapon-model94.img": {
+                    "danger.img": {
                         frame: {
-                            x: 978,
-                            y: 1752,
+                            x: 1805,
+                            y: 842,
                             w: 60,
                             h: 56
                         },
@@ -58741,10 +59182,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "danger.img": {
+                    "loot-weapon-model94.img": {
                         frame: {
-                            x: 1042,
-                            y: 1752,
+                            x: 1805,
+                            y: 902,
                             w: 60,
                             h: 56
                         },
@@ -58763,8 +59204,8 @@ webpackJsonp([1], {
                     },
                     "map-bollard-01.img": {
                         frame: {
-                            x: 1106,
-                            y: 1752,
+                            x: 1805,
+                            y: 962,
                             w: 57,
                             h: 56
                         },
@@ -58783,8 +59224,8 @@ webpackJsonp([1], {
                     },
                     "santa-hat.img": {
                         frame: {
-                            x: 1167,
-                            y: 1752,
+                            x: 1805,
+                            y: 1022,
                             w: 57,
                             h: 56
                         },
@@ -58801,10 +59242,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "map-tree-04.img": {
+                    "map-tree-09.img": {
                         frame: {
-                            x: 1800,
-                            y: 246,
+                            x: 1805,
+                            y: 1082,
                             w: 56,
                             h: 56
                         },
@@ -58821,10 +59262,10 @@ webpackJsonp([1], {
                             h: 56
                         }
                     },
-                    "map-tree-09.img": {
+                    "map-tree-04.img": {
                         frame: {
-                            x: 1800,
-                            y: 306,
+                            x: 1805,
+                            y: 1142,
                             w: 56,
                             h: 56
                         },
@@ -58843,8 +59284,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-glock.img": {
                         frame: {
-                            x: 1800,
-                            y: 366,
+                            x: 1805,
+                            y: 1202,
                             w: 46,
                             h: 56
                         },
@@ -58863,8 +59304,8 @@ webpackJsonp([1], {
                     },
                     "loot-medical-soda.img": {
                         frame: {
-                            x: 1800,
-                            y: 426,
+                            x: 1855,
+                            y: 1202,
                             w: 32,
                             h: 56
                         },
@@ -58883,8 +59324,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-01.img": {
                         frame: {
-                            x: 1228,
-                            y: 1752,
+                            x: 1805,
+                            y: 1262,
                             w: 72,
                             h: 55
                         },
@@ -58903,8 +59344,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-02.img": {
                         frame: {
-                            x: 1304,
-                            y: 1752,
+                            x: 1805,
+                            y: 1321,
                             w: 72,
                             h: 55
                         },
@@ -58923,8 +59364,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-04.img": {
                         frame: {
-                            x: 1380,
-                            y: 1752,
+                            x: 1805,
+                            y: 1380,
                             w: 72,
                             h: 55
                         },
@@ -58943,8 +59384,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-05.img": {
                         frame: {
-                            x: 1456,
-                            y: 1752,
+                            x: 1805,
+                            y: 1439,
                             w: 72,
                             h: 55
                         },
@@ -58963,8 +59404,8 @@ webpackJsonp([1], {
                     },
                     "part-leaf-02.img": {
                         frame: {
-                            x: 1800,
-                            y: 486,
+                            x: 1805,
+                            y: 1498,
                             w: 55,
                             h: 55
                         },
@@ -58981,10 +59422,50 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
+                    "part-blossom-02.img": {
+                        frame: {
+                            x: 1805,
+                            y: 1557,
+                            w: 54,
+                            h: 55
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 5,
+                            y: 5,
+                            w: 54,
+                            h: 55
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "part-blossom-01.img": {
+                        frame: {
+                            x: 1805,
+                            y: 1616,
+                            w: 54,
+                            h: 55
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 5,
+                            y: 4,
+                            w: 54,
+                            h: 55
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
                     "map-toilet-res-01.img": {
                         frame: {
-                            x: 1800,
-                            y: 545,
+                            x: 1805,
+                            y: 1675,
                             w: 50,
                             h: 55
                         },
@@ -59003,8 +59484,8 @@ webpackJsonp([1], {
                     },
                     "ping-map-airdrop.img": {
                         frame: {
-                            x: 1800,
-                            y: 604,
+                            x: 1747,
+                            y: 1192,
                             w: 38,
                             h: 55
                         },
@@ -59023,8 +59504,8 @@ webpackJsonp([1], {
                     },
                     "map-case-deagle-01.img": {
                         frame: {
-                            x: 1532,
-                            y: 1752,
+                            x: 2,
+                            y: 1753,
                             w: 72,
                             h: 54
                         },
@@ -59043,8 +59524,8 @@ webpackJsonp([1], {
                     },
                     "map-case-deagle-02.img": {
                         frame: {
-                            x: 1608,
-                            y: 1752,
+                            x: 78,
+                            y: 1753,
                             w: 72,
                             h: 54
                         },
@@ -59061,7 +59542,7 @@ webpackJsonp([1], {
                             h: 54
                         }
                     },
-                    "hide.img": {
+                    "hamburger.img": {
                         frame: {
                             x: 1611,
                             y: 1498,
@@ -59081,7 +59562,7 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "hamburger.img": {
+                    "hide.img": {
                         frame: {
                             x: 1543,
                             y: 1430,
@@ -59103,8 +59584,8 @@ webpackJsonp([1], {
                     },
                     "part-leaf-01.img": {
                         frame: {
-                            x: 1684,
-                            y: 1752,
+                            x: 154,
+                            y: 1753,
                             w: 62,
                             h: 54
                         },
@@ -59121,10 +59602,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "loot-medical-healthkit.img": {
+                    "emote-medical-healthkit.img": {
                         frame: {
-                            x: 1750,
-                            y: 1752,
+                            x: 220,
+                            y: 1753,
                             w: 60,
                             h: 54
                         },
@@ -59141,10 +59622,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "emote-medical-healthkit.img": {
+                    "loot-medical-healthkit.img": {
                         frame: {
-                            x: 1860,
-                            y: 2,
+                            x: 284,
+                            y: 1753,
                             w: 60,
                             h: 54
                         },
@@ -59163,8 +59644,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mp220.img": {
                         frame: {
-                            x: 1860,
-                            y: 60,
+                            x: 348,
+                            y: 1753,
                             w: 58,
                             h: 54
                         },
@@ -59183,8 +59664,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-20.img": {
                         frame: {
-                            x: 1860,
-                            y: 118,
+                            x: 1747,
+                            y: 1251,
                             w: 54,
                             h: 54
                         },
@@ -59203,8 +59684,8 @@ webpackJsonp([1], {
                     },
                     "leek.img": {
                         frame: {
-                            x: 1860,
-                            y: 176,
+                            x: 1747,
+                            y: 1309,
                             w: 54,
                             h: 54
                         },
@@ -59223,8 +59704,8 @@ webpackJsonp([1], {
                     },
                     "map-stove-02.img": {
                         frame: {
-                            x: 1860,
-                            y: 234,
+                            x: 1747,
+                            y: 1367,
                             w: 50,
                             h: 53
                         },
@@ -59243,8 +59724,8 @@ webpackJsonp([1], {
                     },
                     "ping-map-airstrike.img": {
                         frame: {
-                            x: 1860,
-                            y: 291,
+                            x: 1871,
+                            y: 782,
                             w: 24,
                             h: 53
                         },
@@ -59303,8 +59784,8 @@ webpackJsonp([1], {
                     },
                     "turkey-animal.img": {
                         frame: {
-                            x: 1860,
-                            y: 348,
+                            x: 410,
+                            y: 1753,
                             w: 60,
                             h: 52
                         },
@@ -59323,8 +59804,8 @@ webpackJsonp([1], {
                     },
                     "loot-helmet-01.img": {
                         frame: {
-                            x: 1860,
-                            y: 404,
+                            x: 474,
+                            y: 1753,
                             w: 58,
                             h: 52
                         },
@@ -59341,10 +59822,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "eggplant.img": {
+                    "trunk.img": {
                         frame: {
-                            x: 1860,
-                            y: 460,
+                            x: 1747,
+                            y: 1424,
                             w: 54,
                             h: 52
                         },
@@ -59361,10 +59842,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "trunk.img": {
+                    "eggplant.img": {
                         frame: {
-                            x: 1860,
-                            y: 516,
+                            x: 1747,
+                            y: 1480,
                             w: 54,
                             h: 52
                         },
@@ -59383,28 +59864,8 @@ webpackJsonp([1], {
                     },
                     "loot-weapon-mac10.img": {
                         frame: {
-                            x: 1860,
-                            y: 572,
-                            w: 52,
-                            h: 52
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 6,
-                            y: 6,
-                            w: 52,
-                            h: 52
-                        },
-                        sourceSize: {
-                            w: 64,
-                            h: 64
-                        }
-                    },
-                    "movement.img": {
-                        frame: {
-                            x: 1860,
-                            y: 628,
+                            x: 1747,
+                            y: 1536,
                             w: 52,
                             h: 52
                         },
@@ -59423,8 +59884,28 @@ webpackJsonp([1], {
                     },
                     "ping-map-help.img": {
                         frame: {
-                            x: 1860,
-                            y: 684,
+                            x: 1747,
+                            y: 1592,
+                            w: 52,
+                            h: 52
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 6,
+                            y: 6,
+                            w: 52,
+                            h: 52
+                        },
+                        sourceSize: {
+                            w: 64,
+                            h: 64
+                        }
+                    },
+                    "movement.img": {
+                        frame: {
+                            x: 536,
+                            y: 1753,
                             w: 52,
                             h: 52
                         },
@@ -59443,8 +59924,8 @@ webpackJsonp([1], {
                     },
                     "crab.img": {
                         frame: {
-                            x: 1860,
-                            y: 740,
+                            x: 592,
+                            y: 1753,
                             w: 52,
                             h: 52
                         },
@@ -59461,10 +59942,50 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
+                    "ribbon-red.img": {
+                        frame: {
+                            x: 648,
+                            y: 1753,
+                            w: 50,
+                            h: 52
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 12,
+                            y: 11,
+                            w: 50,
+                            h: 52
+                        },
+                        sourceSize: {
+                            w: 74,
+                            h: 74
+                        }
+                    },
+                    "ribbon-blue.img": {
+                        frame: {
+                            x: 702,
+                            y: 1753,
+                            w: 50,
+                            h: 52
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 12,
+                            y: 11,
+                            w: 50,
+                            h: 52
+                        },
+                        sourceSize: {
+                            w: 74,
+                            h: 74
+                        }
+                    },
                     "loot-throwable-frag.img": {
                         frame: {
-                            x: 1860,
-                            y: 796,
+                            x: 756,
+                            y: 1753,
                             w: 50,
                             h: 52
                         },
@@ -59481,50 +60002,10 @@ webpackJsonp([1], {
                             h: 64
                         }
                     },
-                    "ribbon-blue.img": {
-                        frame: {
-                            x: 1860,
-                            y: 852,
-                            w: 50,
-                            h: 52
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 12,
-                            y: 11,
-                            w: 50,
-                            h: 52
-                        },
-                        sourceSize: {
-                            w: 74,
-                            h: 74
-                        }
-                    },
-                    "ribbon-red.img": {
-                        frame: {
-                            x: 1860,
-                            y: 908,
-                            w: 50,
-                            h: 52
-                        },
-                        rotated: !1,
-                        trimmed: !0,
-                        spriteSourceSize: {
-                            x: 12,
-                            y: 11,
-                            w: 50,
-                            h: 52
-                        },
-                        sourceSize: {
-                            w: 74,
-                            h: 74
-                        }
-                    },
                     "map-snow-05.img": {
                         frame: {
-                            x: 1860,
-                            y: 964,
+                            x: 810,
+                            y: 1753,
                             w: 46,
                             h: 52
                         },
@@ -59543,8 +60024,8 @@ webpackJsonp([1], {
                     },
                     "question.img": {
                         frame: {
-                            x: 1860,
-                            y: 1020,
+                            x: 1859,
+                            y: 1675,
                             w: 36,
                             h: 52
                         },
@@ -59563,8 +60044,8 @@ webpackJsonp([1], {
                     },
                     "map-building-bank-window-01.img": {
                         frame: {
-                            x: 1888,
-                            y: 291,
+                            x: 1866,
+                            y: 962,
                             w: 28,
                             h: 52
                         },
@@ -59579,52 +60060,12 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 28,
                             h: 52
-                        }
-                    },
-                    "map-case-flare-01.img": {
-                        frame: {
-                            x: 2,
-                            y: 1812,
-                            w: 70,
-                            h: 51
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 70,
-                            h: 51
-                        },
-                        sourceSize: {
-                            w: 70,
-                            h: 51
-                        }
-                    },
-                    "map-case-hatchet-01.img": {
-                        frame: {
-                            x: 76,
-                            y: 1812,
-                            w: 70,
-                            h: 51
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 70,
-                            h: 51
-                        },
-                        sourceSize: {
-                            w: 70,
-                            h: 51
                         }
                     },
                     "map-chest-01.img": {
                         frame: {
-                            x: 150,
-                            y: 1812,
+                            x: 860,
+                            y: 1753,
                             w: 70,
                             h: 51
                         },
@@ -59643,8 +60084,8 @@ webpackJsonp([1], {
                     },
                     "map-chest-02.img": {
                         frame: {
-                            x: 224,
-                            y: 1812,
+                            x: 934,
+                            y: 1753,
                             w: 70,
                             h: 51
                         },
@@ -59663,8 +60104,48 @@ webpackJsonp([1], {
                     },
                     "map-chest-03.img": {
                         frame: {
-                            x: 298,
-                            y: 1812,
+                            x: 1008,
+                            y: 1753,
+                            w: 70,
+                            h: 51
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 70,
+                            h: 51
+                        },
+                        sourceSize: {
+                            w: 70,
+                            h: 51
+                        }
+                    },
+                    "map-case-flare-01.img": {
+                        frame: {
+                            x: 1082,
+                            y: 1753,
+                            w: 70,
+                            h: 51
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 70,
+                            h: 51
+                        },
+                        sourceSize: {
+                            w: 70,
+                            h: 51
+                        }
+                    },
+                    "map-case-hatchet-01.img": {
+                        frame: {
+                            x: 1156,
+                            y: 1753,
                             w: 70,
                             h: 51
                         },
@@ -59683,8 +60164,8 @@ webpackJsonp([1], {
                     },
                     "gun-ots38-01.img": {
                         frame: {
-                            x: 1900,
-                            y: 1020,
+                            x: 1873,
+                            y: 62,
                             w: 18,
                             h: 51
                         },
@@ -59703,8 +60184,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-06.img": {
                         frame: {
-                            x: 372,
-                            y: 1812,
+                            x: 1230,
+                            y: 1753,
                             w: 82,
                             h: 50
                         },
@@ -59723,8 +60204,8 @@ webpackJsonp([1], {
                     },
                     "dab-face.img": {
                         frame: {
-                            x: 458,
-                            y: 1812,
+                            x: 1316,
+                            y: 1753,
                             w: 72,
                             h: 50
                         },
@@ -59743,8 +60224,8 @@ webpackJsonp([1], {
                     },
                     "forest.img": {
                         frame: {
-                            x: 534,
-                            y: 1812,
+                            x: 1392,
+                            y: 1753,
                             w: 62,
                             h: 50
                         },
@@ -59763,8 +60244,8 @@ webpackJsonp([1], {
                     },
                     "potato.img": {
                         frame: {
-                            x: 1860,
-                            y: 1076,
+                            x: 1458,
+                            y: 1753,
                             w: 52,
                             h: 50
                         },
@@ -59783,8 +60264,8 @@ webpackJsonp([1], {
                     },
                     "baguette.img": {
                         frame: {
-                            x: 1860,
-                            y: 1130,
+                            x: 1514,
+                            y: 1753,
                             w: 50,
                             h: 50
                         },
@@ -59803,8 +60284,8 @@ webpackJsonp([1], {
                     },
                     "map-snow-04.img": {
                         frame: {
-                            x: 1860,
-                            y: 1184,
+                            x: 1568,
+                            y: 1753,
                             w: 50,
                             h: 50
                         },
@@ -59823,8 +60304,8 @@ webpackJsonp([1], {
                     },
                     "copy.img": {
                         frame: {
-                            x: 1860,
-                            y: 1238,
+                            x: 1622,
+                            y: 1753,
                             w: 46,
                             h: 50
                         },
@@ -59843,8 +60324,8 @@ webpackJsonp([1], {
                     },
                     "map-toilet-03.img": {
                         frame: {
-                            x: 1860,
-                            y: 1292,
+                            x: 1503,
+                            y: 278,
                             w: 34,
                             h: 50
                         },
@@ -59863,8 +60344,8 @@ webpackJsonp([1], {
                     },
                     "map-toilet-04.img": {
                         frame: {
-                            x: 1860,
-                            y: 1346,
+                            x: 1505,
+                            y: 342,
                             w: 34,
                             h: 50
                         },
@@ -59881,10 +60362,30 @@ webpackJsonp([1], {
                             h: 50
                         }
                     },
-                    "part-airdrop-01.img": {
+                    "map-bush-res-04.img": {
                         frame: {
-                            x: 1860,
-                            y: 1400,
+                            x: 1672,
+                            y: 1753,
+                            w: 48,
+                            h: 48
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 12,
+                            y: 12,
+                            w: 48,
+                            h: 48
+                        },
+                        sourceSize: {
+                            w: 72,
+                            h: 72
+                        }
+                    },
+                    "map-woodpile-01.img": {
+                        frame: {
+                            x: 1724,
+                            y: 1753,
                             w: 48,
                             h: 48
                         },
@@ -59903,28 +60404,8 @@ webpackJsonp([1], {
                     },
                     "map-pot-01.img": {
                         frame: {
-                            x: 1860,
-                            y: 1452,
-                            w: 48,
-                            h: 48
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 48,
-                            h: 48
-                        },
-                        sourceSize: {
-                            w: 48,
-                            h: 48
-                        }
-                    },
-                    "map-pot-02.img": {
-                        frame: {
-                            x: 1860,
-                            y: 1504,
+                            x: 1776,
+                            y: 1753,
                             w: 48,
                             h: 48
                         },
@@ -59943,8 +60424,8 @@ webpackJsonp([1], {
                     },
                     "skull-leader.img": {
                         frame: {
-                            x: 1860,
-                            y: 1556,
+                            x: 1828,
+                            y: 1753,
                             w: 46,
                             h: 48
                         },
@@ -59961,10 +60442,10 @@ webpackJsonp([1], {
                             h: 48
                         }
                     },
-                    "map-recorder-01.img": {
+                    "map-recorder-02.img": {
                         frame: {
-                            x: 1860,
-                            y: 1608,
+                            x: 1863,
+                            y: 1557,
                             w: 32,
                             h: 48
                         },
@@ -59983,8 +60464,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-06.img": {
                         frame: {
-                            x: 600,
-                            y: 1812,
+                            x: 2,
+                            y: 1811,
                             w: 96,
                             h: 47
                         },
@@ -60003,8 +60484,8 @@ webpackJsonp([1], {
                     },
                     "teabag.img": {
                         frame: {
-                            x: 1860,
-                            y: 1660,
+                            x: 102,
+                            y: 1811,
                             w: 55,
                             h: 47
                         },
@@ -60023,8 +60504,8 @@ webpackJsonp([1], {
                     },
                     "map-vending-soda-01.img": {
                         frame: {
-                            x: 1860,
-                            y: 1711,
+                            x: 161,
+                            y: 1811,
                             w: 54,
                             h: 47
                         },
@@ -60043,8 +60524,8 @@ webpackJsonp([1], {
                     },
                     "map-refrigerator-01.img": {
                         frame: {
-                            x: 1800,
-                            y: 663,
+                            x: 219,
+                            y: 1811,
                             w: 54,
                             h: 47
                         },
@@ -60063,8 +60544,8 @@ webpackJsonp([1], {
                     },
                     "map-oven-01.img": {
                         frame: {
-                            x: 1800,
-                            y: 714,
+                            x: 277,
+                            y: 1811,
                             w: 54,
                             h: 47
                         },
@@ -60083,8 +60564,8 @@ webpackJsonp([1], {
                     },
                     "map-control-panel-03.img": {
                         frame: {
-                            x: 1800,
-                            y: 765,
+                            x: 335,
+                            y: 1811,
                             w: 48,
                             h: 47
                         },
@@ -60099,32 +60580,32 @@ webpackJsonp([1], {
                         sourceSize: {
                             w: 48,
                             h: 47
-                        }
-                    },
-                    "map-crate-17.img": {
-                        frame: {
-                            x: 700,
-                            y: 1812,
-                            w: 86,
-                            h: 45
-                        },
-                        rotated: !1,
-                        trimmed: !1,
-                        spriteSourceSize: {
-                            x: 0,
-                            y: 0,
-                            w: 86,
-                            h: 45
-                        },
-                        sourceSize: {
-                            w: 86,
-                            h: 45
                         }
                     },
                     "map-crate-14.img": {
                         frame: {
-                            x: 790,
-                            y: 1812,
+                            x: 387,
+                            y: 1811,
+                            w: 86,
+                            h: 45
+                        },
+                        rotated: !1,
+                        trimmed: !1,
+                        spriteSourceSize: {
+                            x: 0,
+                            y: 0,
+                            w: 86,
+                            h: 45
+                        },
+                        sourceSize: {
+                            w: 86,
+                            h: 45
+                        }
+                    },
+                    "map-crate-17.img": {
+                        frame: {
+                            x: 477,
+                            y: 1811,
                             w: 86,
                             h: 45
                         },
@@ -60143,8 +60624,8 @@ webpackJsonp([1], {
                     },
                     "map-drawers-01.img": {
                         frame: {
-                            x: 880,
-                            y: 1812,
+                            x: 567,
+                            y: 1811,
                             w: 80,
                             h: 45
                         },
@@ -60163,8 +60644,8 @@ webpackJsonp([1], {
                     },
                     "map-drawers-02.img": {
                         frame: {
-                            x: 964,
-                            y: 1812,
+                            x: 651,
+                            y: 1811,
                             w: 80,
                             h: 45
                         },
@@ -60183,8 +60664,8 @@ webpackJsonp([1], {
                     },
                     "headshot-face.img": {
                         frame: {
-                            x: 1048,
-                            y: 1812,
+                            x: 735,
+                            y: 1811,
                             w: 64,
                             h: 45
                         },
@@ -60203,8 +60684,8 @@ webpackJsonp([1], {
                     },
                     "map-stand-01.img": {
                         frame: {
-                            x: 1860,
-                            y: 1762,
+                            x: 874,
+                            y: 598,
                             w: 40,
                             h: 45
                         },
@@ -60223,8 +60704,8 @@ webpackJsonp([1], {
                     },
                     "map-couch-res-01.img": {
                         frame: {
-                            x: 1116,
-                            y: 1812,
+                            x: 803,
+                            y: 1811,
                             w: 86,
                             h: 44
                         },
@@ -60243,8 +60724,8 @@ webpackJsonp([1], {
                     },
                     "loot-helmet-03.img": {
                         frame: {
-                            x: 1206,
-                            y: 1812,
+                            x: 893,
+                            y: 1811,
                             w: 58,
                             h: 44
                         },
@@ -60283,8 +60764,8 @@ webpackJsonp([1], {
                     },
                     "map-drawers-res.img": {
                         frame: {
-                            x: 1800,
-                            y: 816,
+                            x: 1747,
+                            y: 1648,
                             w: 47,
                             h: 29
                         },
@@ -60303,8 +60784,8 @@ webpackJsonp([1], {
                     },
                     "pumpkin-play.img": {
                         frame: {
-                            x: 1898,
-                            y: 1292,
+                            x: 1873,
+                            y: 122,
                             w: 21,
                             h: 23
                         },
@@ -60323,8 +60804,8 @@ webpackJsonp([1], {
                     },
                     "gun-m249-bot-01.img": {
                         frame: {
-                            x: 1800,
-                            y: 849,
+                            x: 1566,
+                            y: 1488,
                             w: 38,
                             h: 22
                         },
@@ -60341,19 +60822,19 @@ webpackJsonp([1], {
                             h: 22
                         }
                     },
-                    "thumbs-up.img": {
+                    "map-toilet-01.img": {
                         frame: {
-                            x: 895,
+                            x: 1066,
                             y: 1556,
-                            w: 54,
+                            w: 50,
                             h: 64
                         },
                         rotated: !1,
                         trimmed: !0,
                         spriteSourceSize: {
-                            x: 5,
+                            x: 7,
                             y: 0,
-                            w: 54,
+                            w: 50,
                             h: 64
                         },
                         sourceSize: {
@@ -60365,7 +60846,7 @@ webpackJsonp([1], {
             }],
             gradient: [{
                 meta: {
-                    image: "gradient-0-50-d8d6160a.png",
+                    image: "gradient-0-50-1e8f6873.png",
                     size: {
                         w: 512,
                         h: 512
@@ -62569,7 +63050,7 @@ webpackJsonp([1], {
             }],
             faction: [{
                 meta: {
-                    image: "faction-0-50-44ce1204.png",
+                    image: "faction-0-50-c4789633.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -63020,7 +63501,7 @@ webpackJsonp([1], {
                     "player-patch-02.img": {
                         frame: {
                             x: 1702,
-                            y: 513,
+                            y: 532,
                             w: 60,
                             h: 31
                         },
@@ -63097,9 +63578,29 @@ webpackJsonp([1], {
                             h: 128
                         }
                     },
-                    "map-bunker-generic-floor-03.img": {
+                    "player-helmet-lieutenant.img": {
                         frame: {
                             x: 1796,
+                            y: 1374,
+                            w: 92,
+                            h: 120
+                        },
+                        rotated: !1,
+                        trimmed: !0,
+                        spriteSourceSize: {
+                            x: 3,
+                            y: 4,
+                            w: 92,
+                            h: 120
+                        },
+                        sourceSize: {
+                            w: 128,
+                            h: 128
+                        }
+                    },
+                    "map-bunker-generic-floor-03.img": {
+                        frame: {
+                            x: 1892,
                             y: 1374,
                             w: 80,
                             h: 115
@@ -63119,8 +63620,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-generic-ceiling-02.img": {
                         frame: {
-                            x: 1880,
-                            y: 1374,
+                            x: 1796,
+                            y: 1498,
                             w: 80,
                             h: 115
                         },
@@ -63140,7 +63641,7 @@ webpackJsonp([1], {
                     "map-stone-res-02f.img": {
                         frame: {
                             x: 1796,
-                            y: 1493,
+                            y: 1617,
                             w: 100,
                             h: 100
                         },
@@ -63159,8 +63660,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-01a.img": {
                         frame: {
-                            x: 1900,
-                            y: 1493,
+                            x: 1880,
+                            y: 1498,
                             w: 56,
                             h: 96
                         },
@@ -63200,7 +63701,7 @@ webpackJsonp([1], {
                     "map-bunker-chrys-chamber-floor-01a.img": {
                         frame: {
                             x: 1796,
-                            y: 1597,
+                            y: 1721,
                             w: 82,
                             h: 75
                         },
@@ -63220,7 +63721,7 @@ webpackJsonp([1], {
                     "map-statue-top-01.img": {
                         frame: {
                             x: 1796,
-                            y: 1676,
+                            y: 1800,
                             w: 141,
                             h: 72
                         },
@@ -63239,8 +63740,8 @@ webpackJsonp([1], {
                     },
                     "map-statue-top-02.img": {
                         frame: {
-                            x: 1796,
-                            y: 1752,
+                            x: 1584,
+                            y: 743,
                             w: 141,
                             h: 72
                         },
@@ -63259,8 +63760,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-22.img": {
                         frame: {
-                            x: 1882,
-                            y: 1597,
+                            x: 1900,
+                            y: 1617,
                             w: 72,
                             h: 72
                         },
@@ -63279,8 +63780,8 @@ webpackJsonp([1], {
                     },
                     "map-crate-02f.img": {
                         frame: {
-                            x: 1702,
-                            y: 437,
+                            x: 1882,
+                            y: 1721,
                             w: 72,
                             h: 72
                         },
@@ -63319,8 +63820,8 @@ webpackJsonp([1], {
                     },
                     "map-chest-03f.img": {
                         frame: {
-                            x: 1796,
-                            y: 1828,
+                            x: 1702,
+                            y: 437,
                             w: 70,
                             h: 51
                         },
@@ -63337,7 +63838,7 @@ webpackJsonp([1], {
                             h: 51
                         }
                     },
-                    "map-planter-05.img": {
+                    "map-planter-04.img": {
                         frame: {
                             x: 1920,
                             y: 1126,
@@ -63357,7 +63858,7 @@ webpackJsonp([1], {
                             h: 50
                         }
                     },
-                    "map-planter-04.img": {
+                    "map-planter-05.img": {
                         frame: {
                             x: 1920,
                             y: 1180,
@@ -63379,8 +63880,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-02a.img": {
                         frame: {
-                            x: 1584,
-                            y: 743,
+                            x: 1410,
+                            y: 1427,
                             w: 112,
                             h: 48
                         },
@@ -63399,8 +63900,8 @@ webpackJsonp([1], {
                     },
                     "map-bunker-chrys-compartment-ceiling-03a.img": {
                         frame: {
-                            x: 1584,
-                            y: 795,
+                            x: 1526,
+                            y: 1427,
                             w: 112,
                             h: 48
                         },
@@ -63419,8 +63920,8 @@ webpackJsonp([1], {
                     },
                     "player-patch-01.img": {
                         frame: {
-                            x: 1870,
-                            y: 1828,
+                            x: 1702,
+                            y: 492,
                             w: 60,
                             h: 36
                         },
@@ -67035,7 +67536,7 @@ webpackJsonp([1], {
     },
     b4f03d8a: function(e, t, a) {
         t = e.exports = a("95cc1214")(!1),
-        t.push([e.i, '/* Breaks in Bootstrap 4 are:\n *\n * extra large devices (wide screens): 1200px,\n * large devices (desktops): 992px,\n * medium devices (tablets): 768px,\n * small devices (phones): 576px\n *\n * However... iPhone X landscape width: 812px\n * https://mydevice.io/devices/\n */\nimg {\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  -webkit-user-drag: none;\n  -khtml-user-drag: none;\n  -moz-user-drag: none;\n  -o-user-drag: none;\n  user-drag: none;\n}\n#cvs {\n  -webkit-filter: none;\n          filter: none;\n}\n.click-through {\n  pointer-events: none;\n}\n#game-area-wrapper {\n  cursor: crosshair;\n  left: 0;\n  position: absolute !important;\n  top: 0;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\n#ui-game {\n  -webkit-filter: none;\n          filter: none;\n  height: 100%;\n  left: 0px;\n  position: absolute;\n  top: 0px;\n  width: 100%;\n}\n#ui-center {\n  color: #FFF;\n  pointer-events: all;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translateX(-50%) translateY(-50%) scale(1);\n          transform: translateX(-50%) translateY(-50%) scale(1);\n  z-index: 10;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-center {\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.85);\n            transform: translateX(-50%) translateY(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-center {\n    pointer-events: all;\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.85);\n            transform: translateX(-50%) translateY(-50%) scale(0.85);\n    z-index: 10;\n  }\n}\n@media (max-width: 850px) and (max-height: 300px) {\n  #ui-center {\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.775);\n            transform: translateX(-50%) translateY(-50%) scale(0.775);\n  }\n}\n#ui-game-menu {\n  background-color: rgba(0, 0, 0, 0.5);\n  border-radius: 5px;\n  box-sizing: border-box;\n  display: none;\n  margin: 10px auto;\n  padding: 10px 15px;\n}\n@media screen and (max-width: 850px) {\n  #ui-game-menu {\n    height: initial;\n    padding: 4px 10px;\n    width: 190px;\n  }\n}\n@media (max-width: 850px) and (max-height: 300px) {\n  #ui-game-menu {\n    margin-top: 0px;\n  }\n}\n#ui-game-menu p {\n  bottom: 4px;\n  display: inline-block;\n  font-size: 14px;\n  position: relative;\n}\n@media screen and (max-width: 850px) {\n  #ui-game-menu p {\n    bottom: 0px;\n    font-size: 12px;\n    margin-bottom: 8px;\n    margin-top: 6px;\n  }\n}\n.ui-game-menu-desktop {\n  height: 495px;\n  width: 350px;\n}\n.btns-game-double-row {\n  display: flex;\n  position: relative;\n}\n.btns-game-double-row > .btn-game-container {\n  position: relative;\n  width: 100%;\n}\n.btns-game-double-row > .btn-game-container > .btn-double-row {\n  display: inline-block;\n}\n.btns-game-double-row > div:not(:last-child) {\n  margin-right: 2px;\n}\n.game-menu-icon-toggle {\n  background-size: 22px;\n  background-position: center;\n  background-repeat: no-repeat;\n  bottom: 13px;\n  display: inline-block;\n  height: 22px;\n  left: 60%;\n  pointer-events: none;\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 22px;\n}\n.btn-game-touch-style {\n  background-color: #50afab;\n  background-position: 4px 4px;\n  background-repeat: no-repeat;\n  background-size: 20px;\n  border: 0px;\n  border-bottom: none;\n  border-radius: 5px;\n  box-shadow: inset 0 -2px #387c79;\n  box-sizing: border-box;\n  color: white;\n  cursor: pointer;\n  display: block;\n  font-size: 14px;\n  height: 30px;\n  line-height: 30px;\n  margin: auto;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  width: 100%;\n}\n.movement-icon {\n  background-image: url(../img/gui/movement.svg);\n}\n.target-icon {\n  background-image: url(../img/gui/target.svg);\n}\n.aim-line-on-icon {\n  background-image: url(../img/gui/checked.svg);\n}\n.aim-line-off-icon {\n  background-image: url(../img/gui/close.svg);\n}\n#btn-game-tabs > .btn-game-container > .btn-game-menu {\n  text-align: center;\n  color: white;\n  line-height: 36px;\n  font-size: 16px;\n  background-color: transparent;\n  border: 2px solid;\n  border-color: white;\n  box-shadow: none;\n  cursor: pointer;\n  flex: 1;\n}\n#btn-game-tabs > .btn-game-container > .btn-game-menu-selected {\n  border: 2px solid !important;\n  border-color: #00ff00 !important;\n  background-color: rgba(0, 0, 0, 0.35);\n}\n.game-menu-icon-static {\n  background-size: 36px;\n  background-position: center;\n  background-repeat: no-repeat;\n  bottom: 13px;\n  display: inline-block;\n  height: 26px;\n  left: 50%;\n  pointer-events: none;\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 36px;\n}\n.settings-icon {\n  background-image: url(../img/gui/cog.svg);\n}\n.keybind-icon {\n  background-image: url(../img/gui/keyboard.svg);\n}\n#ui-game-tab-settings {\n  display: block;\n  height: initial;\n}\n.ui-game-tab-settings-desktop {\n  height: 340px;\n}\n#ui-game-tab-keybinds {\n  display: none;\n  height: 345px;\n}\n#ui-game-tab-keybinds > .btn-keybind-restore {\n  margin-top: 20px;\n}\n#ui-game-tab-keybinds > #ui-keybind-list {\n  height: 295px;\n  overflow-y: scroll;\n  pointer-events: all;\n}\n#ui-map-container {\n  position: absolute;\n  bottom: 52px;\n}\n#ui-alive-info {\n  position: absolute;\n  color: white;\n  width: 92px;\n  height: 36px;\n  top: 174px;\n  left: 96px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-alive-info > #ui-map-counter-faction {\n  bottom: 3px;\n  display: none;\n  font-size: 24px;\n  left: 12px;\n  position: absolute;\n  text-align: center;\n  width: 92px;\n}\n#ui-alive-info > #ui-map-counter-faction > .ui-players-alive-red {\n  color: #ff0000;\n  display: inline-block;\n  font-size: 24px;\n  font-weight: bold;\n  position: relative;\n}\n#ui-alive-info > #ui-map-counter-faction > .ui-players-alive-blue {\n  color: #00d2ff;\n  display: inline-block;\n  font-size: 24px;\n  font-weight: bold;\n  position: relative;\n}\n#ui-map-expand-mobile {\n  height: 190px;\n  width: 190px;\n  left: -4px;\n  top: -22px;\n  z-index: 0;\n  background-color: transparent;\n}\n#ui-map-expand img {\n  display: none;\n}\n#ui-map-minimize {\n  left: 124px;\n}\n.ui-map-wrapper-mobile {\n  bottom: initial;\n  color: #FFF;\n  display: block;\n  font-size: 16px;\n  left: 6px;\n  top: 46px;\n}\n.ui-map-wrapper-mobile .ui-players-alive {\n  left: 4px;\n}\n.ui-map-wrapper-mobile #ui-map-counter-default {\n  position: relative;\n  display: inline-block;\n  font-size: 24px;\n  text-align: center;\n  bottom: 10px;\n  left: 9px;\n}\n.ui-map-wrapper-mobile .ui-map-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 0px;\n  background-size: 24px;\n  background-repeat: no-repeat;\n  background-position: 6px 6px;\n}\n.ui-map-wrapper-mobile #ui-map-info {\n  position: absolute;\n  color: white;\n  width: 92px;\n  height: 36px;\n  top: 174px;\n  left: -2px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n.ui-map-wrapper-mobile #ui-spec-counter {\n  position: absolute;\n  color: white;\n  width: 68px;\n  height: 28px;\n  top: 135px;\n  left: 60px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n.ui-map-wrapper-mobile #ui-spec-counter-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 2px;\n  background-size: 20px;\n  background-repeat: no-repeat;\n  background-position: 6px 4px;\n  background-image: url(../img/gui/eye.svg);\n}\n.ui-map-wrapper-mobile #ui-spec-counter-number {\n  position: relative;\n  display: inline-block;\n  font-size: 20px;\n  width: 24px;\n  text-align: center;\n  bottom: 15px;\n  left: 0px;\n}\n.ui-map-wrapper-mobile .gas-icon {\n  background-image: url(../img/gui/gas.svg);\n}\n.ui-map-wrapper-mobile .danger-icon {\n  background-image: url(../img/gui/danger.svg);\n}\n.ui-map-wrapper-mobile .alive-icon {\n  background-image: url(../img/gui/player-gui.svg);\n}\n.ui-map-wrapper-mobile .icon-pulse {\n  -webkit-animation: pulse 2s linear infinite;\n  animation: pulse 2s linear infinite;\n}\n.ui-map-wrapper-mobile .ui-settings-button {\n  position: absolute;\n  color: white;\n  border-radius: 5px;\n  pointer-events: all;\n}\n.ui-map-wrapper-mobile .ui-settings-button img {\n  position: absolute;\n  left: 6px;\n  top: 6px;\n  height: 36px;\n  width: 36px;\n  background-size: 36px;\n  background-repeat: no-repeat;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-map-wrapper-mobile .ui-settings-button .map-img-after {\n  display: none;\n}\n.ui-map-wrapper-mobile .ui-settings-button:hover {\n  -webkit-transform: scale(1);\n          transform: scale(1);\n}\n.ui-map-wrapper-desktop {\n  position: absolute;\n  bottom: 12px;\n  left: 12px;\n}\n#ui-map-wrapper {\n  position: absolute;\n  z-index: 1;\n}\n#ui-settings-container-mobile {\n  position: relative;\n}\n#ui-menu-display {\n  cursor: pointer;\n  left: 2px;\n  top: -18px;\n  height: 48px;\n  width: 48px;\n  opacity: 0.8;\n  background-color: rgba(0, 0, 0, 0.4);\n  background-size: 48px;\n  background-repeat: no-repeat;\n  background-position: center;\n  background-image: url(../img/gui/cog.svg);\n  z-index: 1;\n}\n/**\n * ui-big-map\n */\n#big-map {\n  display: none;\n  height: 100%;\n  width: 100%;\n}\n#big-map-collision {\n  height: 100%;\n  left: 50%;\n  margin: auto;\n  pointer-events: all;\n  position: fixed;\n  top: 0px;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#big-map-close {\n  display: none;\n  position: absolute;\n  margin-left: auto;\n  height: 64px;\n  width: 64px;\n  right: 6px;\n  top: 6px;\n  border-radius: 6px;\n  background-color: rgba(0, 0, 0, 0.5);\n  background-repeat: no-repeat;\n  background-size: 48px;\n  background-position: center;\n  background-image: url(../img/gui/close.svg);\n  pointer-events: all;\n}\n/**\n * ui-right-center\n */\n#ui-right-center {\n  position: absolute;\n  color: #FFF;\n  opacity: 0.75;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-right-center-desktop {\n  top: 40%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  right: 12px;\n}\n.ui-right-center-mobile {\n  height: 100%;\n  left: 50%;\n  top: 10px;\n  -webkit-transform: translateX(-50%) scale(1);\n          transform: translateX(-50%) scale(1);\n  width: 100%;\n}\n.ui-right-center-tablet {\n  height: initial;\n  left: initial;\n  top: 12px !important;\n  -webkit-transform: scale(0.8);\n          transform: scale(0.8);\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n  right: 6px;\n  width: initial;\n}\n@media (max-height: 600px) {\n  .ui-right-center-tablet {\n    -webkit-transform: scale(0.55);\n            transform: scale(0.55);\n  }\n}\n/**\n * ui-bottom-right\n */\n.ui-bottom-right-tablet {\n  bottom: 25% !important;\n  right: 6px !important;\n  -webkit-transform: scale(0.8) !important;\n          transform: scale(0.8) !important;\n  -webkit-transform-origin: right !important;\n          transform-origin: right !important;\n}\n.ui-bottom-right-tablet-ipad {\n  bottom: 25% !important;\n  right: 6px !important;\n  -webkit-transform: scale(0.75) !important;\n          transform: scale(0.75) !important;\n  -webkit-transform-origin: right !important;\n          transform-origin: right !important;\n}\n@media (max-height: 600px) {\n  .ui-bottom-right-tablet {\n    bottom: 25% !important;\n    -webkit-transform: scale(0.7) !important;\n            transform: scale(0.7) !important;\n    -webkit-transform-origin: right !important;\n            transform-origin: right !important;\n  }\n}\n/**\n * ui-bottom-center-right\n */\n.ui-bottom-center-right-tablet {\n  left: 72% !important;\n  -webkit-transform: scale(0.65) !important;\n          transform: scale(0.65) !important;\n}\n#ui-emote-button {\n  background: rgba(0, 0, 0, 0.4);\n  background-image: url(../img/gui/emote.svg);\n  background-position: center;\n  background-repeat: no-repeat;\n  background-size: 28px;\n  border-radius: 21px;\n  display: none;\n  height: 42px;\n  position: absolute;\n  right: 108px;\n  top: 0px;\n  width: 42px;\n}\n@media screen and (max-width: 850px) {\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: 18px;\n    height: 28px;\n    right: 4px;\n    top: initial;\n    width: 28px;\n  }\n}\n/**\n * ui-top-left\n */\n.ui-top-left-tablet {\n  left: 120px !important;\n}\n/**\n * ui-spectate-options-wrapper\n */\n.ui-spectate-options-wrapper-tablet {\n  bottom: 12px !important;\n  top: initial !important;\n}\n.ui-killfeed-wrapper-tablet {\n  top: 60px !important;\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container {\n    margin-bottom: 0px;\n  }\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container > p {\n    width: 75px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider-text {\n    margin-bottom: 0px;\n  }\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container > .slider {\n    bottom: 3px;\n    width: 85px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider::-webkit-slider-thumb {\n    width: 24px;\n    height: 24px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider::-moz-range-thumb {\n    width: 24px;\n    height: 24px;\n  }\n}\n#ui-stats-logo {\n  background-image: url("../img/surviv_logo_full.png");\n  background-repeat: no-repeat;\n  background-size: 250px;\n  background-position: center;\n  height: 125px;\n  position: absolute;\n  left: 20px;\n  top: 8px;\n  width: 250px;\n}\n@media (max-width: 1280px), (max-height: 768px) {\n  #ui-stats-logo {\n    background-size: 175px;\n    height: 90px;\n    width: 175px;\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-stats-logo {\n    background-size: 124px;\n    bottom: 4px;\n    height: 64px;\n    left: initial;\n    right: 8px;\n    top: initial;\n    width: 124px;\n  }\n}\n.ui-hidden {\n  display: none;\n}\n.btn-game-menu {\n  /* Added from .menu-option in menu.less */\n  text-align: center;\n  line-height: 38px;\n  display: block;\n  width: 100%;\n  height: 40px;\n  border: 0px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  position: relative;\n  margin: auto;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  color: white;\n  font-size: 16px;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  background-color: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n  background-repeat: no-repeat;\n  cursor: pointer;\n}\n#btn-game-fullscreen {\n  background-size: 34px;\n  background-position: 4px 2px;\n  background-image: url(../img/gui/minimize.svg);\n}\n#btn-game-sound {\n  background-size: 44px;\n  background-position: 2px -3px;\n}\n#btn-game-aim-line {\n  background-size: 24px;\n  background-position: 8px 6px;\n}\n#btn-game-quit {\n  margin-top: 40px;\n  background-size: 44px;\n  background-position: -2px -3px;\n  background-image: url(../img/gui/quit.svg);\n}\n#btn-game-resume {\n  margin-top: 30px;\n  background-size: 44px;\n  background-position: -2px -3px;\n  background-image: url(../img/gui/resume.svg);\n}\n/**\n     * ui-top-center\n     */\n#ui-top-center {\n  position: absolute;\n  color: #FFF;\n  top: 80px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-top-center .top-center-text {\n  text-align: center;\n  width: 100vw;\n  padding: 8px;\n}\n#ui-waiting-text {\n  display: none;\n  color: white;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n}\n#ui-waiting-text span {\n  font-size: 32px;\n  font-weight: bold;\n}\n.top-center-text .spectate-text {\n  display: inline-block;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 24px;\n  font-weight: bold;\n  overflow: hidden;\n  height: 32px;\n}\n@media (max-width: 1024px) {\n  .top-center-text .spectate-text {\n    font-size: 18px;\n  }\n}\n.top-center-text .spectate-desc {\n  color: white;\n  margin-right: 8px;\n}\n.ui-spectate-mode {\n  display: none;\n}\n#ui-spectate-text {\n  position: relative;\n}\n#spectate-player {\n  max-width: 250px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  color: cyan;\n}\n/**\n     * ui-top-center-scopes\n     */\n#ui-top-center-scopes-wrapper {\n  /* Taken from ui-top-center */\n  position: absolute;\n  color: #FFF;\n  top: 0%;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 100%;\n}\n#ui-top-center-scopes {\n  margin-top: 12px;\n  text-align: center;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-top-center-scopes {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n.ui-zoom {\n  background: rgba(0, 0, 0, 0.3);\n  border-radius: 36px;\n  width: 64px;\n  height: 64px;\n  opacity: 0.6;\n  display: inline-block;\n}\n.ui-zoom-hover:hover {\n  opacity: 1.0;\n}\n.ui-zoom-active {\n  vertical-align: baseline;\n  opacity: 1.0;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-zoom .ui-zoom-image {\n  width: 64px;\n  height: 64px;\n  opacity: 0.4;\n  padding: 2px;\n}\n.ui-zoom .ui-zoom-text {\n  margin-top: 14px;\n  width: 100%;\n}\n.ui-zoom .ui-zoom-level {\n  font-size: 32px;\n  text-align: center;\n  width: 100%;\n  /*cursor: inherit;*/\n}\n.ui-zoom .ui-zoom-append {\n  font-size: 24px;\n}\n.ui-zoom-inactive {\n  display: none;\n  margin-left: -8px;\n  margin-right: -8px;\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(0.5);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(0.5);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(0.5);\n  transition: all 100ms ease-in;\n  transform: scale(0.5);\n}\n.ui-zoom-inactive:hover {\n  cursor: pointer !important;\n  opacity: 1.0;\n}\n/**\n     * ui-team-pings and ui-emotes\n     */\n.ui-emote-wheel {\n  z-index: 3;\n  display: none;\n  position: fixed;\n}\n.ui-emote-parent {\n  opacity: 0.75;\n}\n.ui-emote-hl {\n  z-index: 2;\n  display: none;\n}\n.ui-emote {\n  position: fixed;\n  width: 256px;\n  height: 256px;\n  background-size: 256px;\n  background-repeat: no-repeat;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-emote-bg-circle {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-circle.svg);\n}\n.ui-emote-bg-quarter {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-quarter.svg);\n}\n.ui-emote-bg-eighth {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-eighth.svg);\n}\n.ui-emote-middle .ui-emote-image {\n  width: 24px !important;\n  height: 24px !important;\n  background-size: 24px !important;\n  background-image: url(../img/gui/close.svg);\n}\n.ui-emote-top .ui-emote-image {\n  margin-top: -78px;\n  background-image: url(../img/gui/ping-team-danger.svg);\n}\n.ui-emote-right .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(90deg);\n          transform: translate(-50%, -50%) rotate(90deg);\n}\n.ui-emote-right .ui-emote-image {\n  margin-left: 78px;\n  background-image: url(../img/gui/ping-team-coming.svg);\n}\n.ui-emote-bottom .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(180deg);\n          transform: translate(-50%, -50%) rotate(180deg);\n}\n.ui-emote-bottom .ui-emote-image {\n  margin-top: 78px;\n  background-image: url(../img/gui/ping-team-help.svg);\n}\n.ui-emote-left .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(270deg);\n          transform: translate(-50%, -50%) rotate(270deg);\n}\n.ui-emote-left .ui-emote-image {\n  margin-left: -78px;\n  background-image: url(../img/gui/ping-team-help.svg);\n}\n.ui-emote-top-left .ui-emote-image {\n  margin-left: -80px;\n  margin-top: -30px;\n  background-image: url(../img/loot/loot-ammo-box.svg);\n}\n.ui-emote-bottom-left .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(-45deg);\n          transform: translate(-50%, -50%) rotate(-45deg);\n}\n.ui-emote-bottom-left .ui-emote-image {\n  margin-left: -80px;\n  margin-top: 30px;\n  background-image: url(../img/loot/loot-medical-healthkit.svg);\n}\n.ui-emote-circle .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-circle-highlight.svg);\n}\n.ui-emote-quarter .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-quarter-highlight.svg);\n}\n.ui-emote-eighth .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-eighth-highlight.svg);\n}\n.ui-emote-image {\n  z-index: 1;\n  position: fixed;\n  background-repeat: no-repeat;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-emote-image-large {\n  width: 64px;\n  height: 64px;\n  background-size: 64px;\n}\n.ui-emote-image-small {\n  width: 35px;\n  height: 35px;\n  background-size: 35px;\n}\n/**\n     * ui-team-indicators\n     */\n.ui-team-indicator {\n  z-index: 2;\n  display: none;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  border-radius: 32px;\n  width: 64px;\n  height: 64px;\n  background-size: 64px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/indicator.svg);\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-team-indicator-pos {\n  opacity: 0.75;\n  position: relative;\n  border-radius: 24px;\n  width: 32px;\n  height: 32px;\n  top: 23px;\n  left: 32px;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-team-indicator-image {\n  width: 32px;\n  height: 32px;\n  background-size: 32px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/ping-team-danger.svg);\n}\n.ui-indicator-ping-border {\n  z-index: 0;\n  display: none;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 160px;\n  height: 160px;\n  position: relative;\n  background-size: 160px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/ping-border.svg);\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n/**\n     * ui-top-left\n     */\n#ui-top-left {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  left: 12px;\n  display: block;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-top-left {\n    -webkit-transform-origin: top left;\n            transform-origin: top left;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n.ui-bg-standard {\n  background: rgba(0, 0, 0, 0.24);\n  border-radius: 5px;\n}\n.ui-team-member {\n  display: none;\n  position: relative;\n  width: 200px;\n  height: 32px;\n  padding: 4px;\n  margin-bottom: 8px;\n}\n.ui-team-member-name {\n  font-weight: bold;\n  text-shadow: 1px 1px 0px #000000;\n  font-size: 16px;\n  max-width: 180px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ui-team-member-color {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n  border-radius: 7px;\n  width: 14px;\n  height: 14px;\n}\n.ui-background-yellow {\n  background-color: #ffff00;\n}\n.ui-background-blue {\n  background-color: blue;\n}\n.ui-background-red {\n  background-color: red;\n}\n.ui-background-purple {\n  background-color: #ff00ff;\n}\n.ui-background-cyan {\n  background-color: #00ffff;\n}\n.ui-background-orange {\n  background-color: #ff5400;\n}\n.ui-team-member-status {\n  display: none;\n  position: absolute;\n  top: 4px;\n  right: -38px;\n  width: 32px;\n  height: 32px;\n  background-size: 32px;\n  background-repeat: no-repeat;\n}\n.ui-team-member-status-downed {\n  border-radius: 16px;\n  display: block !important;\n  background-image: url(../img/gui/down.svg) !important;\n}\n.ui-team-member-status-dead {\n  display: block !important;\n  background-image: url(../img/gui/skull-team.svg) !important;\n  opacity: 0.5 !important;\n}\n.ui-team-member-status-disconnected {\n  display: block !important;\n  background-image: url(../img/gui/close.svg) !important;\n  opacity: 0.5 !important;\n}\n.ui-team-member-health {\n  margin-top: 4px;\n}\n.ui-team-member-health .ui-bar-inner {\n  background-color: white;\n  z-index: 1;\n  position: absolute;\n  border-radius: 4px;\n  width: 200px;\n  height: 10px;\n  transition: width 0.0s;\n  transition-property: width;\n  transition-duration: 0.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.ui-team-member-health .ui-bar-danger {\n  background: rgba(255, 0, 0, 0.8);\n  -webkit-animation-name: pulse;\n          animation-name: pulse;\n  -webkit-animation-duration: 0.5s;\n          animation-duration: 0.5s;\n  -webkit-animation-timing-function: ease-out;\n          animation-timing-function: ease-out;\n  -webkit-animation-delay: 0;\n          animation-delay: 0;\n  -webkit-animation-direction: alternate;\n          animation-direction: alternate;\n  -webkit-animation-iteration-count: infinite;\n          animation-iteration-count: infinite;\n  -webkit-animation-fill-mode: none;\n          animation-fill-mode: none;\n  -webkit-animation-play-state: running;\n          animation-play-state: running;\n}\n.ui-team-member-health .ui-health-depleted {\n  z-index: 0;\n  background: #929292;\n  transition: width 1.0s;\n  transition-property: width;\n  transition-duration: 1.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n#ui-spectate-options-wrapper {\n  color: #FFF;\n  display: block;\n  left: 12px;\n  position: absolute;\n  top: 12px;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-spectate-options-wrapper {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    -webkit-transform-origin: top left;\n            transform-origin: top left;\n  }\n}\n#ui-spectate-options {\n  position: relative;\n  pointer-events: all;\n  width: 100%;\n}\n#ui-spectate-buttons {\n  display: inline-block;\n  padding: 8px 8px 0px 8px;\n  text-align: center;\n  width: 192px;\n}\n#ui-spectate-options a {\n  position: relative;\n  color: white;\n  font-size: 16px;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  background: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n  cursor: pointer;\n}\n#btn-spectate-prev-player {\n  margin-bottom: 24px;\n}\n#ui-spectate-stats {\n  vertical-align: top;\n  display: none;\n}\n#ui-spectate-stats-header {\n  text-align: center;\n  font-size: 24px;\n  font-weight: bold;\n  padding: 8px;\n}\n#ui-spectate-stats-table {\n  width: 100%;\n  background-color: transparent;\n  margin: auto;\n  margin-right: 0px;\n  border-collapse: collapse;\n}\n#ui-spectate-stats tbody,\n#ui-spectate-stats td,\n#ui-spectate-stats th {\n  padding: 0px 8px 8px 16px;\n  font-size: 18px;\n}\n.ui-spectate-stats-category {\n  width: 130px;\n  color: rgba(255, 255, 255, 0.75);\n}\n.ui-spectate-stats-value {\n  width: 75px;\n  color: white;\n}\n#ui-leaderboard-wrapper {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n  display: flex;\n  font-weight: bold;\n  text-align: center;\n  width: 85px;\n  display: inline-block;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-leaderboard-wrapper {\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n#ui-leaderboard-alive {\n  display: none;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-bottom: 8px;\n  padding: 8px;\n  height: 64px;\n  width: 72px;\n}\n#ui-leaderboard-alive-faction {\n  display: none;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  height: 74px;\n  line-height: 38px;\n  margin-bottom: 8px;\n  padding: 4px;\n  width: 78px;\n}\n#ui-leaderboard-alive-faction .ui-players-alive-red {\n  color: #ff0000;\n  display: block;\n  font-size: 36px;\n  position: relative;\n}\n#ui-leaderboard-alive-faction .ui-players-alive-blue {\n  color: #00d2ff;\n  display: block;\n  font-size: 36px;\n  position: relative;\n}\n.ui-players-alive {\n  position: relative;\n  font-size: 54px;\n}\n.ui-leaderboard-header {\n  font-size: 24px;\n  margin-bottom: 8px;\n}\n#ui-kill-counter-wrapper {\n  display: none;\n  margin-top: 32px;\n}\n#ui-kill-counter {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-bottom: 8px;\n  padding: 8px;\n  height: 64px;\n  width: 72px;\n}\n.ui-player-kills {\n  position: relative;\n  font-size: 54px;\n}\n.ui-kill-counter-header {\n  font-size: 24px;\n  margin-bottom: 8px;\n}\n#ui-killfeed-wrapper {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n  display: flex;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-killfeed-wrapper {\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n#ui-killfeed {\n  display: inline-block;\n  margin-left: 24px;\n  height: 100px;\n}\n#ui-killfeed-contents {\n  width: 800px;\n}\n#ui-killfeed-contents .killfeed-div {\n  position: absolute;\n  right: 100px;\n  background-color: rgba(0, 0, 0, 0.4);\n  padding: 4px 8px;\n  border-radius: 2px;\n  height: 22px;\n  line-height: 24px;\n}\n.killfeed-div div {\n  float: left;\n  font-size: 16px;\n  font-weight: bold;\n  color: #EFEEEE;\n}\n#ui-killfeed .killfeed-text {\n  max-width: 550px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/**\n * ui-right-center\n */\n#ui-right-center:hover {\n  opacity: 1;\n}\n#ui-ammo-interactive {\n  width: 90px;\n}\n.ui-ammo {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  display: inline-block;\n  height: 52px;\n  margin-bottom: 5px;\n  margin-left: 3px;\n  margin-right: 3px;\n  width: 35px;\n}\n.ui-ammo > .ui-loot-count {\n  position: absolute;\n  font-size: 20px;\n  font-weight: bold;\n  top: 28px;\n  text-align: center;\n  width: 100%;\n}\n.ui-ammo-row {\n  display: flex;\n}\n.ui-ammo-row > div:not(:last-child) {\n  margin-right: 10px;\n}\n.ui-ammo > .ui-loot-image {\n  bottom: 0;\n  height: 22px;\n  margin-top: 5px;\n  position: absolute;\n  right: 6px;\n  top: 0;\n  width: 22px;\n}\n.ui-ammo > .ui-loot-overlay {\n  bottom: 0;\n  height: 22px;\n  margin-top: 5px;\n  position: absolute;\n  right: 6px;\n  top: 0;\n  width: 22px;\n}\n#ui-loot-ph1 {\n  opacity: 0 !important;\n}\n#ui-medical-interactive {\n  margin-bottom: 32px;\n}\n.ui-medical > .ui-loot-image {\n  position: absolute;\n  height: 30px;\n  width: 30px;\n  background-size: 30px;\n  background-repeat: no-repeat;\n  right: 5px;\n  margin-top: 1px;\n  top: 0;\n  bottom: 0;\n}\n.ui-medical:hover {\n  cursor: pointer !important;\n}\n.ui-loot {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  width: 85px;\n  height: 32px;\n  margin-left: auto;\n  margin-bottom: 5px;\n}\n.ui-loot:hover {\n  opacity: 1 !important;\n}\n.ui-outline-hover {\n  border: 2px solid rgba(0, 255, 0, 0);\n}\n.ui-outline-hover:hover {\n  -webkit-transition: border 100ms ease-out;\n  -moz-transition: border 100ms ease-out;\n  -o-transition: border 100ms ease-out;\n  border: 2px solid #00ff00;\n}\n.ui-scale-hover {\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n}\n.ui-scale-hover:hover {\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1.1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1.1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1.1);\n  transition: all 100ms ease-in;\n  transform: scale(1.1);\n}\n.ui-loot > .ui-loot-count {\n  position: absolute;\n  font-size: 24px;\n  font-weight: bold;\n  left: 10px;\n  top: 2px;\n  text-align: center;\n}\n@media (max-height: 864px), (max-width: 1024px) {\n  .ui-right-center-desktop {\n    top: 42%;\n    -webkit-transform-origin: right;\n            transform-origin: right;\n    -webkit-transform: translateY(-50%) scale(0.8);\n            transform: translateY(-50%) scale(0.8);\n  }\n  #ui-medical-interactive {\n    margin-bottom: 8px;\n  }\n}\n@media (max-height: 640px) {\n  .ui-right-center-desktop {\n    top: 42%;\n    -webkit-transform-origin: right;\n            transform-origin: right;\n    -webkit-transform: translateY(-50%) scale(0.7);\n            transform: translateY(-50%) scale(0.7);\n  }\n  #ui-medical-interactive {\n    margin-bottom: 8px;\n  }\n}\n/**\n     * ui-upper-center\n     */\n#ui-upper-center {\n  position: absolute;\n  display: flex;\n  color: #FFF;\n  top: 180px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-announcement {\n  display: none;\n  color: yellow;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n  text-align: center;\n  width: 100vw;\n}\n/**\n     * ui-lower-center\n     */\n#ui-lower-center {\n  position: absolute;\n  color: #FFF;\n  bottom: 40%;\n  left: 50%;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-lower-center {\n    -webkit-transform-origin: left bottom;\n            transform-origin: left bottom;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    bottom: 33%;\n  }\n}\n#ui-interaction {\n  display: flex;\n}\n#ui-interaction-press {\n  background: rgba(0, 0, 0, 0.4);\n  background-size: 80%;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 5px;\n  font-weight: 700;\n  margin-left: -24px;\n  text-align: center;\n}\n.ui-interaction-large {\n  font-size: 42px;\n  height: 48px;\n  width: 48px;\n}\n.ui-interaction-small {\n  font-size: 26px;\n  height: 36px;\n  line-height: 36px;\n  min-width: 24px;\n  padding-left: 10px;\n  padding-right: 10px;\n}\n#ui-interaction-outer {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-left: 10px;\n  padding: 0px 15px;\n  height: 48px;\n}\n#ui-interaction-outer #ui-interaction-description {\n  margin-top: 10px;\n  font-size: 24px;\n  text-align: center;\n}\n/**\n     * ui-bottom-left\n     */\n#ui-map-container {\n  position: absolute;\n  bottom: 52px;\n}\n#ui-map-info {\n  position: absolute;\n  color: white;\n  width: 100px;\n  height: 36px;\n  bottom: 218px;\n  left: 82px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-gas-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 24px;\n  margin-left: 2px;\n  background-size: 24px;\n  background-repeat: no-repeat;\n  background-position: 6px 6px;\n}\n.gas-icon {\n  background-image: url(../img/gui/gas.svg);\n}\n.danger-icon {\n  background-image: url(../img/gui/danger.svg);\n}\n.icon-pulse {\n  -webkit-animation: pulse 2s linear infinite;\n  animation: pulse 2s linear infinite;\n}\n#ui-gas-timer {\n  position: relative;\n  display: inline-block;\n  font-size: 24px;\n  text-align: center;\n  bottom: 10px;\n  left: 0px;\n}\n#ui-spec-counter {\n  position: absolute;\n  color: white;\n  width: 68px;\n  height: 28px;\n  bottom: 218px;\n  left: 6px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-spec-counter-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 2px;\n  background-size: 20px;\n  background-repeat: no-repeat;\n  background-position: 6px 4px;\n  background-image: url(../img/gui/eye.svg);\n}\n#ui-spec-counter-number {\n  position: relative;\n  display: inline-block;\n  font-size: 20px;\n  width: 24px;\n  text-align: center;\n  bottom: 15px;\n  left: 0px;\n}\n#ui-settings-container-desktop {\n  position: relative;\n  left: 16px;\n  bottom: 12px;\n}\n#ui-settings-container-desktop div {\n  cursor: pointer;\n}\n.ui-settings-button {\n  position: absolute;\n  color: white;\n  border-radius: 5px;\n  height: 48px;\n  width: 48px;\n  pointer-events: all;\n  opacity: 0.5;\n  background: rgba(0, 0, 0, 0.4);\n}\n#ui-map-minimize {\n  left: 185px;\n}\n.ui-settings-button img {\n  position: absolute;\n  left: 6px;\n  top: 6px;\n  height: 36px;\n  width: 36px;\n  background-size: 36px;\n  background-repeat: no-repeat;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-settings-button .map-img-after {\n  display: none;\n}\n.ui-settings-button:hover {\n  opacity: 1;\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1.1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1.1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1.1);\n  transition: all 100ms ease-in;\n  transform: scale(1.1);\n}\n/**\n     * ui-bottom-center-0\n     */\n#ui-bottom-center-0 {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-0 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n#ui-equipped-ammo-wrapper {\n  /* Taken from ui-bottom-center-0 */\n  position: absolute;\n  color: #FFF;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  bottom: 62px;\n}\n#ui-equipped-ammo {\n  margin-bottom: 12px;\n  text-align: center;\n  opacity: 1.0;\n}\n#ui-bullet-counter {\n  display: inline-block;\n  width: 175px;\n  height: 56px;\n  text-align: center;\n  text-shadow: 2px 2px #000000;\n}\n#ui-bullet-counter #ui-current-clip {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 44px;\n  font-weight: bold;\n  width: 100px;\n  height: 50px;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  left: 50%;\n  position: relative;\n  text-align: center;\n}\n#ui-bullet-counter #ui-remaining-ammo {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 24px;\n  font-weight: bold;\n  line-height: 32px;\n  width: 65px;\n  height: 32px;\n  left: 82%;\n  position: absolute;\n  text-align: center;\n  top: 18px;\n}\n#ui-boost-counter {\n  display: inline-flex;\n  width: 412px;\n}\n#ui-boost-counter .ui-boost-base {\n  background: rgba(0, 0, 0, 0.4);\n  height: 10px;\n  margin-bottom: 8px;\n}\n#ui-boost-counter-0 {\n  border-top-left-radius: 3px;\n  border-bottom-left-radius: 3px;\n  width: 100px;\n  margin-right: 3px;\n}\n#ui-boost-counter-0 .ui-bar-inner {\n  background: #ff901a;\n}\n#ui-boost-counter-1 {\n  width: 100px;\n  margin-left: 3px;\n  margin-right: 3px;\n}\n#ui-boost-counter-1 .ui-bar-inner {\n  background: #ff751a;\n}\n#ui-boost-counter-2 {\n  width: 150px;\n  margin-left: 3px;\n  margin-right: 3px;\n}\n#ui-boost-counter-2 .ui-bar-inner {\n  background: #ff6616;\n}\n#ui-boost-counter-3 {\n  border-top-right-radius: 3px;\n  border-bottom-right-radius: 3px;\n  width: 50px;\n  margin-left: 3px;\n}\n#ui-boost-counter-3 .ui-bar-inner {\n  background: #ff5600;\n}\n.ui-boost-base .ui-bar-inner {\n  border-radius: inherit;\n  width: 0px;\n  height: 10px;\n}\n.ui-health-flair {\n  background-size: 64px;\n  background-repeat: no-repeat;\n  background-position: center;\n  display: none;\n  height: 64px;\n  position: absolute;\n  width: 64px;\n  z-index: 2;\n}\n#ui-health-flair-left {\n  left: -32px;\n  top: 13px;\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg);\n}\n#ui-health-flair-right {\n  right: -32px;\n  top: 13px;\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg);\n}\n#ui-health-counter {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  width: 400px;\n  height: 32px;\n  padding: 6px;\n}\n#ui-health-counter .ui-bar-inner {\n  z-index: 1;\n  position: absolute;\n  border-radius: 5px;\n  width: 100%;\n  height: 32px;\n  transition: width 0.0s;\n  transition-property: width;\n  transition-duration: 0.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n#ui-health-container {\n  width: 400px;\n  position: relative;\n}\n#ui-health-counter .ui-bar-danger {\n  background: rgba(255, 0, 0, 0.8);\n  -webkit-animation-name: pulse;\n          animation-name: pulse;\n  -webkit-animation-duration: 0.5s;\n          animation-duration: 0.5s;\n  -webkit-animation-timing-function: ease-out;\n          animation-timing-function: ease-out;\n  -webkit-animation-delay: 0;\n          animation-delay: 0;\n  -webkit-animation-direction: alternate;\n          animation-direction: alternate;\n  -webkit-animation-iteration-count: infinite;\n          animation-iteration-count: infinite;\n  -webkit-animation-fill-mode: none;\n          animation-fill-mode: none;\n  -webkit-animation-play-state: running;\n          animation-play-state: running;\n}\n#ui-health-counter #ui-health-depleted {\n  z-index: 0;\n  background: #929292;\n  transition: width 1.0s;\n  transition-property: width;\n  transition-duration: 1.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.health-bar-pulse {\n  -webkit-animation: pulsewhite 1s linear infinite;\n  animation: pulsewhite 1s linear infinite;\n}\n@-webkit-keyframes pulsewhite {\n  0% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n  50% {\n    background-color: rgba(255, 255, 255, 0.6);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n}\n@keyframes pulsewhite {\n  0% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n  50% {\n    background-color: rgba(255, 255, 255, 0.6);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n}\n@-webkit-keyframes pulse {\n  0% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n  50% {\n    background-color: rgba(255, 0, 0, 0.8);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n}\n@keyframes pulse {\n  0% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n  50% {\n    background-color: rgba(255, 0, 0, 0.8);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n}\n/**\n     * ui-bottom-center-1\n     */\n#ui-bottom-center-1 {\n  z-index: 3;\n  position: absolute;\n  color: #FFF;\n  bottom: 220px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-1 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n    bottom: 138px;\n  }\n}\n#ui-kills {\n  display: none;\n  text-align: center;\n  background: rgba(0, 0, 0, 0.4);\n  color: #FFF;\n  border-radius: 5px;\n  padding: 8px;\n}\n#ui-kill-text {\n  font-size: 18px;\n}\n#ui-kill-count {\n  font-weight: bold;\n  color: #ff4100;\n  font-size: 32px;\n  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);\n}\n/**\n     * ui-bottom-center-2\n     */\n#ui-bottom-center-2 {\n  position: absolute;\n  color: #FFF;\n  bottom: 160px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-pickup-message {\n  color: white;\n  opacity: 0;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n  text-align: center;\n  width: 100vw;\n}\n/**\n * ui-bottom-center-right\n */\n#ui-bottom-center-right {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  left: 75%;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-right {\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n}\n.ui-armor-counter {\n  position: absolute;\n  bottom: 0px;\n  display: block;\n  width: 48px;\n  height: 60px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-left: 4px;\n}\n#ui-armor-helmet {\n  right: 4px;\n}\n#ui-armor-backpack {\n  left: 60px;\n  border: 2px solid transparent;\n}\n.ui-armor-level {\n  position: relative;\n  font-size: 16px;\n  font-weight: bold;\n  bottom: 24px;\n  text-align: center;\n  text-shadow: 1px 1px #000000;\n  /*cursor: inherit;*/\n}\n.ui-armor-counter-inner {\n  z-index: 1;\n  position: absolute;\n  background: rgba(0, 255, 0, 0.5);\n  border-radius: 5px;\n  width: 100%;\n  height: 0px;\n  bottom: 0px;\n  transition: height 0.5s;\n  transition-property: height;\n  transition-duration: 0.5s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.ui-armor-counter .ui-armor-count {\n  z-index: 2;\n  text-shadow: 2px 2px #000000;\n  position: relative;\n  font-size: 18px;\n  font-weight: bold;\n  margin-top: -28px;\n  text-align: center;\n}\n.ui-armor-counter .ui-armor-image {\n  margin: auto;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  top: 0;\n  z-index: 0;\n  position: absolute;\n  height: 36px;\n  width: 36px;\n}\n/**\n * ui-bottom-right\n */\n#ui-bottom-right {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  right: 12px;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-right {\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n}\n#ui-weapon-container {\n  width: 192px;\n}\n.ui-weapon-info {\n  margin-bottom: 5px;\n  border-radius: 5px;\n  border: 2px solid transparent;\n}\n.ui-weapon-switch {\n  position: absolute;\n  right: 0px;\n  opacity: 0.6;\n  border-radius: 5px;\n  border: 2px solid transparent;\n  width: 160px;\n  height: 60px;\n  margin-left: auto;\n  pointer-events: all;\n  cursor: pointer !important;\n}\n#ui-weapon-id-1 {\n  bottom: 210px;\n}\n#ui-weapon-id-2 {\n  bottom: 140px;\n}\n#ui-weapon-id-3 {\n  bottom: 70px;\n}\n#ui-weapon-id-4 {\n  bottom: 0px;\n}\n.ui-weapon-name {\n  position: absolute;\n  font-size: 18px;\n  font-weight: bold;\n  right: 8px;\n  margin-top: 38px;\n  text-align: center;\n}\n.ui-weapon-number {\n  position: absolute;\n  font-size: 24px;\n  font-weight: bold;\n  right: 8px;\n  text-align: center;\n}\n.ui-weapon-exp {\n  display: none;\n  position: absolute;\n  height: 32px;\n  width: 32px;\n  font-size: 18px;\n  font-weight: bold;\n  line-height: 34px;\n  right: 78px;\n  margin-top: 26px;\n  text-align: center;\n}\n.ui-weapon-image {\n  display: none;\n  position: relative;\n  height: 60px;\n  width: 60px;\n  left: 4px;\n  background-size: 60px;\n  background-repeat: no-repeat;\n}\n#ui-weapon-id-4 .ui-weapon-image {\n  height: 52px;\n  width: 52px;\n  left: 4px;\n  top: 4px;\n  background-size: 52px;\n}\n.ui-weapon-dragged {\n  position: fixed !important;\n  width: 160px !important;\n  right: initial !important;\n  bottom: initial !important;\n  pointer-events: none !important;\n}\n/**\n     * ui-stats, end game screen\n     */\n#ui-stats {\n  display: none;\n}\n#ui-stats-bg {\n  display: none;\n  opacity: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  background: rgba(0, 0, 0, 0.75);\n  pointer-events: none;\n  z-index: 2;\n}\n#ui-stats-contents {\n  border-radius: 5px;\n  color: #FFF;\n  height: 100%;\n  left: 50%;\n  position: absolute;\n  text-align: center;\n  top: 0%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 100%;\n  z-index: 3;\n}\n@media (max-height: 860px) {\n  #ui-stats-contents {\n    top: 0%;\n  }\n}\n#ui-stats-contents-inner {\n  margin-top: 75px;\n}\n@media (max-height: 768px) {\n  #ui-stats-contents-inner {\n    margin-top: 25px;\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-stats-contents-inner {\n    margin-top: 0px;\n  }\n}\n@media (max-height: 768px) {\n  #ui-stats-header {\n    -webkit-transform: scale(0.75);\n            transform: scale(0.75);\n    -webkit-transform-origin: top;\n            transform-origin: top;\n  }\n}\n.ui-stats-header-title {\n  font-weight: bold;\n  font-size: 48px;\n  margin: 20px;\n  color: gold;\n}\n.ui-stats-header-reason {\n  font-size: 24px;\n}\n.ui-stats-header-overview {\n  display: inline;\n  margin: 10px;\n}\n.ui-stats-header-overview div {\n  display: inline;\n  padding-bottom: 12px;\n  border-bottom: 2px solid rgba(255, 255, 255, 0.25);\n}\n.ui-stats-header-overview div:not(:first-child) {\n  margin-left: 100px;\n}\n.ui-stats-header-red-team {\n  color: #cc0000;\n  font-weight: bold;\n}\n.ui-stats-header-blue-team {\n  color: #007eff;\n  font-weight: bold;\n}\nspan.ui-stats-header-stat {\n  font-size: 32px;\n}\nspan.ui-stats-header-value {\n  margin-left: 24px;\n  font-size: 48px;\n  font-weight: bold;\n}\n#ui-stats-info-box {\n  position: relative;\n  left: 50%;\n  margin: auto;\n  margin-top: 50px;\n  height: 190px;\n  display: flex;\n}\n@media (max-height: 768px) {\n  #ui-stats-info-box {\n    margin-top: -30px;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: left;\n            transform-origin: left;\n  }\n}\n@media (max-width: 1024px) {\n  #ui-stats-info-box {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    -webkit-transform-origin: left;\n            transform-origin: left;\n  }\n}\n.ui-stats-info-player {\n  position: relative;\n  width: 250px;\n  background-color: rgba(0, 0, 0, 0.75);\n  border-radius: 4px;\n  border: 2px solid black;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n.ui-stats-info-status:after {\n  content: "";\n  display: block;\n  position: absolute;\n  top: 15%;\n  left: 25%;\n  background-image: url(../img/gui/skull.svg);\n  background-repeat: no-repeat;\n  background-size: 128px;\n  width: 100%;\n  height: 100%;\n  opacity: 0.1;\n  z-index: -1;\n}\n.ui-stats-info-player-name {\n  color: gold;\n  font-size: 24px;\n  font-weight: bold;\n  font-style: italic;\n  margin-top: 8px;\n  margin-bottom: 8px;\n  margin-left: auto;\n  margin-right: auto;\n  max-width: 240px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ui-stats-info-player-badge {\n  background-size: 56px;\n  background-repeat: no-repeat;\n  background-position: center;\n  height: 56px;\n  left: auto;\n  position: absolute;\n  top: -40px;\n  width: 100%;\n}\n.ui-stats-info-player-red-leader {\n  background-image: url(../img/gui/star-red.svg);\n}\n.ui-stats-info-player-red-ribbon {\n  background-image: url(../img/gui/ribbon-red.svg);\n}\n.ui-stats-info-player-blue-leader {\n  background-image: url(../img/gui/star-blue.svg);\n}\n.ui-stats-info-player-blue-ribbon {\n  background-image: url(../img/gui/ribbon-blue.svg);\n}\n.ui-stats-info {\n  display: flex;\n  height: 36px;\n  margin: auto;\n}\n.ui-stats-info > div {\n  padding: 8px;\n  font-size: 18px;\n  line-height: 12px;\n  text-align: left;\n  font-weight: bold;\n}\n.ui-stats-info > div:first-child {\n  width: 55%;\n  margin-right: 4px;\n  text-align: right;\n  font-weight: normal;\n}\n.ui-stats-reason {\n  display: flex;\n  height: 72px;\n  margin: auto;\n}\n.ui-stats-reason div {\n  padding: 8px;\n  margin: auto;\n  width: 100%;\n  text-align: center;\n  font-size: 16px;\n}\n.ui-stats-reason .ui-stats-reason-dead {\n  color: red;\n}\n.ui-stats-reason .ui-stats-reason-alive {\n  color: lawngreen;\n}\n#ui-stats-options {\n  position: absolute;\n  left: 50%;\n  margin-top: 20px;\n  min-height: 60px;\n  z-index: 1;\n}\n@media (max-height: 768px) {\n  #ui-stats-options {\n    margin-top: 8px;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: top;\n            transform-origin: top;\n  }\n}\n.ui-stats-restart {\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 200px;\n  margin: auto;\n  margin-bottom: 20px;\n}\n.ui-stats-spectate {\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  left: 102px;\n  width: 125px;\n  background: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n}\n.ui-stats-ad-container {\n  display: none;\n  margin-top: 80px;\n}\n@media (max-height: 768px) {\n  .ui-stats-ad-container {\n    margin-top: 70px;\n  }\n}\n/* Tooltip container */\n.tooltip {\n  position: relative;\n}\n/* Tooltip text */\n.tooltip .tooltip-text {\n  visibility: hidden;\n  width: 240px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  padding: 5px 0;\n  border-radius: 6px;\n  position: absolute;\n  z-index: 1;\n  right: 110%;\n  opacity: 0.75;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\n.tooltip .tooltip-text::after {\n  content: " ";\n  position: absolute;\n  top: 50%;\n  left: 100%;\n  margin-top: -5px;\n  border-width: 5px;\n  border-style: solid;\n  border-color: transparent transparent transparent black;\n}\n.tooltip-title {\n  font-size: 18px;\n  font-weight: bold;\n  padding: 4px;\n  color: yellow;\n}\n.tooltip-description {\n  font-size: 16px;\n  padding: 4px;\n}\n.tooltip-description span {\n  font-size: 16px;\n}\n.tooltip:hover .tooltip-text {\n  visibility: visible;\n}\n/**\n     * editor\n     */\n#ui-editor-top-center {\n  position: absolute;\n  color: #FFF;\n  top: 0%;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-editor-top-right {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n}\n.ui-editor-header {\n  text-align: center;\n  font-weight: bold;\n  font-size: 16px;\n  padding: 8px;\n}\n.ui-editor-info {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 36px;\n  margin-bottom: 8px;\n  padding: 8px;\n}\n.ui-editor-list {\n  margin: 0px;\n  list-style: none;\n}\n#ui-editor-info-list {\n  padding: 0px;\n}\n/*\n     * Profiler\n     */\n#ui-profiler-top-left {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  left: 12px;\n  text-align: center;\n  display: flex;\n}\n.ui-profiler-list {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-right: 16px;\n  padding: 8px;\n}\n.ui-profiler-list-header {\n  font-size: 16px;\n  font-weight: bold;\n  margin-bottom: 8px;\n}\n.ui-profiler-list ul {\n  list-style: none;\n  text-align: left;\n  padding: 0px;\n  margin: 0px;\n}\n.ui-profiler-list li {\n  display: flex;\n}\n.kv {\n  font-family: monospace;\n  font-size: 14px;\n  font-weight: normal;\n}\n.kv:last-child {\n  width: 100%;\n  text-align: right;\n}\n/* Hide mobile-only elements */\n#ui-settings-container-mobile {\n  display: none;\n}\n@media screen and (max-width: 850px) {\n  * {\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none;\n  }\n  /**\n * ui-touches\n */\n  .ui-touch-down {\n    display: none;\n    position: fixed;\n    background-color: rgba(0, 0, 0, 0.5);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-touch-down-landscape {\n    width: 112px;\n    height: 112px;\n    border-radius: 56px;\n  }\n  .ui-touch-down-portrait {\n    width: 96px;\n    height: 96px;\n    border-radius: 48px;\n  }\n  .ui-touch-pos {\n    display: none;\n    position: fixed;\n    background-color: rgba(0, 0, 0, 0.5);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-touch-pos-landscape {\n    width: 64px;\n    height: 64px;\n    border-radius: 32px;\n  }\n  .ui-touch-pos-portrait {\n    width: 48px;\n    height: 48px;\n    border-radius: 24px;\n  }\n  .btn-game-menu {\n    position: relative;\n    margin: auto;\n    margin-top: 2px;\n    margin-bottom: 4px;\n    color: white;\n    font-size: 14px;\n    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n    background-color: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: inset 0 -2px #387c79;\n    background-repeat: no-repeat;\n    cursor: pointer;\n    text-align: center;\n    line-height: 30px;\n    display: block;\n    width: 100%;\n    height: 30px;\n    border: 0px;\n    border-radius: 5px;\n    -moz-border-radius: 5px;\n    -webkit-border-radius: 5px;\n    box-sizing: border-box;\n  }\n  #btn-game-fullscreen {\n    background-size: 22px;\n    background-position: 4px 2px;\n    background-image: url(../img/gui/minimize.svg);\n  }\n  #btn-game-aim-line {\n    background-size: 18px;\n    background-position: 6px 5px;\n    margin-bottom: 8px;\n  }\n  #btn-game-sound {\n    background-size: 30px;\n    background-position: 3px 0px;\n    margin-bottom: 8px;\n  }\n  #btn-game-quit {\n    margin-top: 20px;\n    background-size: 34px;\n    background-position: -2px -3px;\n    background-image: url(../img/gui/quit.svg);\n  }\n  #btn-game-resume {\n    margin-top: 20px;\n    background-size: 34px;\n    background-position: -1px -1px;\n    background-image: url(../img/gui/resume.svg);\n  }\n  /**\n     * ui-top-center\n     */\n  #ui-top-center {\n    position: absolute;\n    color: #FFF;\n    top: 15%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-top-center .top-center-text {\n    text-align: center;\n    width: 100vw;\n    padding: 4px;\n  }\n  #ui-waiting-text {\n    display: none;\n    color: white;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n  }\n  #ui-waiting-text span {\n    font-size: 16px;\n    font-weight: bold;\n  }\n  .top-center-text .spectate-text {\n    display: inline-block;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    overflow: hidden;\n    height: 32px;\n  }\n  .top-center-text .spectate-desc {\n    color: white;\n    margin-right: 8px;\n  }\n  .ui-spectate-mode {\n    display: none;\n  }\n  #ui-spectate-text {\n    position: relative;\n  }\n  #spectate-player {\n    max-width: 250px;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n    color: cyan;\n  }\n  /**\n * ui-top-center-scopes\n */\n  #ui-top-center-scopes-wrapper {\n    position: absolute;\n    color: #FFF;\n    left: 6px;\n    top: 132px;\n    -webkit-transform: initial;\n            transform: initial;\n    width: initial;\n  }\n  #ui-top-center-scopes {\n    margin-top: 6px;\n    text-align: center;\n    color: white;\n  }\n  .ui-zoom {\n    display: inline-block;\n    margin-left: -12px;\n    margin-right: -12px;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n    background: rgba(0, 0, 0, 0.3);\n    border-radius: 32px;\n    width: 42px;\n    height: 42px;\n    opacity: 0.3;\n    pointer-events: all;\n  }\n  .ui-zoom-active {\n    vertical-align: baseline;\n    opacity: 1.0;\n    margin-left: 0px;\n    margin-right: 0px;\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1);\n    transition: all 100ms ease-in;\n    transition: opacity 0.25s ease-out;\n    -moz-transition: opacity 0.25s ease-out;\n    -webkit-transition: opacity 0.25s ease-out;\n    -o-transition: opacity 0.25s ease-out;\n  }\n  .ui-zoom .ui-zoom-image {\n    width: 48px;\n    height: 48px;\n    opacity: 0.4;\n    padding: 2px;\n  }\n  .ui-zoom .ui-zoom-text {\n    margin-top: 14px;\n    width: 100%;\n  }\n  .ui-zoom .ui-zoom-level {\n    font-size: 24px;\n    line-height: 16px;\n    text-align: center;\n    width: 100%;\n    /*cursor: inherit;*/\n  }\n  .ui-zoom .ui-zoom-append {\n    font-size: 24px;\n  }\n  .ui-zoom-inactive {\n    display: none;\n    margin-left: -8px;\n    margin-right: -8px;\n    transition: all 100ms ease-in;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n  }\n  /**\n     * ui-team-pings and ui-emotes\n     */\n  .ui-emote-wheel {\n    z-index: 3;\n    display: none;\n    position: fixed;\n  }\n  .ui-emote-parent {\n    opacity: 1.0;\n  }\n  .ui-emote-hl {\n    z-index: 2;\n    display: none;\n  }\n  .ui-emote {\n    position: fixed;\n    width: 256px;\n    height: 256px;\n    background-size: 256px;\n    background-repeat: no-repeat;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-emote-bg-circle {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-circle.svg);\n  }\n  .ui-emote-bg-quarter {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-quarter.svg);\n  }\n  .ui-emote-bg-eighth {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-eighth.svg);\n  }\n  .ui-emote-middle .ui-emote-image {\n    width: 24px !important;\n    height: 24px !important;\n    background-size: 24px !important;\n    background-image: none !important;\n  }\n  .ui-emote-top .ui-emote-image {\n    margin-top: -78px;\n    background-image: url(../img/gui/ping-team-danger.svg);\n  }\n  .ui-emote-right .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(90deg);\n            transform: translate(-50%, -50%) rotate(90deg);\n  }\n  .ui-emote-right .ui-emote-image {\n    margin-left: 78px;\n    background-image: url(../img/gui/ping-team-coming.svg);\n  }\n  .ui-emote-bottom .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(180deg);\n            transform: translate(-50%, -50%) rotate(180deg);\n  }\n  .ui-emote-bottom .ui-emote-image {\n    margin-top: 78px;\n    background-image: url(../img/gui/ping-team-help.svg);\n  }\n  .ui-emote-left .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(270deg);\n            transform: translate(-50%, -50%) rotate(270deg);\n  }\n  .ui-emote-left .ui-emote-image {\n    margin-left: -78px;\n    background-image: url(../img/gui/ping-team-help.svg);\n  }\n  .ui-emote-top-left .ui-emote-image {\n    margin-left: -80px;\n    margin-top: -30px;\n    background-image: url(../img/loot/loot-ammo-box.svg);\n  }\n  .ui-emote-bottom-left .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(-45deg);\n            transform: translate(-50%, -50%) rotate(-45deg);\n  }\n  .ui-emote-bottom-left .ui-emote-image {\n    margin-left: -80px;\n    margin-top: 30px;\n    background-image: url(../img/loot/loot-medical-healthkit.svg);\n  }\n  .ui-emote-circle .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-circle-highlight.svg);\n  }\n  .ui-emote-quarter .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-quarter-highlight.svg);\n  }\n  .ui-emote-eighth .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-eighth-highlight.svg);\n  }\n  .ui-emote-image {\n    z-index: 1;\n    position: fixed;\n    background-repeat: no-repeat;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-emote-image-large {\n    width: 80px;\n    height: 80px;\n    background-size: 64px;\n    background-position: center;\n  }\n  .ui-emote-image-small {\n    width: 35px;\n    height: 35px;\n    background-size: 35px;\n  }\n  /**\n     * ui-team-indicators\n     */\n  .ui-team-indicator {\n    z-index: 2;\n    display: none;\n    position: fixed;\n    top: 0px;\n    left: 0px;\n    border-radius: 32px;\n    width: 64px;\n    height: 64px;\n    background-size: 64px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/indicator.svg);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-team-indicator-pos {\n    opacity: 0.75;\n    position: relative;\n    border-radius: 24px;\n    width: 32px;\n    height: 32px;\n    top: 23px;\n    left: 32px;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-team-indicator-image {\n    width: 32px;\n    height: 32px;\n    background-size: 32px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/ping-team-danger.svg);\n  }\n  .ui-indicator-ping-border {\n    z-index: 0;\n    display: none;\n    position: fixed;\n    top: 0px;\n    left: 0px;\n    width: 160px;\n    height: 160px;\n    position: relative;\n    background-size: 160px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/ping-border.svg);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  /**\n * ui-top-left\n */\n  #ui-top-left {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    display: block;\n  }\n  .ui-bg-standard {\n    background: rgba(0, 0, 0, 0.24);\n    border-radius: 5px;\n  }\n  #ui-team {\n    position: fixed;\n    left: 128px;\n  }\n  .ui-team-member {\n    display: none;\n    position: relative;\n    width: 110px;\n    height: 20px;\n    padding: 4px;\n    margin-bottom: 4px;\n  }\n  .ui-team-member-name {\n    font-weight: bold;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 10px;\n    max-width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  .ui-team-member-color {\n    position: absolute;\n    top: 4px;\n    right: 4px;\n    border-radius: 9px;\n    width: 9px;\n    height: 9px;\n  }\n  .ui-background-yellow {\n    background-color: yellow;\n  }\n  .ui-background-blue {\n    background-color: blue;\n  }\n  .ui-background-red {\n    background-color: red;\n  }\n  .ui-background-purple {\n    background-color: purple;\n  }\n  .ui-background-cyan {\n    background-color: cyan;\n  }\n  .ui-team-member-status {\n    display: none;\n    position: absolute;\n    top: 2px;\n    right: -24px;\n    width: 20px;\n    height: 20px;\n    background-size: 20px;\n    background-repeat: no-repeat;\n  }\n  .ui-team-member-status-downed {\n    border-radius: 16px;\n    display: block !important;\n    background-image: url(../img/gui/down.svg) !important;\n  }\n  .ui-team-member-status-dead {\n    display: block !important;\n    background-image: url(../img/gui/skull-team.svg) !important;\n    opacity: 0.5 !important;\n  }\n  .ui-team-member-status-disconnected {\n    display: block !important;\n    background-image: url(../img/gui/close.svg) !important;\n    opacity: 0.5 !important;\n  }\n  .ui-team-member-health {\n    margin-top: 2px;\n  }\n  .ui-team-member-health .ui-bar-inner {\n    background-color: white;\n    z-index: 1;\n    position: absolute;\n    border-radius: 4px;\n    width: 110px;\n    height: 5px;\n    transition: width 0.0s;\n    transition-property: width;\n    transition-duration: 0.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .ui-team-member-health .ui-bar-danger {\n    background: rgba(255, 0, 0, 0.8);\n    -webkit-animation-name: pulse;\n            animation-name: pulse;\n    -webkit-animation-duration: 0.5s;\n            animation-duration: 0.5s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0;\n            animation-delay: 0;\n    -webkit-animation-direction: alternate;\n            animation-direction: alternate;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  .ui-team-member-health .ui-health-depleted {\n    z-index: 0;\n    background: #929292;\n    transition: width 1.0s;\n    transition-property: width;\n    transition-duration: 1.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  #ui-spectate-options-wrapper {\n    bottom: 6px;\n    position: fixed;\n    left: 6px;\n    top: initial !important;\n  }\n  #ui-spectate-options {\n    bottom: 0px;\n    z-index: 1;\n    position: absolute;\n    pointer-events: all;\n    width: 100%;\n  }\n  #ui-spectate-buttons {\n    display: inline-block;\n    width: 124px;\n    padding: 8px 8px 4px 8px;\n    text-align: center;\n  }\n  #ui-spectate-options a {\n    position: relative;\n    color: white;\n    height: 28px;\n    margin-bottom: 2px;\n    line-height: 26px;\n    font-size: 12px;\n    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n    background: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: none;\n    cursor: pointer;\n  }\n  #btn-spectate-prev-player {\n    margin-bottom: 12px !important;\n  }\n  #btn-spectate-view-stats {\n    margin-bottom: 12px !important;\n  }\n  #ui-spectate-stats {\n    position: absolute;\n    top: 0px;\n    left: 146px;\n    width: 160px;\n    display: none;\n  }\n  #ui-spectate-stats-header {\n    text-align: center;\n    font-size: 16px;\n    font-weight: bold;\n    padding: 6px;\n    color: white;\n  }\n  #ui-spectate-stats-table {\n    width: 100%;\n    background-color: transparent;\n    margin: auto;\n    margin-right: 0px;\n    margin-bottom: 4px;\n    border-collapse: collapse;\n  }\n  #ui-spectate-stats tbody,\n  #ui-spectate-stats td,\n  #ui-spectate-stats th {\n    padding: 0px 2px 2px 14px;\n    font-size: 10px;\n  }\n  .ui-spectate-stats-category {\n    width: 75px;\n    color: rgba(255, 255, 255, 0.75);\n  }\n  .ui-spectate-stats-value {\n    width: 75px;\n    color: white;\n  }\n  /**\n     * ui-top-right\n     */\n  #ui-top-right {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    display: flex;\n  }\n  #ui-leaderboard {\n    font-weight: bold;\n    text-align: center;\n    width: 56px;\n    display: inline-block;\n  }\n  #ui-leaderboard-alive {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-bottom: -16px;\n    padding: 8px;\n    height: 32px;\n    width: 40px;\n  }\n  .ui-players-alive-pulse {\n    -webkit-animation-name: pulseAlive;\n            animation-name: pulseAlive;\n    -webkit-animation-duration: 2.0s;\n            animation-duration: 2.0s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0s;\n            animation-delay: 0s;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  @-webkit-keyframes pulseAlive {\n    0% {\n      color: #ffffff;\n    }\n    20% {\n      color: #ff0000;\n    }\n    40% {\n      color: #ffffff;\n    }\n    100% {\n      color: #ffffff;\n    }\n  }\n  @keyframes pulseAlive {\n    0% {\n      color: #ffffff;\n    }\n    20% {\n      color: #ff0000;\n    }\n    40% {\n      color: #ffffff;\n    }\n    100% {\n      color: #ffffff;\n    }\n  }\n  .ui-leaderboard-header {\n    font-size: 12px;\n  }\n  #ui-killfeed-wrapper {\n    top: 24px;\n    left: 6px;\n    right: initial;\n  }\n  #ui-killfeed {\n    position: absolute;\n    margin: initial;\n    top: 135px;\n  }\n  #ui-killfeed-contents {\n    width: 800px;\n  }\n  #ui-killfeed-contents .killfeed-div {\n    position: absolute;\n    background-color: rgba(0, 0, 0, 0.4);\n    padding: 3px 3px;\n    border-radius: 2px;\n    height: 8px;\n    line-height: 8px;\n    right: initial;\n  }\n  .killfeed-div span,\n  .killfeed-div div {\n    float: left;\n    font-size: 8px;\n    line-height: 8px;\n    font-weight: bold;\n    color: #EFEEEE;\n  }\n  .killfeed-red span,\n  .killfeed-red div {\n    color: #d1777c !important;\n  }\n  .killfeed-blue span,\n  .killfeed-blue div {\n    color: deepskyblue !important;\n  }\n  #ui-killfeed-contents .killfeed-red {\n    color: #d1777c;\n  }\n  #ui-killfeed-contents .killfeed-blue {\n    color: deepskyblue;\n  }\n  #ui-killfeed .killfeed-name {\n    max-width: 180px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  /**\n * ui-right-center\n */\n  #ui-ammo-interactive {\n    position: absolute;\n    right: 4px;\n    top: 0px;\n    width: 90px;\n  }\n  .ui-ammo > .ui-loot-image {\n    position: absolute;\n    height: 11px;\n    width: 11px;\n    right: 2px;\n    margin-top: 2px;\n  }\n  .ui-ammo > .ui-loot-overlay {\n    position: absolute;\n    height: 11px;\n    width: 11px;\n    right: 2px;\n    margin-top: 2px;\n  }\n  .ui-ammo {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 85px;\n    height: 32px;\n    margin-left: auto;\n    margin-bottom: 5px;\n  }\n  .ui-ammo > .ui-loot-count {\n    position: absolute;\n    font-size: 24px;\n    font-weight: bold;\n    left: 10px;\n    top: 2px;\n    text-align: center;\n  }\n  .ui-ammo-row {\n    display: flex;\n  }\n  .ui-ammo-row > div:not(:last-child) {\n    margin-right: 10px;\n  }\n  #ui-loot-ph1 {\n    opacity: 0 !important;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    display: inline-block;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 38px;\n    height: 14px;\n    margin-left: auto;\n    margin-bottom: 2px;\n  }\n  .ui-ammo > .ui-loot-count {\n    position: absolute;\n    font-size: 12px;\n    font-weight: bold;\n    width: 16px;\n    left: 3px;\n    margin-top: -1px;\n    text-align: center;\n  }\n  #ui-medical-interactive {\n    display: inline-flex;\n    left: 68%;\n    position: absolute;\n    top: 0px;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-medical-interactive > .ui-loot {\n    display: inline-block;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 44px;\n    height: 18px;\n    margin-left: 6px;\n    margin-bottom: 2px;\n  }\n  .ui-medical > .ui-loot-image {\n    position: absolute;\n    height: 18px;\n    width: 18px;\n    background-size: 18px;\n    background-repeat: no-repeat;\n    right: 2px;\n    margin-top: 0px;\n  }\n  .ui-medical > .ui-loot-count {\n    position: absolute;\n    font-size: 16px;\n    font-weight: bold;\n    left: 4px;\n    width: 16px;\n    margin-top: -3px;\n    text-align: center;\n  }\n  .ui-loot {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 85px;\n    height: 32px;\n    margin-left: auto;\n    margin-bottom: 5px;\n  }\n  .ui-loot:hover {\n    opacity: 1 !important;\n  }\n  .ui-outline-hover {\n    border: 2px solid rgba(0, 255, 0, 0);\n  }\n  .ui-outline-hover:hover {\n    -webkit-transition: border 100ms ease-out;\n    -moz-transition: border 100ms ease-out;\n    -o-transition: border 100ms ease-out;\n    border: 2px solid rgba(0, 255, 0, 0);\n  }\n  .ui-scale-hover {\n    transform: scale(1);\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1);\n    transition: all 100ms ease-in;\n  }\n  .ui-scale-hover:hover {\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1.1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1.1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1.1);\n    transition: all 100ms ease-in;\n    transform: scale(1.1);\n  }\n  #ui-debug-button {\n    display: none;\n    background: rgba(0, 0, 0, 0.4);\n    position: absolute;\n    border-radius: 13px;\n    height: 26px;\n    width: 26px;\n    background-size: 18px;\n    bottom: 10px;\n    right: 38px;\n    background-position: center;\n    background-image: url(../img/gui/mag-glass.svg);\n    background-repeat: no-repeat;\n    pointer-events: auto;\n    z-index: 1;\n  }\n  /**\n * ui-upper-center\n */\n  #ui-upper-center {\n    position: absolute;\n    display: flex;\n    color: #FFF;\n    top: 84px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-announcement {\n    display: none;\n    color: yellow;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    width: 100vw;\n  }\n  /**\n     * ui-lower-center\n     */\n  #ui-lower-center {\n    bottom: 44%;\n    color: #FFF;\n    left: 60%;\n    position: absolute;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-interaction {\n    display: flex;\n  }\n  #ui-interaction-press {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: -20px;\n    font-size: 34px;\n    width: 44px;\n    height: 44px;\n    background-size: 36px;\n    background-position: center;\n    background-repeat: no-repeat;\n  }\n  #ui-interaction-outer {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: 6px;\n    padding: 0px 6px;\n    height: 28px;\n  }\n  #ui-interaction-outer #ui-interaction-description {\n    margin-top: 5px;\n    font-size: 16px;\n    text-align: center;\n  }\n  /**\n * ui-bottom-center-0\n */\n  #ui-bottom-center-0 {\n    position: absolute;\n    color: #FFF;\n    bottom: 6px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  /**\n * ui-equipped-ammo\n */\n  #ui-equipped-ammo-wrapper {\n    /* Taken from ui-bottom-center-0 */\n    position: absolute;\n    color: #FFF;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    bottom: 78px;\n  }\n  #ui-equipped-ammo {\n    position: absolute;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    text-align: center;\n    opacity: 1.0;\n  }\n  #ui-bullet-counter {\n    display: inline-block;\n    width: 175px;\n    height: 28px;\n    text-align: center;\n    text-shadow: 1px 1px #000000;\n  }\n  #ui-bullet-counter > #ui-current-clip {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 28px;\n    font-weight: bold;\n    line-height: 30px;\n    width: 60px;\n    height: 32px;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    left: 50%;\n    position: relative;\n    text-align: center;\n  }\n  #ui-bullet-counter > #ui-remaining-ammo {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 16px;\n    font-weight: bold;\n    line-height: 22px;\n    width: 44px;\n    height: 22px;\n    left: 122px;\n    position: absolute;\n    text-align: center;\n    top: 10px;\n  }\n  #ui-bullet-counter > #ui-reload-button-container {\n    height: 36px;\n    left: 162px;\n    position: absolute;\n    top: 3px;\n    width: 36px;\n  }\n  #ui-reload-button-container > #ui-reload-button {\n    background: rgba(0, 0, 0, 0.4);\n    background-position: 4px 3px;\n    background-image: url(../img/gui/bullets.svg);\n    background-repeat: no-repeat;\n    background-size: 14px;\n    border-radius: 11px;\n    height: 22px;\n    left: 50%;\n    position: absolute;\n    top: 50%;\n    -webkit-transform: translateX(-50%) translateY(-50%);\n            transform: translateX(-50%) translateY(-50%);\n    width: 22px;\n  }\n  #ui-boost-counter {\n    display: inline-flex;\n    width: 206px;\n  }\n  #ui-boost-counter .ui-boost-base {\n    background: rgba(0, 0, 0, 0.4);\n    height: 6px;\n    margin-bottom: 0px;\n  }\n  #ui-boost-counter-0 {\n    border-top-left-radius: 3px;\n    border-bottom-left-radius: 3px;\n    width: 50px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-0 .ui-bar-inner {\n    background: #ff901a;\n  }\n  #ui-boost-counter-1 {\n    width: 50px;\n    margin-left: 3px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-1 .ui-bar-inner {\n    background: #ff751a;\n  }\n  #ui-boost-counter-2 {\n    width: 75px;\n    margin-left: 3px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-2 .ui-bar-inner {\n    background: #ff6616;\n  }\n  #ui-boost-counter-3 {\n    border-top-right-radius: 3px;\n    border-bottom-right-radius: 3px;\n    width: 25px;\n    margin-left: 3px;\n  }\n  #ui-boost-counter-3 .ui-bar-inner {\n    background: #ff5600;\n  }\n  .ui-boost-base .ui-bar-inner {\n    border-radius: inherit;\n    width: 0px;\n    height: 6px;\n  }\n  .ui-health-flair {\n    background-size: 36px;\n    background-repeat: no-repeat;\n    background-position: center;\n    display: none;\n    height: 36px;\n    position: absolute;\n    width: 36px;\n    z-index: 2;\n  }\n  #ui-health-flair-left {\n    left: -17px;\n    top: 14px;\n    -webkit-transform: rotate(270deg);\n            transform: rotate(270deg);\n  }\n  #ui-health-flair-right {\n    right: -17px;\n    top: 14px;\n    -webkit-transform: rotate(90deg);\n            transform: rotate(90deg);\n  }\n  #ui-health-counter {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 200px;\n    height: 18px;\n    padding: 4px;\n  }\n  #ui-health-counter .ui-bar-inner {\n    z-index: 1;\n    position: absolute;\n    border-radius: 5px;\n    width: 100%;\n    height: 18px;\n    transition: width 0.0s;\n    transition-property: width;\n    transition-duration: 0.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  #ui-health-container {\n    width: 200px;\n    position: relative;\n  }\n  #ui-health-counter .ui-bar-danger {\n    background: rgba(255, 0, 0, 0.8);\n    -webkit-animation-name: pulse;\n            animation-name: pulse;\n    -webkit-animation-duration: 0.5s;\n            animation-duration: 0.5s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0;\n            animation-delay: 0;\n    -webkit-animation-direction: alternate;\n            animation-direction: alternate;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  #ui-health-counter #ui-health-depleted {\n    z-index: 0;\n    background: #929292;\n    transition: width 1.0s;\n    transition-property: width;\n    transition-duration: 1.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .health-bar-pulse {\n    -webkit-animation: pulsewhite 1s linear infinite;\n    animation: pulsewhite 1s linear infinite;\n  }\n  @-webkit-keyframes pulsewhite {\n    0% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n    50% {\n      background-color: rgba(255, 255, 255, 0.6);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n  }\n  @keyframes pulsewhite {\n    0% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n    50% {\n      background-color: rgba(255, 255, 255, 0.6);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n  }\n  @-webkit-keyframes pulse {\n    0% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n    50% {\n      background-color: rgba(255, 0, 0, 0.8);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n  }\n  @keyframes pulse {\n    0% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n    50% {\n      background-color: rgba(255, 0, 0, 0.8);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n  }\n  /**\n     * ui-bottom-center-1\n     */\n  #ui-bottom-center-1 {\n    z-index: 3;\n    position: absolute;\n    color: #FFF;\n    bottom: 23%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-kills {\n    display: none;\n    text-align: center;\n    background: rgba(0, 0, 0, 0.4);\n    color: #FFF;\n    border-radius: 5px;\n    padding: 6px;\n  }\n  #ui-kill-text {\n    font-size: 10px;\n  }\n  #ui-kill-count {\n    font-weight: bold;\n    color: #ff4100;\n    font-size: 18px;\n    margin-bottom: -3px;\n    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);\n  }\n  /**\n     * ui-bottom-center-2\n     */\n  #ui-bottom-center-2 {\n    position: absolute;\n    color: #FFF;\n    bottom: 82px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-pickup-message {\n    color: white;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    width: 100vw;\n  }\n  /**\n * ui-bottom-center-right\n */\n  #ui-bottom-center-right {\n    bottom: initial;\n    color: #FFF;\n    left: 70%;\n    opacity: 0.75;\n    position: absolute;\n    bottom: 6px;\n  }\n  .ui-armor-counter {\n    position: absolute;\n    bottom: 0px;\n    display: block;\n    width: 20px;\n    height: 24px;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: 2px;\n  }\n  #ui-armor-helmet {\n    right: 4px;\n  }\n  #ui-armor-backpack {\n    left: 30px;\n  }\n  .ui-armor-level {\n    display: none;\n  }\n  .ui-armor-counter-inner {\n    z-index: 1;\n    position: absolute;\n    background: rgba(0, 255, 0, 0.5);\n    border-radius: 5px;\n    width: 100%;\n    height: 0px;\n    bottom: 0px;\n    transition: height 0.5s;\n    transition-property: height;\n    transition-duration: 0.5s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .ui-armor-counter .ui-armor-count {\n    z-index: 2;\n    text-shadow: 1px 1px #000000;\n    position: relative;\n    font-size: 18px;\n    font-weight: bold;\n    margin-top: -28px;\n    text-align: center;\n  }\n  .ui-armor-counter .ui-armor-image {\n    margin: auto;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    top: 0;\n    z-index: 0;\n    position: absolute;\n    height: 18px;\n    width: 18px;\n  }\n  /**\n * ui-bottom-right\n */\n  #ui-bottom-right {\n    bottom: initial;\n    color: #FFF;\n    position: absolute;\n    right: 6px;\n    top: 225px;\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-weapon-container {\n    width: 88px;\n  }\n  .ui-weapon-info {\n    margin-bottom: 5px;\n    border-radius: 5px;\n    border: 2px solid transparent;\n  }\n  .ui-weapon-switch {\n    position: absolute;\n    right: 0px;\n    opacity: 0.6;\n    border-radius: 5px;\n    border: 2px solid transparent;\n    width: 68px;\n    height: 28px;\n    margin-left: auto;\n    pointer-events: all;\n  }\n  #ui-weapon-id-1 {\n    bottom: 105px;\n  }\n  #ui-weapon-id-2 {\n    bottom: 70px;\n  }\n  #ui-weapon-id-3 {\n    bottom: 35px;\n  }\n  #ui-weapon-id-4 {\n    bottom: 0px;\n  }\n  .ui-weapon-name {\n    position: absolute;\n    font-size: 10px;\n    font-weight: bold;\n    right: 4px;\n    width: 48px;\n    margin-top: 14px;\n    text-align: right;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  .ui-weapon-number {\n    display: none;\n    position: absolute;\n    font-size: 24px;\n    font-weight: bold;\n    right: 8px;\n    text-align: center;\n  }\n  .ui-weapon-exp {\n    display: none;\n    position: absolute;\n    height: 16px;\n    width: 16px;\n    font-size: 8px;\n    font-weight: bold;\n    line-height: 18px;\n    right: 34px;\n    margin-top: 10px;\n    text-align: center;\n  }\n  .ui-weapon-image {\n    display: none;\n    position: relative;\n    height: 28px;\n    width: 28px;\n    left: 2px;\n    bottom: 0px;\n    -webkit-transform: rotate(10deg);\n            transform: rotate(10deg);\n  }\n  #ui-weapon-id-4 .ui-weapon-image {\n    height: 24px;\n    width: 24px;\n    left: 0px;\n    top: 0px;\n    background-size: 24px;\n  }\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: 18px;\n    height: 28px;\n    right: 4px;\n    top: initial;\n    width: 28px;\n  }\n  /**\n * ui-stats, end game screen\n */\n  #ui-stats-contents {\n    border-radius: 5px;\n    color: #FFF;\n    height: 100%;\n    left: 50%;\n    position: absolute;\n    text-align: center;\n    top: 0%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    width: 100%;\n  }\n  #ui-stats-header {\n    margin-top: 14px;\n  }\n  .ui-stats-header-title {\n    font-weight: bold;\n    font-size: 24px;\n    margin: 6px;\n    color: gold;\n  }\n  .ui-stats-header-reason {\n    font-size: 12px;\n  }\n  .ui-stats-header-overview {\n    position: fixed;\n    top: 4px;\n    right: 12px;\n    margin: 5px;\n  }\n  .ui-stats-header-overview div {\n    display: block;\n    padding-bottom: 6px;\n    border-bottom: 2px solid rgba(255, 255, 255, 0.25);\n  }\n  .ui-stats-header-overview div:not(:first-child) {\n    margin: initial;\n  }\n  span.ui-stats-header-stat {\n    font-size: 22px;\n  }\n  span.ui-stats-header-value {\n    margin-left: 12px;\n    font-size: 28px;\n    font-weight: bold;\n  }\n  #ui-stats-info-box {\n    position: relative;\n    left: 50%;\n    margin: auto;\n    margin-top: -8px;\n    height: 100px;\n    display: flex;\n  }\n  .ui-stats-info-player {\n    position: relative;\n    width: 125px;\n    background-color: rgba(0, 0, 0, 0.75);\n    border-radius: 4px;\n    border: 2px solid black;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  .ui-stats-info-status:after {\n    background-image: url(../img/gui/skull.svg);\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: 70px;\n    content: "";\n    display: block;\n    height: 100%;\n    left: initial;\n    opacity: 0.1;\n    position: absolute;\n    top: 0%;\n    width: 100%;\n    z-index: -1;\n  }\n  .ui-stats-info-player-name {\n    color: gold;\n    font-size: 12px;\n    font-weight: bold;\n    font-style: italic;\n    margin-top: 4px;\n    margin-bottom: 4px;\n    margin-left: auto;\n    margin-right: auto;\n    max-width: 120px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  .ui-stats-info-player-badge {\n    background-size: 24px;\n    background-repeat: no-repeat;\n    background-position: center;\n    height: 56px;\n    left: auto;\n    position: absolute;\n    top: -34px;\n    width: 100%;\n  }\n  .ui-stats-info {\n    display: flex;\n    height: 18px;\n    margin: auto;\n  }\n  .ui-stats-info > div {\n    padding: 4px;\n    font-size: 9px;\n    line-height: 6px;\n    text-align: left;\n    font-weight: bold;\n  }\n  .ui-stats-info > div:first-child {\n    width: 55%;\n    margin-right: 4px;\n    text-align: right;\n    font-weight: normal;\n  }\n  .ui-stats-reason {\n    display: flex;\n    height: 72px;\n    margin: auto;\n  }\n  .ui-stats-reason div {\n    padding: 8px;\n    margin: auto;\n    width: 100%;\n    text-align: center;\n    font-size: 16px;\n  }\n  .ui-stats-reason .ui-stats-reason-dead {\n    color: red;\n  }\n  .ui-stats-reason .ui-stats-reason-alive {\n    color: lawngreen;\n  }\n  #ui-stats-options {\n    position: absolute;\n    left: 50%;\n    margin-top: 2px;\n    min-height: 30px;\n    -webkit-transform: scale(1.1);\n            transform: scale(1.1);\n    z-index: 1;\n  }\n  .ui-stats-restart {\n    position: absolute;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    width: 130px;\n    margin: auto;\n    margin-bottom: 20px;\n  }\n  .ui-stats-spectate {\n    position: absolute;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    left: 68px;\n    width: 88px;\n    background: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: none;\n  }\n  .ui-stats-ad-container {\n    display: none;\n    margin-top: 8px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  /* Tooltip container */\n  .tooltip {\n    position: relative;\n  }\n  /* Tooltip text */\n  .tooltip .tooltip-text {\n    visibility: hidden !important;\n    width: 240px;\n    background-color: black;\n    color: #fff;\n    text-align: center;\n    padding: 5px 0;\n    border-radius: 6px;\n    position: absolute;\n    z-index: 1;\n    right: 110%;\n    opacity: 0.75;\n    top: 50%;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  .tooltip .tooltip-text::after {\n    content: " ";\n    position: absolute;\n    top: 50%;\n    left: 100%;\n    margin-top: -5px;\n    border-width: 5px;\n    border-style: solid;\n    border-color: transparent transparent transparent black;\n  }\n  .tooltip-title {\n    font-size: 18px;\n    font-weight: bold;\n    padding: 4px;\n    color: yellow;\n  }\n  .tooltip-description {\n    font-size: 16px;\n    padding: 4px;\n  }\n  .tooltip-description span {\n    font-size: 16px;\n  }\n  /**\n     * editor\n     */\n  #ui-editor-top-center {\n    position: absolute;\n    color: #FFF;\n    top: 0%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-editor-top-right {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    right: 6px;\n  }\n  .ui-editor-header {\n    text-align: center;\n    font-weight: bold;\n    font-size: 16px;\n    padding: 8px;\n  }\n  .ui-editor-info {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 36px;\n    margin-bottom: 8px;\n    padding: 8px;\n  }\n  .ui-editor-list {\n    margin: 0px;\n    padding: 0px;\n    list-style: none;\n  }\n  .ui-editor-list li div {\n    font-family: monospace;\n    font-size: 14px;\n  }\n  /*\n     * Profiler\n     */\n  #ui-profiler-top-left {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    text-align: center;\n    display: flex;\n  }\n  .ui-profiler-list {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-right: 16px;\n    padding: 8px;\n  }\n  .ui-profiler-list-header {\n    font-size: 16px;\n    font-weight: bold;\n    margin-bottom: 8px;\n  }\n  .ui-profiler-list ul {\n    list-style: none;\n    text-align: left;\n    padding: 0px;\n    margin: 0px;\n  }\n  .ui-profiler-list li {\n    display: flex;\n  }\n  .kv {\n    font-family: monospace;\n    font-size: 14px;\n    font-weight: normal;\n  }\n  .kv:last-child {\n    width: 100%;\n    text-align: right;\n  }\n  /* Hide desktop-only elements */\n  #ui-settings-container-desktop,\n  #ui-leaderboard-wrapper {\n    display: none;\n  }\n  /* Show mobile-only elements */\n  #ui-settings-container-mobile {\n    display: block;\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-top-center {\n    -webkit-transform-origin: top;\n            transform-origin: top;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-bottom-center-0 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-bottom-right {\n    top: 200px;\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n}\n@media screen and (max-width: 850px) and (max-width: 850px) and (orientation: landscape) {\n  .ui-stats-header-overview .ui-stats-header-left {\n    position: fixed;\n    top: -4px;\n    left: 12px;\n  }\n  .ui-stats-header-overview .ui-stats-header-right {\n    position: fixed;\n    top: -4px;\n    right: 12px;\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px) and (max-width: 640px) {\n  .ui-stats-ad-container {\n    margin-top: 0px;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n  }\n}\n@media screen and (max-width: 850px) and (max-width: 850px) and (max-height: 320px) {\n  .ui-stats-ad-container {\n    position: fixed;\n    right: 10px;\n    top: 24px;\n    -webkit-transform: scale(0.5);\n            transform: scale(0.5);\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) {\n  #ui-stats-contents {\n    margin-top: 32px;\n    margin-bottom: 16px;\n  }\n  #ui-stats-header-overview {\n    position: initial;\n  }\n  #ui-stats-info-box {\n    display: inline-block;\n    left: initial;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: initial;\n            transform-origin: initial;\n    margin-top: 2px;\n    width: 100%;\n  }\n  .ui-stats-ad-container {\n    width: 100%;\n  }\n  .ui-stats-info-player {\n    display: inline-block;\n    left: initial !important;\n    margin: 8px;\n    -webkit-transform: none;\n            transform: none;\n  }\n  .ui-stats-header-overview {\n    display: inline-block;\n    position: initial;\n    width: 175px;\n  }\n  .ui-stats-header-overview div {\n    position: initial;\n    margin-bottom: 8px;\n  }\n  #ui-top-center {\n    top: 134px;\n    left: 50%;\n  }\n  #ui-top-center-scopes-wrapper {\n    display: none;\n    bottom: 42px;\n    top: initial;\n  }\n  #ui-team {\n    top: 40px;\n  }\n  .ui-team-member {\n    height: 18px;\n    margin-bottom: 4px;\n  }\n  #ui-upper-center {\n    top: 180px;\n  }\n  #ui-bottom-center-0 {\n    top: -15px;\n    bottom: initial;\n    left: 100px;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n  #ui-bottom-center-1 {\n    bottom: 28%;\n  }\n  #ui-bottom-center-2 {\n    bottom: 218px;\n  }\n  #ui-lower-center {\n    bottom: 38%;\n    left: 38%;\n  }\n  #ui-boost-counter {\n    position: relative;\n    top: 40px;\n    left: 2px;\n  }\n  #ui-bottom-right {\n    bottom: 20px;\n    right: 6px;\n    top: initial;\n  }\n  #ui-weapon-id-1 {\n    right: 240px;\n    bottom: initial;\n  }\n  #ui-weapon-id-2 {\n    right: 160px;\n    bottom: initial;\n  }\n  #ui-weapon-id-3 {\n    right: 80px;\n    bottom: initial;\n  }\n  #ui-weapon-id-4 {\n    bottom: initial;\n  }\n  .ui-weapon-info {\n    display: inline-block;\n  }\n  #ui-bottom-center-right {\n    bottom: 9px;\n    left: 30px;\n    top: initial;\n  }\n  .ui-right-center-mobile {\n    top: 6px;\n  }\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: initial;\n    height: 28px;\n    left: initial;\n    right: 4px;\n    top: 62%;\n    width: 28px;\n  }\n  #ui-debug-button {\n    top: 242px;\n  }\n  #ui-ammo-interactive {\n    margin-top: 4px;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    display: block;\n  }\n  #ui-medical-interactive {\n    display: inline-block;\n    left: initial;\n    right: 8px;\n    -webkit-transform: initial;\n            transform: initial;\n  }\n  #ui-medical-interactive > .ui-loot {\n    display: block;\n  }\n  #ui-equipped-ammo {\n    left: initial;\n    position: initial;\n    -webkit-transform: none;\n            transform: none;\n  }\n  #ui-equipped-ammo-wrapper {\n    bottom: initial;\n    color: #FFF;\n    left: initial;\n    position: absolute;\n    right: 6px;\n    top: 44%;\n    -webkit-transform: none;\n            transform: none;\n  }\n  #ui-bullet-counter {\n    width: initial;\n  }\n  #ui-bullet-counter > #ui-current-clip {\n    left: 50%;\n  }\n  #ui-bullet-counter > #ui-remaining-ammo {\n    left: initial;\n    right: 0px;\n    top: 36px;\n  }\n  #ui-bullet-counter > #ui-reload-button-container {\n    left: 36px;\n    top: 56px;\n  }\n  #ui-reload-button-container > #ui-reload-button {\n    left: initial;\n    right: 0px;\n  }\n  #big-map-collision {\n    left: initial;\n    top: 50%;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  #big-map-close {\n    bottom: initial;\n    top: 12px;\n  }\n  #ui-spectate-options-wrapper {\n    bottom: 42px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  #ui-spectate-options {\n    position: absolute;\n    bottom: 12px;\n  }\n  #ui-spectate-stats {\n    bottom: 0px;\n    top: initial;\n  }\n  #ui-ammo-interactive {\n    top: 96px;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    margin-bottom: 2px;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (min-height: 668px) {\n  #ui-stats-contents {\n    margin-top: 32px;\n  }\n  #ui-stats-info-box {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  .ui-stats-ad-container {\n    margin-top: 20px;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-stats-options {\n    display: block;\n    left: initial;\n    position: initial;\n    margin: auto;\n    margin-top: 24px;\n    width: 100%;\n  }\n  .ui-stats-restart {\n    display: block;\n    position: initial;\n    -webkit-transform: initial;\n            transform: initial;\n    margin-bottom: 0px;\n  }\n  .ui-stats-spectate {\n    display: block;\n    margin: auto;\n    margin-top: 6px;\n    position: initial;\n    -webkit-transform: initial;\n            transform: initial;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (max-height: 667px) {\n  #ui-stats-contents {\n    margin-top: 0px;\n  }\n  .ui-stats-ad-container {\n    margin-top: 20px;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (max-height: 568px) and (max-width: 375px) {\n  #ui-bottom-center-right {\n    left: 22px;\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n  #ui-bottom-right {\n    right: 0px;\n  }\n  #ui-bottom-center-0 {\n    top: -20px;\n    left: 84px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n}\n', ""])
+        t.push([e.i, '/* Breaks in Bootstrap 4 are:\n *\n * extra large devices (wide screens): 1200px,\n * large devices (desktops): 992px,\n * medium devices (tablets): 768px,\n * small devices (phones): 576px\n *\n * However... iPhone X landscape width: 812px\n * https://mydevice.io/devices/\n */\nimg {\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  -webkit-user-drag: none;\n  -khtml-user-drag: none;\n  -moz-user-drag: none;\n  -o-user-drag: none;\n  user-drag: none;\n}\n#cvs {\n  -webkit-filter: none;\n          filter: none;\n}\n.click-through {\n  pointer-events: none;\n}\n#game-area-wrapper {\n  cursor: crosshair;\n  left: 0;\n  position: absolute !important;\n  top: 0;\n  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);\n}\n#ui-game {\n  -webkit-filter: none;\n          filter: none;\n  height: 100%;\n  left: 0px;\n  position: absolute;\n  top: 0px;\n  width: 100%;\n}\n#ui-center {\n  color: #FFF;\n  pointer-events: all;\n  position: absolute;\n  left: 50%;\n  top: 50%;\n  -webkit-transform: translateX(-50%) translateY(-50%) scale(1);\n          transform: translateX(-50%) translateY(-50%) scale(1);\n  z-index: 10;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-center {\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.85);\n            transform: translateX(-50%) translateY(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-center {\n    pointer-events: all;\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.85);\n            transform: translateX(-50%) translateY(-50%) scale(0.85);\n    z-index: 10;\n  }\n}\n@media (max-width: 850px) and (max-height: 300px) {\n  #ui-center {\n    -webkit-transform: translateX(-50%) translateY(-50%) scale(0.775);\n            transform: translateX(-50%) translateY(-50%) scale(0.775);\n  }\n}\n#ui-game-menu {\n  background-color: rgba(0, 0, 0, 0.5);\n  border-radius: 5px;\n  box-sizing: border-box;\n  display: none;\n  margin: 10px auto;\n  padding: 10px 15px;\n}\n@media screen and (max-width: 850px) {\n  #ui-game-menu {\n    height: initial;\n    padding: 4px 10px;\n    width: 190px;\n  }\n}\n@media (max-width: 850px) and (max-height: 300px) {\n  #ui-game-menu {\n    margin-top: 0px;\n  }\n}\n#ui-game-menu p {\n  bottom: 4px;\n  display: inline-block;\n  font-size: 14px;\n  position: relative;\n}\n@media screen and (max-width: 850px) {\n  #ui-game-menu p {\n    bottom: 0px;\n    font-size: 12px;\n    margin-bottom: 8px;\n    margin-top: 6px;\n  }\n}\n.ui-game-menu-desktop {\n  height: 495px;\n  width: 350px;\n}\n.btns-game-double-row {\n  display: flex;\n  position: relative;\n}\n.btns-game-double-row > .btn-game-container {\n  position: relative;\n  width: 100%;\n}\n.btns-game-double-row > .btn-game-container > .btn-double-row {\n  display: inline-block;\n}\n.btns-game-double-row > div:not(:last-child) {\n  margin-right: 2px;\n}\n.game-menu-icon-toggle {\n  background-size: 22px;\n  background-position: center;\n  background-repeat: no-repeat;\n  bottom: 13px;\n  display: inline-block;\n  height: 22px;\n  left: 60%;\n  pointer-events: none;\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 22px;\n}\n.btn-game-touch-style {\n  background-color: #50afab;\n  background-position: 4px 4px;\n  background-repeat: no-repeat;\n  background-size: 20px;\n  border: 0px;\n  border-bottom: none;\n  border-radius: 5px;\n  box-shadow: inset 0 -2px #387c79;\n  box-sizing: border-box;\n  color: white;\n  cursor: pointer;\n  display: block;\n  font-size: 14px;\n  height: 30px;\n  line-height: 30px;\n  margin: auto;\n  margin-top: 2px;\n  margin-bottom: 4px;\n  position: relative;\n  text-align: center;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  width: 100%;\n}\n.movement-icon {\n  background-image: url(../img/gui/movement.svg);\n}\n.target-icon {\n  background-image: url(../img/gui/target.svg);\n}\n.aim-line-on-icon {\n  background-image: url(../img/gui/checked.svg);\n}\n.aim-line-off-icon {\n  background-image: url(../img/gui/close.svg);\n}\n#btn-game-tabs > .btn-game-container > .btn-game-menu {\n  text-align: center;\n  color: white;\n  line-height: 36px;\n  font-size: 16px;\n  background-color: transparent;\n  border: 2px solid;\n  border-color: white;\n  box-shadow: none;\n  cursor: pointer;\n  flex: 1;\n}\n#btn-game-tabs > .btn-game-container > .btn-game-menu-selected {\n  border: 2px solid !important;\n  border-color: #00ff00 !important;\n  background-color: rgba(0, 0, 0, 0.35);\n}\n.game-menu-icon-static {\n  background-size: 36px;\n  background-position: center;\n  background-repeat: no-repeat;\n  bottom: 13px;\n  display: inline-block;\n  height: 26px;\n  left: 50%;\n  pointer-events: none;\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 36px;\n}\n.settings-icon {\n  background-image: url(../img/gui/cog.svg);\n}\n.keybind-icon {\n  background-image: url(../img/gui/keyboard.svg);\n}\n#ui-game-tab-settings {\n  display: block;\n  height: initial;\n}\n.ui-game-tab-settings-desktop {\n  height: 340px;\n}\n#ui-game-tab-keybinds {\n  display: none;\n  height: 345px;\n}\n#ui-game-tab-keybinds > .btn-keybind-restore {\n  margin-top: 20px;\n}\n#ui-game-tab-keybinds > #ui-keybind-list {\n  height: 295px;\n  overflow-y: scroll;\n  pointer-events: all;\n}\n#ui-map-container {\n  position: absolute;\n  bottom: 52px;\n}\n#ui-alive-info {\n  position: absolute;\n  color: white;\n  width: 92px;\n  height: 36px;\n  top: 174px;\n  left: 96px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-alive-info > #ui-map-counter-faction {\n  bottom: 3px;\n  display: none;\n  font-size: 24px;\n  left: 12px;\n  position: absolute;\n  text-align: center;\n  width: 92px;\n}\n#ui-alive-info > #ui-map-counter-faction > .ui-players-alive-red {\n  color: #ff0000;\n  display: inline-block;\n  font-size: 24px;\n  font-weight: bold;\n  position: relative;\n}\n#ui-alive-info > #ui-map-counter-faction > .ui-players-alive-blue {\n  color: #00d2ff;\n  display: inline-block;\n  font-size: 24px;\n  font-weight: bold;\n  position: relative;\n}\n#ui-map-expand-mobile {\n  height: 190px;\n  width: 190px;\n  left: -4px;\n  top: -22px;\n  z-index: 0;\n  background-color: transparent;\n}\n#ui-map-expand img {\n  display: none;\n}\n#ui-map-minimize {\n  left: 124px;\n}\n.ui-map-wrapper-mobile {\n  bottom: initial;\n  color: #FFF;\n  display: block;\n  font-size: 16px;\n  left: 6px;\n  top: 46px;\n}\n.ui-map-wrapper-mobile .ui-players-alive {\n  left: 4px;\n}\n.ui-map-wrapper-mobile #ui-map-counter-default {\n  position: relative;\n  display: inline-block;\n  font-size: 24px;\n  text-align: center;\n  bottom: 10px;\n  left: 9px;\n}\n.ui-map-wrapper-mobile .ui-map-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 0px;\n  background-size: 24px;\n  background-repeat: no-repeat;\n  background-position: 6px 6px;\n}\n.ui-map-wrapper-mobile #ui-map-info {\n  position: absolute;\n  color: white;\n  width: 92px;\n  height: 36px;\n  top: 174px;\n  left: -2px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n.ui-map-wrapper-mobile #ui-spec-counter {\n  position: absolute;\n  color: white;\n  width: 68px;\n  height: 28px;\n  top: 135px;\n  left: 60px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n.ui-map-wrapper-mobile #ui-spec-counter-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 2px;\n  background-size: 20px;\n  background-repeat: no-repeat;\n  background-position: 6px 4px;\n  background-image: url(../img/gui/eye.svg);\n}\n.ui-map-wrapper-mobile #ui-spec-counter-number {\n  position: relative;\n  display: inline-block;\n  font-size: 20px;\n  width: 24px;\n  text-align: center;\n  bottom: 15px;\n  left: 0px;\n}\n.ui-map-wrapper-mobile .gas-icon {\n  background-image: url(../img/gui/gas.svg);\n}\n.ui-map-wrapper-mobile .danger-icon {\n  background-image: url(../img/gui/danger.svg);\n}\n.ui-map-wrapper-mobile .alive-icon {\n  background-image: url(../img/gui/player-gui.svg);\n}\n.ui-map-wrapper-mobile .icon-pulse {\n  -webkit-animation: pulse 2s linear infinite;\n  animation: pulse 2s linear infinite;\n}\n.ui-map-wrapper-mobile .ui-settings-button {\n  position: absolute;\n  color: white;\n  border-radius: 5px;\n  pointer-events: all;\n}\n.ui-map-wrapper-mobile .ui-settings-button img {\n  position: absolute;\n  left: 6px;\n  top: 6px;\n  height: 36px;\n  width: 36px;\n  background-size: 36px;\n  background-repeat: no-repeat;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-map-wrapper-mobile .ui-settings-button .map-img-after {\n  display: none;\n}\n.ui-map-wrapper-mobile .ui-settings-button:hover {\n  -webkit-transform: scale(1);\n          transform: scale(1);\n}\n.ui-map-wrapper-desktop {\n  position: absolute;\n  bottom: 12px;\n  left: 12px;\n}\n#ui-map-wrapper {\n  position: absolute;\n  z-index: 1;\n}\n#ui-settings-container-mobile {\n  position: relative;\n}\n#ui-menu-display {\n  cursor: pointer;\n  left: 2px;\n  top: -18px;\n  height: 48px;\n  width: 48px;\n  opacity: 0.8;\n  background-color: rgba(0, 0, 0, 0.4);\n  background-size: 48px;\n  background-repeat: no-repeat;\n  background-position: center;\n  background-image: url(../img/gui/cog.svg);\n  z-index: 1;\n}\n/**\n * ui-big-map\n */\n#big-map {\n  display: none;\n  height: 100%;\n  width: 100%;\n}\n#big-map-collision {\n  height: 100%;\n  left: 50%;\n  margin: auto;\n  pointer-events: all;\n  position: fixed;\n  top: 0px;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#big-map-close {\n  display: none;\n  position: absolute;\n  margin-left: auto;\n  height: 64px;\n  width: 64px;\n  right: 6px;\n  top: 6px;\n  border-radius: 6px;\n  background-color: rgba(0, 0, 0, 0.5);\n  background-repeat: no-repeat;\n  background-size: 48px;\n  background-position: center;\n  background-image: url(../img/gui/close.svg);\n  pointer-events: all;\n}\n/**\n * ui-right-center\n */\n#ui-right-center {\n  position: absolute;\n  color: #FFF;\n  opacity: 0.75;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-right-center-desktop {\n  top: 40%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n  right: 12px;\n}\n.ui-right-center-mobile {\n  height: 100%;\n  left: 50%;\n  top: 10px;\n  -webkit-transform: translateX(-50%) scale(1);\n          transform: translateX(-50%) scale(1);\n  width: 100%;\n}\n.ui-right-center-tablet {\n  height: initial;\n  left: initial;\n  top: 12px !important;\n  -webkit-transform: scale(0.8);\n          transform: scale(0.8);\n  -webkit-transform-origin: top right;\n          transform-origin: top right;\n  right: 6px;\n  width: initial;\n}\n@media (max-height: 600px) {\n  .ui-right-center-tablet {\n    -webkit-transform: scale(0.55);\n            transform: scale(0.55);\n  }\n}\n/**\n * ui-bottom-right\n */\n.ui-bottom-right-tablet {\n  bottom: 25% !important;\n  right: 6px !important;\n  -webkit-transform: scale(0.8) !important;\n          transform: scale(0.8) !important;\n  -webkit-transform-origin: right !important;\n          transform-origin: right !important;\n}\n.ui-bottom-right-tablet-ipad {\n  bottom: 25% !important;\n  right: 6px !important;\n  -webkit-transform: scale(0.75) !important;\n          transform: scale(0.75) !important;\n  -webkit-transform-origin: right !important;\n          transform-origin: right !important;\n}\n@media (max-height: 600px) {\n  .ui-bottom-right-tablet {\n    bottom: 25% !important;\n    -webkit-transform: scale(0.7) !important;\n            transform: scale(0.7) !important;\n    -webkit-transform-origin: right !important;\n            transform-origin: right !important;\n  }\n}\n/**\n * ui-bottom-center-right\n */\n.ui-bottom-center-right-tablet {\n  left: 72% !important;\n  -webkit-transform: scale(0.65) !important;\n          transform: scale(0.65) !important;\n}\n#ui-emote-button {\n  background: rgba(0, 0, 0, 0.4);\n  background-image: url(../img/gui/emote.svg);\n  background-position: center;\n  background-repeat: no-repeat;\n  background-size: 28px;\n  border-radius: 21px;\n  display: none;\n  height: 42px;\n  position: absolute;\n  right: 108px;\n  top: 0px;\n  width: 42px;\n}\n@media screen and (max-width: 850px) {\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: 18px;\n    height: 28px;\n    right: 4px;\n    top: initial;\n    width: 28px;\n  }\n}\n/**\n * ui-top-left\n */\n.ui-top-left-tablet {\n  left: 120px !important;\n}\n/**\n * ui-spectate-options-wrapper\n */\n.ui-spectate-options-wrapper-tablet {\n  bottom: 12px !important;\n  top: initial !important;\n}\n.ui-killfeed-wrapper-tablet {\n  top: 60px !important;\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container {\n    margin-bottom: 0px;\n  }\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container > p {\n    width: 75px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider-text {\n    margin-bottom: 0px;\n  }\n}\n@media (max-width: 850px) and (max-height: 320px) {\n  .ui-slider-container > .slider {\n    bottom: 3px;\n    width: 85px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider::-webkit-slider-thumb {\n    width: 24px;\n    height: 24px;\n  }\n}\n@media screen and (max-width: 850px) {\n  .ui-slider-container > .slider::-moz-range-thumb {\n    width: 24px;\n    height: 24px;\n  }\n}\n#ui-stats-logo {\n  background-image: url("../img/surviv_logo_full.png");\n  background-repeat: no-repeat;\n  background-size: 250px;\n  background-position: center;\n  height: 125px;\n  position: absolute;\n  left: 20px;\n  top: 8px;\n  width: 250px;\n}\n@media (max-width: 1280px), (max-height: 768px) {\n  #ui-stats-logo {\n    background-size: 175px;\n    height: 90px;\n    width: 175px;\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-stats-logo {\n    background-size: 124px;\n    bottom: 4px;\n    height: 64px;\n    left: initial;\n    right: 8px;\n    top: initial;\n    width: 124px;\n  }\n}\n.ui-hidden {\n  display: none;\n}\n.btn-game-menu {\n  /* Added from .menu-option in menu.less */\n  text-align: center;\n  line-height: 38px;\n  display: block;\n  width: 100%;\n  height: 40px;\n  border: 0px;\n  border-radius: 5px;\n  box-sizing: border-box;\n  position: relative;\n  margin: auto;\n  margin-top: 5px;\n  margin-bottom: 5px;\n  color: white;\n  font-size: 16px;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  background-color: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n  background-repeat: no-repeat;\n  cursor: pointer;\n}\n#btn-game-fullscreen {\n  background-size: 34px;\n  background-position: 4px 2px;\n  background-image: url(../img/gui/minimize.svg);\n}\n#btn-game-sound {\n  background-size: 44px;\n  background-position: 2px -3px;\n}\n#btn-game-aim-line {\n  background-size: 24px;\n  background-position: 8px 6px;\n}\n#btn-game-quit {\n  margin-top: 40px;\n  background-size: 44px;\n  background-position: -2px -3px;\n  background-image: url(../img/gui/quit.svg);\n}\n#btn-game-resume {\n  margin-top: 30px;\n  background-size: 44px;\n  background-position: -2px -3px;\n  background-image: url(../img/gui/resume.svg);\n}\n/**\n     * ui-top-center\n     */\n#ui-top-center {\n  position: absolute;\n  color: #FFF;\n  top: 80px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-top-center .top-center-text {\n  text-align: center;\n  width: 100vw;\n  padding: 8px;\n}\n#ui-waiting-text {\n  display: none;\n  color: white;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n}\n#ui-waiting-text span {\n  font-size: 32px;\n  font-weight: bold;\n}\n.top-center-text .spectate-text {\n  display: inline-block;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 24px;\n  font-weight: bold;\n  overflow: hidden;\n  height: 32px;\n}\n@media (max-width: 1024px) {\n  .top-center-text .spectate-text {\n    font-size: 18px;\n  }\n}\n.top-center-text .spectate-desc {\n  color: white;\n  margin-right: 8px;\n}\n.ui-spectate-mode {\n  display: none;\n}\n#ui-spectate-text {\n  position: relative;\n}\n#spectate-player {\n  max-width: 250px;\n  white-space: nowrap;\n  text-overflow: ellipsis;\n  color: cyan;\n}\n/**\n     * ui-top-center-scopes\n     */\n#ui-top-center-scopes-wrapper {\n  /* Taken from ui-top-center */\n  position: absolute;\n  color: #FFF;\n  top: 0%;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 100%;\n}\n#ui-top-center-scopes {\n  margin-top: 12px;\n  text-align: center;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-top-center-scopes {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n.ui-zoom {\n  background: rgba(0, 0, 0, 0.3);\n  border-radius: 36px;\n  width: 64px;\n  height: 64px;\n  opacity: 0.6;\n  display: inline-block;\n}\n.ui-zoom-hover:hover {\n  opacity: 1.0;\n}\n.ui-zoom-active {\n  vertical-align: baseline;\n  opacity: 1.0;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-zoom .ui-zoom-image {\n  width: 64px;\n  height: 64px;\n  opacity: 0.4;\n  padding: 2px;\n}\n.ui-zoom .ui-zoom-text {\n  margin-top: 14px;\n  width: 100%;\n}\n.ui-zoom .ui-zoom-level {\n  font-size: 32px;\n  text-align: center;\n  width: 100%;\n  /*cursor: inherit;*/\n}\n.ui-zoom .ui-zoom-append {\n  font-size: 24px;\n}\n.ui-zoom-inactive {\n  display: none;\n  margin-left: -8px;\n  margin-right: -8px;\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(0.5);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(0.5);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(0.5);\n  transition: all 100ms ease-in;\n  transform: scale(0.5);\n}\n.ui-zoom-inactive:hover {\n  cursor: pointer !important;\n  opacity: 1.0;\n}\n/**\n     * ui-team-pings and ui-emotes\n     */\n.ui-emote-wheel {\n  z-index: 3;\n  display: none;\n  position: fixed;\n}\n.ui-emote-parent {\n  opacity: 0.75;\n}\n.ui-emote-hl {\n  z-index: 2;\n  display: none;\n}\n.ui-emote {\n  position: fixed;\n  width: 256px;\n  height: 256px;\n  background-size: 256px;\n  background-repeat: no-repeat;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-emote-bg-circle {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-circle.svg);\n}\n.ui-emote-bg-quarter {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-quarter.svg);\n}\n.ui-emote-bg-eighth {\n  opacity: 0.5;\n  background-image: url(../img/gui/ping-part-eighth.svg);\n}\n.ui-emote-middle .ui-emote-image {\n  width: 24px !important;\n  height: 24px !important;\n  background-size: 24px !important;\n  background-image: url(../img/gui/close.svg);\n}\n.ui-emote-top .ui-emote-image {\n  margin-top: -78px;\n  background-image: url(../img/gui/ping-team-danger.svg);\n}\n.ui-emote-right .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(90deg);\n          transform: translate(-50%, -50%) rotate(90deg);\n}\n.ui-emote-right .ui-emote-image {\n  margin-left: 78px;\n  background-image: url(../img/gui/ping-team-coming.svg);\n}\n.ui-emote-bottom .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(180deg);\n          transform: translate(-50%, -50%) rotate(180deg);\n}\n.ui-emote-bottom .ui-emote-image {\n  margin-top: 78px;\n  background-image: url(../img/gui/ping-team-help.svg);\n}\n.ui-emote-left .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(270deg);\n          transform: translate(-50%, -50%) rotate(270deg);\n}\n.ui-emote-left .ui-emote-image {\n  margin-left: -78px;\n  background-image: url(../img/gui/ping-team-help.svg);\n}\n.ui-emote-top-left .ui-emote-image {\n  margin-left: -80px;\n  margin-top: -30px;\n  background-image: url(../img/loot/loot-ammo-box.svg);\n}\n.ui-emote-bottom-left .ui-emote {\n  -webkit-transform: translate(-50%, -50%) rotate(-45deg);\n          transform: translate(-50%, -50%) rotate(-45deg);\n}\n.ui-emote-bottom-left .ui-emote-image {\n  margin-left: -80px;\n  margin-top: 30px;\n  background-image: url(../img/loot/loot-medical-healthkit.svg);\n}\n.ui-emote-circle .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-circle-highlight.svg);\n}\n.ui-emote-quarter .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-quarter-highlight.svg);\n}\n.ui-emote-eighth .ui-emote-hl {\n  background-image: url(../img/gui/ping-part-eighth-highlight.svg);\n}\n.ui-emote-image {\n  z-index: 1;\n  position: fixed;\n  background-repeat: no-repeat;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-emote-image-large {\n  width: 64px;\n  height: 64px;\n  background-size: 64px;\n}\n.ui-emote-image-small {\n  width: 35px;\n  height: 35px;\n  background-size: 35px;\n}\n/**\n     * ui-team-indicators\n     */\n.ui-team-indicator {\n  z-index: 2;\n  display: none;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  border-radius: 32px;\n  width: 64px;\n  height: 64px;\n  background-size: 64px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/indicator.svg);\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-team-indicator-pos {\n  opacity: 0.75;\n  position: relative;\n  border-radius: 24px;\n  width: 32px;\n  height: 32px;\n  top: 23px;\n  left: 32px;\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n.ui-team-indicator-image {\n  width: 32px;\n  height: 32px;\n  background-size: 32px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/ping-team-danger.svg);\n}\n.ui-indicator-ping-border {\n  z-index: 0;\n  display: none;\n  position: fixed;\n  top: 0px;\n  left: 0px;\n  width: 160px;\n  height: 160px;\n  position: relative;\n  background-size: 160px;\n  background-repeat: no-repeat;\n  background-image: url(../img/gui/ping-border.svg);\n  -webkit-transform: translate(-50%, -50%);\n          transform: translate(-50%, -50%);\n}\n/**\n     * ui-top-left\n     */\n#ui-top-left {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  left: 12px;\n  display: block;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-top-left {\n    -webkit-transform-origin: top left;\n            transform-origin: top left;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n.ui-bg-standard {\n  background: rgba(0, 0, 0, 0.24);\n  border-radius: 5px;\n}\n.ui-team-member {\n  display: none;\n  position: relative;\n  width: 200px;\n  height: 32px;\n  padding: 4px;\n  margin-bottom: 8px;\n}\n.ui-team-member-name {\n  font-weight: bold;\n  text-shadow: 1px 1px 0px #000000;\n  font-size: 16px;\n  max-width: 180px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ui-team-member-color {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n  border-radius: 7px;\n  width: 14px;\n  height: 14px;\n}\n.ui-background-yellow {\n  background-color: #ffff00;\n}\n.ui-background-blue {\n  background-color: blue;\n}\n.ui-background-red {\n  background-color: red;\n}\n.ui-background-purple {\n  background-color: #ff00ff;\n}\n.ui-background-cyan {\n  background-color: #00ffff;\n}\n.ui-background-orange {\n  background-color: #ff5400;\n}\n.ui-team-member-status {\n  display: none;\n  position: absolute;\n  top: 4px;\n  right: -38px;\n  width: 32px;\n  height: 32px;\n  background-size: 32px;\n  background-repeat: no-repeat;\n}\n.ui-team-member-status-downed {\n  border-radius: 16px;\n  display: block !important;\n  background-image: url(../img/gui/down.svg) !important;\n}\n.ui-team-member-status-dead {\n  display: block !important;\n  background-image: url(../img/gui/skull-team.svg) !important;\n  opacity: 0.5 !important;\n}\n.ui-team-member-status-disconnected {\n  display: block !important;\n  background-image: url(../img/gui/close.svg) !important;\n  opacity: 0.5 !important;\n}\n.ui-team-member-health {\n  margin-top: 4px;\n}\n.ui-team-member-health .ui-bar-inner {\n  background-color: white;\n  z-index: 1;\n  position: absolute;\n  border-radius: 4px;\n  width: 200px;\n  height: 10px;\n  transition: width 0.0s;\n  transition-property: width;\n  transition-duration: 0.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.ui-team-member-health .ui-bar-danger {\n  background: rgba(255, 0, 0, 0.8);\n  -webkit-animation-name: pulse;\n          animation-name: pulse;\n  -webkit-animation-duration: 0.5s;\n          animation-duration: 0.5s;\n  -webkit-animation-timing-function: ease-out;\n          animation-timing-function: ease-out;\n  -webkit-animation-delay: 0;\n          animation-delay: 0;\n  -webkit-animation-direction: alternate;\n          animation-direction: alternate;\n  -webkit-animation-iteration-count: infinite;\n          animation-iteration-count: infinite;\n  -webkit-animation-fill-mode: none;\n          animation-fill-mode: none;\n  -webkit-animation-play-state: running;\n          animation-play-state: running;\n}\n.ui-team-member-health .ui-health-depleted {\n  z-index: 0;\n  background: #929292;\n  transition: width 1.0s;\n  transition-property: width;\n  transition-duration: 1.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n#ui-spectate-options-wrapper {\n  color: #FFF;\n  display: block;\n  left: 12px;\n  position: absolute;\n  top: 12px;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-spectate-options-wrapper {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    -webkit-transform-origin: top left;\n            transform-origin: top left;\n  }\n}\n#ui-spectate-options {\n  position: relative;\n  pointer-events: all;\n  width: 100%;\n}\n#ui-spectate-buttons {\n  display: inline-block;\n  padding: 8px 8px 0px 8px;\n  text-align: center;\n  width: 192px;\n}\n#ui-spectate-options a {\n  position: relative;\n  color: white;\n  font-size: 16px;\n  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n  background: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n  cursor: pointer;\n}\n#btn-spectate-prev-player {\n  margin-bottom: 24px;\n}\n#ui-spectate-stats {\n  vertical-align: top;\n  display: none;\n}\n#ui-spectate-stats-header {\n  text-align: center;\n  font-size: 24px;\n  font-weight: bold;\n  padding: 8px;\n}\n#ui-spectate-stats-table {\n  width: 100%;\n  background-color: transparent;\n  margin: auto;\n  margin-right: 0px;\n  border-collapse: collapse;\n}\n#ui-spectate-stats tbody,\n#ui-spectate-stats td,\n#ui-spectate-stats th {\n  padding: 0px 8px 8px 16px;\n  font-size: 18px;\n}\n.ui-spectate-stats-category {\n  width: 130px;\n  color: rgba(255, 255, 255, 0.75);\n}\n.ui-spectate-stats-value {\n  width: 75px;\n  color: white;\n}\n#ui-leaderboard-wrapper {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n  display: flex;\n  font-weight: bold;\n  text-align: center;\n  width: 85px;\n  display: inline-block;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-leaderboard-wrapper {\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n#ui-leaderboard-alive {\n  display: none;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-bottom: 8px;\n  padding: 8px;\n  height: 64px;\n  width: 72px;\n}\n#ui-leaderboard-alive-faction {\n  display: none;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  height: 74px;\n  line-height: 38px;\n  margin-bottom: 8px;\n  padding: 4px;\n  width: 78px;\n}\n#ui-leaderboard-alive-faction .ui-players-alive-red {\n  color: #ff0000;\n  display: block;\n  font-size: 36px;\n  position: relative;\n}\n#ui-leaderboard-alive-faction .ui-players-alive-blue {\n  color: #00d2ff;\n  display: block;\n  font-size: 36px;\n  position: relative;\n}\n.ui-players-alive {\n  position: relative;\n  font-size: 54px;\n}\n.ui-leaderboard-header {\n  font-size: 24px;\n  margin-bottom: 8px;\n}\n#ui-kill-counter-wrapper {\n  display: none;\n  margin-top: 32px;\n}\n#ui-kill-counter {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-bottom: 8px;\n  padding: 8px;\n  height: 64px;\n  width: 72px;\n}\n.ui-player-kills {\n  position: relative;\n  font-size: 54px;\n}\n.ui-kill-counter-header {\n  font-size: 24px;\n  margin-bottom: 8px;\n}\n#ui-killfeed-wrapper {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n  display: flex;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-killfeed-wrapper {\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n}\n#ui-killfeed {\n  display: inline-block;\n  margin-left: 24px;\n  height: 100px;\n}\n#ui-killfeed-contents {\n  width: 800px;\n}\n#ui-killfeed-contents .killfeed-div {\n  position: absolute;\n  right: 100px;\n  background-color: rgba(0, 0, 0, 0.4);\n  padding: 4px 8px;\n  border-radius: 2px;\n  height: 22px;\n  line-height: 24px;\n}\n.killfeed-div div {\n  float: left;\n  font-size: 16px;\n  font-weight: bold;\n  color: #EFEEEE;\n}\n#ui-killfeed .killfeed-text {\n  max-width: 550px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n/**\n * ui-right-center\n */\n#ui-right-center:hover {\n  opacity: 1;\n}\n#ui-ammo-interactive {\n  width: 90px;\n}\n.ui-ammo {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  display: inline-block;\n  height: 52px;\n  margin-bottom: 5px;\n  margin-left: 3px;\n  margin-right: 3px;\n  width: 35px;\n}\n.ui-ammo > .ui-loot-count {\n  position: absolute;\n  font-size: 20px;\n  font-weight: bold;\n  top: 28px;\n  text-align: center;\n  width: 100%;\n}\n.ui-ammo-row {\n  display: flex;\n}\n.ui-ammo-row > div:not(:last-child) {\n  margin-right: 10px;\n}\n.ui-ammo > .ui-loot-image {\n  bottom: 0;\n  height: 22px;\n  margin-top: 5px;\n  position: absolute;\n  right: 6px;\n  top: 0;\n  width: 22px;\n}\n.ui-ammo > .ui-loot-overlay {\n  bottom: 0;\n  height: 22px;\n  margin-top: 5px;\n  position: absolute;\n  right: 6px;\n  top: 0;\n  width: 22px;\n}\n#ui-loot-ph1 {\n  opacity: 0 !important;\n}\n#ui-medical-interactive {\n  margin-bottom: 32px;\n}\n.ui-medical > .ui-loot-image {\n  position: absolute;\n  height: 30px;\n  width: 30px;\n  background-size: 30px;\n  background-repeat: no-repeat;\n  right: 5px;\n  margin-top: 1px;\n  top: 0;\n  bottom: 0;\n}\n.ui-medical:hover {\n  cursor: pointer !important;\n}\n.ui-loot {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  width: 85px;\n  height: 32px;\n  margin-left: auto;\n  margin-bottom: 5px;\n}\n.ui-loot:hover {\n  opacity: 1 !important;\n}\n.ui-outline-hover {\n  border: 2px solid rgba(0, 255, 0, 0);\n}\n.ui-outline-hover:hover {\n  -webkit-transition: border 100ms ease-out;\n  -moz-transition: border 100ms ease-out;\n  -o-transition: border 100ms ease-out;\n  border: 2px solid #00ff00;\n}\n.ui-scale-hover {\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n}\n.ui-scale-hover:hover {\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1.1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1.1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1.1);\n  transition: all 100ms ease-in;\n  transform: scale(1.1);\n}\n.ui-loot > .ui-loot-count {\n  position: absolute;\n  font-size: 24px;\n  font-weight: bold;\n  left: 10px;\n  top: 2px;\n  text-align: center;\n}\n@media (max-height: 864px), (max-width: 1024px) {\n  .ui-right-center-desktop {\n    top: 42%;\n    -webkit-transform-origin: right;\n            transform-origin: right;\n    -webkit-transform: translateY(-50%) scale(0.8);\n            transform: translateY(-50%) scale(0.8);\n  }\n  #ui-medical-interactive {\n    margin-bottom: 8px;\n  }\n}\n@media (max-height: 640px) {\n  .ui-right-center-desktop {\n    top: 42%;\n    -webkit-transform-origin: right;\n            transform-origin: right;\n    -webkit-transform: translateY(-50%) scale(0.7);\n            transform: translateY(-50%) scale(0.7);\n  }\n  #ui-medical-interactive {\n    margin-bottom: 8px;\n  }\n}\n/**\n     * ui-upper-center\n     */\n#ui-upper-center {\n  position: absolute;\n  display: flex;\n  color: #FFF;\n  top: 180px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-announcement {\n  display: none;\n  color: yellow;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n  text-align: center;\n  width: 100vw;\n}\n/**\n     * ui-lower-center\n     */\n#ui-lower-center {\n  position: absolute;\n  color: #FFF;\n  bottom: 40%;\n  left: 50%;\n}\n@media screen and (min-width: 851px) and (max-height: 768px), (max-width: 1200px) {\n  #ui-lower-center {\n    -webkit-transform-origin: left bottom;\n            transform-origin: left bottom;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    bottom: 33%;\n  }\n}\n#ui-interaction {\n  display: flex;\n}\n#ui-interaction-press {\n  background: rgba(0, 0, 0, 0.4);\n  background-size: 80%;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 5px;\n  font-weight: 700;\n  margin-left: -24px;\n  text-align: center;\n}\n.ui-interaction-large {\n  font-size: 42px;\n  height: 48px;\n  width: 48px;\n}\n.ui-interaction-small {\n  font-size: 26px;\n  height: 36px;\n  line-height: 36px;\n  min-width: 24px;\n  padding-left: 10px;\n  padding-right: 10px;\n}\n#ui-interaction-outer {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-left: 10px;\n  padding: 0px 15px;\n  height: 48px;\n}\n#ui-interaction-outer #ui-interaction-description {\n  margin-top: 10px;\n  font-size: 24px;\n  text-align: center;\n}\n/**\n     * ui-bottom-left\n     */\n#ui-map-container {\n  position: absolute;\n  bottom: 52px;\n}\n#ui-map-info {\n  position: absolute;\n  color: white;\n  width: 100px;\n  height: 36px;\n  bottom: 218px;\n  left: 82px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-gas-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 24px;\n  margin-left: 2px;\n  background-size: 24px;\n  background-repeat: no-repeat;\n  background-position: 6px 6px;\n}\n.gas-icon {\n  background-image: url(../img/gui/gas.svg);\n}\n.danger-icon {\n  background-image: url(../img/gui/danger.svg);\n}\n.icon-pulse {\n  -webkit-animation: pulse 2s linear infinite;\n  animation: pulse 2s linear infinite;\n}\n#ui-gas-timer {\n  position: relative;\n  display: inline-block;\n  font-size: 24px;\n  text-align: center;\n  bottom: 10px;\n  left: 0px;\n}\n#ui-spec-counter {\n  position: absolute;\n  color: white;\n  width: 68px;\n  height: 28px;\n  bottom: 218px;\n  left: 6px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n}\n#ui-spec-counter-icon {\n  padding: 6px;\n  display: inline-block;\n  height: 24px;\n  width: 18px;\n  margin-left: 2px;\n  background-size: 20px;\n  background-repeat: no-repeat;\n  background-position: 6px 4px;\n  background-image: url(../img/gui/eye.svg);\n}\n#ui-spec-counter-number {\n  position: relative;\n  display: inline-block;\n  font-size: 20px;\n  width: 24px;\n  text-align: center;\n  bottom: 15px;\n  left: 0px;\n}\n#ui-settings-container-desktop {\n  position: relative;\n  left: 16px;\n  bottom: 12px;\n}\n#ui-settings-container-desktop div {\n  cursor: pointer;\n}\n.ui-settings-button {\n  position: absolute;\n  color: white;\n  border-radius: 5px;\n  height: 48px;\n  width: 48px;\n  pointer-events: all;\n  opacity: 0.5;\n  background: rgba(0, 0, 0, 0.4);\n}\n#ui-map-minimize {\n  left: 185px;\n}\n.ui-settings-button img {\n  position: absolute;\n  left: 6px;\n  top: 6px;\n  height: 36px;\n  width: 36px;\n  background-size: 36px;\n  background-repeat: no-repeat;\n  transform: scale(1);\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1);\n  transition: all 100ms ease-in;\n  transition: opacity 0.25s ease-out;\n  -moz-transition: opacity 0.25s ease-out;\n  -webkit-transition: opacity 0.25s ease-out;\n  -o-transition: opacity 0.25s ease-out;\n}\n.ui-settings-button .map-img-after {\n  display: none;\n}\n.ui-settings-button:hover {\n  opacity: 1;\n  -webkit-transition: all 100ms ease-in;\n  -webkit-transform: scale(1.1);\n  -ms-transition: all 100ms ease-in;\n  -ms-transform: scale(1.1);\n  -moz-transition: all 100ms ease-in;\n  -moz-transform: scale(1.1);\n  transition: all 100ms ease-in;\n  transform: scale(1.1);\n}\n/**\n     * ui-bottom-center-0\n     */\n#ui-bottom-center-0 {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-0 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n#ui-equipped-ammo-wrapper {\n  /* Taken from ui-bottom-center-0 */\n  position: absolute;\n  color: #FFF;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  bottom: 62px;\n}\n#ui-equipped-ammo {\n  margin-bottom: 12px;\n  text-align: center;\n  opacity: 1.0;\n}\n#ui-bullet-counter {\n  display: inline-block;\n  width: 175px;\n  height: 56px;\n  text-align: center;\n  text-shadow: 2px 2px #000000;\n}\n#ui-bullet-counter #ui-current-clip {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 44px;\n  font-weight: bold;\n  width: 100px;\n  height: 50px;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  left: 50%;\n  position: relative;\n  text-align: center;\n}\n#ui-bullet-counter #ui-remaining-ammo {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 24px;\n  font-weight: bold;\n  line-height: 32px;\n  width: 65px;\n  height: 32px;\n  left: 82%;\n  position: absolute;\n  text-align: center;\n  top: 18px;\n}\n#ui-boost-counter {\n  display: inline-flex;\n  width: 412px;\n}\n#ui-boost-counter .ui-boost-base {\n  background: rgba(0, 0, 0, 0.4);\n  height: 10px;\n  margin-bottom: 8px;\n}\n#ui-boost-counter-0 {\n  border-top-left-radius: 3px;\n  border-bottom-left-radius: 3px;\n  width: 100px;\n  margin-right: 3px;\n}\n#ui-boost-counter-0 .ui-bar-inner {\n  background: #ff901a;\n}\n#ui-boost-counter-1 {\n  width: 100px;\n  margin-left: 3px;\n  margin-right: 3px;\n}\n#ui-boost-counter-1 .ui-bar-inner {\n  background: #ff751a;\n}\n#ui-boost-counter-2 {\n  width: 150px;\n  margin-left: 3px;\n  margin-right: 3px;\n}\n#ui-boost-counter-2 .ui-bar-inner {\n  background: #ff6616;\n}\n#ui-boost-counter-3 {\n  border-top-right-radius: 3px;\n  border-bottom-right-radius: 3px;\n  width: 50px;\n  margin-left: 3px;\n}\n#ui-boost-counter-3 .ui-bar-inner {\n  background: #ff5600;\n}\n.ui-boost-base .ui-bar-inner {\n  border-radius: inherit;\n  width: 0px;\n  height: 10px;\n}\n.ui-health-flair {\n  background-size: 64px;\n  background-repeat: no-repeat;\n  background-position: center;\n  display: none;\n  height: 64px;\n  position: absolute;\n  width: 64px;\n  z-index: 2;\n}\n#ui-health-flair-left {\n  left: -32px;\n  top: 13px;\n  -webkit-transform: rotate(270deg);\n          transform: rotate(270deg);\n}\n#ui-health-flair-right {\n  right: -32px;\n  top: 13px;\n  -webkit-transform: rotate(90deg);\n          transform: rotate(90deg);\n}\n#ui-health-counter {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  width: 400px;\n  height: 32px;\n  padding: 6px;\n}\n#ui-health-counter .ui-bar-inner {\n  z-index: 1;\n  position: absolute;\n  border-radius: 5px;\n  width: 100%;\n  height: 32px;\n  transition: width 0.0s;\n  transition-property: width;\n  transition-duration: 0.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n#ui-health-container {\n  width: 400px;\n  position: relative;\n}\n#ui-health-counter .ui-bar-danger {\n  background: rgba(255, 0, 0, 0.8);\n  -webkit-animation-name: pulse;\n          animation-name: pulse;\n  -webkit-animation-duration: 0.5s;\n          animation-duration: 0.5s;\n  -webkit-animation-timing-function: ease-out;\n          animation-timing-function: ease-out;\n  -webkit-animation-delay: 0;\n          animation-delay: 0;\n  -webkit-animation-direction: alternate;\n          animation-direction: alternate;\n  -webkit-animation-iteration-count: infinite;\n          animation-iteration-count: infinite;\n  -webkit-animation-fill-mode: none;\n          animation-fill-mode: none;\n  -webkit-animation-play-state: running;\n          animation-play-state: running;\n}\n#ui-health-counter #ui-health-depleted {\n  z-index: 0;\n  background: #929292;\n  transition: width 1.0s;\n  transition-property: width;\n  transition-duration: 1.0s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.health-bar-pulse {\n  -webkit-animation: pulsewhite 1s linear infinite;\n  animation: pulsewhite 1s linear infinite;\n}\n@-webkit-keyframes pulsewhite {\n  0% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n  50% {\n    background-color: rgba(255, 255, 255, 0.6);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n}\n@keyframes pulsewhite {\n  0% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n  50% {\n    background-color: rgba(255, 255, 255, 0.6);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.6);\n  }\n}\n@-webkit-keyframes pulse {\n  0% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n  50% {\n    background-color: rgba(255, 0, 0, 0.8);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n}\n@keyframes pulse {\n  0% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n  50% {\n    background-color: rgba(255, 0, 0, 0.8);\n  }\n  100% {\n    background-color: rgba(0, 0, 0, 0.8);\n  }\n}\n/**\n     * ui-bottom-center-1\n     */\n#ui-bottom-center-1 {\n  z-index: 3;\n  position: absolute;\n  color: #FFF;\n  bottom: 220px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-1 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n    bottom: 138px;\n  }\n}\n#ui-kills {\n  display: none;\n  text-align: center;\n  background: rgba(0, 0, 0, 0.4);\n  color: #FFF;\n  border-radius: 5px;\n  padding: 8px;\n}\n#ui-kill-text {\n  font-size: 18px;\n}\n#ui-kill-count {\n  font-weight: bold;\n  color: #ff4100;\n  font-size: 32px;\n  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);\n}\n/**\n     * ui-bottom-center-2\n     */\n#ui-bottom-center-2 {\n  position: absolute;\n  color: #FFF;\n  bottom: 160px;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-pickup-message {\n  color: white;\n  opacity: 0;\n  text-shadow: 2px 2px 0px #000000;\n  font-size: 32px;\n  font-weight: bold;\n  text-align: center;\n  width: 100vw;\n}\n/**\n * ui-bottom-center-left\n */\n#ui-bottom-center-left {\n  bottom: 12px;\n  color: #FFF;\n  pointer-events: auto;\n  position: absolute;\n  right: 75%;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-left {\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n}\n#ui-perk-0 {\n  border: 2px solid transparent;\n  display: none;\n  left: 4px;\n}\n.ui-perk-pulse {\n  -webkit-animation-name: perkPulse;\n  -webkit-animation-duration: 1.5s;\n  -webkit-animation-iteration-count: 4;\n}\n@-webkit-keyframes perkPulse {\n  from {\n    background-color: rgba(0, 0, 0, 0.4);\n    -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, 0);\n  }\n  50% {\n    background-color: rgba(255, 210, 0, 0.75);\n    -webkit-box-shadow: 0px 0px 30px #ffd200;\n  }\n  to {\n    background-color: rgba(0, 0, 0, 0.4);\n    -webkit-box-shadow: 0px 0px 30px rgba(0, 0, 0, 0);\n  }\n}\n/* Tooltip container */\n.tooltip-perk {\n  position: relative;\n}\n/* Tooltip text */\n.tooltip-perk .tooltip-text {\n  visibility: hidden;\n  width: 180px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  padding: 5px 0;\n  border-radius: 6px;\n  position: absolute;\n  z-index: 1;\n  left: 50%;\n  opacity: 0.75;\n  bottom: 115%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n.tooltip-perk .tooltip-text::after {\n  content: " ";\n  position: absolute;\n  top: 100%;\n  left: 50%;\n  margin-left: -5px;\n  border-width: 5px;\n  border-style: solid;\n  border-color: black transparent transparent transparent;\n}\n.tooltip-perk-title {\n  font-size: 18px;\n  font-weight: bold;\n  padding: 4px;\n  color: yellow;\n}\n.tooltip-perk-description {\n  font-size: 16px;\n  padding: 4px;\n}\n.tooltip-perk-description span {\n  font-size: 16px;\n}\n.tooltip-perk:hover .tooltip-text {\n  visibility: visible;\n}\n/**\n * ui-bottom-center-right\n */\n#ui-bottom-center-right {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  left: 75%;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-center-right {\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n}\n.ui-armor-counter {\n  position: absolute;\n  bottom: 0px;\n  display: block;\n  width: 48px;\n  height: 60px;\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-left: 4px;\n}\n#ui-armor-helmet {\n  right: 4px;\n}\n#ui-armor-backpack {\n  left: 60px;\n  border: 2px solid transparent;\n}\n.ui-armor-level {\n  position: relative;\n  font-size: 16px;\n  font-weight: bold;\n  bottom: 24px;\n  text-align: center;\n  text-shadow: 1px 1px #000000;\n  /*cursor: inherit;*/\n}\n.ui-armor-counter-inner {\n  z-index: 1;\n  position: absolute;\n  background: rgba(0, 255, 0, 0.5);\n  border-radius: 5px;\n  width: 100%;\n  height: 0px;\n  bottom: 0px;\n  transition: height 0.5s;\n  transition-property: height;\n  transition-duration: 0.5s;\n  transition-timing-function: ease-out;\n  transition-delay: initial;\n}\n.ui-armor-counter .ui-armor-count {\n  z-index: 2;\n  text-shadow: 2px 2px #000000;\n  position: relative;\n  font-size: 18px;\n  font-weight: bold;\n  margin-top: -28px;\n  text-align: center;\n}\n.ui-armor-counter .ui-armor-image {\n  margin: auto;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  top: 0;\n  z-index: 0;\n  position: absolute;\n  height: 36px;\n  width: 36px;\n}\n/**\n * ui-bottom-right\n */\n#ui-bottom-right {\n  position: absolute;\n  color: #FFF;\n  bottom: 12px;\n  right: 12px;\n}\n@media (max-height: 768px), (max-width: 1200px) {\n  #ui-bottom-right {\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n}\n#ui-weapon-container {\n  width: 192px;\n}\n.ui-weapon-info {\n  margin-bottom: 5px;\n  border-radius: 5px;\n  border: 2px solid transparent;\n}\n.ui-weapon-switch {\n  position: absolute;\n  right: 0px;\n  opacity: 0.6;\n  border-radius: 5px;\n  border: 2px solid transparent;\n  width: 160px;\n  height: 60px;\n  margin-left: auto;\n  pointer-events: all;\n  cursor: pointer !important;\n}\n#ui-weapon-id-1 {\n  bottom: 210px;\n}\n#ui-weapon-id-2 {\n  bottom: 140px;\n}\n#ui-weapon-id-3 {\n  bottom: 70px;\n}\n#ui-weapon-id-4 {\n  bottom: 0px;\n}\n.ui-weapon-name {\n  position: absolute;\n  font-size: 18px;\n  font-weight: bold;\n  right: 8px;\n  margin-top: 38px;\n  text-align: center;\n}\n.ui-weapon-number {\n  position: absolute;\n  font-size: 24px;\n  font-weight: bold;\n  right: 8px;\n  text-align: center;\n}\n.ui-weapon-exp {\n  display: none;\n  position: absolute;\n  height: 32px;\n  width: 32px;\n  font-size: 18px;\n  font-weight: bold;\n  line-height: 34px;\n  right: 78px;\n  margin-top: 26px;\n  text-align: center;\n}\n.ui-weapon-image {\n  display: none;\n  position: relative;\n  height: 60px;\n  width: 60px;\n  left: 4px;\n  background-size: 60px;\n  background-repeat: no-repeat;\n}\n#ui-weapon-id-4 .ui-weapon-image {\n  height: 52px;\n  width: 52px;\n  left: 4px;\n  top: 4px;\n  background-size: 52px;\n}\n.ui-weapon-dragged {\n  position: fixed !important;\n  width: 160px !important;\n  right: initial !important;\n  bottom: initial !important;\n  pointer-events: none !important;\n}\n/**\n     * ui-stats, end game screen\n     */\n#ui-stats {\n  display: none;\n}\n#ui-stats-bg {\n  display: none;\n  opacity: 0;\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100vw;\n  height: 100vh;\n  background: rgba(0, 0, 0, 0.75);\n  pointer-events: none;\n  z-index: 2;\n}\n#ui-stats-contents {\n  border-radius: 5px;\n  color: #FFF;\n  height: 100%;\n  left: 50%;\n  position: absolute;\n  text-align: center;\n  top: 0%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 100%;\n  z-index: 3;\n}\n@media (max-height: 860px) {\n  #ui-stats-contents {\n    top: 0%;\n  }\n}\n#ui-stats-contents-inner {\n  margin-top: 75px;\n}\n@media (max-height: 768px) {\n  #ui-stats-contents-inner {\n    margin-top: 25px;\n  }\n}\n@media screen and (max-width: 850px) {\n  #ui-stats-contents-inner {\n    margin-top: 0px;\n  }\n}\n@media (max-height: 768px) {\n  #ui-stats-header {\n    -webkit-transform: scale(0.75);\n            transform: scale(0.75);\n    -webkit-transform-origin: top;\n            transform-origin: top;\n  }\n}\n.ui-stats-header-title {\n  font-weight: bold;\n  font-size: 48px;\n  margin: 20px;\n  color: gold;\n}\n.ui-stats-header-reason {\n  font-size: 24px;\n}\n.ui-stats-header-overview {\n  display: inline;\n  margin: 10px;\n}\n.ui-stats-header-overview div {\n  display: inline;\n  padding-bottom: 12px;\n  border-bottom: 2px solid rgba(255, 255, 255, 0.25);\n}\n.ui-stats-header-overview div:not(:first-child) {\n  margin-left: 100px;\n}\n.ui-stats-header-red-team {\n  color: #cc0000;\n  font-weight: bold;\n}\n.ui-stats-header-blue-team {\n  color: #007eff;\n  font-weight: bold;\n}\nspan.ui-stats-header-stat {\n  font-size: 32px;\n}\nspan.ui-stats-header-value {\n  margin-left: 24px;\n  font-size: 48px;\n  font-weight: bold;\n}\n#ui-stats-info-box {\n  position: relative;\n  left: 50%;\n  margin: auto;\n  margin-top: 50px;\n  height: 190px;\n  display: flex;\n}\n@media (max-height: 768px) {\n  #ui-stats-info-box {\n    margin-top: -30px;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: left;\n            transform-origin: left;\n  }\n}\n@media (max-width: 1024px) {\n  #ui-stats-info-box {\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n    -webkit-transform-origin: left;\n            transform-origin: left;\n  }\n}\n.ui-stats-info-player {\n  position: relative;\n  width: 250px;\n  background-color: rgba(0, 0, 0, 0.75);\n  border-radius: 4px;\n  border: 2px solid black;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n.ui-stats-info-status:after {\n  content: "";\n  display: block;\n  position: absolute;\n  top: 15%;\n  left: 25%;\n  background-image: url(../img/gui/skull.svg);\n  background-repeat: no-repeat;\n  background-size: 128px;\n  width: 100%;\n  height: 100%;\n  opacity: 0.1;\n  z-index: -1;\n}\n.ui-stats-info-player-name {\n  color: gold;\n  font-size: 24px;\n  font-weight: bold;\n  font-style: italic;\n  margin-top: 8px;\n  margin-bottom: 8px;\n  margin-left: auto;\n  margin-right: auto;\n  max-width: 240px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.ui-stats-info-player-badge {\n  background-size: 56px;\n  background-repeat: no-repeat;\n  background-position: center;\n  height: 56px;\n  left: auto;\n  position: absolute;\n  top: -40px;\n  width: 100%;\n}\n.ui-stats-info-player-red-leader {\n  background-image: url(../img/gui/star-red.svg);\n}\n.ui-stats-info-player-red-ribbon {\n  background-image: url(../img/gui/ribbon-red.svg);\n}\n.ui-stats-info-player-blue-leader {\n  background-image: url(../img/gui/star-blue.svg);\n}\n.ui-stats-info-player-blue-ribbon {\n  background-image: url(../img/gui/ribbon-blue.svg);\n}\n.ui-stats-info {\n  display: flex;\n  height: 36px;\n  margin: auto;\n}\n.ui-stats-info > div {\n  padding: 8px;\n  font-size: 18px;\n  line-height: 12px;\n  text-align: left;\n  font-weight: bold;\n}\n.ui-stats-info > div:first-child {\n  width: 55%;\n  margin-right: 4px;\n  text-align: right;\n  font-weight: normal;\n}\n.ui-stats-reason {\n  display: flex;\n  height: 72px;\n  margin: auto;\n}\n.ui-stats-reason div {\n  padding: 8px;\n  margin: auto;\n  width: 100%;\n  text-align: center;\n  font-size: 16px;\n}\n.ui-stats-reason .ui-stats-reason-dead {\n  color: red;\n}\n.ui-stats-reason .ui-stats-reason-alive {\n  color: lawngreen;\n}\n#ui-stats-options {\n  position: absolute;\n  left: 50%;\n  margin-top: 20px;\n  min-height: 60px;\n  z-index: 1;\n}\n@media (max-height: 768px) {\n  #ui-stats-options {\n    margin-top: 8px;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: top;\n            transform-origin: top;\n  }\n}\n.ui-stats-restart {\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  width: 200px;\n  margin: auto;\n  margin-bottom: 20px;\n}\n.ui-stats-spectate {\n  position: absolute;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n  left: 102px;\n  width: 125px;\n  background: #50afab;\n  border-bottom: 2px solid #387c79;\n  box-shadow: inset 0 -2px #387c79;\n}\n.ui-stats-ad-container {\n  display: none;\n  margin-top: 80px;\n}\n@media (max-height: 768px) {\n  .ui-stats-ad-container {\n    margin-top: 70px;\n  }\n}\n/* Tooltip container */\n.tooltip {\n  position: relative;\n}\n/* Tooltip text */\n.tooltip .tooltip-text {\n  visibility: hidden;\n  width: 240px;\n  background-color: black;\n  color: #fff;\n  text-align: center;\n  padding: 5px 0;\n  border-radius: 6px;\n  position: absolute;\n  z-index: 1;\n  right: 110%;\n  opacity: 0.75;\n  top: 50%;\n  -webkit-transform: translateY(-50%);\n          transform: translateY(-50%);\n}\n.tooltip .tooltip-text::after {\n  content: " ";\n  position: absolute;\n  top: 50%;\n  left: 100%;\n  margin-top: -5px;\n  border-width: 5px;\n  border-style: solid;\n  border-color: transparent transparent transparent black;\n}\n.tooltip-title {\n  font-size: 18px;\n  font-weight: bold;\n  padding: 4px;\n  color: yellow;\n}\n.tooltip-description {\n  font-size: 16px;\n  padding: 4px;\n}\n.tooltip-description span {\n  font-size: 16px;\n}\n.tooltip:hover .tooltip-text {\n  visibility: visible;\n}\n/**\n     * editor\n     */\n#ui-editor-top-center {\n  position: absolute;\n  color: #FFF;\n  top: 0%;\n  left: 50%;\n  -webkit-transform: translateX(-50%);\n          transform: translateX(-50%);\n}\n#ui-editor-top-right {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  right: 12px;\n}\n.ui-editor-header {\n  text-align: center;\n  font-weight: bold;\n  font-size: 16px;\n  padding: 8px;\n}\n.ui-editor-info {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  font-size: 36px;\n  margin-bottom: 8px;\n  padding: 8px;\n}\n.ui-editor-list {\n  margin: 0px;\n  list-style: none;\n}\n#ui-editor-info-list {\n  padding: 0px;\n}\n/*\n     * Profiler\n     */\n#ui-profiler-top-left {\n  position: absolute;\n  color: #FFF;\n  font-size: 16px;\n  top: 12px;\n  left: 12px;\n  text-align: center;\n  display: flex;\n}\n.ui-profiler-list {\n  background: rgba(0, 0, 0, 0.4);\n  border-radius: 5px;\n  margin-right: 16px;\n  padding: 8px;\n}\n.ui-profiler-list-header {\n  font-size: 16px;\n  font-weight: bold;\n  margin-bottom: 8px;\n}\n.ui-profiler-list ul {\n  list-style: none;\n  text-align: left;\n  padding: 0px;\n  margin: 0px;\n}\n.ui-profiler-list li {\n  display: flex;\n}\n.kv {\n  font-family: monospace;\n  font-size: 14px;\n  font-weight: normal;\n}\n.kv:last-child {\n  width: 100%;\n  text-align: right;\n}\n/* Hide mobile-only elements */\n#ui-settings-container-mobile {\n  display: none;\n}\n@media screen and (max-width: 850px) {\n  * {\n    -webkit-touch-callout: none;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n        -ms-user-select: none;\n            user-select: none;\n  }\n  /**\n * ui-touches\n */\n  .ui-touch-down {\n    display: none;\n    position: fixed;\n    background-color: rgba(0, 0, 0, 0.5);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-touch-down-landscape {\n    width: 112px;\n    height: 112px;\n    border-radius: 56px;\n  }\n  .ui-touch-down-portrait {\n    width: 96px;\n    height: 96px;\n    border-radius: 48px;\n  }\n  .ui-touch-pos {\n    display: none;\n    position: fixed;\n    background-color: rgba(0, 0, 0, 0.5);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-touch-pos-landscape {\n    width: 64px;\n    height: 64px;\n    border-radius: 32px;\n  }\n  .ui-touch-pos-portrait {\n    width: 48px;\n    height: 48px;\n    border-radius: 24px;\n  }\n  .btn-game-menu {\n    position: relative;\n    margin: auto;\n    margin-top: 2px;\n    margin-bottom: 4px;\n    color: white;\n    font-size: 14px;\n    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n    background-color: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: inset 0 -2px #387c79;\n    background-repeat: no-repeat;\n    cursor: pointer;\n    text-align: center;\n    line-height: 30px;\n    display: block;\n    width: 100%;\n    height: 30px;\n    border: 0px;\n    border-radius: 5px;\n    -moz-border-radius: 5px;\n    -webkit-border-radius: 5px;\n    box-sizing: border-box;\n  }\n  #btn-game-fullscreen {\n    background-size: 22px;\n    background-position: 4px 2px;\n    background-image: url(../img/gui/minimize.svg);\n  }\n  #btn-game-aim-line {\n    background-size: 18px;\n    background-position: 6px 5px;\n    margin-bottom: 8px;\n  }\n  #btn-game-sound {\n    background-size: 30px;\n    background-position: 3px 0px;\n    margin-bottom: 8px;\n  }\n  #btn-game-quit {\n    margin-top: 20px;\n    background-size: 34px;\n    background-position: -2px -3px;\n    background-image: url(../img/gui/quit.svg);\n  }\n  #btn-game-resume {\n    margin-top: 20px;\n    background-size: 34px;\n    background-position: -1px -1px;\n    background-image: url(../img/gui/resume.svg);\n  }\n  /**\n     * ui-top-center\n     */\n  #ui-top-center {\n    position: absolute;\n    color: #FFF;\n    top: 15%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-top-center .top-center-text {\n    text-align: center;\n    width: 100vw;\n    padding: 4px;\n  }\n  #ui-waiting-text {\n    display: none;\n    color: white;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n  }\n  #ui-waiting-text span {\n    font-size: 16px;\n    font-weight: bold;\n  }\n  .top-center-text .spectate-text {\n    display: inline-block;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    overflow: hidden;\n    height: 32px;\n  }\n  .top-center-text .spectate-desc {\n    color: white;\n    margin-right: 8px;\n  }\n  .ui-spectate-mode {\n    display: none;\n  }\n  #ui-spectate-text {\n    position: relative;\n  }\n  #spectate-player {\n    max-width: 250px;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n    color: cyan;\n  }\n  /**\n * ui-top-center-scopes\n */\n  #ui-top-center-scopes-wrapper {\n    position: absolute;\n    color: #FFF;\n    left: 6px;\n    top: 132px;\n    -webkit-transform: initial;\n            transform: initial;\n    width: initial;\n  }\n  #ui-top-center-scopes {\n    margin-top: 6px;\n    text-align: center;\n    color: white;\n  }\n  .ui-zoom {\n    display: inline-block;\n    margin-left: -12px;\n    margin-right: -12px;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n    background: rgba(0, 0, 0, 0.3);\n    border-radius: 32px;\n    width: 42px;\n    height: 42px;\n    opacity: 0.3;\n    pointer-events: all;\n  }\n  .ui-zoom-active {\n    vertical-align: baseline;\n    opacity: 1.0;\n    margin-left: 0px;\n    margin-right: 0px;\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1);\n    transition: all 100ms ease-in;\n    transition: opacity 0.25s ease-out;\n    -moz-transition: opacity 0.25s ease-out;\n    -webkit-transition: opacity 0.25s ease-out;\n    -o-transition: opacity 0.25s ease-out;\n  }\n  .ui-zoom .ui-zoom-image {\n    width: 48px;\n    height: 48px;\n    opacity: 0.4;\n    padding: 2px;\n  }\n  .ui-zoom .ui-zoom-text {\n    margin-top: 14px;\n    width: 100%;\n  }\n  .ui-zoom .ui-zoom-level {\n    font-size: 24px;\n    line-height: 16px;\n    text-align: center;\n    width: 100%;\n    /*cursor: inherit;*/\n  }\n  .ui-zoom .ui-zoom-append {\n    font-size: 24px;\n  }\n  .ui-zoom-inactive {\n    display: none;\n    margin-left: -8px;\n    margin-right: -8px;\n    transition: all 100ms ease-in;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n  }\n  /**\n     * ui-team-pings and ui-emotes\n     */\n  .ui-emote-wheel {\n    z-index: 3;\n    display: none;\n    position: fixed;\n  }\n  .ui-emote-parent {\n    opacity: 1.0;\n  }\n  .ui-emote-hl {\n    z-index: 2;\n    display: none;\n  }\n  .ui-emote {\n    position: fixed;\n    width: 256px;\n    height: 256px;\n    background-size: 256px;\n    background-repeat: no-repeat;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-emote-bg-circle {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-circle.svg);\n  }\n  .ui-emote-bg-quarter {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-quarter.svg);\n  }\n  .ui-emote-bg-eighth {\n    opacity: 0.65;\n    background-image: url(../img/gui/ping-part-eighth.svg);\n  }\n  .ui-emote-middle .ui-emote-image {\n    width: 24px !important;\n    height: 24px !important;\n    background-size: 24px !important;\n    background-image: none !important;\n  }\n  .ui-emote-top .ui-emote-image {\n    margin-top: -78px;\n    background-image: url(../img/gui/ping-team-danger.svg);\n  }\n  .ui-emote-right .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(90deg);\n            transform: translate(-50%, -50%) rotate(90deg);\n  }\n  .ui-emote-right .ui-emote-image {\n    margin-left: 78px;\n    background-image: url(../img/gui/ping-team-coming.svg);\n  }\n  .ui-emote-bottom .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(180deg);\n            transform: translate(-50%, -50%) rotate(180deg);\n  }\n  .ui-emote-bottom .ui-emote-image {\n    margin-top: 78px;\n    background-image: url(../img/gui/ping-team-help.svg);\n  }\n  .ui-emote-left .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(270deg);\n            transform: translate(-50%, -50%) rotate(270deg);\n  }\n  .ui-emote-left .ui-emote-image {\n    margin-left: -78px;\n    background-image: url(../img/gui/ping-team-help.svg);\n  }\n  .ui-emote-top-left .ui-emote-image {\n    margin-left: -80px;\n    margin-top: -30px;\n    background-image: url(../img/loot/loot-ammo-box.svg);\n  }\n  .ui-emote-bottom-left .ui-emote {\n    -webkit-transform: translate(-50%, -50%) rotate(-45deg);\n            transform: translate(-50%, -50%) rotate(-45deg);\n  }\n  .ui-emote-bottom-left .ui-emote-image {\n    margin-left: -80px;\n    margin-top: 30px;\n    background-image: url(../img/loot/loot-medical-healthkit.svg);\n  }\n  .ui-emote-circle .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-circle-highlight.svg);\n  }\n  .ui-emote-quarter .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-quarter-highlight.svg);\n  }\n  .ui-emote-eighth .ui-emote-hl {\n    background-image: url(../img/gui/ping-part-eighth-highlight.svg);\n  }\n  .ui-emote-image {\n    z-index: 1;\n    position: fixed;\n    background-repeat: no-repeat;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-emote-image-large {\n    width: 80px;\n    height: 80px;\n    background-size: 64px;\n    background-position: center;\n  }\n  .ui-emote-image-small {\n    width: 35px;\n    height: 35px;\n    background-size: 35px;\n  }\n  /**\n     * ui-team-indicators\n     */\n  .ui-team-indicator {\n    z-index: 2;\n    display: none;\n    position: fixed;\n    top: 0px;\n    left: 0px;\n    border-radius: 32px;\n    width: 64px;\n    height: 64px;\n    background-size: 64px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/indicator.svg);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-team-indicator-pos {\n    opacity: 0.75;\n    position: relative;\n    border-radius: 24px;\n    width: 32px;\n    height: 32px;\n    top: 23px;\n    left: 32px;\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  .ui-team-indicator-image {\n    width: 32px;\n    height: 32px;\n    background-size: 32px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/ping-team-danger.svg);\n  }\n  .ui-indicator-ping-border {\n    z-index: 0;\n    display: none;\n    position: fixed;\n    top: 0px;\n    left: 0px;\n    width: 160px;\n    height: 160px;\n    position: relative;\n    background-size: 160px;\n    background-repeat: no-repeat;\n    background-image: url(../img/gui/ping-border.svg);\n    -webkit-transform: translate(-50%, -50%);\n            transform: translate(-50%, -50%);\n  }\n  /**\n * ui-top-left\n */\n  #ui-top-left {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    display: block;\n  }\n  .ui-bg-standard {\n    background: rgba(0, 0, 0, 0.24);\n    border-radius: 5px;\n  }\n  #ui-team {\n    position: fixed;\n    left: 128px;\n  }\n  .ui-team-member {\n    display: none;\n    position: relative;\n    width: 110px;\n    height: 20px;\n    padding: 4px;\n    margin-bottom: 4px;\n  }\n  .ui-team-member-name {\n    font-weight: bold;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 10px;\n    max-width: 100px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  .ui-team-member-color {\n    position: absolute;\n    top: 4px;\n    right: 4px;\n    border-radius: 9px;\n    width: 9px;\n    height: 9px;\n  }\n  .ui-background-yellow {\n    background-color: yellow;\n  }\n  .ui-background-blue {\n    background-color: blue;\n  }\n  .ui-background-red {\n    background-color: red;\n  }\n  .ui-background-purple {\n    background-color: purple;\n  }\n  .ui-background-cyan {\n    background-color: cyan;\n  }\n  .ui-team-member-status {\n    display: none;\n    position: absolute;\n    top: 2px;\n    right: -24px;\n    width: 20px;\n    height: 20px;\n    background-size: 20px;\n    background-repeat: no-repeat;\n  }\n  .ui-team-member-status-downed {\n    border-radius: 16px;\n    display: block !important;\n    background-image: url(../img/gui/down.svg) !important;\n  }\n  .ui-team-member-status-dead {\n    display: block !important;\n    background-image: url(../img/gui/skull-team.svg) !important;\n    opacity: 0.5 !important;\n  }\n  .ui-team-member-status-disconnected {\n    display: block !important;\n    background-image: url(../img/gui/close.svg) !important;\n    opacity: 0.5 !important;\n  }\n  .ui-team-member-health {\n    margin-top: 2px;\n  }\n  .ui-team-member-health .ui-bar-inner {\n    background-color: white;\n    z-index: 1;\n    position: absolute;\n    border-radius: 4px;\n    width: 110px;\n    height: 5px;\n    transition: width 0.0s;\n    transition-property: width;\n    transition-duration: 0.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .ui-team-member-health .ui-bar-danger {\n    background: rgba(255, 0, 0, 0.8);\n    -webkit-animation-name: pulse;\n            animation-name: pulse;\n    -webkit-animation-duration: 0.5s;\n            animation-duration: 0.5s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0;\n            animation-delay: 0;\n    -webkit-animation-direction: alternate;\n            animation-direction: alternate;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  .ui-team-member-health .ui-health-depleted {\n    z-index: 0;\n    background: #929292;\n    transition: width 1.0s;\n    transition-property: width;\n    transition-duration: 1.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  #ui-spectate-options-wrapper {\n    bottom: 6px;\n    position: fixed;\n    left: 6px;\n    top: initial !important;\n  }\n  #ui-spectate-options {\n    bottom: 0px;\n    z-index: 1;\n    position: absolute;\n    pointer-events: all;\n    width: 100%;\n  }\n  #ui-spectate-buttons {\n    display: inline-block;\n    width: 124px;\n    padding: 8px 8px 4px 8px;\n    text-align: center;\n  }\n  #ui-spectate-options a {\n    position: relative;\n    color: white;\n    height: 28px;\n    margin-bottom: 2px;\n    line-height: 26px;\n    font-size: 12px;\n    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);\n    background: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: none;\n    cursor: pointer;\n  }\n  #btn-spectate-prev-player {\n    margin-bottom: 12px !important;\n  }\n  #btn-spectate-view-stats {\n    margin-bottom: 12px !important;\n  }\n  #ui-spectate-stats {\n    position: absolute;\n    top: 0px;\n    left: 146px;\n    width: 160px;\n    display: none;\n  }\n  #ui-spectate-stats-header {\n    text-align: center;\n    font-size: 16px;\n    font-weight: bold;\n    padding: 6px;\n    color: white;\n  }\n  #ui-spectate-stats-table {\n    width: 100%;\n    background-color: transparent;\n    margin: auto;\n    margin-right: 0px;\n    margin-bottom: 4px;\n    border-collapse: collapse;\n  }\n  #ui-spectate-stats tbody,\n  #ui-spectate-stats td,\n  #ui-spectate-stats th {\n    padding: 0px 2px 2px 14px;\n    font-size: 10px;\n  }\n  .ui-spectate-stats-category {\n    width: 75px;\n    color: rgba(255, 255, 255, 0.75);\n  }\n  .ui-spectate-stats-value {\n    width: 75px;\n    color: white;\n  }\n  /**\n     * ui-top-right\n     */\n  #ui-top-right {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    display: flex;\n  }\n  #ui-leaderboard {\n    font-weight: bold;\n    text-align: center;\n    width: 56px;\n    display: inline-block;\n  }\n  #ui-leaderboard-alive {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-bottom: -16px;\n    padding: 8px;\n    height: 32px;\n    width: 40px;\n  }\n  .ui-players-alive-pulse {\n    -webkit-animation-name: pulseAlive;\n            animation-name: pulseAlive;\n    -webkit-animation-duration: 2.0s;\n            animation-duration: 2.0s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0s;\n            animation-delay: 0s;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  @-webkit-keyframes pulseAlive {\n    0% {\n      color: #ffffff;\n    }\n    20% {\n      color: #ff0000;\n    }\n    40% {\n      color: #ffffff;\n    }\n    100% {\n      color: #ffffff;\n    }\n  }\n  @keyframes pulseAlive {\n    0% {\n      color: #ffffff;\n    }\n    20% {\n      color: #ff0000;\n    }\n    40% {\n      color: #ffffff;\n    }\n    100% {\n      color: #ffffff;\n    }\n  }\n  .ui-leaderboard-header {\n    font-size: 12px;\n  }\n  #ui-killfeed-wrapper {\n    top: 24px;\n    left: 6px;\n    right: initial;\n  }\n  #ui-killfeed {\n    position: absolute;\n    margin: initial;\n    top: 135px;\n  }\n  #ui-killfeed-contents {\n    width: 800px;\n  }\n  #ui-killfeed-contents .killfeed-div {\n    position: absolute;\n    background-color: rgba(0, 0, 0, 0.4);\n    padding: 3px 3px;\n    border-radius: 2px;\n    height: 8px;\n    line-height: 8px;\n    right: initial;\n  }\n  .killfeed-div span,\n  .killfeed-div div {\n    float: left;\n    font-size: 8px;\n    line-height: 8px;\n    font-weight: bold;\n    color: #EFEEEE;\n  }\n  .killfeed-red span,\n  .killfeed-red div {\n    color: #d1777c !important;\n  }\n  .killfeed-blue span,\n  .killfeed-blue div {\n    color: deepskyblue !important;\n  }\n  #ui-killfeed-contents .killfeed-red {\n    color: #d1777c;\n  }\n  #ui-killfeed-contents .killfeed-blue {\n    color: deepskyblue;\n  }\n  #ui-killfeed .killfeed-name {\n    max-width: 180px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  /**\n * ui-right-center\n */\n  #ui-ammo-interactive {\n    position: absolute;\n    right: 4px;\n    top: 0px;\n    width: 90px;\n  }\n  .ui-ammo > .ui-loot-image {\n    position: absolute;\n    height: 11px;\n    width: 11px;\n    right: 2px;\n    margin-top: 2px;\n  }\n  .ui-ammo > .ui-loot-overlay {\n    position: absolute;\n    height: 11px;\n    width: 11px;\n    right: 2px;\n    margin-top: 2px;\n  }\n  .ui-ammo {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 85px;\n    height: 32px;\n    margin-left: auto;\n    margin-bottom: 5px;\n  }\n  .ui-ammo > .ui-loot-count {\n    position: absolute;\n    font-size: 24px;\n    font-weight: bold;\n    left: 10px;\n    top: 2px;\n    text-align: center;\n  }\n  .ui-ammo-row {\n    display: flex;\n  }\n  .ui-ammo-row > div:not(:last-child) {\n    margin-right: 10px;\n  }\n  #ui-loot-ph1 {\n    opacity: 0 !important;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    display: inline-block;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 38px;\n    height: 14px;\n    margin-left: auto;\n    margin-bottom: 2px;\n  }\n  .ui-ammo > .ui-loot-count {\n    position: absolute;\n    font-size: 12px;\n    font-weight: bold;\n    width: 16px;\n    left: 3px;\n    margin-top: -1px;\n    text-align: center;\n  }\n  #ui-medical-interactive {\n    display: inline-flex;\n    left: 68%;\n    position: absolute;\n    top: 0px;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-medical-interactive > .ui-loot {\n    display: inline-block;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 44px;\n    height: 18px;\n    margin-left: 6px;\n    margin-bottom: 2px;\n  }\n  .ui-medical > .ui-loot-image {\n    position: absolute;\n    height: 18px;\n    width: 18px;\n    background-size: 18px;\n    background-repeat: no-repeat;\n    right: 2px;\n    margin-top: 0px;\n  }\n  .ui-medical > .ui-loot-count {\n    position: absolute;\n    font-size: 16px;\n    font-weight: bold;\n    left: 4px;\n    width: 16px;\n    margin-top: -3px;\n    text-align: center;\n  }\n  .ui-loot {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 85px;\n    height: 32px;\n    margin-left: auto;\n    margin-bottom: 5px;\n  }\n  .ui-loot:hover {\n    opacity: 1 !important;\n  }\n  .ui-outline-hover {\n    border: 2px solid rgba(0, 255, 0, 0);\n  }\n  .ui-outline-hover:hover {\n    -webkit-transition: border 100ms ease-out;\n    -moz-transition: border 100ms ease-out;\n    -o-transition: border 100ms ease-out;\n    border: 2px solid rgba(0, 255, 0, 0);\n  }\n  .ui-scale-hover {\n    transform: scale(1);\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1);\n    transition: all 100ms ease-in;\n  }\n  .ui-scale-hover:hover {\n    -webkit-transition: all 100ms ease-in;\n    -webkit-transform: scale(1.1);\n    -ms-transition: all 100ms ease-in;\n    -ms-transform: scale(1.1);\n    -moz-transition: all 100ms ease-in;\n    -moz-transform: scale(1.1);\n    transition: all 100ms ease-in;\n    transform: scale(1.1);\n  }\n  #ui-debug-button {\n    display: none;\n    background: rgba(0, 0, 0, 0.4);\n    position: absolute;\n    border-radius: 13px;\n    height: 26px;\n    width: 26px;\n    background-size: 18px;\n    bottom: 10px;\n    right: 38px;\n    background-position: center;\n    background-image: url(../img/gui/mag-glass.svg);\n    background-repeat: no-repeat;\n    pointer-events: auto;\n    z-index: 1;\n  }\n  /**\n * ui-upper-center\n */\n  #ui-upper-center {\n    position: absolute;\n    display: flex;\n    color: #FFF;\n    top: 84px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-announcement {\n    display: none;\n    color: yellow;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    width: 100vw;\n  }\n  /**\n     * ui-lower-center\n     */\n  #ui-lower-center {\n    bottom: 44%;\n    color: #FFF;\n    left: 60%;\n    position: absolute;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-interaction {\n    display: flex;\n  }\n  #ui-interaction-press {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: -20px;\n    font-size: 34px;\n    width: 44px;\n    height: 44px;\n    background-size: 36px;\n    background-position: center;\n    background-repeat: no-repeat;\n  }\n  #ui-interaction-outer {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: 6px;\n    padding: 0px 6px;\n    height: 28px;\n  }\n  #ui-interaction-outer #ui-interaction-description {\n    margin-top: 5px;\n    font-size: 16px;\n    text-align: center;\n  }\n  /**\n * ui-bottom-center-0\n */\n  #ui-bottom-center-0 {\n    position: absolute;\n    color: #FFF;\n    bottom: 6px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  /**\n * ui-equipped-ammo\n */\n  #ui-equipped-ammo-wrapper {\n    /* Taken from ui-bottom-center-0 */\n    position: absolute;\n    color: #FFF;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    bottom: 78px;\n  }\n  #ui-equipped-ammo {\n    position: absolute;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    text-align: center;\n    opacity: 1.0;\n  }\n  #ui-bullet-counter {\n    display: inline-block;\n    width: 175px;\n    height: 28px;\n    text-align: center;\n    text-shadow: 1px 1px #000000;\n  }\n  #ui-bullet-counter > #ui-current-clip {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 28px;\n    font-weight: bold;\n    line-height: 30px;\n    width: 60px;\n    height: 32px;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    left: 50%;\n    position: relative;\n    text-align: center;\n  }\n  #ui-bullet-counter > #ui-remaining-ammo {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 16px;\n    font-weight: bold;\n    line-height: 22px;\n    width: 44px;\n    height: 22px;\n    left: 122px;\n    position: absolute;\n    text-align: center;\n    top: 10px;\n  }\n  #ui-bullet-counter > #ui-reload-button-container {\n    height: 36px;\n    left: 162px;\n    position: absolute;\n    top: 3px;\n    width: 36px;\n  }\n  #ui-reload-button-container > #ui-reload-button {\n    background: rgba(0, 0, 0, 0.4);\n    background-position: 4px 3px;\n    background-image: url(../img/gui/bullets.svg);\n    background-repeat: no-repeat;\n    background-size: 14px;\n    border-radius: 11px;\n    height: 22px;\n    left: 50%;\n    position: absolute;\n    top: 50%;\n    -webkit-transform: translateX(-50%) translateY(-50%);\n            transform: translateX(-50%) translateY(-50%);\n    width: 22px;\n  }\n  #ui-boost-counter {\n    display: inline-flex;\n    width: 206px;\n  }\n  #ui-boost-counter .ui-boost-base {\n    background: rgba(0, 0, 0, 0.4);\n    height: 6px;\n    margin-bottom: 0px;\n  }\n  #ui-boost-counter-0 {\n    border-top-left-radius: 3px;\n    border-bottom-left-radius: 3px;\n    width: 50px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-0 .ui-bar-inner {\n    background: #ff901a;\n  }\n  #ui-boost-counter-1 {\n    width: 50px;\n    margin-left: 3px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-1 .ui-bar-inner {\n    background: #ff751a;\n  }\n  #ui-boost-counter-2 {\n    width: 75px;\n    margin-left: 3px;\n    margin-right: 3px;\n  }\n  #ui-boost-counter-2 .ui-bar-inner {\n    background: #ff6616;\n  }\n  #ui-boost-counter-3 {\n    border-top-right-radius: 3px;\n    border-bottom-right-radius: 3px;\n    width: 25px;\n    margin-left: 3px;\n  }\n  #ui-boost-counter-3 .ui-bar-inner {\n    background: #ff5600;\n  }\n  .ui-boost-base .ui-bar-inner {\n    border-radius: inherit;\n    width: 0px;\n    height: 6px;\n  }\n  .ui-health-flair {\n    background-size: 36px;\n    background-repeat: no-repeat;\n    background-position: center;\n    display: none;\n    height: 36px;\n    position: absolute;\n    width: 36px;\n    z-index: 2;\n  }\n  #ui-health-flair-left {\n    left: -17px;\n    top: 14px;\n    -webkit-transform: rotate(270deg);\n            transform: rotate(270deg);\n  }\n  #ui-health-flair-right {\n    right: -17px;\n    top: 14px;\n    -webkit-transform: rotate(90deg);\n            transform: rotate(90deg);\n  }\n  #ui-health-counter {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    width: 200px;\n    height: 18px;\n    padding: 4px;\n  }\n  #ui-health-counter .ui-bar-inner {\n    z-index: 1;\n    position: absolute;\n    border-radius: 5px;\n    width: 100%;\n    height: 18px;\n    transition: width 0.0s;\n    transition-property: width;\n    transition-duration: 0.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  #ui-health-container {\n    width: 200px;\n    position: relative;\n  }\n  #ui-health-counter .ui-bar-danger {\n    background: rgba(255, 0, 0, 0.8);\n    -webkit-animation-name: pulse;\n            animation-name: pulse;\n    -webkit-animation-duration: 0.5s;\n            animation-duration: 0.5s;\n    -webkit-animation-timing-function: ease-out;\n            animation-timing-function: ease-out;\n    -webkit-animation-delay: 0;\n            animation-delay: 0;\n    -webkit-animation-direction: alternate;\n            animation-direction: alternate;\n    -webkit-animation-iteration-count: infinite;\n            animation-iteration-count: infinite;\n    -webkit-animation-fill-mode: none;\n            animation-fill-mode: none;\n    -webkit-animation-play-state: running;\n            animation-play-state: running;\n  }\n  #ui-health-counter #ui-health-depleted {\n    z-index: 0;\n    background: #929292;\n    transition: width 1.0s;\n    transition-property: width;\n    transition-duration: 1.0s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .health-bar-pulse {\n    -webkit-animation: pulsewhite 1s linear infinite;\n    animation: pulsewhite 1s linear infinite;\n  }\n  @-webkit-keyframes pulsewhite {\n    0% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n    50% {\n      background-color: rgba(255, 255, 255, 0.6);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n  }\n  @keyframes pulsewhite {\n    0% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n    50% {\n      background-color: rgba(255, 255, 255, 0.6);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.6);\n    }\n  }\n  @-webkit-keyframes pulse {\n    0% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n    50% {\n      background-color: rgba(255, 0, 0, 0.8);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n  }\n  @keyframes pulse {\n    0% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n    50% {\n      background-color: rgba(255, 0, 0, 0.8);\n    }\n    100% {\n      background-color: rgba(0, 0, 0, 0.8);\n    }\n  }\n  /**\n     * ui-bottom-center-1\n     */\n  #ui-bottom-center-1 {\n    z-index: 3;\n    position: absolute;\n    color: #FFF;\n    bottom: 23%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-kills {\n    display: none;\n    text-align: center;\n    background: rgba(0, 0, 0, 0.4);\n    color: #FFF;\n    border-radius: 5px;\n    padding: 6px;\n  }\n  #ui-kill-text {\n    font-size: 10px;\n  }\n  #ui-kill-count {\n    font-weight: bold;\n    color: #ff4100;\n    font-size: 18px;\n    margin-bottom: -3px;\n    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);\n  }\n  /**\n     * ui-bottom-center-2\n     */\n  #ui-bottom-center-2 {\n    position: absolute;\n    color: #FFF;\n    bottom: 82px;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-pickup-message {\n    color: white;\n    text-shadow: 1px 1px 0px #000000;\n    font-size: 16px;\n    font-weight: bold;\n    text-align: center;\n    width: 100vw;\n  }\n  /**\n * ui-bottom-center-left\n */\n  #ui-bottom-center-left {\n    bottom: initial;\n    color: #FFF;\n    right: 70%;\n    opacity: 0.75;\n    position: absolute;\n    bottom: 6px;\n  }\n  /**\n * ui-bottom-center-right\n */\n  #ui-bottom-center-right {\n    bottom: initial;\n    color: #FFF;\n    left: 70%;\n    opacity: 0.75;\n    position: absolute;\n    bottom: 6px;\n  }\n  .ui-armor-counter {\n    position: absolute;\n    bottom: 0px;\n    display: block;\n    width: 20px;\n    height: 24px;\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-left: 2px;\n  }\n  #ui-armor-helmet {\n    right: 4px;\n  }\n  #ui-armor-backpack {\n    left: 30px;\n  }\n  .ui-armor-level {\n    display: none;\n  }\n  .ui-armor-counter-inner {\n    z-index: 1;\n    position: absolute;\n    background: rgba(0, 255, 0, 0.5);\n    border-radius: 5px;\n    width: 100%;\n    height: 0px;\n    bottom: 0px;\n    transition: height 0.5s;\n    transition-property: height;\n    transition-duration: 0.5s;\n    transition-timing-function: ease-out;\n    transition-delay: initial;\n  }\n  .ui-armor-counter .ui-armor-count {\n    z-index: 2;\n    text-shadow: 1px 1px #000000;\n    position: relative;\n    font-size: 18px;\n    font-weight: bold;\n    margin-top: -28px;\n    text-align: center;\n  }\n  .ui-armor-counter .ui-armor-image {\n    margin: auto;\n    left: 0;\n    right: 0;\n    bottom: 0;\n    top: 0;\n    z-index: 0;\n    position: absolute;\n    height: 18px;\n    width: 18px;\n  }\n  /**\n * ui-bottom-right\n */\n  #ui-bottom-right {\n    bottom: initial;\n    color: #FFF;\n    position: absolute;\n    right: 6px;\n    top: 225px;\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-weapon-container {\n    width: 88px;\n  }\n  .ui-weapon-info {\n    margin-bottom: 5px;\n    border-radius: 5px;\n    border: 2px solid transparent;\n  }\n  .ui-weapon-switch {\n    position: absolute;\n    right: 0px;\n    opacity: 0.6;\n    border-radius: 5px;\n    border: 2px solid transparent;\n    width: 68px;\n    height: 28px;\n    margin-left: auto;\n    pointer-events: all;\n  }\n  #ui-weapon-id-1 {\n    bottom: 105px;\n  }\n  #ui-weapon-id-2 {\n    bottom: 70px;\n  }\n  #ui-weapon-id-3 {\n    bottom: 35px;\n  }\n  #ui-weapon-id-4 {\n    bottom: 0px;\n  }\n  .ui-weapon-name {\n    position: absolute;\n    font-size: 10px;\n    font-weight: bold;\n    right: 4px;\n    width: 48px;\n    margin-top: 14px;\n    text-align: right;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  .ui-weapon-number {\n    display: none;\n    position: absolute;\n    font-size: 24px;\n    font-weight: bold;\n    right: 8px;\n    text-align: center;\n  }\n  .ui-weapon-exp {\n    display: none;\n    position: absolute;\n    height: 16px;\n    width: 16px;\n    font-size: 8px;\n    font-weight: bold;\n    line-height: 18px;\n    right: 34px;\n    margin-top: 10px;\n    text-align: center;\n  }\n  .ui-weapon-image {\n    display: none;\n    position: relative;\n    height: 28px;\n    width: 28px;\n    left: 2px;\n    bottom: 0px;\n    -webkit-transform: rotate(10deg);\n            transform: rotate(10deg);\n  }\n  #ui-weapon-id-4 .ui-weapon-image {\n    height: 24px;\n    width: 24px;\n    left: 0px;\n    top: 0px;\n    background-size: 24px;\n  }\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: 18px;\n    height: 28px;\n    right: 4px;\n    top: initial;\n    width: 28px;\n  }\n  /**\n * ui-stats, end game screen\n */\n  #ui-stats-contents {\n    border-radius: 5px;\n    color: #FFF;\n    height: 100%;\n    left: 50%;\n    position: absolute;\n    text-align: center;\n    top: 0%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    width: 100%;\n  }\n  #ui-stats-header {\n    margin-top: 14px;\n  }\n  .ui-stats-header-title {\n    font-weight: bold;\n    font-size: 24px;\n    margin: 6px;\n    color: gold;\n  }\n  .ui-stats-header-reason {\n    font-size: 12px;\n  }\n  .ui-stats-header-overview {\n    position: fixed;\n    top: 4px;\n    right: 12px;\n    margin: 5px;\n  }\n  .ui-stats-header-overview div {\n    display: block;\n    padding-bottom: 6px;\n    border-bottom: 2px solid rgba(255, 255, 255, 0.25);\n  }\n  .ui-stats-header-overview div:not(:first-child) {\n    margin: initial;\n  }\n  span.ui-stats-header-stat {\n    font-size: 22px;\n  }\n  span.ui-stats-header-value {\n    margin-left: 12px;\n    font-size: 28px;\n    font-weight: bold;\n  }\n  #ui-stats-info-box {\n    position: relative;\n    left: 50%;\n    margin: auto;\n    margin-top: -8px;\n    height: 100px;\n    display: flex;\n  }\n  .ui-stats-info-player {\n    position: relative;\n    width: 125px;\n    background-color: rgba(0, 0, 0, 0.75);\n    border-radius: 4px;\n    border: 2px solid black;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  .ui-stats-info-status:after {\n    background-image: url(../img/gui/skull.svg);\n    background-position: center;\n    background-repeat: no-repeat;\n    background-size: 70px;\n    content: "";\n    display: block;\n    height: 100%;\n    left: initial;\n    opacity: 0.1;\n    position: absolute;\n    top: 0%;\n    width: 100%;\n    z-index: -1;\n  }\n  .ui-stats-info-player-name {\n    color: gold;\n    font-size: 12px;\n    font-weight: bold;\n    font-style: italic;\n    margin-top: 4px;\n    margin-bottom: 4px;\n    margin-left: auto;\n    margin-right: auto;\n    max-width: 120px;\n    white-space: nowrap;\n    overflow: hidden;\n    text-overflow: ellipsis;\n  }\n  .ui-stats-info-player-badge {\n    background-size: 24px;\n    background-repeat: no-repeat;\n    background-position: center;\n    height: 56px;\n    left: auto;\n    position: absolute;\n    top: -34px;\n    width: 100%;\n  }\n  .ui-stats-info {\n    display: flex;\n    height: 18px;\n    margin: auto;\n  }\n  .ui-stats-info > div {\n    padding: 4px;\n    font-size: 9px;\n    line-height: 6px;\n    text-align: left;\n    font-weight: bold;\n  }\n  .ui-stats-info > div:first-child {\n    width: 55%;\n    margin-right: 4px;\n    text-align: right;\n    font-weight: normal;\n  }\n  .ui-stats-reason {\n    display: flex;\n    height: 72px;\n    margin: auto;\n  }\n  .ui-stats-reason div {\n    padding: 8px;\n    margin: auto;\n    width: 100%;\n    text-align: center;\n    font-size: 16px;\n  }\n  .ui-stats-reason .ui-stats-reason-dead {\n    color: red;\n  }\n  .ui-stats-reason .ui-stats-reason-alive {\n    color: lawngreen;\n  }\n  #ui-stats-options {\n    position: absolute;\n    left: 50%;\n    margin-top: 2px;\n    min-height: 30px;\n    -webkit-transform: scale(1.1);\n            transform: scale(1.1);\n    z-index: 1;\n  }\n  .ui-stats-restart {\n    position: absolute;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    width: 130px;\n    margin: auto;\n    margin-bottom: 20px;\n  }\n  .ui-stats-spectate {\n    position: absolute;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n    left: 68px;\n    width: 88px;\n    background: #50afab;\n    border-bottom: 2px solid #387c79;\n    box-shadow: none;\n  }\n  .ui-stats-ad-container {\n    display: none;\n    margin-top: 8px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  /* Tooltip container */\n  .tooltip {\n    position: relative;\n  }\n  /* Tooltip text */\n  .tooltip .tooltip-text {\n    visibility: hidden !important;\n    width: 240px;\n    background-color: black;\n    color: #fff;\n    text-align: center;\n    padding: 5px 0;\n    border-radius: 6px;\n    position: absolute;\n    z-index: 1;\n    right: 110%;\n    opacity: 0.75;\n    top: 50%;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  .tooltip .tooltip-text::after {\n    content: " ";\n    position: absolute;\n    top: 50%;\n    left: 100%;\n    margin-top: -5px;\n    border-width: 5px;\n    border-style: solid;\n    border-color: transparent transparent transparent black;\n  }\n  .tooltip-title {\n    font-size: 18px;\n    font-weight: bold;\n    padding: 4px;\n    color: yellow;\n  }\n  .tooltip-description {\n    font-size: 16px;\n    padding: 4px;\n  }\n  .tooltip-description span {\n    font-size: 16px;\n  }\n  .tooltip-perk .tooltip-text {\n    visibility: hidden !important;\n  }\n  .tooltip-perk:hover .tooltip-text {\n    visibility: hidden !important;\n  }\n  /**\n     * editor\n     */\n  #ui-editor-top-center {\n    position: absolute;\n    color: #FFF;\n    top: 0%;\n    left: 50%;\n    -webkit-transform: translateX(-50%);\n            transform: translateX(-50%);\n  }\n  #ui-editor-top-right {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    right: 6px;\n  }\n  .ui-editor-header {\n    text-align: center;\n    font-weight: bold;\n    font-size: 16px;\n    padding: 8px;\n  }\n  .ui-editor-info {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    font-size: 36px;\n    margin-bottom: 8px;\n    padding: 8px;\n  }\n  .ui-editor-list {\n    margin: 0px;\n    padding: 0px;\n    list-style: none;\n  }\n  .ui-editor-list li div {\n    font-family: monospace;\n    font-size: 14px;\n  }\n  /*\n     * Profiler\n     */\n  #ui-profiler-top-left {\n    position: absolute;\n    color: #FFF;\n    font-size: 16px;\n    top: 6px;\n    left: 6px;\n    text-align: center;\n    display: flex;\n  }\n  .ui-profiler-list {\n    background: rgba(0, 0, 0, 0.4);\n    border-radius: 5px;\n    margin-right: 16px;\n    padding: 8px;\n  }\n  .ui-profiler-list-header {\n    font-size: 16px;\n    font-weight: bold;\n    margin-bottom: 8px;\n  }\n  .ui-profiler-list ul {\n    list-style: none;\n    text-align: left;\n    padding: 0px;\n    margin: 0px;\n  }\n  .ui-profiler-list li {\n    display: flex;\n  }\n  .kv {\n    font-family: monospace;\n    font-size: 14px;\n    font-weight: normal;\n  }\n  .kv:last-child {\n    width: 100%;\n    text-align: right;\n  }\n  /* Hide desktop-only elements */\n  #ui-settings-container-desktop,\n  #ui-leaderboard-wrapper {\n    display: none;\n  }\n  /* Show mobile-only elements */\n  #ui-settings-container-mobile {\n    display: block;\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-top-center {\n    -webkit-transform-origin: top;\n            transform-origin: top;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-bottom-center-0 {\n    -webkit-transform-origin: bottom;\n            transform-origin: bottom;\n    -webkit-transform: translateX(-50%) scale(0.85);\n            transform: translateX(-50%) scale(0.85);\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px), screen and (max-width: 850px) and (max-width: 640px) {\n  #ui-bottom-right {\n    top: 200px;\n    -webkit-transform-origin: top right;\n            transform-origin: top right;\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n}\n@media screen and (max-width: 850px) and (max-width: 850px) and (orientation: landscape) {\n  .ui-stats-header-overview .ui-stats-header-left {\n    position: fixed;\n    top: -4px;\n    left: 12px;\n  }\n  .ui-stats-header-overview .ui-stats-header-right {\n    position: fixed;\n    top: -4px;\n    right: 12px;\n  }\n}\n@media screen and (max-width: 850px) and (max-height: 360px) and (max-width: 640px) {\n  .ui-stats-ad-container {\n    margin-top: 0px;\n    -webkit-transform: scale(0.6);\n            transform: scale(0.6);\n  }\n}\n@media screen and (max-width: 850px) and (max-width: 850px) and (max-height: 320px) {\n  .ui-stats-ad-container {\n    position: fixed;\n    right: 10px;\n    top: 24px;\n    -webkit-transform: scale(0.5);\n            transform: scale(0.5);\n    -webkit-transform-origin: bottom right;\n            transform-origin: bottom right;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) {\n  #ui-stats-contents {\n    margin-top: 32px;\n    margin-bottom: 16px;\n  }\n  #ui-stats-header-overview {\n    position: initial;\n  }\n  #ui-stats-info-box {\n    display: inline-block;\n    left: initial;\n    -webkit-transform: scale(0.9);\n            transform: scale(0.9);\n    -webkit-transform-origin: initial;\n            transform-origin: initial;\n    margin-top: 2px;\n    width: 100%;\n  }\n  .ui-stats-ad-container {\n    width: 100%;\n  }\n  .ui-stats-info-player {\n    display: inline-block;\n    left: initial !important;\n    margin: 8px;\n    -webkit-transform: none;\n            transform: none;\n  }\n  .ui-stats-header-overview {\n    display: inline-block;\n    position: initial;\n    width: 175px;\n  }\n  .ui-stats-header-overview div {\n    position: initial;\n    margin-bottom: 8px;\n  }\n  #ui-top-center {\n    top: 134px;\n    left: 50%;\n  }\n  #ui-top-center-scopes-wrapper {\n    display: none;\n    bottom: 42px;\n    top: initial;\n  }\n  #ui-team {\n    top: 40px;\n  }\n  .ui-team-member {\n    height: 18px;\n    margin-bottom: 4px;\n  }\n  #ui-upper-center {\n    top: 180px;\n  }\n  #ui-bottom-center-0 {\n    top: -15px;\n    bottom: initial;\n    left: 100px;\n    -webkit-transform: scale(0.85);\n            transform: scale(0.85);\n  }\n  #ui-bottom-center-1 {\n    bottom: 28%;\n  }\n  #ui-bottom-center-2 {\n    bottom: 218px;\n  }\n  #ui-lower-center {\n    bottom: 38%;\n    left: 38%;\n  }\n  #ui-boost-counter {\n    position: relative;\n    top: 40px;\n    left: 2px;\n  }\n  #ui-bottom-right {\n    bottom: 20px;\n    right: 6px;\n    top: initial;\n  }\n  #ui-weapon-id-1 {\n    right: 240px;\n    bottom: initial;\n  }\n  #ui-weapon-id-2 {\n    right: 160px;\n    bottom: initial;\n  }\n  #ui-weapon-id-3 {\n    right: 80px;\n    bottom: initial;\n  }\n  #ui-weapon-id-4 {\n    bottom: initial;\n  }\n  .ui-weapon-info {\n    display: inline-block;\n  }\n  #ui-bottom-center-right {\n    bottom: 9px;\n    left: 30px;\n    top: initial;\n  }\n  .ui-right-center-mobile {\n    top: 6px;\n  }\n  #ui-emote-button {\n    background-size: 20px;\n    border-radius: 14px;\n    bottom: initial;\n    height: 28px;\n    left: initial;\n    right: 4px;\n    top: 62%;\n    width: 28px;\n  }\n  #ui-debug-button {\n    top: 242px;\n  }\n  #ui-ammo-interactive {\n    margin-top: 4px;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    display: block;\n  }\n  #ui-medical-interactive {\n    display: inline-block;\n    left: initial;\n    right: 8px;\n    -webkit-transform: initial;\n            transform: initial;\n  }\n  #ui-medical-interactive > .ui-loot {\n    display: block;\n  }\n  #ui-equipped-ammo {\n    left: initial;\n    position: initial;\n    -webkit-transform: none;\n            transform: none;\n  }\n  #ui-equipped-ammo-wrapper {\n    bottom: initial;\n    color: #FFF;\n    left: initial;\n    position: absolute;\n    right: 6px;\n    top: 44%;\n    -webkit-transform: none;\n            transform: none;\n  }\n  #ui-bullet-counter {\n    width: initial;\n  }\n  #ui-bullet-counter > #ui-current-clip {\n    left: 50%;\n  }\n  #ui-bullet-counter > #ui-remaining-ammo {\n    left: initial;\n    right: 0px;\n    top: 36px;\n  }\n  #ui-bullet-counter > #ui-reload-button-container {\n    left: 36px;\n    top: 56px;\n  }\n  #ui-reload-button-container > #ui-reload-button {\n    left: initial;\n    right: 0px;\n  }\n  #big-map-collision {\n    left: initial;\n    top: 50%;\n    -webkit-transform: translateY(-50%);\n            transform: translateY(-50%);\n  }\n  #big-map-close {\n    bottom: initial;\n    top: 12px;\n  }\n  #ui-spectate-options-wrapper {\n    bottom: 42px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n  #ui-spectate-options {\n    position: absolute;\n    bottom: 12px;\n  }\n  #ui-spectate-stats {\n    bottom: 0px;\n    top: initial;\n  }\n  #ui-ammo-interactive {\n    top: 96px;\n  }\n  #ui-ammo-interactive > .ui-ammo {\n    margin-bottom: 2px;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (min-height: 668px) {\n  #ui-stats-contents {\n    margin-top: 32px;\n  }\n  #ui-stats-info-box {\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  .ui-stats-ad-container {\n    margin-top: 20px;\n    -webkit-transform: scale(1);\n            transform: scale(1);\n  }\n  #ui-stats-options {\n    display: block;\n    left: initial;\n    position: initial;\n    margin: auto;\n    margin-top: 24px;\n    width: 100%;\n  }\n  .ui-stats-restart {\n    display: block;\n    position: initial;\n    -webkit-transform: initial;\n            transform: initial;\n    margin-bottom: 0px;\n  }\n  .ui-stats-spectate {\n    display: block;\n    margin: auto;\n    margin-top: 6px;\n    position: initial;\n    -webkit-transform: initial;\n            transform: initial;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (max-height: 667px) {\n  #ui-stats-contents {\n    margin-top: 0px;\n  }\n  .ui-stats-ad-container {\n    margin-top: 20px;\n  }\n}\n@media screen and (max-width: 850px) and (orientation: portrait) and (max-height: 568px) and (max-width: 375px) {\n  #ui-bottom-center-right {\n    left: 22px;\n    -webkit-transform: scale(0.8);\n            transform: scale(0.8);\n  }\n  #ui-bottom-right {\n    right: 0px;\n  }\n  #ui-bottom-center-0 {\n    top: -20px;\n    left: 84px;\n    -webkit-transform: scale(0.7);\n            transform: scale(0.7);\n  }\n}\n', ""])
     },
     b78cf179: function(e, t, a) {
         "use strict";
@@ -68228,12 +68729,12 @@ webpackJsonp([1], {
                         if (f.obj && f.obj.__id != w.lastSoundObjId && P > 7.5 && (w.lastSoundObjId = f.obj.__id,
                         w.playHitSfx)) {
                             var I = p.mul(p.normalizeSafe(T, p.create(1, 0)), -1)
-                              , A = s.Defs[f.obj.type];
-                            d.playHitFx(A.hitParticle, A.sound.bullet, w.pos, I, w.layer, t, a)
+                              , C = s.Defs[f.obj.type];
+                            d.playHitFx(C.hitParticle, C.sound.bullet, w.pos, I, w.layer, t, a)
                         }
-                        var C = r.getGroundSurface(w.pos, w.layer);
-                        w.posZ <= .01 && (w.inWater || "water" != C.type || t.addRippleParticle(w.pos, w.layer),
-                        w.inWater = "water" == C.type);
+                        var A = r.getGroundSurface(w.pos, w.layer);
+                        w.posZ <= .01 && (w.inWater || "water" != A.type || t.addRippleParticle(w.pos, w.layer),
+                        w.inWater = "water" == A.type);
                         var E = w.velZ;
                         if (w.velZ = (w.posZ - w.posZOld) / e,
                         !w.isNew && !w.grounded && w.velZ >= 0 && E < 0) {
@@ -68250,8 +68751,8 @@ webpackJsonp([1], {
                                 }
                             } else
                                 w.grounded = !0,
-                                D.name = u[C.type],
-                                void 0 === D.name && (D.name = "footstep_" + C.type,
+                                D.name = u[A.type],
+                                void 0 === D.name && (D.name = "footstep_" + A.type,
                                 D.fn = "playGroup",
                                 D.channel = "sfx");
                             D.name && w.playHitSfx && a[D.fn](D.name, {
@@ -68524,7 +69025,7 @@ webpackJsonp([1], {
             "game-level-1": "Lvl. 1",
             "game-level-2": "Lvl. 2",
             "game-level-3": "Lvl. 3",
-            "game-level-9": "Lvl. 3",
+            "game-level-4": "Lvl. 4",
             "game-outfitBase": "Basis Outfit",
             "game-outfitRoyalFortune": "Koninklijk Fortuin",
             "game-outfitKeyLime": "Limoen",
@@ -68661,9 +69162,9 @@ webpackJsonp([1], {
                     this.waterWidths.push(z);
                     for (var M = this.shoreWidth, T = null, P = 0; P < r.length; P++) {
                         var I = r[P]
-                          , A = I.spline.getClosestTtoPoint(y)
-                          , C = I.spline.getPos(A)
-                          , E = c.length(c.sub(C, y));
+                          , C = I.spline.getClosestTtoPoint(y)
+                          , A = I.spline.getPos(C)
+                          , E = c.length(c.sub(A, y));
                         E < 2 * I.waterWidth && (M = s.max(M, I.shoreWidth)),
                         (0 == h || h == t.length - 1) && E < 1.5 && !x && (T = I)
                     }
@@ -69570,11 +70071,11 @@ webpackJsonp([1], {
                             }
                         }
                         for (var I = 0; I < w.length; I++) {
-                            var A = w[I];
-                            if (A.active && !A.J.dead && (d.sameLayer(A.J.layer, f.layer) || 2 & A.J.layer) && (A.__id != f.playerId || f.damageSelf)) {
-                                var C = null;
-                                if (A.hasActivePan()) {
-                                    var E = A
+                            var C = w[I];
+                            if (C.active && !C.J.dead && (d.sameLayer(C.J.layer, f.layer) || 2 & C.J.layer) && (C.__id != f.playerId || f.damageSelf)) {
+                                var A = null;
+                                if (C.hasActivePan()) {
+                                    var E = C
                                       , D = E.getPanSegment()
                                       , O = i(D.p0, D.p1, E.posOld, E.dirOld)
                                       , B = i(D.p0, D.p1, E.pos, E.dir)
@@ -69583,26 +70084,26 @@ webpackJsonp([1], {
                                       , F = R || L;
                                     if (F) {
                                         var j = h.normalize(h.perp(h.sub(B.p1, B.p0)));
-                                        C = {
+                                        A = {
                                             point: F.point,
                                             normal: j
                                         }
                                     }
                                 }
-                                var N = s.intersectSegmentCircle(S, f.pos, A.pos, A.rad);
-                                if (N && (!C || h.length(h.sub(N.point, f.startPos)) < h.length(h.sub(C.point, f.startPos))) ? v.push({
+                                var N = s.intersectSegmentCircle(S, f.pos, C.pos, C.rad);
+                                if (N && (!A || h.length(h.sub(N.point, f.startPos)) < h.length(h.sub(A.point, f.startPos))) ? v.push({
                                     type: "player",
-                                    player: A,
+                                    player: C,
                                     point: N.point,
                                     normal: N.normal
-                                }) : C && v.push({
+                                }) : A && v.push({
                                     type: "pan",
                                     collidable: !0,
-                                    point: C.point,
-                                    normal: C.normal,
-                                    layer: A.layer
+                                    point: A.point,
+                                    normal: A.normal,
+                                    layer: C.layer
                                 }),
-                                N || C)
+                                N || A)
                                     break
                             }
                         }
@@ -70029,13 +70530,13 @@ webpackJsonp([1], {
                       , I = Math.max(window.screen.width, window.screen.height);
                     T *= window.devicePixelRatio,
                     I *= window.devicePixelRatio;
-                    var A = I < 1366 && T < 768
-                      , C = A || !this.config.get("highResTex") ? "low" : "high";
-                    (g.mobile && !g.tablet || g.webview && this.systemMemory <= 2147483648 || this.pixi.renderer.type == o.RENDERER_TYPE.CANVAS) && (C = "low");
+                    var C = I < 1366 && T < 768
+                      , A = C || !this.config.get("highResTex") ? "low" : "high";
+                    (g.mobile && !g.tablet || g.webview && this.systemMemory <= 2147483648 || this.pixi.renderer.type == o.RENDERER_TYPE.CANVAS) && (A = "low");
                     var E = x.getParameterByName("textureRes");
-                    E && (C = E),
+                    E && (A = E),
                     P.loadStaticDomImages(),
-                    this.textureManager = new M.TextureManager(this.pixi.renderer,C),
+                    this.textureManager = new M.TextureManager(this.pixi.renderer,A),
                     this.textureManager.loadAtlasList(["gradient", "shared", "main"]),
                     this.input = new f.pe(this.pixi.view),
                     this.inputBinds = new b.InputBinds(this.input,this.config),
@@ -70069,8 +70570,7 @@ webpackJsonp([1], {
                     }
                     this.tryApplySiteInfo(),
                     window.aiptag && (window.aiptag.gdprConsent = window.cookiesConsented,
-                    window.aiptag.consented = window.cookiesConsented,
-                    y.storeGeneric("ad_request", "main"))
+                    window.aiptag.consented = window.cookiesConsented)
                 }
             },
             onResize: function() {
@@ -70229,10 +70729,7 @@ webpackJsonp([1], {
                   , s = g.webview ? "#surviv-io_728x90_webview" : "#surviv-io_728x90";
                 r(s).css({
                     transform: "translate(" + n.x + ", " + n.y + ")"
-                }),
-                this.active ? (this.playMode2Btn.addClass("btn-flare-mode"),
-                r("#btn-start-team").addClass("btn-flare-mode")) : (this.playMode2Btn.removeClass("btn-flare-mode"),
-                r("#btn-start-team").removeClass("btn-flare-mode"))
+                })
             },
             tryJoinTeam: function(e, t) {
                 if (this.active && -1 === this.quickPlayPendingModeIdx) {
@@ -70331,36 +70828,36 @@ webpackJsonp([1], {
                 document.body.appendChild(t)
             }(e)
         }();
-        var A = new i;
+        var C = new i;
         document.addEventListener("DOMContentLoaded", function(e) {
             setTimeout(function() {
-                A.o()
+                C.o()
             }, 0)
         }),
         window.addEventListener("load", function() {
             setTimeout(function() {
-                A.o()
+                C.o()
             }, 0)
         }),
         window.addEventListener("unload", function(e) {
-            A.onUnload()
+            C.onUnload()
         }),
         "#_=_" == window.location.hash && (window.location.hash = "",
         history.pushState("", document.title, window.location.pathname)),
         window.addEventListener("resize", function() {
-            A.onResize()
+            C.onResize()
         }),
         window.addEventListener("hashchange", function() {
-            A.tryJoinTeam(!1)
+            C.tryJoinTeam(!1)
         }),
         window.addEventListener("beforeunload", function(e) {
-            if (A.game && A.game.wt() && !g.webview) {
+            if (C.game && C.game.wt() && !g.webview) {
                 var t = "Do you want to reload the game?";
                 return e.returnValue = t,
                 t
             }
         });
-        var C = [];
+        var A = [];
         window.onerror = function(e, t, a, i, r) {
             if (-1 != e.indexOf("').innerText") || -1 != r.stack.indexOf("cdn.rawgit.com") || -1 != r.stack.indexOf("chrome-extension://"))
                 return void x.N();
@@ -70374,7 +70871,7 @@ webpackJsonp([1], {
                 browser: navigator.userAgent
             }
               , n = JSON.stringify(o);
-            -1 === C.indexOf(n) && (C.push(n),
+            -1 === A.indexOf(n) && (A.push(n),
             /tpc.googlesyndication.com/.test(n) || (/surviv\.io\/js\/.*\.js/.test(n) && -1 == o.stacktrace.indexOf("chrome-extension://") && -1 == o.stacktrace.indexOf("cdn.rawgit.com") ? -1 !== o.msg.indexOf("TypeError: null is not an object (evaluating 't.transform._parentID=-1')") ? y.logError(n) : y.logWindowOnAppError(n) : y.logWindowOnError(n)))
         }
     },
@@ -71553,7 +72050,7 @@ webpackJsonp([1], {
             };
             return be.mergeDeep(t, e || {})
         }
-        function A(e) {
+        function C(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -71600,7 +72097,7 @@ webpackJsonp([1], {
             };
             return be.mergeDeep(t, e || {})
         }
-        function C(e) {
+        function A(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -77833,7 +78330,7 @@ webpackJsonp([1], {
                     destroy: .75
                 },
                 health: 200,
-                loot: [s("tier_airdrop_mythic", 3, 4), s("tier_airdrop_rare", 3, 4), s("tier_airdrop_armor", 6, 8), s("tier_medical", 12, 15), s("tier_airdrop_scopes", 6, 8), s("tier_airdrop_faction_skins", 1, 2), s("tier_airdrop_faction_melee", 3, 4), s("tier_airdrop_ammo", 10, 12), s("tier_airdrop_throwables", 6, 8), s("tier_katanas", 1, 1)],
+                loot: [s("tier_airdrop_mythic", 3, 4), s("tier_airdrop_rare", 3, 4), s("tier_airdrop_armor", 6, 8), s("tier_medical", 12, 15), s("tier_airdrop_scopes", 6, 8), s("tier_airdrop_faction_skins", 1, 2), s("tier_airdrop_faction_melee", 3, 4), s("tier_airdrop_ammo", 10, 12), s("tier_airdrop_throwables", 6, 8), s("tier_katanas", 1, 1), l("strobe", 1), l("strobe", 1), l("strobe", 1)],
                 map: {
                     display: !1
                 },
@@ -78317,49 +78814,49 @@ webpackJsonp([1], {
                     sprite: "map-grill-01.img"
                 }
             }),
-            gun_mount_01: A({
+            gun_mount_01: C({
                 loot: [l("m870", 1)],
                 img: {
                     sprite: "map-gun-mount-01.img"
                 }
             }),
-            gun_mount_02: A({
+            gun_mount_02: C({
                 loot: [l("mp220", 1)],
                 img: {
                     sprite: "map-gun-mount-02.img"
                 }
             }),
-            gun_mount_03: A({
+            gun_mount_03: C({
                 loot: [l("qbb97", 1)],
                 img: {
                     sprite: "map-gun-mount-03.img"
                 }
             }),
-            gun_mount_04: A({
+            gun_mount_04: C({
                 loot: [l("woodaxe_bloody", 1)],
                 img: {
                     sprite: "map-gun-mount-04.img"
                 }
             }),
-            gun_mount_05: A({
+            gun_mount_05: C({
                 loot: [l("m1100", 1)],
                 img: {
                     sprite: "map-gun-mount-05.img"
                 }
             }),
-            locker_01: C({
+            locker_01: A({
                 img: {
                     sprite: "map-locker-01.img"
                 },
                 loot: [s("tier_world", 1, 1)]
             }),
-            locker_02: C({
+            locker_02: A({
                 img: {
                     sprite: "map-locker-02.img"
                 },
                 loot: [s("tier_police", 1, 1)]
             }),
-            locker_03: C({
+            locker_03: A({
                 img: {
                     sprite: "map-locker-03.img"
                 },
@@ -79159,7 +79656,7 @@ webpackJsonp([1], {
                 health: 500,
                 loot: [s("tier_shotguns", 2, 3), s("tier_lmgs", 2, 3), l("outfitWoodland", 1)],
                 map: {
-                    color: 7817749,
+                    color: 16746936,
                     scale: 3
                 },
                 img: {
@@ -91263,15 +91760,15 @@ webpackJsonp([1], {
         }
         function m() {
             var e = [];
-            for (var t in x.items)
-                x.items.hasOwnProperty(t) && "scope" == x.items[t].type && e.push(t);
+            for (var t in f.items)
+                f.items.hasOwnProperty(t) && "scope" == f.items[t].type && e.push(t);
             return e
         }
         function p() {
             var e = [];
-            for (var t in x.items)
-                if (x.items.hasOwnProperty(t)) {
-                    var a = x.items[t].type;
+            for (var t in f.items)
+                if (f.items.hasOwnProperty(t)) {
+                    var a = f.items[t].type;
                     "heal" != a && "boost" != a && "ammo" != a || e.push(t)
                 }
             return e
@@ -91280,6 +91777,9 @@ webpackJsonp([1], {
             return ["chest", "helmet", "backpack"]
         }
         function h() {
+            return [0]
+        }
+        function u() {
             this.mobile = !1,
             this.touch = !1,
             this.pickupMessage = {
@@ -91298,7 +91798,7 @@ webpackJsonp([1], {
                     ticker: Number.MAX_VALUE
                 });
             this.weapons = [];
-            for (var t = 0; t < x.WeaponSlot.Count; t++)
+            for (var t = 0; t < f.WeaponSlot.Count; t++)
                 this.weapons[t] = {
                     slot: t,
                     name: "",
@@ -91308,7 +91808,7 @@ webpackJsonp([1], {
                     opacity: 0,
                     width: 0,
                     ticker: 0,
-                    bind: D[t],
+                    bind: O[t],
                     bindStr: ""
                 };
             this.ammo = {
@@ -91318,7 +91818,7 @@ webpackJsonp([1], {
                 displayRemaining: !1
             },
             this.interaction = {
-                type: E.None,
+                type: D.None,
                 text: "",
                 key: "",
                 usable: !1
@@ -91350,16 +91850,25 @@ webpackJsonp([1], {
                     width: 0,
                     ticker: 0
                 });
+            this.perks = [];
+            for (var l = h(), c = 0; c < l.length; c++)
+                this.perks.push({
+                    type: l[c],
+                    subtype: "",
+                    width: 0,
+                    ticker: 0,
+                    pulse: !1
+                });
             this.health = 100,
             this.boost = 0,
             this.downed = !1
         }
-        function u(e, t) {
+        function g(e, t) {
             var a = this;
             this.localization = e,
             this.inputBinds = t,
-            this.oldState = new h,
-            this.newState = new h,
+            this.oldState = new u,
+            this.newState = new u,
             this.frameCount = 0,
             this.dom = {
                 debugButton: r("ui-debug-button"),
@@ -91394,7 +91903,8 @@ webpackJsonp([1], {
                 },
                 scopes: [],
                 loot: [],
-                gear: []
+                gear: [],
+                perks: []
             };
             for (var i = 0; i < A; i++) {
                 var s = "ui-killfeed-" + i
@@ -91413,53 +91923,65 @@ webpackJsonp([1], {
                     text: l.firstElementChild
                 })
             }
-            for (var u = 0; u < 4; u++) {
-                var g = r("ui-weapon-id-" + (u + 1))
-                  , y = {
-                    div: g,
-                    name: g.getElementsByClassName("ui-weapon-name")[0],
-                    number: g.getElementsByClassName("ui-weapon-number")[0],
-                    image: g.getElementsByClassName("ui-weapon-image")[0],
-                    ammo: g.getElementsByClassName("ui-weapon-ammo-counter")[0]
+            for (var g = 0; g < 4; g++) {
+                var y = r("ui-weapon-id-" + (g + 1))
+                  , w = {
+                    div: y,
+                    name: y.getElementsByClassName("ui-weapon-name")[0],
+                    number: y.getElementsByClassName("ui-weapon-number")[0],
+                    image: y.getElementsByClassName("ui-weapon-image")[0],
+                    ammo: y.getElementsByClassName("ui-weapon-ammo-counter")[0]
                 };
-                this.dom.weapons.push(y)
+                this.dom.weapons.push(w)
             }
-            for (var w = m(), f = 0; f < w.length; f++) {
-                var b = w[f]
-                  , _ = {
-                    scopeType: b,
-                    div: r("ui-scope-" + b)
+            for (var x = m(), b = 0; b < x.length; b++) {
+                var _ = x[b]
+                  , S = {
+                    scopeType: _,
+                    div: r("ui-scope-" + _)
                 };
-                this.dom.scopes.push(_)
+                this.dom.scopes.push(S)
             }
-            for (var S = p(), k = 0; k < S.length; k++) {
-                var v = S[k]
-                  , z = r("ui-loot-" + v);
-                if (z) {
-                    var T = {
-                        lootType: v,
-                        div: z,
-                        count: z.getElementsByClassName("ui-loot-count")[0],
-                        image: z.getElementsByClassName("ui-loot-image")[0],
-                        overlay: z.getElementsByClassName("ui-loot-overlay")[0]
+            for (var k = p(), v = 0; v < k.length; v++) {
+                var z = k[v]
+                  , M = r("ui-loot-" + z);
+                if (M) {
+                    var P = {
+                        lootType: z,
+                        div: M,
+                        count: M.getElementsByClassName("ui-loot-count")[0],
+                        image: M.getElementsByClassName("ui-loot-image")[0],
+                        overlay: M.getElementsByClassName("ui-loot-overlay")[0]
                     };
-                    this.dom.loot.push(T)
+                    this.dom.loot.push(P)
                 }
             }
-            for (var P = d(), I = 0; I < P.length; I++) {
-                var E = P[I]
-                  , D = r("ui-armor-" + E)
-                  , O = {
-                    gearType: E,
-                    div: D,
-                    level: D.getElementsByClassName("ui-armor-level")[0],
-                    image: D.getElementsByClassName("ui-armor-image")[0]
+            for (var I = d(), C = 0; C < I.length; C++) {
+                var D = I[C]
+                  , O = r("ui-armor-" + D)
+                  , B = {
+                    gearType: D,
+                    div: O,
+                    level: O.getElementsByClassName("ui-armor-level")[0],
+                    image: O.getElementsByClassName("ui-armor-image")[0]
                 };
-                this.dom.gear.push(O)
+                this.dom.gear.push(B)
+            }
+            for (var L = h(), R = 0; R < L.length; R++) {
+                var F = L[R]
+                  , j = r("ui-perk-" + F)
+                  , N = {
+                    perkType: F,
+                    div: j,
+                    divTitle: j.getElementsByClassName("tooltip-title")[0],
+                    divDesc: j.getElementsByClassName("tooltip-desc")[0],
+                    image: j.getElementsByClassName("ui-armor-image")[0]
+                };
+                this.dom.perks.push(N)
             }
             this.uiEvents = [],
             this.eventListeners = [];
-            var B = function(e, t, i) {
+            var q = function(e, t, i) {
                 a.eventListeners.push({
                     event: e,
                     elem: t,
@@ -91468,7 +91990,7 @@ webpackJsonp([1], {
                 t.addEventListener(e, i)
             };
             this.itemActions = [];
-            for (var L = function(e, t, i, r) {
+            for (var V = function(e, t, i, r) {
                 a.itemActions.push({
                     action: e,
                     type: t,
@@ -91477,61 +91999,61 @@ webpackJsonp([1], {
                     actionQueued: !1,
                     actionTime: 0
                 })
-            }, R = 0; R < this.dom.weapons.length; R++)
-                L("use", "weapon", R, this.dom.weapons[R].div),
-                L("drop", "weapon", R, this.dom.weapons[R].div);
-            for (var F = 0; F < this.dom.scopes.length; F++) {
-                var j = this.dom.scopes[F];
-                L("use", "scope", j.scopeType, j.div),
-                "1xscope" != j.scopeType && L("drop", "loot", j.scopeType, j.div)
+            }, U = 0; U < this.dom.weapons.length; U++)
+                V("use", "weapon", U, this.dom.weapons[U].div),
+                V("drop", "weapon", U, this.dom.weapons[U].div);
+            for (var G = 0; G < this.dom.scopes.length; G++) {
+                var H = this.dom.scopes[G];
+                V("use", "scope", H.scopeType, H.div),
+                "1xscope" != H.scopeType && V("drop", "loot", H.scopeType, H.div)
             }
-            for (var N = 0; N < this.dom.loot.length; N++) {
-                var q = this.dom.loot[N]
-                  , V = x.items[q.lootType];
-                "heal" != V.type && "boost" != V.type || L("use", "loot", q.lootType, q.div),
-                L("drop", "loot", q.lootType, q.div)
+            for (var W = 0; W < this.dom.loot.length; W++) {
+                var K = this.dom.loot[W]
+                  , Z = f.items[K.lootType];
+                "heal" != Z.type && "boost" != Z.type || V("use", "loot", K.lootType, K.div),
+                V("drop", "loot", K.lootType, K.div)
             }
-            for (var U = 0; U < this.dom.gear.length; U++) {
-                var G = this.dom.gear[U];
-                "backpack" != G.gearType && L("drop", "loot", G.gearType, G.div)
+            for (var X = 0; X < this.dom.gear.length; X++) {
+                var Y = this.dom.gear[X];
+                "backpack" != Y.gearType && V("drop", "loot", Y.gearType, Y.div)
             }
-            for (var H = 0; H < this.itemActions.length; H++)
+            for (var J = 0; J < this.itemActions.length; J++)
                 !function(e) {
                     var t = a.itemActions[e];
-                    B("mousedown", t.div, function(e) {
+                    q("mousedown", t.div, function(e) {
                         ("use" == t.action && o(e) || "drop" == t.action && n(e)) && (e.stopPropagation(),
                         t.actionQueued = !0)
                     }),
-                    B("mouseup", t.div, function(e) {
+                    q("mouseup", t.div, function(e) {
                         t.actionQueued && ("use" == t.action && o(e) || "drop" == t.action && n(e)) && (e.stopPropagation(),
                         a.pushAction(t),
                         t.actionQueued = !1)
                     }),
-                    B("touchstart", t.div, function(e) {
+                    q("touchstart", t.div, function(e) {
                         e.changedTouches.length > 0 && (e.stopPropagation(),
                         t.actionQueued = !0,
                         t.actionTime = (new Date).getTime(),
                         t.touchOsId = e.changedTouches[0].identifier)
                     }),
-                    B("touchend", t.div, function(e) {
-                        (new Date).getTime() - t.actionTime < C && t.actionQueued && "use" == t.action && a.pushAction(t),
+                    q("touchend", t.div, function(e) {
+                        (new Date).getTime() - t.actionTime < E && t.actionQueued && "use" == t.action && a.pushAction(t),
                         t.actionQueued = !1
                     }),
-                    B("touchcancel", t.div, function(e) {
+                    q("touchcancel", t.div, function(e) {
                         t.actionQueued = !1
                     })
-                }(H);
-            var W = document.getElementById("cvs");
+                }(J);
+            var Q = document.getElementById("cvs");
             this.clearQueuedItemActions = function() {
                 for (var e = 0; e < a.itemActions.length; e++)
                     a.itemActions[e].actionQueued = !1;
-                M.touch && W.focus()
+                T.touch && Q.focus()
             }
             ,
             window.addEventListener("mouseup", this.clearQueuedItemActions),
             window.addEventListener("focus", this.clearQueuedItemActions)
         }
-        function g() {
+        function y() {
             var e = function(e, t) {
                 r(e).getElementsByClassName("ui-loot-image")[0].src = t
             };
@@ -91550,19 +92072,19 @@ webpackJsonp([1], {
             r("mag-glass-white").src = "img/gui/mag-glass.svg",
             r("ui-minimize-img").src = "img/gui/minimize.svg"
         }
-        var y, w = a("6b42806d"), x = a("989ad62a"), f = a("ceee80d9"), b = x.Input, _ = x.Action, S = a("10899aea"), k = a("300e2704"), v = a("1901e2d9"), z = a("c2a798c8"), M = a("ce29f17f"), T = a("26be8056"), P = x.DamageType, I = k.PickupMsgType, A = 6, C = 750, E = {
+        var w, x = a("6b42806d"), f = a("989ad62a"), b = a("ceee80d9"), _ = f.Input, S = f.Action, k = a("10899aea"), v = a("300e2704"), z = a("1901e2d9"), M = a("c2a798c8"), T = a("ce29f17f"), P = a("26be8056"), I = f.DamageType, C = v.PickupMsgType, A = 6, E = 750, D = {
             None: 0,
             Cancel: 1,
             Loot: 2,
             Revive: 3,
             Object: 4
-        }, D = (y = {},
-        i(y, x.WeaponSlot.Primary, b.EquipPrimary),
-        i(y, x.WeaponSlot.Secondary, b.EquipSecondary),
-        i(y, x.WeaponSlot.Melee, b.EquipMelee),
-        i(y, x.WeaponSlot.Throwable, b.EquipThrowable),
-        y);
-        u.prototype = {
+        }, O = (w = {},
+        i(w, f.WeaponSlot.Primary, _.EquipPrimary),
+        i(w, f.WeaponSlot.Secondary, _.EquipSecondary),
+        i(w, f.WeaponSlot.Melee, _.EquipMelee),
+        i(w, f.WeaponSlot.Throwable, _.EquipThrowable),
+        w);
+        g.prototype = {
             n: function() {
                 for (var e = 0; e < this.eventListeners.length; e++) {
                     var t = this.eventListeners[e];
@@ -91583,115 +92105,115 @@ webpackJsonp([1], {
             },
             c: function(e, t, a, i, r, o, n) {
                 var s = this.newState;
-                if (s.mobile = M.mobile,
-                s.touch = M.touch,
+                if (s.mobile = T.mobile,
+                s.touch = T.touch,
                 s.touch)
                     for (var m = 0; m < this.itemActions.length; m++) {
                         var p = this.itemActions[m];
                         if (p.actionQueued && "drop" == p.action) {
                             var d = (new Date).getTime()
                               , h = d - p.actionTime;
-                            h >= C && (this.pushAction(p),
+                            h >= E && (this.pushAction(p),
                             p.actionTime = d)
                         }
                     }
                 s.pickupMessage.ticker += e;
                 var u = s.pickupMessage.ticker
                   , g = s.pickupMessage.duration;
-                s.pickupMessage.opacity = S.smoothstep(u, 0, .2) * (1 - S.smoothstep(u, g, g + .2));
-                for (var y = 0, f = 0; f < s.killFeed.length; f++) {
-                    var b = s.killFeed[f];
+                s.pickupMessage.opacity = k.smoothstep(u, 0, .2) * (1 - k.smoothstep(u, g, g + .2));
+                for (var y = 0, w = 0; w < s.killFeed.length; w++) {
+                    var b = s.killFeed[w];
                     b.ticker += e;
-                    var k = b.ticker;
+                    var _ = b.ticker;
                     b.offset = y,
-                    b.opacity = S.smoothstep(k, 0, .25) * (1 - S.smoothstep(k, 6, 6.5)),
-                    y += S.min(k / .25, 1),
-                    M.mobile && (b.opacity = k < 6.5 ? 1 : 0)
+                    b.opacity = k.smoothstep(_, 0, .25) * (1 - k.smoothstep(_, 6, 6.5)),
+                    y += k.min(_ / .25, 1),
+                    T.mobile && (b.opacity = _ < 6.5 ? 1 : 0)
                 }
-                s.health = t.J.dead ? 0 : S.max(t.$.health, 1),
+                s.health = t.J.dead ? 0 : k.max(t.$.health, 1),
                 s.boost = t.$.boost,
                 s.downed = t.J.downed;
-                var T = E.None
+                var v = D.None
                   , P = null
                   , I = !0;
                 if (!t.J.dead) {
-                    for (var A = null, D = 0, O = o.ie.m(), B = 0; B < O.length; B++) {
+                    for (var C = null, A = 0, O = o.ie.m(), B = 0; B < O.length; B++) {
                         var L = O[B];
-                        if (L.active && !L.dead && v.sameLayer(L.layer, t.layer)) {
+                        if (L.active && !L.dead && z.sameLayer(L.layer, t.layer)) {
                             var R = L.getInteraction();
                             if (R) {
-                                var F = w.intersectCircle(L.collider, t.J.pos, R.rad);
-                                F && F.pen >= D && (A = L,
-                                D = F.pen)
+                                var F = x.intersectCircle(L.collider, t.J.pos, R.rad);
+                                F && F.pen >= A && (C = L,
+                                A = F.pen)
                             }
                         }
                     }
-                    A && (T = E.Object,
-                    P = A,
+                    C && (v = D.Object,
+                    P = C,
                     I = !0);
                     var j = r.Rt();
                     if (j && !t.J.downed) {
-                        var N = x.items[j.name]
-                          , q = t.Gt(x.WeaponSlot.Primary)
-                          , V = t.Gt(x.WeaponSlot.Secondary)
+                        var N = f.items[j.name]
+                          , q = t.Gt(f.WeaponSlot.Primary)
+                          , V = t.Gt(f.WeaponSlot.Secondary)
                           , U = q && V
                           , G = "gun" != N.type || !U || "gun" == t.Ut()
                           , H = !1;
                         (s.touch && "helmet" == N.type && t.Nt() == N.level && j.name != t.J.helmet || "chest" == N.type && t.qt() == N.level && j.name != t.J.chest) && (H = !0),
-                        (G || M.uiLayout == M.UiLayout.Sm) && (T = E.Loot,
+                        (G || T.uiLayout == T.UiLayout.Sm) && (v = D.Loot,
                         P = j),
                         I = G && (!s.touch || "gun" == N.type || "melee" == N.type || "skin" == N.type || H)
                     }
-                    if (t.action.type == _.None && !t.J.downed)
+                    if (t.action.type == S.None && !t.J.downed)
                         for (var W = i.ee(t.__id).teamId, K = i.de.m(), Z = 0; Z < K.length; Z++) {
                             var X = K[Z];
                             if (X.active) {
                                 var Y = i.ee(X.__id).teamId;
-                                if (X.__id != t.__id && W == Y && X.J.downed && !X.J.dead && X.action.type != _.Revive) {
-                                    var J = z.length(z.sub(X.J.pos, t.J.pos));
-                                    J < x.player.reviveMaxRange && v.sameLayer(X.layer, t.layer) && (T = E.Revive,
+                                if (X.__id != t.__id && W == Y && X.J.downed && !X.J.dead && X.action.type != S.Revive) {
+                                    var J = M.length(M.sub(X.J.pos, t.J.pos));
+                                    J < f.player.reviveMaxRange && z.sameLayer(X.layer, t.layer) && (v = D.Revive,
                                     P = t,
                                     I = !0)
                                 }
                             }
                         }
-                    t.action.type == _.Revive && t.J.downed && (T = E.None,
+                    t.action.type == S.Revive && t.J.downed && (v = D.None,
                     P = null,
                     I = !1),
-                    t.action.type != _.UseItem && (t.action.type != _.Revive || t.J.downed) || a || (T = E.Cancel,
+                    t.action.type != S.UseItem && (t.action.type != S.Revive || t.J.downed) || a || (v = D.Cancel,
                     P = null,
                     I = !0)
                 }
-                s.interaction.type = T,
-                s.interaction.text = this.getInteractionText(T, P),
-                s.interaction.key = this.getInteractionKey(T),
+                s.interaction.type = v,
+                s.interaction.text = this.getInteractionText(v, P),
+                s.interaction.key = this.getInteractionKey(v),
                 s.interaction.usable = I && !a;
                 for (var Q = 0; Q < t.$.weapons.length; Q++) {
                     var $ = t.$.weapons[Q]
                       , ee = s.weapons[Q];
                     ee.name = $.name,
                     ee.ammo = $.ammo,
-                    Q == x.WeaponSlot.Throwable && (ee.ammo = t.$.inventory[$.name] || 0);
+                    Q == f.WeaponSlot.Throwable && (ee.ammo = t.$.inventory[$.name] || 0);
                     var te = ee.equipped;
                     ee.equipped = Q == t.$.curWeapIdx,
                     ee.selectable = ("" != $.name || 0 == Q || 1 == Q) && !a;
                     var ae = ee.equipped ? 1 : .6
                       , ie = ae - ee.opacity
-                      , re = S.min(ie, S.sign(ie) * e / .15);
-                    ee.opacity = S.clamp(ee.opacity + re, 0, 1),
-                    M.mobile && (ee.opacity = ae),
+                      , re = k.min(ie, k.sign(ie) * e / .15);
+                    ee.opacity = k.clamp(ee.opacity + re, 0, 1),
+                    T.mobile && (ee.opacity = ae),
                     ee.ticker += e,
                     ee.equipped && te || (ee.ticker = 0),
                     this.frameCount < 2 && (ee.ticker = 1);
-                    var oe = S.min(ee.ticker / .09, Math.PI)
+                    var oe = k.min(ee.ticker / .09, Math.PI)
                       , ne = Math.sin(oe);
                     ee.width = ne < .001 ? 0 : ne,
-                    M.mobile && (ee.width = 0);
+                    T.mobile && (ee.width = 0);
                     var se = n.getBind(ee.bind);
                     ee.bindStr = se ? se.toString() : ""
                 }
                 var le = s.weapons[t.$.curWeapIdx]
-                  , ce = x.items[le.name]
+                  , ce = f.items[le.name]
                   , me = le.ammo
                   , pe = "throwable" == ce.type ? 0 : t.$.inventory[ce.ammo];
                 s.ammo.current = me,
@@ -91708,15 +92230,15 @@ webpackJsonp([1], {
                     var ye = s.loot[ge]
                       , we = ye.count;
                     ye.count = t.$.inventory[ye.type] || 0,
-                    ye.maximum = x.bagSizes[ye.type][ue],
+                    ye.maximum = f.bagSizes[ye.type][ue],
                     ye.selectable = ye.count > 0 && !a,
                     ye.count > we && (ye.ticker = 0),
                     this.frameCount < 2 && (ye.ticker = 1),
                     ye.ticker += e;
-                    var xe = S.min(ye.ticker / .05, Math.PI)
+                    var xe = k.min(ye.ticker / .05, Math.PI)
                       , fe = Math.sin(xe);
                     ye.width = fe < .001 ? 0 : fe,
-                    M.mobile && (ye.width = 0)
+                    T.mobile && (ye.width = 0)
                 }
                 for (var be = 0; be < s.gear.length; be++) {
                     var _e = s.gear[be]
@@ -91728,13 +92250,27 @@ webpackJsonp([1], {
                     ke != _e.item && (_e.ticker = 0),
                     this.frameCount < 2 && (_e.ticker = 1),
                     _e.ticker += e;
-                    var ve = S.min(_e.ticker / .05, Math.PI)
+                    var ve = k.min(_e.ticker / .05, Math.PI)
                       , ze = Math.sin(ve);
                     _e.width = ze < .001 ? 0 : ze,
-                    M.mobile && (_e.width = 0)
+                    T.mobile && (_e.width = 0)
                 }
-                var Me = c(this.oldState, this.newState, 0 == this.frameCount++);
-                this.render(Me, this.newState),
+                for (var Me = 0; Me < s.perks.length; Me++) {
+                    var Te = s.perks[Me]
+                      , Pe = t.J.role
+                      , Ie = Te.subtype;
+                    Te.subtype = Pe,
+                    Ie != Te.subtype && (Te.ticker = 0),
+                    this.frameCount < 2 && (Te.ticker = 1),
+                    Te.ticker += e;
+                    var Ce = k.min(Te.ticker / .05, Math.PI)
+                      , Ae = Math.sin(Ce);
+                    Te.width = Ae < .001 ? 0 : Ae,
+                    T.mobile && (Te.width = 0),
+                    Te.pulse = !a && !T.mobile
+                }
+                var Ee = c(this.oldState, this.newState, 0 == this.frameCount++);
+                this.render(Ee, this.newState),
                 l(this.newState, this.oldState)
             },
             render: function(e, t) {
@@ -91755,7 +92291,7 @@ webpackJsonp([1], {
                       , n = t.killFeed[i];
                     if (r.text && (o.text.innerHTML = n.text),
                     r.offset) {
-                        var l = M.uiLayout != M.UiLayout.Sm || M.tablet ? 35 : 15;
+                        var l = T.uiLayout != T.UiLayout.Sm || T.tablet ? 35 : 15;
                         o.line.style.top = Math.floor(n.offset * l) + "px"
                     }
                     r.color && (o.text.style.color = n.color),
@@ -91785,10 +92321,10 @@ webpackJsonp([1], {
                         color: [255, 0, 0]
                     }], m = 0, p = Math.ceil(t.health); c[m].health > p && m < c.length - 1; )
                         m++;
-                    var d = c[S.max(m - 1, 0)]
+                    var d = c[k.max(m - 1, 0)]
                       , h = c[m]
-                      , u = S.delerp(t.health, d.health, h.health)
-                      , g = [Math.floor(S.lerp(u, d.color[0], h.color[0])), Math.floor(S.lerp(u, d.color[1], h.color[1])), Math.floor(S.lerp(u, d.color[2], h.color[2]))];
+                      , u = k.delerp(t.health, d.health, h.health)
+                      , g = [Math.floor(k.lerp(u, d.color[0], h.color[0])), Math.floor(k.lerp(u, d.color[1], h.color[1])), Math.floor(k.lerp(u, d.color[2], h.color[2]))];
                     t.downed && (g = [255, 0, 0]),
                     a.health.inner.style.backgroundColor = "rgba(" + g[0] + ", " + g[1] + ", " + g[2] + ", 1.0)",
                     a.health.inner.style.width = t.health + "%",
@@ -91797,55 +92333,55 @@ webpackJsonp([1], {
                     t.health > 25 ? a.health.inner.classList.remove("ui-bar-danger") : a.health.inner.classList.add("ui-bar-danger")
                 }
                 if (e.boost) {
-                    for (var y = x.player.boostBreakpoints, w = 0, f = 0; f < y.length; f++)
-                        w += y[f];
+                    for (var y = f.player.boostBreakpoints, w = 0, x = 0; x < y.length; x++)
+                        w += y[x];
                     for (var b = t.boost / 100, _ = 0; _ < a.boost.bars.length; _++) {
-                        var k = y[_] / w
-                          , v = S.clamp(b / k, 0, 1);
-                        b = S.max(b - k, 0),
+                        var S = y[_] / w
+                          , v = k.clamp(b / S, 0, 1);
+                        b = k.max(b - S, 0),
                         a.boost.bars[_].style.width = 100 * v + "%"
                     }
                     a.boost.div.style.opacity = 0 == t.boost ? 0 : 1
                 }
-                e.interaction.type && (a.interaction.div.style.display = t.interaction.type == E.None ? "none" : "flex"),
+                e.interaction.type && (a.interaction.div.style.display = t.interaction.type == D.None ? "none" : "flex"),
                 e.interaction.text && (a.interaction.text.innerHTML = t.interaction.text),
                 e.interaction.key && (a.interaction.key.innerHTML = t.touch ? "" : t.interaction.key,
                 a.interaction.key.className = a.interaction.key.innerHTML.length > 1 ? "ui-interaction-small" : "ui-interaction-large"),
                 e.interaction.usable && (a.interaction.key.style.display = t.interaction.usable ? "block" : "none");
                 for (var z = 0; z < e.weapons.length; z++) {
-                    var T = e.weapons[z]
+                    var M = e.weapons[z]
                       , P = a.weapons[z]
                       , I = t.weapons[z];
-                    if (T.name) {
-                        var A = "" != I.name
-                          , C = ""
-                          , D = ""
+                    if (M.name) {
+                        var C = "" != I.name
+                          , A = ""
+                          , E = ""
                           , O = !1
                           , B = 0
                           , L = 1;
-                        if (A) {
-                            var R = x.items[I.name];
-                            C = this.localization.translate("game-hud-" + I.name) || this.localization.translate("game-" + I.name),
-                            D = R.lootImg.sprite,
-                            O = R.isDual && M.uiLayout == M.UiLayout.Sm || R.lootImg.rot,
+                        if (C) {
+                            var R = f.items[I.name];
+                            A = this.localization.translate("game-hud-" + I.name) || this.localization.translate("game-" + I.name),
+                            E = R.lootImg.sprite,
+                            O = R.isDual && T.uiLayout == T.UiLayout.Sm || R.lootImg.rot,
                             R.lootImg.rot && (B = 180 * R.lootImg.rot / Math.PI),
                             R.lootImg.mirror && (L = -1)
                         }
-                        P.name.innerHTML = C,
-                        P.image.src = s(D),
-                        P.image.style.display = A ? "inline" : "none",
+                        P.name.innerHTML = A,
+                        P.image.src = s(E),
+                        P.image.style.display = C ? "inline" : "none",
                         P.image.style.transform = O ? "rotate(" + B + "deg) scaleX(" + L + ")" : ""
                     }
-                    if (T.equipped && (P.div.style.backgroundColor = I.equipped ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0)"),
-                    T.selectable && (P.div.style.pointerEvents = "" != I.name || I.selectable ? "auto" : "none"),
-                    T.width) {
-                        var F = S.lerp(I.width, 83.33, 100);
+                    if (M.equipped && (P.div.style.backgroundColor = I.equipped ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0)"),
+                    M.selectable && (P.div.style.pointerEvents = "" != I.name || I.selectable ? "auto" : "none"),
+                    M.width) {
+                        var F = k.lerp(I.width, 83.33, 100);
                         P.div.style.width = F + "%"
                     }
-                    T.opacity && (P.div.style.opacity = I.opacity),
-                    T.ammo && P.ammo && (P.ammo.innerHTML = I.ammo,
+                    M.opacity && (P.div.style.opacity = I.opacity),
+                    M.ammo && P.ammo && (P.ammo.innerHTML = I.ammo,
                     P.ammo.style.display = I.ammo > 0 ? "block" : "none"),
-                    T.bindStr && (P.number.innerHTML = I.bindStr[0] || "")
+                    M.bindStr && (P.number.innerHTML = I.bindStr[0] || "")
                 }
                 if (e.ammo.current) {
                     var j = t.ammo.current;
@@ -91864,7 +92400,7 @@ webpackJsonp([1], {
                     var V = e.scopes[q]
                       , U = a.scopes[q]
                       , G = t.scopes[q];
-                    V.visible && (U.div.style.display = G.visible ? M.mobile && !M.tablet ? "flex" : "inline-block" : "none"),
+                    V.visible && (U.div.style.display = G.visible ? T.mobile && !T.tablet ? "flex" : "inline-block" : "none"),
                     V.equipped && (G.equipped ? (U.div.classList.add("ui-zoom-active"),
                     U.div.classList.remove("ui-zoom-inactive")) : (U.div.classList.remove("ui-zoom-active"),
                     U.div.classList.add("ui-zoom-inactive"))),
@@ -91876,7 +92412,7 @@ webpackJsonp([1], {
                       , Z = t.loot[H];
                     if (W && K && Z) {
                         if ((W.count || W.maximum) && (K.count.innerHTML = Z.count,
-                        K.div.style.opacity = x.items[K.lootType].special && 0 == Z.count ? 0 : Z.count > 0 ? 1 : .25,
+                        K.div.style.opacity = f.items[K.lootType].special && 0 == Z.count ? 0 : Z.count > 0 ? 1 : .25,
                         K.div.style.color = Z.count == Z.maximum ? "#ff9900" : "#ffffff"),
                         W.width) {
                             var X = 1 + .33 * Z.width
@@ -91892,17 +92428,34 @@ webpackJsonp([1], {
                       , $ = a.gear[J]
                       , ee = t.gear[J];
                     if (Q.item) {
-                        var te = "" != ee.item ? x.items[ee.item] : null
+                        var te = "" != ee.item ? f.items[ee.item] : null
                           , ae = te ? te.level : 0;
                         $.div.style.display = te ? "block" : "none",
                         $.level.innerHTML = this.localization.translate("game-level-" + ae),
-                        $.level.style.color = 3 == ae ? "#ff9900" : "#ffffff",
+                        $.level.style.color = ae >= 3 ? "#ff9900" : "#ffffff",
                         $.image.src = te ? s(te.lootImg.sprite) : ""
                     }
                     if (Q.selectable && ($.div.style.pointerEvents = ee.selectable ? "auto" : "none"),
                     Q.width) {
                         var ie = 1 + .33 * ee.width;
                         $.image.style.transform = "scale(" + ie + ", " + ie + ")"
+                    }
+                }
+                for (var re = 0; re < e.perks.length; re++) {
+                    var oe = e.perks[re]
+                      , ne = a.perks[re]
+                      , se = t.perks[re];
+                    if (oe.subtype) {
+                        var le = se.subtype;
+                        ne.divTitle.innerHTML = this.localization.translate("game-perk-title-" + le),
+                        ne.divDesc.innerHTML = this.localization.translate("game-perk-desc-" + le),
+                        ne.div.style.display = le > 0 ? "block" : "none",
+                        ne.image.src = le > 0 ? "img/gui/perk-" + le + ".svg" : "",
+                        se.pulse ? ne.div.classList.add("ui-perk-pulse") : ne.div.classList.remove("ui-perk-pulse")
+                    }
+                    if (oe.width && se.pulse) {
+                        var ce = 1 + .33 * se.width;
+                        ne.image.style.transform = "scale(" + ce + ", " + ce + ")"
                     }
                 }
             },
@@ -91924,29 +92477,29 @@ webpackJsonp([1], {
             },
             getKillFeedText: function(e, t, a, i, r) {
                 var o = function(e) {
-                    return T.truncateString(e || "", "bold 16px arial", 180)
+                    return P.truncateString(e || "", "bold 16px arial", 180)
                 };
                 switch (e = o(e),
                 t = o(t),
                 i) {
-                case P.Player:
+                case I.Player:
                     return t + " " + this.localization.translate(r ? "game-knocked-out" : "game-killed") + " " + e + " " + this.localization.translate("game-with") + " " + this.localization.translate("game-" + a);
-                case P.Bleeding:
+                case I.Bleeding:
                     var n = this.localization.translate(t ? "game-finally-killed" : "game-finally-bled-out");
                     return t ? t + " " + n + " " + e : e + " " + n;
-                case P.Gas:
+                case I.Gas:
                     var s = void 0
                       , l = void 0;
                     return r ? (s = this.localization.translate("game-the-red-zone"),
                     l = this.localization.translate("game-knocked-out")) : l = this.localization.translate(t ? "game-finally-killed" : "game-died-outside"),
                     s ? s + " " + l + " " + e : e + " " + l;
-                case P.Airdrop:
-                    var c = f.Defs[a]
+                case I.Airdrop:
+                    var c = b.Defs[a]
                       , m = this.localization.translate("game-the-air-drop")
                       , p = void 0;
                     return p = r ? this.localization.translate("game-knocked-out") : c && !c.airdropCrate ? this.localization.translate("game-killed") : this.localization.translate("game-crushed"),
                     m + " " + p + " " + e;
-                case P.Airstrike:
+                case I.Airstrike:
                     var d = this.localization.translate(r ? "game-knocked-out" : "game-killed");
                     return t ? t + " " + d + " " + e + " " + this.localization.translate("game-with") + " " + this.localization.translate("game-an-air-strike") : this.localization.translate("game-the-air-strike") + " " + d + " " + e;
                 default:
@@ -91958,37 +92511,45 @@ webpackJsonp([1], {
             },
             getLeaderKillFeedText: function(e, t, a, i) {
                 var r = 1 == t ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
-                return a == P.Player ? e + " " + this.localization.translate(i ? "game-knocked-out" : "game-killed") + " " + r + "!" : r + " " + this.localization.translate(i ? "game-is-down" : "game-is-dead") + "!"
+                return a == I.Player ? e + " " + this.localization.translate(i ? "game-knocked-out" : "game-killed") + " " + r + "!" : r + " " + this.localization.translate(i ? "game-is-down" : "game-is-dead") + "!"
             },
-            getLeaderAssignedText: function(e, t) {
-                e = function(e) {
-                    return T.truncateString(e || "", "bold 16px arial", 180)
-                }(e);
-                var a = 1 == t ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
-                return e + " " + this.localization.translate("game-promoted-to") + " " + a + "!"
+            getAssignRoleKillFeedText: function(e, t, a) {
+                switch (t = function(e) {
+                    return P.truncateString(e || "", "bold 16px arial", 180)
+                }(t),
+                e) {
+                case f.Role.FactionLeader:
+                    var i = 1 == a ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
+                    return t + " " + this.localization.translate("game-promoted-to") + " " + i + "!";
+                case f.Role.Lieutenant:
+                    var r = this.localization.translate("game-lieutenant");
+                    return t + " " + this.localization.translate("game-promoted-to") + " " + r + "!";
+                default:
+                    return ""
+                }
             },
             getPickupMessageText: function(e) {
                 var t, a = (t = {},
-                i(t, I.Full, "game-not-enough-space"),
-                i(t, I.AlreadyOwned, "game-item-already-owned"),
-                i(t, I.AlreadyEquipped, "game-item-already-equipped"),
-                i(t, I.BetterItemEquipped, "game-better-item-equipped"),
-                i(t, I.GunCannotFire, "game-gun-cannot-fire"),
-                t), r = a[e] || a[I.Full];
+                i(t, C.Full, "game-not-enough-space"),
+                i(t, C.AlreadyOwned, "game-item-already-owned"),
+                i(t, C.AlreadyEquipped, "game-item-already-equipped"),
+                i(t, C.BetterItemEquipped, "game-better-item-equipped"),
+                i(t, C.GunCannotFire, "game-gun-cannot-fire"),
+                t), r = a[e] || a[C.Full];
                 return this.localization.translate(r)
             },
             getInteractionText: function(e, t) {
                 switch (e) {
-                case E.None:
+                case D.None:
                     return "";
-                case E.Cancel:
+                case D.Cancel:
                     return this.localization.translate("game-cancel");
-                case E.Revive:
+                case D.Revive:
                     return this.localization.translate("game-revive-teammate");
-                case E.Object:
+                case D.Object:
                     var a = t.getInteraction();
                     return this.localization.translate(a.action) + " " + this.localization.translate(a.object);
-                case E.Loot:
+                case D.Loot:
                     var i = this.localization.translate("game-" + t.name) || t.name;
                     return t.count > 1 && (i += " (" + t.count + ")"),
                     i;
@@ -91999,28 +92560,28 @@ webpackJsonp([1], {
             getInteractionKey: function(e) {
                 var t = null;
                 switch (e) {
-                case E.Cancel:
-                    t = this.inputBinds.getBind(b.Cancel);
+                case D.Cancel:
+                    t = this.inputBinds.getBind(_.Cancel);
                     break;
-                case E.Loot:
-                    t = this.inputBinds.getBind(b.Loot) || this.inputBinds.getBind(b.Interact);
+                case D.Loot:
+                    t = this.inputBinds.getBind(_.Loot) || this.inputBinds.getBind(_.Interact);
                     break;
-                case E.Object:
-                    t = this.inputBinds.getBind(b.Use) || this.inputBinds.getBind(b.Interact);
+                case D.Object:
+                    t = this.inputBinds.getBind(_.Use) || this.inputBinds.getBind(_.Interact);
                     break;
-                case E.Revive:
-                    t = this.inputBinds.getBind(b.Revive) || this.inputBinds.getBind(b.Interact);
+                case D.Revive:
+                    t = this.inputBinds.getBind(_.Revive) || this.inputBinds.getBind(_.Interact);
                     break;
-                case E.None:
+                case D.None:
                 default:
-                    t = this.inputBinds.getBind(b.Use)
+                    t = this.inputBinds.getBind(_.Use)
                 }
                 return t ? t.toString() : "<Unbound>"
             }
         },
         e.exports = {
-            at: u,
-            loadStaticDomImages: g
+            at: g,
+            loadStaticDomImages: y
         }
     },
     d49cd95c: function(e, t, a) {
@@ -92184,11 +92745,11 @@ webpackJsonp([1], {
                 if (++this.Xt % 180 == 0) {
                     this.bt = !0;
                     for (var T = 0, P = p.St, I = 0; I < l.length; I++) {
-                        var A = l[I];
-                        A.active && !A.fade && P(A, p.kt) && T++
+                        var C = l[I];
+                        C.active && !C.fade && P(C, p.kt) && T++
                     }
-                    for (var C = 0; C < m.length; C++) {
-                        var E = m[C];
+                    for (var A = 0; A < m.length; A++) {
+                        var E = m[A];
                         E.active && !E.dead && P(E, p.vt) && T++
                     }
                     T && (this.N = !0)
@@ -92348,17 +92909,17 @@ webpackJsonp([1], {
                         for (var z = b[v], M = z.obj, T = 0; T < z.shapes.length; T++) {
                             var P = z.shapes[T]
                               , I = m.transform(P.collider, M.pos, p.oriToRad(M.ori), M.scale)
-                              , A = void 0 !== P.scale ? P.scale : 1;
+                              , C = void 0 !== P.scale ? P.scale : 1;
                             switch (k.beginFill(P.color, 1),
                             I.type) {
                             case m.Type.Circle:
-                                k.drawCircle(I.pos.x, this.height - I.pos.y, I.rad * A);
+                                k.drawCircle(I.pos.x, this.height - I.pos.y, I.rad * C);
                                 break;
                             case m.Type.Aabb:
-                                var C = u.mul(u.sub(I.max, I.min), .5)
-                                  , E = u.add(I.min, C);
-                                C = u.mul(C, A),
-                                k.drawRect(E.x - C.x, this.height - E.y - C.y, 2 * C.x, 2 * C.y)
+                                var A = u.mul(u.sub(I.max, I.min), .5)
+                                  , E = u.add(I.min, A);
+                                A = u.mul(A, C),
+                                k.drawRect(E.x - A.x, this.height - E.y - A.y, 2 * A.x, 2 * A.y)
                             }
                             k.endFill()
                         }
@@ -93128,15 +93689,15 @@ webpackJsonp([1], {
                         for (var T = 0; T < this.dots.length; T++) {
                             var P = this.dots[T]
                               , I = 3.5 + 1.5 * T
-                              , A = m.add(t.pos, m.mul(t.dir, I));
-                            P.position.set(A.x, A.y),
+                              , C = m.add(t.pos, m.mul(t.dir, I));
+                            P.position.set(C.x, C.y),
                             P.scale.set(.01171875, .01171875),
                             P.visible = T < z
                         }
-                        var C = i.pointToScreen(m.create(0, 0))
+                        var A = i.pointToScreen(m.create(0, 0))
                           , E = i.pointToScreen(m.create(1, 1))
-                          , D = m.sub(E, C);
-                        this.container.position.set(C.x, C.y),
+                          , D = m.sub(E, A);
+                        this.container.position.set(A.x, A.y),
                         this.container.scale.set(D.x, D.y),
                         this.container.alpha = .3,
                         r.addPIXIObj(this.container, t.layer, 19, 0)
@@ -93147,7 +93708,7 @@ webpackJsonp([1], {
             e
         }();
         e.exports = {
-            Ae: d
+            Ce: d
         }
     },
     e5d16b4d: function(e, t, a) {
@@ -93709,7 +94270,7 @@ webpackJsonp([1], {
                             v) {
                                 var I = f.sub(v, this.emoteScreenPos);
                                 I.y *= -1;
-                                for (var A = f.length(I), C = r(I), E = 0; E < this.displayedSelectors.length; E++) {
+                                for (var C = f.length(I), A = r(I), E = 0; E < this.displayedSelectors.length; E++) {
                                     var D = this.displayedSelectors[E];
                                     if (D.modular) {
                                         var O = D.emote;
@@ -93759,7 +94320,7 @@ webpackJsonp([1], {
                                     var R = D.ping != g.None || D.emote != d.None
                                       , F = h[D.emote]
                                       , j = F.teamOnly && 1 == n;
-                                    A <= 35 && !R && this.emoteHardTicker <= 0 && !j ? P = D : o(C, D.angleC, D.angleA) && A > 35 && R && this.emoteHardTicker <= 0 && !j ? P = D : D.highlightDisplayed && (D.parent.css("opacity", this.wedgeOpacityReset),
+                                    C <= 35 && !R && this.emoteHardTicker <= 0 && !j ? P = D : o(A, D.angleC, D.angleA) && C > 35 && R && this.emoteHardTicker <= 0 && !j ? P = D : D.highlightDisplayed && (D.parent.css("opacity", this.wedgeOpacityReset),
                                     D.highlight.css("display", "none"),
                                     D.highlightDisplayed = !1)
                                 }
@@ -94179,7 +94740,7 @@ webpackJsonp([1], {
             "game-level-1": "レベル1",
             "game-level-2": "レベル2",
             "game-level-3": "レベル3",
-            "game-level-9": "レベル3",
+            "game-level-4": "レベル4",
             "game-outfitBase": "Basic Outfit",
             "game-outfitRoyalFortune": "Royal Fortune",
             "game-outfitKeyLime": "Key Lime",
@@ -94921,7 +95482,7 @@ webpackJsonp([1], {
             "game-level-1": "1-й Ур.",
             "game-level-2": "2-й Ур.",
             "game-level-3": "3-й Ур.",
-            "game-level-9": "3-й Ур.",
+            "game-level-4": "4-й Ур.",
             "game-outfitBase": "Базовая Экипировка",
             "game-outfitRoyalFortune": "Королевская удача",
             "game-outfitKeyLime": "Лаймовый оттенок",
@@ -94938,6 +95499,17 @@ webpackJsonp([1], {
             "game-outfitCasanova": "Сатиновая куртка",
             "game-outfitKhaki": "Положивший Начало",
             "game-fists": "удар",
+            "game-woodaxe": "Топор",
+            "game-woodaxe_bloody": "Окровавленный топор",
+            "game-hud-woodaxe_bloody": "Топор",
+            "game-katana": "Катана",
+            "game-katana_rusted": "Ржавая катана",
+            "game-hud-katana_rusted": "Катана",
+            "game-katana_orchid": "Катана орхидея",
+            "game-hud-katana_orchid": "Катана",
+            "game-stonehammer": "Каменный молот",
+            "game-hook": "Крюк",
+            "game-pan": "Сковорода",
             "game-ak47": "AK-47",
             "game-dp28": "ДП-28",
             "game-mosin": "Винтовка Мосина",
@@ -94951,6 +95523,7 @@ webpackJsonp([1], {
             "game-m9": "M9",
             "game-glock": "G18C",
             "game-ot38": "ОЦ-38",
+            "game-flare_gun": "Сигнальная ракетница",
             "game-frag": "Осколочная Граната",
             "game-hud-frag": "Осколочная",
             "game-smoke": "Дымовая Граната",
@@ -94959,14 +95532,15 @@ webpackJsonp([1], {
             "game-silo_01": "a silo",
             "index-play-50v50": "Играть в 50v50",
             "index-50v50": "50v50",
-            "game-red-team": "Red Team",
-            "game-blue-team": "Blue Team",
-            "game-red-leader": "Red Leader",
-            "game-blue-leader": "Blue Leader",
+            "game-red-team": "Красная команда",
+            "game-blue-team": "Синяя команда",
+            "game-red-leader": "расного лидера",
+            "game-blue-leader": "синего лидера",
+            "game-lieutenant": "лейтенанта",
             "game-is-down": "is down",
             "game-is-dead": "is dead",
-            "game-promoted-to": "promoted to",
-            "game-youve-been-promoted-to": "You've been promoted to"
+            "game-promoted-to": "повышен до",
+            "game-youve-been-promoted-to": "Вы были повышены до"
         };
         e.exports = i
     },
@@ -96137,4 +96711,4 @@ webpackJsonp([1], {
         }
     }
 }, ["c99e6613"]);
-//# sourceMappingURL=app.a24293d4.js.map
+//# sourceMappingURL=app.dde827eb.js.map

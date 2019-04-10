@@ -31274,7 +31274,7 @@ webpackJsonp([1], {
                     decalType: "decal_frag_small_explosion"
                 },
                 explosion_snowball: {
-                    damage: 4,
+                    damage: 2,
                     obstacleDamage: 1,
                     teamDamage: !1,
                     rad: {
@@ -31287,7 +31287,7 @@ webpackJsonp([1], {
                     decalType: "decal_snowball_explosion"
                 },
                 explosion_snowball_heavy: {
-                    damage: 12,
+                    damage: 5,
                     obstacleDamage: 1,
                     teamDamage: !1,
                     rad: {
@@ -82608,4 +82608,4 @@ webpackJsonp([1], {
         }
     }
 }, ["c99e6613"]);
-//# sourceMappingURL=app.11e97af7.js.map
+//# sourceMappingURL=app.326238ef.js.map

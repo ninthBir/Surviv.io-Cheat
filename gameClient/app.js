@@ -926,9 +926,9 @@ webpackJsonp([1], {
                         f.seqOld = f.seq
                     }
                     if (f.open != f.wasOpen) {
-                        var A = n.Defs[this.type]
-                          , I = f.open ? A.door.sound.open : A.door.sound.close;
-                        r.playSound(I, {
+                        var I = n.Defs[this.type]
+                          , A = f.open ? I.door.sound.open : I.door.sound.close;
+                        r.playSound(A, {
                             channel: "sfx",
                             soundPos: this.pos,
                             layer: this.layer,
@@ -6867,7 +6867,6 @@ webpackJsonp([1], {
                     var t = this;
                     this.config.set("prerollGamesPlayed", this.prerollGamesPlayed),
                     this.config.set("totalGamesPlayed", this.totalGamesPlayed),
-                    this.sessionGames < 100 && s.storeGeneric("gamesThisSession_" + (this.videoAdsEnabled ? 1 : 0), this.sessionGames),
                     this.loggedAdblock || (s.storeGeneric("adblock1", window.adsBlocked),
                     this.loggedAdblock = !0);
                     var a = n.webview && n.version > "1.0.0" && this.config.get("promptAppRate") && this.totalGamesPlayed % 10 == 0;
@@ -6914,10 +6913,11 @@ webpackJsonp([1], {
                             e()
                         };
                         document.addEventListener("admob.interstitial.close", a),
-                        this.isPlayingVideo = !0,
-                        admob && admob.interstitial.show().then(function(e) {
+                        admob && (admob.interstitial.show().then(function(e) {
                             e || a()
-                        })
+                        }),
+                        this.isPlayingVideo = !0,
+                        s.storeGeneric("ad_request", "interstitial"))
                     } else
                         e()
                 }
@@ -6963,7 +6963,8 @@ webpackJsonp([1], {
                     window.aiptag.cmd.player.push(function() {
                         window.adplayer.startPreRoll()
                     }),
-                    this.isPlayingVideo = !0
+                    this.isPlayingVideo = !0,
+                    s.storeGeneric("ad_request", "preroll")
                 }
             }, {
                 key: "showBannerAd",
@@ -6995,7 +6996,7 @@ webpackJsonp([1], {
                 throw new TypeError("Cannot call a class as a function")
         }
         function r(e, t) {
-            return 1 == e ? Number.MAX_VALUE : t ? .5 : .25
+            return 1 == t ? Number.MAX_VALUE : e == _.GameMode.Faction ? .5 : .25
         }
         function o(e, t, a, i, r) {
             D[e] = {
@@ -7262,7 +7263,7 @@ webpackJsonp([1], {
             return P.idToType(this.readUint16())
         }
         ;
-        var A = function() {
+        var I = function() {
             function e(t) {
                 i(this, e);
                 var a = t instanceof ArrayBuffer ? t : null;
@@ -7303,7 +7304,7 @@ webpackJsonp([1], {
             }]),
             e
         }()
-          , I = {
+          , A = {
             kMapNameMaxLen: 24,
             kPlayerNameMaxLen: 16,
             kMouseMaxDist: 64,
@@ -7460,12 +7461,12 @@ webpackJsonp([1], {
         }),
         o(S.Type.Smoke, function(e, t) {
             e.writeVec(t.pos, 0, 0, 1024, 1024, 16),
-            e.writeFloat(t.rad, 0, I.kSmokeMaxRad, 8)
+            e.writeFloat(t.rad, 0, A.kSmokeMaxRad, 8)
         }, function(e, t) {
             e.writeUint8(t.layer)
         }, function(e, t) {
             t.pos = e.readVec(0, 0, 1024, 1024, 16),
-            t.rad = e.readFloat(0, I.kSmokeMaxRad, 8)
+            t.rad = e.readFloat(0, A.kSmokeMaxRad, 8)
         }, function(e, t) {
             t.layer = e.readUint8()
         }),
@@ -7518,7 +7519,7 @@ webpackJsonp([1], {
                 value: function(e) {
                     e.writeUint32(this.protocol),
                     e.writeString(this.privData),
-                    e.writeString(this.name, I.kPlayerNameMaxLen);
+                    e.writeString(this.name, A.kPlayerNameMaxLen);
                     for (var t = 0; t < b.Count; t++)
                         e.writeUint8(this.emotes[t]);
                     e.writeBoolean(this.useTouch),
@@ -7581,7 +7582,7 @@ webpackJsonp([1], {
                     this.touchMoveActive && (e.writeUnitVec(this.touchMoveDir, 8),
                     e.writeUint8(this.touchMoveLen)),
                     e.writeUnitVec(this.toMouseDir, 10),
-                    e.writeFloat(this.toMouseLen, 0, I.kMouseMaxDist, 8),
+                    e.writeFloat(this.toMouseLen, 0, A.kMouseMaxDist, 8),
                     e.writeBits(this.inputs.length, 4);
                     for (var t = 0; t < this.inputs.length; t++)
                         e.writeUint8(this.inputs[t]);
@@ -7684,7 +7685,7 @@ webpackJsonp([1], {
             return w(e, [{
                 key: "deserialize",
                 value: function(e) {
-                    this.mapName = e.readString(I.kMapNameMaxLen),
+                    this.mapName = e.readString(A.kMapNameMaxLen),
                     this.seed = e.readUint32(),
                     this.width = e.readUint16(),
                     this.height = e.readUint16(),
@@ -7731,7 +7732,7 @@ webpackJsonp([1], {
             AirstrikeZones: 8192,
             MapGlobalState: 16384
         }
-          , U = function() {
+          , G = function() {
             function e() {
                 i(this, e),
                 this.delObjIds = [],
@@ -7820,9 +7821,9 @@ webpackJsonp([1], {
                             this.deletedPlayerIds.push(C)
                         }
                     if (0 != (a & V.PlayerStatus)) {
-                        var A = {};
-                        s(e, A),
-                        this.playerStatus = A,
+                        var I = {};
+                        s(e, I),
+                        this.playerStatus = I,
                         this.playerStatusDirty = !0
                     }
                     if (0 != (a & V.GroupStatus)) {
@@ -7862,14 +7863,14 @@ webpackJsonp([1], {
                             this.explosions.push(N)
                         }
                     if (0 != (a & V.Emotes))
-                        for (var q = e.readUint8(), U = 0; U < q; U++) {
-                            var G = {};
-                            G.type = e.readUint8(),
-                            G.playerId = e.readUint16(),
-                            G.pos = e.readVec(0, 0, 1024, 1024, 15),
-                            G.isPing = e.readBoolean(),
+                        for (var q = e.readUint8(), G = 0; G < q; G++) {
+                            var U = {};
+                            U.type = e.readUint8(),
+                            U.playerId = e.readUint16(),
+                            U.pos = e.readVec(0, 0, 1024, 1024, 15),
+                            U.isPing = e.readBoolean(),
                             e.readBits(1),
-                            this.emotes.push(G)
+                            this.emotes.push(U)
                         }
                     if (0 != (a & V.Planes))
                         for (var W = e.readUint8(), H = 0; H < W; H++) {
@@ -7886,8 +7887,8 @@ webpackJsonp([1], {
                         for (var X = e.readUint8(), Y = 0; Y < X; Y++) {
                             var J = {};
                             J.pos = e.readVec(0, 0, 1024, 1024, 12),
-                            J.rad = e.readFloat(0, I.kAirstrikeZoneMaxRad, 8),
-                            J.duration = e.readFloat(0, I.kAirstrikeZoneMaxDuration, 8),
+                            J.rad = e.readFloat(0, A.kAirstrikeZoneMaxRad, 8),
+                            J.duration = e.readFloat(0, A.kAirstrikeZoneMaxDuration, 8),
                             this.airstrikeZones.push(J)
                         }
                     if (0 != (a & V.MapGlobalState)) {
@@ -7901,7 +7902,7 @@ webpackJsonp([1], {
             }]),
             e
         }()
-          , G = function() {
+          , U = function() {
             function e() {
                 i(this, e),
                 this.itemSourceType = "",
@@ -8098,9 +8099,9 @@ webpackJsonp([1], {
         }();
         e.exports = {
             BitStream: C.BitStream,
-            Constants: I,
+            Constants: A,
             getPlayerStatusUpdateRate: r,
-            MsgStream: A,
+            MsgStream: I,
             Msg: E,
             JoinMsg: O,
             DisconnectMsg: B,
@@ -8108,9 +8109,9 @@ webpackJsonp([1], {
             EditMsg: R,
             DropItemMsg: F,
             JoinedMsg: N,
-            UpdateMsg: U,
+            UpdateMsg: G,
             MapMsg: q,
-            KillMsg: G,
+            KillMsg: U,
             PlayerStatsMsg: W,
             GameOverMsg: H,
             PickupMsgType: K,
@@ -8447,8 +8448,8 @@ webpackJsonp([1], {
             this.groupPlayerCount = 0,
             this.teamSelectors = [];
             for (var C = 0; C < 4; C++) {
-                var A = this.topLeft
-                  , I = C
+                var I = this.topLeft
+                  , A = C
                   , D = l.Sprite.fromImage("player-map-outer.img");
                 D.anchor = this.playerOuter.anchor,
                 D.scale = this.playerOuterBaseScale,
@@ -8463,13 +8464,13 @@ webpackJsonp([1], {
                 this.display.teammates.addChild(E),
                 this.teamSelectors.push({
                     teamNameHtml: "",
-                    groupId: s(A).find("[data-id=" + I + "]"),
+                    groupId: s(I).find("[data-id=" + A + "]"),
                     groupIdDisplayed: !1,
-                    teamName: s(A).find("[data-id=" + I + "]").find(".ui-team-member-name"),
-                    teamIcon: s(A).find("[data-id=" + I + "]").find(".ui-team-member-icon"),
-                    teamStatus: s(A).find("[data-id=" + I + "]").find(".ui-team-member-status"),
-                    teamHealthInner: s(A).find("[data-id=" + I + "]").find(".ui-health-actual"),
-                    teamColor: s(A).find("[data-id=" + I + "]").find(".ui-team-member-color"),
+                    teamName: s(I).find("[data-id=" + A + "]").find(".ui-team-member-name"),
+                    teamIcon: s(I).find("[data-id=" + A + "]").find(".ui-team-member-icon"),
+                    teamStatus: s(I).find("[data-id=" + A + "]").find(".ui-team-member-status"),
+                    teamHealthInner: s(I).find("[data-id=" + A + "]").find(".ui-health-actual"),
+                    teamColor: s(I).find("[data-id=" + A + "]").find(".ui-team-member-color"),
                     prevHealth: 0,
                     prevStatus: {
                         disconnected: !1,
@@ -8479,7 +8480,7 @@ webpackJsonp([1], {
                     },
                     indicators: {
                         main: {
-                            elem: s("#ui-team-indicators").find(".ui-indicator-main[data-id=" + I + "]"),
+                            elem: s("#ui-team-indicators").find(".ui-indicator-main[data-id=" + A + "]"),
                             displayed: !1
                         }
                     },
@@ -8645,64 +8646,54 @@ webpackJsonp([1], {
                     this.gasIcon.addClass(T ? "danger-icon" : "gas-icon");
                     var P = Math.floor(this.gasState.time / 60)
                       , C = this.gasState.time % 60
-                      , A = ("0" + C).slice(-2);
-                    this.gasTimer.html(P + ":" + A)
+                      , I = ("0" + C).slice(-2);
+                    this.gasTimer.html(P + ":" + I)
                 }
                 this.spectatorCount = _.spectatorCount,
                 this.updateSpectatorCountDisplay(!1),
                 y.dead && !this.dead && (this.dead = !0,
                 this.pieTimer.o(!0)),
                 (S.downed || this.dead) && this.resetWeapSlotStyling();
-                var I = _.action
-                  , D = x.eqAbs(x.clamp(I.time, 0, I.duration), I.duration, .2);
-                if (!(this.curAction.type == I.type && this.curAction.item == I.item && this.curAction.duration == I.duration || D || this.displayingStats)) {
+                var A = _.action
+                  , D = x.eqAbs(x.clamp(A.time, 0, A.duration), A.duration, .2);
+                if (!(this.curAction.type == A.type && this.curAction.item == A.item && this.curAction.duration == A.duration || D || this.displayingStats)) {
                     this.curAction = {
-                        type: I.type,
-                        item: I.item,
-                        time: I.time,
-                        duration: I.duration
+                        type: A.type,
+                        item: A.item,
+                        time: A.time,
+                        duration: A.duration
                     };
-                    var E = I.type != u.Reload;
+                    var E = A.type != u.Reload;
                     if (this.pieTimer.o(E),
                     this.actionSoundInstance && (this.audioManager.stopSound(this.actionSoundInstance),
                     this.actionSoundInstance = !1),
-                    I.type != u.None) {
+                    A.type != u.None) {
                         var O = ""
                           , B = ""
                           , L = ""
                           , R = null
                           , F = !1;
-                        switch (I.type) {
+                        switch (A.type) {
                         case u.Reload:
-                            if (I.item) {
-                                var j = m.items[I.item];
-                                if (j)
-                                    B = this.localization.translate("game-reloading"),
-                                    R = j.sound.reload,
-                                    F = "reload" == j.caseTiming;
-                                else {
-                                    var N = {
-                                        item: I.item,
-                                        duration: I.duration,
-                                        time: I.time,
-                                        isActivePlayer: a
-                                    };
-                                    b.logError("Invalid item: " + JSON.stringify(N))
-                                }
+                            if (A.item) {
+                                var j = m.items[A.item];
+                                j && (B = this.localization.translate("game-reloading"),
+                                R = j.sound.reload,
+                                F = "reload" == j.caseTiming)
                             }
                             break;
                         case u.UseItem:
-                            if (I.item) {
-                                var q = m.items[I.item];
+                            if (A.item) {
+                                var N = m.items[A.item];
                                 B = this.localization.translate("game-using"),
-                                L = this.localization.translate("game-" + I.item),
-                                R = q.sound.use
+                                L = this.localization.translate("game-" + A.item),
+                                R = N.sound.use
                             }
                             break;
                         case u.Revive:
-                            var V = n.J(I.targetId).name;
+                            var q = n.J(A.targetId).name;
                             B = this.localization.translate("game-reviving"),
-                            L = S.downed ? "" : V
+                            L = S.downed ? "" : q
                         }
                         if ("" == B && "" == L || ("svo" == this.localization.translate("word-order") ? (O += B || "",
                         O += L ? " " + L : "") : "sov" == this.localization.translate("word-order") && (O += L ? L + " " : "",
@@ -8712,133 +8703,133 @@ webpackJsonp([1], {
                         }, this.curAction.duration - this.curAction.time, O, !1)),
                         R && (this.actionSoundInstance = this.audioManager.playSound(R),
                         this.audioManager.stopLocalActionSound()),
-                        F && "" != I.item)
-                            for (var U = m.items[I.item], G = 0; G < U.maxReload; G++) {
-                                var W = G % 2 == 0 ? -1 : 1
-                                  , H = Math.PI + Math.PI / 4 * W
-                                  , K = U.maxReload <= 2 ? 1 : x.lerp(Math.random(), .8, 1.2);
-                                M.createCasingParticle(I.item, H, K, t.pos, t.dir, t.Z.layer, this.particleBarn)
+                        F && "" != A.item)
+                            for (var V = m.items[A.item], G = 0; G < V.maxReload; G++) {
+                                var U = G % 2 == 0 ? -1 : 1
+                                  , W = Math.PI + Math.PI / 4 * U
+                                  , H = V.maxReload <= 2 ? 1 : x.lerp(Math.random(), .8, 1.2);
+                                M.createCasingParticle(A.item, W, H, t.pos, t.dir, t.Z.layer, this.particleBarn)
                             }
                     }
                 }
                 this.bigmapDisplayed || (this.mapSprite.x = this.minimapPos.x + this.mapSprite.width / 2 - t.pos.x / i.width * this.mapSprite.width,
                 this.mapSprite.y = this.minimapPos.y - this.mapSprite.height / 2 + t.pos.y / i.height * this.mapSprite.height);
-                var Z = w.create(.5 * s.screenWidth / s.z(), .5 * s.screenHeight / s.z())
-                  , X = {
-                    min: w.sub(s.pos, Z),
-                    max: w.add(s.pos, Z)
+                var K = w.create(.5 * s.screenWidth / s.z(), .5 * s.screenHeight / s.z())
+                  , Z = {
+                    min: w.sub(s.pos, K),
+                    max: w.add(s.pos, K)
                 }
-                  , Y = n.J(t.__id).groupId
-                  , J = n.getGroupInfo(Y);
-                if (!J) {
-                    var Q = {
+                  , X = n.J(t.__id).groupId
+                  , Y = n.getGroupInfo(X);
+                if (!Y) {
+                    var J = {
                         playerId: t.__id,
-                        groupId: Y,
+                        groupId: X,
                         spectating: this.spectating,
                         playing: this.game.playingTicker,
                         groupInfo: n.groupInfo
                     };
-                    b.logError("badTeamInfo_1: " + JSON.stringify(Q))
+                    b.logError("badTeamInfo_1: " + JSON.stringify(J))
                 }
-                for (var $ = f.uiLayout == f.UiLayout.Sm, ee = J.playerIds.length, te = 0; te < ee; te++) {
-                    var ae = this.teamSelectors[te]
-                      , ie = J.playerIds[te]
-                      , re = n.J(ie)
-                      , oe = ie == S.__id
-                      , ne = n.$(ie);
-                    if (ne) {
-                        for (var se in ae.mapSprites)
-                            if (ae.mapSprites.hasOwnProperty(se)) {
-                                var le = ae.mapSprites[se]
-                                  , ce = le.sprite
-                                  , me = le.usePlayerPosition ? ne.pos : le.position
-                                  , pe = le.displayed && (!ne.dead || le.showOnDeath);
-                                "outer" == se && ne.factionLeader && (pe = !1),
-                                this.updateMapPosition(ce, me, i),
-                                this.updateMapSprite(le, ce, pe, e)
+                for (var Q = f.uiLayout == f.UiLayout.Sm, $ = Y.playerIds.length, ee = 0; ee < $; ee++) {
+                    var te = this.teamSelectors[ee]
+                      , ae = Y.playerIds[ee]
+                      , ie = n.J(ae)
+                      , re = ae == S.__id
+                      , oe = n.$(ae);
+                    if (oe) {
+                        for (var ne in te.mapSprites)
+                            if (te.mapSprites.hasOwnProperty(ne)) {
+                                var se = te.mapSprites[ne]
+                                  , le = se.sprite
+                                  , ce = se.usePlayerPosition ? oe.pos : se.position
+                                  , me = se.displayed && (!oe.dead || se.showOnDeath);
+                                "outer" == ne && oe.factionLeader && (me = !1),
+                                this.updateMapPosition(le, ce, i),
+                                this.updateMapSprite(se, le, me, e)
                             }
-                        if (oe && !ae.mapSpritesLocal ? (this.display.player.addChild(ae.mapSprites.outer.sprite, ae.mapSprites.inner.sprite),
-                        ae.mapSpritesLocal = !0) : !oe && ae.mapSpritesLocal && (this.display.teammates.addChild(ae.mapSprites.outer.sprite, ae.mapSprites.inner.sprite),
-                        ae.mapSpritesLocal = !1),
+                        if (re && !te.mapSpritesLocal ? (this.display.player.addChild(te.mapSprites.outer.sprite, te.mapSprites.inner.sprite),
+                        te.mapSpritesLocal = !0) : !re && te.mapSpritesLocal && (this.display.teammates.addChild(te.mapSprites.outer.sprite, te.mapSprites.inner.sprite),
+                        te.mapSpritesLocal = !1),
                         p > 1) {
-                            ae.groupIdDisplayed || (ae.groupId.css("display", "block"),
-                            ae.groupIdDisplayed = !0),
-                            this.updateTeam(te, v.htmlEscape(re.name), ne.health, {
-                                disconnected: ne.disconnected,
-                                dead: ne.dead,
-                                downed: ne.downed,
-                                factionLeader: ne.factionLeader
-                            }, re.teamId);
-                            for (var de in ae.indicators)
-                                if (ae.indicators.hasOwnProperty(de)) {
-                                    var he = ae.indicators[de]
-                                      , ue = he.elem
-                                      , ge = !0;
-                                    if ((!oe || he.displayAll) && !d) {
-                                        var ye = ne.pos
-                                          , we = w.normalizeSafe(w.sub(ye, s.pos), w.create(1, 0))
-                                          , xe = c.intersectRayAabb(s.pos, we, X.min, X.max)
-                                          , fe = Math.atan2(we.y, -we.x) + .5 * Math.PI
-                                          , be = s.pointToScreen(xe)
-                                          , _e = c.testCircleAabb(ye, m.player.radius, X.min, X.max);
-                                        if (!ne.dead && !_e) {
-                                            var Se = 32
-                                              , ke = "translate(-50%, -50%) rotate(" + fe + "rad)";
-                                            $ && (Se = 16,
-                                            ke += " scale(0.5)"),
-                                            ge = !1;
-                                            var ve = "iphonex" == f.model && f.webview ? 20 : 0;
-                                            ue.css({
-                                                left: x.clamp(be.x, Se, s.screenWidth - Se),
-                                                top: x.clamp(be.y, Se, s.screenHeight - Se - ve),
-                                                transform: ke
+                            te.groupIdDisplayed || (te.groupId.css("display", "block"),
+                            te.groupIdDisplayed = !0),
+                            this.updateTeam(ee, v.htmlEscape(ie.name), oe.health, {
+                                disconnected: oe.disconnected,
+                                dead: oe.dead,
+                                downed: oe.downed,
+                                factionLeader: oe.factionLeader
+                            }, ie.teamId);
+                            for (var pe in te.indicators)
+                                if (te.indicators.hasOwnProperty(pe)) {
+                                    var de = te.indicators[pe]
+                                      , he = de.elem
+                                      , ue = !0;
+                                    if ((!re || de.displayAll) && !d) {
+                                        var ge = oe.pos
+                                          , ye = w.normalizeSafe(w.sub(ge, s.pos), w.create(1, 0))
+                                          , we = c.intersectRayAabb(s.pos, ye, Z.min, Z.max)
+                                          , xe = Math.atan2(ye.y, -ye.x) + .5 * Math.PI
+                                          , fe = s.pointToScreen(we)
+                                          , be = c.testCircleAabb(ge, m.player.radius, Z.min, Z.max);
+                                        if (!oe.dead && !be) {
+                                            var _e = 32
+                                              , Se = "translate(-50%, -50%) rotate(" + xe + "rad)";
+                                            Q && (_e = 16,
+                                            Se += " scale(0.5)"),
+                                            ue = !1;
+                                            var ke = "iphonex" == f.model && f.webview ? 20 : 0;
+                                            he.css({
+                                                left: x.clamp(fe.x, _e, s.screenWidth - _e),
+                                                top: x.clamp(fe.y, _e, s.screenHeight - _e - ke),
+                                                transform: Se
                                             }),
-                                            he.displayed || (ue.css("display", "block"),
-                                            he.displayed = !0)
+                                            de.displayed || (he.css("display", "block"),
+                                            de.displayed = !0)
                                         }
                                     }
-                                    ge && he.displayed && (ue.css("display", "none"),
-                                    he.displayed = !1)
+                                    ue && de.displayed && (he.css("display", "none"),
+                                    de.displayed = !1)
                                 }
                         }
                     }
                 }
-                for (var ze = ee; ze < this.teamSelectors.length; ze++) {
-                    var Me = this.teamSelectors[ze];
-                    for (var Te in Me.mapSprites)
-                        if (Me.mapSprites.hasOwnProperty(Te)) {
-                            var Pe = Me.mapSprites[Te];
-                            Pe.visible = !1
+                for (var ve = $; ve < this.teamSelectors.length; ve++) {
+                    var ze = this.teamSelectors[ve];
+                    for (var Me in ze.mapSprites)
+                        if (ze.mapSprites.hasOwnProperty(Me)) {
+                            var Te = ze.mapSprites[Me];
+                            Te.visible = !1
                         }
-                    for (var Ce in Me.indicators)
-                        if (Me.indicators.hasOwnProperty(Ce)) {
-                            var Ae = Me.indicators[Ce];
-                            Ae.displayed && (Ae.elem.css("display", "none"),
-                            Ae.displayed = !1)
+                    for (var Pe in ze.indicators)
+                        if (ze.indicators.hasOwnProperty(Pe)) {
+                            var Ce = ze.indicators[Pe];
+                            Ce.displayed && (Ce.elem.css("display", "none"),
+                            Ce.displayed = !1)
                         }
-                    if (Me.groupIdDisplayed) {
-                        for (var Ie in Me.mapSprites)
-                            if (Me.mapSprites.hasOwnProperty(Ie)) {
-                                var De = Me.mapSprites[Ie]
-                                  , Ee = De.sprite;
-                                Ee.visible = !1
+                    if (ze.groupIdDisplayed) {
+                        for (var Ie in ze.mapSprites)
+                            if (ze.mapSprites.hasOwnProperty(Ie)) {
+                                var Ae = ze.mapSprites[Ie]
+                                  , De = Ae.sprite;
+                                De.visible = !1
                             }
-                        Me.groupId.css("display", "none"),
-                        Me.groupIdDisplayed = !1
+                        ze.groupId.css("display", "none"),
+                        ze.groupIdDisplayed = !1
                     }
                 }
                 if (i.factionMode) {
-                    var Oe = n.J(S.__id);
-                    if (this.flairId != Oe.teamId) {
-                        this.flairId = Oe.teamId;
-                        var Be = 1 == this.flairId ? "red" : "blue";
+                    var Ee = n.J(S.__id);
+                    if (this.flairId != Ee.teamId) {
+                        this.flairId = Ee.teamId;
+                        var Oe = 1 == this.flairId ? "red" : "blue";
                         this.flairElems.css({
                             display: "block",
-                            "background-image": "url(../img/gui/player-patch-" + Be + ".svg)"
+                            "background-image": "url(../img/gui/player-patch-" + Oe + ".svg)"
                         })
                     }
                 }
-                p > 1 && this.groupPlayerCount != ee && f.uiLayout == f.UiLayout.Lg && (this.groupPlayerCount = ee,
+                p > 1 && this.groupPlayerCount != $ && f.uiLayout == f.UiLayout.Lg && (this.groupPlayerCount = $,
                 this.spectateOptionsWrapper.css({
                     top: this.groupPlayerCount * this.teamMemberHeight + 12
                 })),
@@ -9023,7 +9014,8 @@ webpackJsonp([1], {
                             window.aiptag.cmd.display.push(function() {
                                 aipDisplayTag.display(a)
                             })
-                        }(t)
+                        }(t);
+                    b.storeGeneric("ad_request", "main")
                 }
             },
             trySendAdStatus: function() {
@@ -9172,12 +9164,12 @@ webpackJsonp([1], {
                       , C = 0;
                     C -= (e.length - 1) * P / 2,
                     C -= 10 * (e.length - 1);
-                    for (var A = 0; A < e.length; A++) {
-                        var I = e[A]
-                          , D = m.J(I.playerId)
-                          , E = i(I.timeAlive)
+                    for (var I = 0; I < e.length; I++) {
+                        var A = e[I]
+                          , D = m.J(A.playerId)
+                          , E = i(A.timeAlive)
                           , O = "ui-stats-info-player";
-                        O += I.dead ? " ui-stats-info-status" : "";
+                        O += A.dead ? " ui-stats-info-status" : "";
                         var B = function(e) {
                             return s("<div/>", {
                                 class: e
@@ -9188,9 +9180,9 @@ webpackJsonp([1], {
                             class: "ui-stats-info-player-name",
                             html: v.htmlEscape(D.name)
                         })),
-                        B.append(T(this.localization.translate("game-kills"), "" + I.kills)).append(T(this.localization.translate("game-damage-dealt"), I.damageDealt)).append(T(this.localization.translate("game-damage-taken"), I.damageTaken)).append(T(this.localization.translate("game-survived"), E)),
+                        B.append(T(this.localization.translate("game-kills"), "" + A.kills)).append(T(this.localization.translate("game-damage-dealt"), A.damageDealt)).append(T(this.localization.translate("game-damage-taken"), A.damageTaken)).append(T(this.localization.translate("game-survived"), E)),
                         h && o)
-                            switch (A) {
+                            switch (I) {
                             case 1:
                                 B.append(s("<div/>", {
                                     class: "ui-stats-info-player-badge ui-stats-info-player-red-leader"
@@ -9382,9 +9374,10 @@ webpackJsonp([1], {
                     i(),
                     s(f.mobile ? "#ui-stats-ad-container-mobile" : "#ui-stats-ad-container-desktop").css("display", "inline-block");
                     var e = "";
-                    (e = f.webview ? "surviv-io_300x250_webview_2" : f.mobile ? "surviv-io_300x250_mobile_2" : "surviv-io_300x250_2") && window.aiptag.cmd.display.push(function() {
+                    (e = f.webview ? "surviv-io_300x250_webview_2" : f.mobile ? "surviv-io_300x250_mobile_2" : "surviv-io_300x250_2") && (window.aiptag.cmd.display.push(function() {
                         aipDisplayTag.display(e)
-                    })
+                    }),
+                    b.storeGeneric("ad_request", "stats"))
                 }, r)
             },
             setSpectateTarget: function(e, t, a, i, r) {
@@ -9916,10 +9909,10 @@ webpackJsonp([1], {
                           , P = v.scale
                           , C = null;
                         if (v.parentToCeiling) {
-                            for (var A = -1, I = 0; I < this.imgs.length; I++)
-                                this.imgs[I].isCeiling && (A = I);
-                            if (A >= 0) {
-                                var D = this.imgs[A];
+                            for (var I = -1, A = 0; A < this.imgs.length; A++)
+                                this.imgs[A].isCeiling && (I = A);
+                            if (I >= 0) {
+                                var D = this.imgs[I];
                                 C = D.sprite,
                                 M = m.mul(v.pos, 32),
                                 M.y *= -1,
@@ -9994,12 +9987,12 @@ webpackJsonp([1], {
                 v && (k.visionTicker = M.linger + 1e-4),
                 c.noCeilingRevealTicker > 0 && (k.visionTicker = 0);
                 var C = k.visionTicker > 0
-                  , A = i(k.fadeAlpha, C ? 0 : 1, e * (C ? 12 : M.fadeRate));
-                k.fadeAlpha += A,
+                  , I = i(k.fadeAlpha, C ? 0 : 1, e * (C ? 12 : M.fadeRate));
+                k.fadeAlpha += I,
                 v && this.interiorSound && (n.interiorSound.name = this.interiorSound,
                 n.interiorSound.volume = s.remap(z, M.dist + 2, 0, 0, 1));
-                for (var I = 0; I < this.emitters.length; I++)
-                    this.emitters[I].enabled = this.occupied;
+                for (var A = 0; A < this.emitters.length; A++)
+                    this.emitters[A].enabled = this.occupied;
                 for (var D = 0; D < this.imgs.length; D++) {
                     var E = this.imgs[D]
                       , O = E.isCeiling ? k.fadeAlpha : 1;
@@ -11442,7 +11435,7 @@ webpackJsonp([1], {
                 }
                 for (var o = this.soundInstances.length - 1; o >= 0; o--) {
                     var n = this.soundInstances[o];
-                    "playFinished" != n.playState && "playInterrupted" != n.playState && "playFailed" != n.playState || this.soundInstances.splice(o, 1)
+                    "playFinished" != n.instance.playState && "playInterrupted" != n.instance.playState && "playFailed" != n.instance.playState || this.soundInstances.splice(o, 1)
                 }
                 var s = [0, 1, 1 / 3, 2 / 3]
                   , l = this.underground ? s[this.activeLayer] : 0;
@@ -11566,7 +11559,7 @@ webpackJsonp([1], {
                 t = n.clamp(t, 0, 1);
                 for (var a = this.getTypeVolume(e), i = a > 1e-4 ? t / a : 0, r = 0; r < this.soundInstances.length; r++) {
                     var o = this.soundInstances[r];
-                    o.type == e && (o.volume *= i)
+                    o.type == e && (o.instance.volume *= i)
                 }
             },
             setSoundVolume: function(e) {
@@ -13141,8 +13134,8 @@ webpackJsonp([1], {
           , l = (a("10899aea"),
         a("48eca919"),
         a("259eae5b"))
-          , c = a("26be8056")
-          , m = a("ce29f17f")
+          , c = a("ce29f17f")
+          , m = a("26be8056")
           , p = function() {
             function e(t, a, r, o, s) {
                 var l = this;
@@ -13180,10 +13173,10 @@ webpackJsonp([1], {
                     l.setRoomProperty("region", e)
                 }),
                 this.queueDuo.click(function() {
-                    l.players.length <= 2 && l.setRoomProperty("teamMode", 2)
+                    l.setRoomProperty("gameModeIdx", 1)
                 }),
                 this.queueSquad.click(function() {
-                    l.setRoomProperty("teamMode", 4)
+                    l.setRoomProperty("gameModeIdx", 2)
                 }),
                 this.fillAuto.click(function() {
                     l.setRoomProperty("autoFill", !0)
@@ -13217,9 +13210,9 @@ webpackJsonp([1], {
                         }
                     });
                     var a = n("#team-url").html();
-                    c.copyTextToClipboard(a)
+                    m.copyTextToClipboard(a)
                 }),
-                !m.webview && !m.mobile) {
+                !c.webview && !c.mobile) {
                     this.hideUrl = !1;
                     var p = this;
                     n("#team-hide-url").click(function(e) {
@@ -13266,7 +13259,7 @@ webpackJsonp([1], {
                         this.roomData = {
                             roomUrl: t,
                             region: this.config.get("region"),
-                            teamMode: this.config.get("teamMode"),
+                            gameModeIdx: this.config.get("gameModeIdx"),
                             autoFill: this.config.get("teamAutoFill"),
                             findingGame: !1,
                             lastError: ""
@@ -13319,7 +13312,7 @@ webpackJsonp([1], {
                         this.joined = !1,
                         this.joiningGame = !1,
                         this.refreshUi(),
-                        this.config.set("teamMode", this.roomData.teamMode),
+                        this.config.set("gameModeIdx", this.roomData.gameModeIdx),
                         this.config.set("teamAutoFill", this.roomData.autoFill),
                         this.isLeader && this.config.set("region", this.roomData.region);
                         var t = "";
@@ -13346,8 +13339,7 @@ webpackJsonp([1], {
                         this.localPlayerId = t.localPlayerId,
                         this.isLeader = this.getPlayerById(this.localPlayerId).isLeader,
                         this.isLeader && (this.roomData.region = i.region,
-                        this.roomData.autoFill = i.autoFill,
-                        this.roomData.teamMode = i.teamMode),
+                        this.roomData.autoFill = i.autoFill),
                         this.refreshUi();
                         break;
                     case "joinGame":
@@ -13390,10 +13382,10 @@ webpackJsonp([1], {
                     if (this.isLeader && !this.roomData.findingGame) {
                         var e = s.protocolVersion
                           , t = this.roomData.region
-                          , a = c.getParameterByName("region");
+                          , a = m.getParameterByName("region");
                         void 0 !== a && a.length > 0 && (t = a);
                         var i = this.pingTest.getZones(t)
-                          , r = c.getParameterByName("zone");
+                          , r = m.getParameterByName("zone");
                         void 0 !== r && r.length > 0 && (i = [r]);
                         var o = {
                             version: e,
@@ -13408,65 +13400,58 @@ webpackJsonp([1], {
             }, {
                 key: "refreshUi",
                 value: function() {
-                    var e = this;
+                    var e = this
+                      , t = function(e, t, a) {
+                        e.removeClass("btn-darken btn-disabled btn-opaque btn-hollow-selected"),
+                        a ? e.addClass("btn-darken") : (e.addClass("btn-disabled"),
+                        t || e.addClass("btn-opaque")),
+                        t && e.addClass("btn-hollow-selected"),
+                        e.prop("disabled", !a)
+                    };
                     n("#team-menu").css("display", this.active ? "block" : "none"),
                     n("#start-menu").css("display", this.active ? "none" : "block"),
                     n("#news-block").css("display", this.active ? "none" : "block"),
                     n("#social-share-block").css("display", this.active ? "none" : "block");
-                    var t = "" != this.roomData.lastError
-                      , a = r(this.roomData.lastError, this.localization);
-                    if (this.serverWarning.css("opacity", t ? 1 : 0),
-                    this.serverWarning.html(a),
+                    var a = "" != this.roomData.lastError
+                      , i = r(this.roomData.lastError, this.localization);
+                    if (this.serverWarning.css("opacity", a ? 1 : 0),
+                    this.serverWarning.html(i),
                     this.active && (n("#team-menu-joining-text").css("display", this.create ? "none" : "block"),
                     n("#team-menu-creating-text").css("display", this.create ? "block" : "none"),
                     n("#team-menu-connecting").css("display", this.joined ? "none" : "block"),
                     n("#team-menu-contents").css("display", this.joined ? "block" : "none")),
                     this.joined) {
-                        for (var i = this.siteInfo.pops || {}, o = Object.keys(i), s = 0; s < o.length; s++) {
-                            var l = o[s]
-                              , p = i[l]
-                              , d = n("#team-server-opts").children('option[value="' + l + '"]');
-                            d.html(d.attr("data-label") + " [" + p + "]")
+                        for (var o = this.siteInfo.pops || {}, s = Object.keys(o), l = 0; l < s.length; l++) {
+                            var p = s[l]
+                              , d = o[p]
+                              , h = n("#team-server-opts").children('option[value="' + p + '"]');
+                            h.html(h.attr("data-label") + " [" + d + "]")
                         }
                         if (this.serverSelect.find("option").each(function(t, a) {
                             a.selected = a.value == e.roomData.region
                         }),
-                        n(".btn-team-queue").removeClass("btn-hollow-selected"),
-                        (2 == this.roomData.teamMode ? this.queueDuo : this.queueSquad).addClass("btn-hollow-selected"),
-                        n(".btn-team-fill").removeClass("btn-hollow-selected"),
-                        (this.roomData.autoFill ? this.fillAuto : this.fillNone).addClass("btn-hollow-selected"),
+                        t(this.queueDuo, 1 == this.roomData.gameModeIdx, this.isLeader && -1 !== this.roomData.enabledGameModeIdxs.indexOf(1)),
+                        t(this.queueSquad, 2 == this.roomData.gameModeIdx, this.isLeader && -1 !== this.roomData.enabledGameModeIdxs.indexOf(2)),
+                        t(this.fillAuto, this.roomData.autoFill, this.isLeader),
+                        t(this.fillNone, !this.roomData.autoFill, this.isLeader),
+                        this.serverSelect.prop("disabled", !this.isLeader),
                         this.roomData.roomUrl) {
-                            var h = window.location.origin + "/" + this.roomData.roomUrl
-                              , u = this.roomData.roomUrl.substring(1);
-                            m.webview ? n("#team-url").html(u) : (n("#team-url").html(h),
-                            n("#team-code").html(u)),
+                            var u = window.location.origin + "/" + this.roomData.roomUrl
+                              , g = this.roomData.roomUrl.substring(1);
+                            c.webview ? n("#team-url").html(g) : (n("#team-url").html(u),
+                            n("#team-code").html(g)),
                             window.history && window.history.replaceState("", "", this.roomData.roomUrl)
                         }
                         this.playBtn.html(this.roomData.findingGame || this.joiningGame ? '<div class="ui-spinner"></div>' : this.playBtn.attr("data-label")),
-                        4 == this.roomData.teamMode ? this.playBtn.addClass("btn-faction-mode") : this.playBtn.removeClass("btn-faction-mode"),
-                        this.isLeader ? (this.teamOptions.addClass("btn-darken"),
-                        this.teamOptions.removeClass("btn-disabled"),
-                        this.teamOptions.removeClass("btn-opaque")) : (this.teamOptions.addClass("btn-disabled"),
-                        n(".team-menu-options-buttons .btn-hollow-selected").removeClass("btn-opaque"),
-                        n('.team-menu-options-buttons a:not(".btn-hollow-selected")').addClass("btn-opaque"),
-                        this.teamOptions.removeClass("btn-darken")),
-                        this.teamOptions.prop("disabled", !this.isLeader),
-                        this.serverSelect.prop("disabled", !this.isLeader),
                         n("#btn-start-team").css("display", this.isLeader ? "block" : "none");
-                        for (var g = !1, y = 0; y < this.players.length; y++)
-                            this.players[y].isLeader && (g = this.players[y].inGame);
-                        var w = n("#msg-wait-reason");
-                        if (w.css("display", this.isLeader ? "none" : "block"),
-                        this.roomData.findingGame || this.joiningGame ? w.html('<div class="ui-spinner" style="margin-right:16px"></div>' + this.localization.translate("index-joining-game") + "<span> ...</span>") : g ? w.html(this.localization.translate("index-game-in-progress") + "<span> ...</span>") : w.html(this.localization.translate("index-waiting-for-leader") + "<span> ...</span>"),
-                        this.isLeader) {
-                            var x = this.players.length <= 2;
-                            x || (this.queueDuo.addClass("btn-disabled btn-opaque"),
-                            this.queueDuo.removeClass("btn-darken btn-hollow-selected")),
-                            this.queueDuo.prop("disabled", !x)
-                        }
+                        for (var y = !1, w = 0; w < this.players.length; w++)
+                            this.players[w].isLeader && (y = this.players[w].inGame);
+                        var x = n("#msg-wait-reason");
+                        x.css("display", this.isLeader ? "none" : "block"),
+                        this.roomData.findingGame || this.joiningGame ? x.html('<div class="ui-spinner" style="margin-right:16px"></div>' + this.localization.translate("index-joining-game") + "<span> ...</span>") : y ? x.html(this.localization.translate("index-game-in-progress") + "<span> ...</span>") : x.html(this.localization.translate("index-waiting-for-leader") + "<span> ...</span>");
                         var f = n("#team-menu-member-list");
                         f.empty();
-                        for (var b = 0; b < this.roomData.teamMode; b++) {
+                        for (var b = 0; b < this.roomData.maxPlayers; b++) {
                             var _ = {
                                 name: "",
                                 playerId: 0,
@@ -13498,7 +13483,7 @@ webpackJsonp([1], {
                                 class: "name menu-option"
                             }).append(n("<div/>", {
                                 class: z,
-                                html: c.htmlEscape(_.name)
+                                html: m.htmlEscape(_.name)
                             }))),
                             k.append(n("<div/>", {
                                 class: "icon " + (_.inGame ? "icon-in-game" : "")
@@ -13556,7 +13541,7 @@ webpackJsonp([1], {
         }
         function r(e, t, a, i, r) {
             var o, n;
-            if (r === I(e, t, a, i) > 0)
+            if (r === A(e, t, a, i) > 0)
                 for (o = t; o < a; o += i)
                     n = P(o, e[o], e[o + 1], n);
             else
@@ -13821,8 +13806,8 @@ webpackJsonp([1], {
             } while (a !== e);return i
         }
         function T(e, t) {
-            var a = new A(e.i,e.x,e.y)
-              , i = new A(t.i,t.x,t.y)
+            var a = new I(e.i,e.x,e.y)
+              , i = new I(t.i,t.x,t.y)
               , r = e.next
               , o = t.prev;
             return e.next = t,
@@ -13836,7 +13821,7 @@ webpackJsonp([1], {
             i
         }
         function P(e, t, a, i) {
-            var r = new A(e,t,a);
+            var r = new I(e,t,a);
             return i ? (r.next = i.next,
             r.prev = i,
             i.next.prev = r,
@@ -13850,7 +13835,7 @@ webpackJsonp([1], {
             e.prevZ && (e.prevZ.nextZ = e.nextZ),
             e.nextZ && (e.nextZ.prevZ = e.prevZ)
         }
-        function A(e, t, a) {
+        function I(e, t, a) {
             this.i = e,
             this.x = t,
             this.y = a,
@@ -13861,7 +13846,7 @@ webpackJsonp([1], {
             this.nextZ = null,
             this.steiner = !1
         }
-        function I(e, t, a, i) {
+        function A(e, t, a, i) {
             for (var r = 0, o = t, n = a - i; o < a; o += i)
                 r += (e[n] - e[o]) * (e[o + 1] + e[n + 1]),
                 n = o;
@@ -13872,12 +13857,12 @@ webpackJsonp([1], {
         i.deviation = function(e, t, a, i) {
             var r = t && t.length
               , o = r ? t[0] * a : e.length
-              , n = Math.abs(I(e, 0, o, a));
+              , n = Math.abs(A(e, 0, o, a));
             if (r)
                 for (var s = 0, l = t.length; s < l; s++) {
                     var c = t[s] * a
                       , m = s < l - 1 ? t[s + 1] * a : e.length;
-                    n -= Math.abs(I(e, c, m, a))
+                    n -= Math.abs(A(e, c, m, a))
                 }
             var p = 0;
             for (s = 0; s < i.length; s += 3) {
@@ -14314,7 +14299,7 @@ webpackJsonp([1], {
                 args: a
             }
         }
-        var s, l, c, m, p, d, h, u, g, y, w, x, f, b, _, S, k, v, z, M, T, P, C, A, I, D, E, O, B, L, R, F, j, N, q, V, U, G, W = function() {
+        var s, l, c, m, p, d, h, u, g, y, w, x, f, b, _, S, k, v, z, M, T, P, C, I, A, D, E, O, B, L, R, F, j, N, q, V, G, U, W = function() {
             function e(e, t) {
                 for (var a = 0; a < t.length; a++) {
                     var i = t[a];
@@ -14522,13 +14507,13 @@ webpackJsonp([1], {
                 P)), o(.1, (C = {},
                 i(C, J.HandL, new Y(X.create(14, -1.75))),
                 i(C, J.HandR, new Y(X.create(14, 1.75))),
-                C)), o(.2, (A = {},
-                i(A, J.HandL, new Y(X.create(14, -1.75))),
-                i(A, J.HandR, new Y(X.create(14, 1.75))),
-                A)), o(.1, (I = {},
-                i(I, J.HandL, new Y(X.create(22.75, -1.75))),
-                i(I, J.HandR, new Y(X.create(1.75, 14))),
-                I)), o(99999, (D = {},
+                C)), o(.2, (I = {},
+                i(I, J.HandL, new Y(X.create(14, -1.75))),
+                i(I, J.HandR, new Y(X.create(14, 1.75))),
+                I)), o(.1, (A = {},
+                i(A, J.HandL, new Y(X.create(22.75, -1.75))),
+                i(A, J.HandR, new Y(X.create(1.75, 14))),
+                A)), o(99999, (D = {},
                 i(D, J.HandL, new Y(X.create(22.75, -1.75))),
                 i(D, J.HandR, new Y(X.create(1.75, 14))),
                 D))],
@@ -14585,13 +14570,13 @@ webpackJsonp([1], {
                 keyframes: [o(0, (V = {},
                 i(V, J.HandL, new Y(X.create(14, -12.25))),
                 i(V, J.HandR, new Y(X.create(14, 12.25))),
-                V)), o(.2, (U = {},
-                i(U, J.HandL, new Y(X.create(24.5, -8.75))),
-                i(U, J.HandR, new Y(X.create(5.25, 21))),
-                U)), o(H.player.reviveDuration, (G = {},
+                V)), o(.2, (G = {},
                 i(G, J.HandL, new Y(X.create(24.5, -8.75))),
                 i(G, J.HandR, new Y(X.create(5.25, 21))),
-                G))],
+                G)), o(H.player.reviveDuration, (U = {},
+                i(U, J.HandL, new Y(X.create(24.5, -8.75))),
+                i(U, J.HandR, new Y(X.create(5.25, 21))),
+                U))],
                 effects: []
             }
         };
@@ -14668,16 +14653,16 @@ webpackJsonp([1], {
                     if (T) {
                         var P = l.neg(T.dir)
                           , C = p.intersectSegmentDist(t, M, P, h, v, i, !0)
-                          , A = o.intersectSegment(e, M, l.add(M, l.mul(P, h)))
-                          , I = A ? l.length(l.sub(A.point, M)) : 0
-                          , D = A && I <= C;
+                          , I = o.intersectSegment(e, M, l.add(M, l.mul(P, h)))
+                          , A = I ? l.length(l.sub(I.point, M)) : 0
+                          , D = I && A <= C;
                         if (c.debug) {
                             var E = D ? 65280 : 16711680;
                             m.addRay(M, P, h, E)
                         }
                         if (D)
                             return {
-                                dist: I
+                                dist: A
                             }
                     }
                 }
@@ -14704,7 +14689,7 @@ webpackJsonp([1], {
         e.exports = {
             shared: [{
                 meta: {
-                    image: "shared-0-100-2a978847.png",
+                    image: "shared-0-100-d8f93706.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -17195,7 +17180,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-1-100-f39d50d9.png",
+                    image: "shared-1-100-61bad37b.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -19586,7 +19571,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-2-100-2c4b3acf.png",
+                    image: "shared-2-100-017bc6d2.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -27678,7 +27663,7 @@ webpackJsonp([1], {
             }],
             gradient: [{
                 meta: {
-                    image: "gradient-0-100-9e3de04a.png",
+                    image: "gradient-0-100-b277f2b3.png",
                     size: {
                         w: 1024,
                         h: 1024
@@ -28570,7 +28555,7 @@ webpackJsonp([1], {
             }],
             snow: [{
                 meta: {
-                    image: "snow-0-100-9be513c2.png",
+                    image: "snow-0-100-9855e043.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -29862,7 +29847,7 @@ webpackJsonp([1], {
             }],
             faction: [{
                 meta: {
-                    image: "faction-0-100-3beabfae.png",
+                    image: "faction-0-100-a871adbd.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -30714,7 +30699,7 @@ webpackJsonp([1], {
             }],
             desert: [{
                 meta: {
-                    image: "desert-0-100-f84fc78f.png",
+                    image: "desert-0-100-c9666893.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -31446,7 +31431,7 @@ webpackJsonp([1], {
             }],
             main: [{
                 meta: {
-                    image: "main-0-100-4670a313.png",
+                    image: "main-0-100-45aaaeff.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -32318,7 +32303,7 @@ webpackJsonp([1], {
             }],
             woods: [{
                 meta: {
-                    image: "woods-0-100-b107430d.png",
+                    image: "woods-0-100-ee672b37.png",
                     size: {
                         w: 4096,
                         h: 4096
@@ -33510,7 +33495,7 @@ webpackJsonp([1], {
             }],
             halloween: [{
                 meta: {
-                    image: "halloween-0-100-4486bb65.png",
+                    image: "halloween-0-100-692791e4.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -34022,7 +34007,7 @@ webpackJsonp([1], {
             profile: null,
             playerName: "",
             region: "na",
-            teamMode: 4,
+            gameModeIdx: 2,
             teamAutoFill: !0,
             language: s.detectLanguage() || "en",
             emoteTop: 6,
@@ -35935,11 +35920,11 @@ webpackJsonp([1], {
     },
     "903f46c9": function(e, t, a) {
         "use strict";
-        var i = (a("989ad62a"),
-        a("1901e2d9"))
-          , r = (a("c2a798c8"),
+        var i = a("989ad62a")
+          , r = a("1901e2d9")
+          , o = (a("c2a798c8"),
         a("d5ec3c16"))
-          , o = {
+          , n = {
             desc: {
                 name: "Faction",
                 icon: "img/loot/loot-weapon-flare-gun.svg"
@@ -35968,11 +35953,13 @@ webpackJsonp([1], {
                     playerSubmerge: 1192009
                 }
             },
-            gameRules: {
+            gameMode: {
+                type: i.GameMode.Faction,
+                maxPlayers: 100,
                 factions: 2
             }
         };
-        e.exports = i.mergeDeep({}, r, o)
+        e.exports = r.mergeDeep({}, o, n)
     },
     "9085f81b": function(e, t, a) {
         "use strict";
@@ -36254,6 +36241,10 @@ webpackJsonp([1], {
                 HideUI: 34,
                 TeamPingSingle: 35,
                 Count: 36
+            },
+            GameMode: {
+                BR: 0,
+                Faction: 1
             },
             WeaponSlot: {
                 Primary: 0,
@@ -42973,7 +42964,7 @@ webpackJsonp([1], {
                 helmet09: {
                     name: "Leader Helmet",
                     type: "helmet",
-                    level: 9,
+                    level: 3,
                     damageReduction: .7,
                     noDrop: !0,
                     skinImg: {
@@ -43231,8 +43222,8 @@ webpackJsonp([1], {
           , T = a("a7f094a3")
           , P = a("4b8d140f")
           , C = a("a48f3bb2")
-          , A = a("d49cd95c")
-          , I = a("753d6e4b")
+          , I = a("d49cd95c")
+          , A = a("753d6e4b")
           , D = a("119e8c4c")
           , E = a("feb8fc30")
           , O = a("fc6a992a")
@@ -43324,15 +43315,15 @@ webpackJsonp([1], {
                 this.Me = !1,
                 this.Te = new N.Pe(this.fe,this.config),
                 this.K = new f.I,
-                this.Ce = new R.Ae(this,this.canvasMode),
-                this.Ie = new D.p(this.Ce),
-                this.De = new A.Ee,
+                this.Ce = new R.Ie(this,this.canvasMode),
+                this.Ae = new D.p(this.Ce),
+                this.De = new I.Ee,
                 this.Oe = new B.Be,
                 this.Le = new x.Re,
                 this.Fe = new M.je,
                 this.Ne = new L.qe,
                 this.Ve = new v.pe,
-                this.Ue = new O.Ge(this.we),
+                this.Ge = new O.Ue(this.we),
                 this.We = new w.H,
                 this.He = new j.m,
                 this.Ke = new b.ge,
@@ -43340,10 +43331,10 @@ webpackJsonp([1], {
                 this.Xe = new C.Ye,
                 this.Je = new T.Qe(this.canvasMode),
                 this.$e = new E.et,
-                this.ke = new q.ee(this,this.we,this.$e,this.Ie,this.Ue,this.localization,this.canvasMode,this.Te,this.be,this._e,this.adManager),
+                this.ke = new q.ee(this,this.we,this.$e,this.Ae,this.Ge,this.localization,this.canvasMode,this.Te,this.be,this._e,this.adManager),
                 this.tt = new V.at(this.localization,this.be),
                 this.it = new k.rt(this.we,this.ke,this.Oe,this.K,this.De),
-                this.ot = new F.he(this.Ie,this.we,this.ke);
+                this.ot = new F.he(this.Ae,this.we,this.ke);
                 var t = (e = {},
                 i(e, l.Type.Player, this.Oe.me),
                 i(e, l.Type.Obstacle, this.De.te),
@@ -43356,7 +43347,7 @@ webpackJsonp([1], {
                 i(e, l.Type.Smoke, this.He.e),
                 i(e, l.Type.Airdrop, this.We.U),
                 e);
-                this.mt = new I.Creator;
+                this.mt = new A.Creator;
                 for (var a in t)
                     t.hasOwnProperty(a) && this.mt.registerType(a, t[a]);
                 this.debugDisplay = new o.Graphics;
@@ -43427,9 +43418,9 @@ webpackJsonp([1], {
                     this.$e.destroy(),
                     this.Je.free(),
                     this.We.o(),
-                    this.Ue.o(),
+                    this.Ge.o(),
                     this.De.o(),
-                    this.Ie.o(),
+                    this.Ae.o(),
                     this.Ce.o(),
                     this.we.stopAll(); this.pixi.stage.children.length > 0; ) {
                         var e = this.pixi.stage.children[0];
@@ -43450,7 +43441,7 @@ webpackJsonp([1], {
                   , r = {};
                 r.render = r.render || {},
                 this.playing && (this.playingTicker += e),
-                this.Oe.l(e, this.ht, this.teamMode, this.Ce, this.Ie, this.K, this.De, this.be, this.we, this.it.wheelKeyTriggered, this.ke.displayingStats, this.spectating),
+                this.Oe.l(e, this.ht, this.teamMode, this.Ce, this.Ae, this.K, this.De, this.be, this.we, this.it.wheelKeyTriggered, this.ke.displayingStats, this.spectating),
                 this.updateAmbience(),
                 this.K.pos = u.copy(this.ut.pos),
                 this.K.applyShake();
@@ -43484,10 +43475,10 @@ webpackJsonp([1], {
                           , C = u.copy(T.aimMovement.toAimDir);
                         if (this.Te.turnDirTicker -= e,
                         this.Te.moveDetected && !T.touched) {
-                            var A = u.normalizeSafe(M.toMoveDir, u.create(1, 0))
-                              , I = this.Te.turnDirTicker < 0 ? A : T.aimMovement.toAimDir;
-                            this.Te.setAimDir(I),
-                            C = I
+                            var I = u.normalizeSafe(M.toMoveDir, u.create(1, 0))
+                              , A = this.Te.turnDirTicker < 0 ? I : T.aimMovement.toAimDir;
+                            this.Te.setAimDir(A),
+                            C = A
                         }
                         T.touched && (this.Te.turnDirTicker = this.Te.turnDirCooldown),
                         this.Te.moveDetected ? (z.touchMoveDir = u.normalizeSafe(M.toMoveDir, u.create(1, 0)),
@@ -43532,19 +43523,19 @@ webpackJsonp([1], {
                     this.ke.interactionTouched && (z.addInput(s.Interact),
                     z.addInput(s.Cancel));
                     for (var V = 0; V < this.tt.uiEvents.length; V++) {
-                        var U = this.tt.uiEvents[V];
-                        if ("use" == U.action)
-                            if ("weapon" == U.type) {
-                                var G = {
+                        var G = this.tt.uiEvents[V];
+                        if ("use" == G.action)
+                            if ("weapon" == G.type) {
+                                var U = {
                                     0: s.EquipPrimary,
                                     1: s.EquipSecondary,
                                     2: s.EquipMelee,
                                     3: s.EquipThrowable
                                 }
-                                  , W = G[U.data];
+                                  , W = U[G.data];
                                 W && z.addInput(W)
                             } else
-                                z.useItem = U.data
+                                z.useItem = G.data
                     }
                     this.be.isBindPressed(s.UseBandage) ? z.useItem = "bandage" : this.be.isBindPressed(s.UseHealthKit) ? z.useItem = "healthkit" : this.be.isBindPressed(s.UseSoda) ? z.useItem = "soda" : this.be.isBindPressed(s.UsePainkiller) && (z.useItem = "painkiller");
                     for (var H = !1, K = 0; K < this.tt.uiEvents.length; K++) {
@@ -43609,17 +43600,17 @@ webpackJsonp([1], {
                 this.inputMsgTimeout = 1,
                 this.prevInputMsg = z),
                 this.tt.flushInput(),
-                this.De.l(e, this.ut, this.Oe, this.Ie, this.we, this.xe, this.Ce, this.K, t, r),
+                this.De.l(e, this.ut, this.Oe, this.Ae, this.we, this.xe, this.Ce, this.K, t, r),
                 this.Xe.l(e, this.ut, this.K, r),
-                this.Le.l(e, this.Oe, this.De, this.K, this.ut, this.Ce, this.Ie, this.we),
-                this.Fe.l(e, this.Oe, this.De, this.K, this.ut, this.Ce, this.Ie, this.we),
-                this.Ne.l(e, this.Ie, this.we, this.ut, this.De, this.Ce, this.K),
-                this.Ve.l(e, this.De, this.Oe, this.K, this.Ie, this.we, r),
-                this.We.l(e, this.ut, this.K, this.De, this.Ie, this.Ce, this.we),
-                this.Ue.l(e, this.K, this.ut, this.De, this.Ce),
+                this.Le.l(e, this.Oe, this.De, this.K, this.ut, this.Ce, this.Ae, this.we),
+                this.Fe.l(e, this.Oe, this.De, this.K, this.ut, this.Ce, this.Ae, this.we),
+                this.Ne.l(e, this.Ae, this.we, this.ut, this.De, this.Ce, this.K),
+                this.Ve.l(e, this.De, this.Oe, this.K, this.Ae, this.we, r),
+                this.We.l(e, this.ut, this.K, this.De, this.Ae, this.Ce, this.we),
+                this.Ge.l(e, this.K, this.ut, this.De, this.Ce),
                 this.He.l(e, this.K, this.ut, this.De, this.Ce),
-                this.ot.l(e, this.ht, this.Oe, this.Ie, this.we),
-                this.Ie.l(e, this.K, r),
+                this.ot.l(e, this.ht, this.Oe, this.Ae, this.we),
+                this.Ae.l(e, this.K, r),
                 this.Ke.l(e, this.Oe, this.ut, this.anonPlayerNames, this.dt, this.De, this.K, this.Ce),
                 this.Ze.l(e, this.K, this.Ce, r),
                 this.$e.l(e, this.ut, this.K),
@@ -43681,7 +43672,7 @@ webpackJsonp([1], {
                 this.Fe.render(this.K),
                 this.De.render(this.K),
                 this.Je.render(this.K),
-                this.ke.render(this.ut.pos, this.Je, this.K, this.De, this.Ue, t),
+                this.ke.render(this.ut.pos, this.Je, this.K, this.De, this.Ge, t),
                 this.it.render(this.K),
                 this.$e.render(this.K),
                 _.flush()
@@ -43730,7 +43721,7 @@ webpackJsonp([1], {
                 var t = {
                     audioManager: this.we,
                     renderer: this.Ce,
-                    particleBarn: this.Ie,
+                    particleBarn: this.Ae,
                     map: this.De,
                     smokeBarn: this.He,
                     decalBarn: this.Ze
@@ -43749,7 +43740,7 @@ webpackJsonp([1], {
                 }
                 if (e.groupStatusDirty) {
                     var s = this.Oe.J(this.ht).groupId;
-                    this.Oe.At(s, e.groupStatus)
+                    this.Oe.It(s, e.groupStatus)
                 }
                 for (var l = 0; l < e.delObjIds.length; l++)
                     e.delObjIds[l],
@@ -43764,7 +43755,7 @@ webpackJsonp([1], {
                 }
                 this.spectating = this.ht != this.dt,
                 this.ut = this.Oe.de(this.ht),
-                this.ut.It(e.activePlayerData, this.Oe),
+                this.ut.At(e.activePlayerData, this.Oe),
                 e.activePlayerData.weapsDirty && (this.ke.weapsDirty = !0),
                 this.spectating && (this.ke.setSpectateTarget(this.ht, this.dt, this.teamMode, this.anonPlayerNames, this.Oe),
                 this.Te.hideAll()),
@@ -43791,10 +43782,10 @@ webpackJsonp([1], {
                     var f = e.emotes[x];
                     f.isPing ? this.it.addPing(f, this.De.factionMode) : this.it.addEmote(f)
                 }
-                this.Ue.Dt(e.planes, this.De);
+                this.Ge.Dt(e.planes, this.De);
                 for (var b = 0; b < e.airstrikeZones.length; b++)
-                    this.Ue.Et(e.airstrikeZones[b]);
-                e.mapStateDirty && this.De.updateMapState(e.mapState, this.updateRecvCount, this.ut, this.Ie, this.we),
+                    this.Ge.Et(e.airstrikeZones[b]);
+                e.mapStateDirty && this.De.updateMapState(e.mapState, this.updateRecvCount, this.ut, this.Ae, this.we),
                 this.updateRecvCount++
             },
             Se: function(e, t) {
@@ -43815,13 +43806,13 @@ webpackJsonp([1], {
                 case h.Msg.Map:
                     var r = new h.MapMsg;
                     r.deserialize(t),
-                    this.De.loadMap(r, this.K, this.canvasMode, this.Ie);
+                    this.De.loadMap(r, this.K, this.canvasMode, this.Ae);
                     var o = this.De.getMapDef().assets;
                     this.we.loadSoundList(o.audio),
                     this.textureManager.loadAtlasList(o.atlases),
                     this.Oe.onMapLoad(this.De),
                     this.Le.onMapLoad(this.De),
-                    this.Ie.onMapLoad(this.De),
+                    this.Ae.onMapLoad(this.De),
                     this.De.renderMap(this.pixi.renderer, this.canvasMode);
                     break;
                 case h.Msg.Update:
@@ -43871,7 +43862,7 @@ webpackJsonp([1], {
                         name: x,
                         suicide: l.killerId == l.targetId || l.killCreditId == l.targetId
                     }, d, this.spectating);
-                    var S = this.tt.getKillFeedText(x, 0 == w.teamId || void 0 == w.teamId ? "" : b, d, l.damageType, l.downed && !l.killed)
+                    var S = this.tt.getKillFeedText(x, w.teamId ? b : "", d, p, l.damageType, l.downed && !l.killed)
                       , k = this.tt.getKillFeedColor(u, c.teamId, m.teamId, this.De.factionMode);
                     if (this.tt.addKillFeed(S, k),
                     l.type == n.DamageType.Player && this.Le.createBulletHit(this.Oe, l.targetId, this.we),
@@ -43900,15 +43891,15 @@ webpackJsonp([1], {
                     }
                     break;
                 case h.Msg.PlayerStats:
-                    var A = new h.PlayerStatsMsg;
-                    A.deserialize(t),
-                    this.ke.setLocalStats(A.playerStats),
+                    var I = new h.PlayerStatsMsg;
+                    I.deserialize(t),
+                    this.ke.setLocalStats(I.playerStats),
                     this.ke.showTeamAd();
                     break;
                 case h.Msg.Stats:
-                    var I = new h.StatsMsg;
-                    I.deserialize(t),
-                    y.q(I.data, this);
+                    var A = new h.StatsMsg;
+                    A.deserialize(t),
+                    y.q(A.data, this);
                     break;
                 case h.Msg.GameOver:
                     var D = new h.GameOverMsg;
@@ -44558,7 +44549,6 @@ webpackJsonp([1], {
                 this.container.addChild(this.gunMag),
                 this.container.rotation = .5 * Math.PI,
                 this.container.visible = !1,
-                this.type = "",
                 this.magTop = !1
             }
             return l(e, [{
@@ -44569,32 +44559,30 @@ webpackJsonp([1], {
             }, {
                 key: "setType",
                 value: function(e, t) {
-                    if (e != this.type) {
-                        this.type = e;
-                        var a = m.items[e]
-                          , i = a.worldImg;
-                        if (this.gunBarrel.texture = c.Texture.fromImage(i.sprite),
-                        this.gunBarrel.anchor.set(.5, 1),
-                        this.gunBarrel.position.set(0, 0),
-                        t ? this.gunBarrel.scale.set(.5 * i.scale.x / 1.25, .5 * i.scale.y / 1.25) : this.gunBarrel.scale.set(.5 * i.scale.x, .5 * i.scale.y),
-                        this.gunBarrel.tint = i.tint,
-                        this.gunBarrel.visible = !0,
-                        i.magImg) {
-                            var r = i.magImg;
-                            this.gunMag.texture = c.Texture.fromImage(r.sprite),
-                            this.gunMag.anchor.set(.5, .5),
-                            this.gunMag.position.set(r.pos.x, r.pos.y),
-                            this.gunMag.scale.set(.25, .25),
-                            this.gunMag.tint = 16777215,
-                            this.gunMag.visible = !0,
-                            r.top ? this.container.addChild(this.gunMag) : this.container.addChildAt(this.gunMag, 0)
-                        } else
-                            this.gunMag.visible = !1;
-                        this.magTop = i.magImg && i.magImg.top;
-                        var o = w.create(-4.25, -1.75);
-                        a.pistol && a.isDual && (o = a.isDual ? w.create(-5.95, 0) : w.create(-4.75, -1.75)),
-                        this.container.position.set(o.x, o.y)
-                    }
+                    var a = m.items[e]
+                      , i = a.worldImg
+                      , r = t ? 1.25 : 1;
+                    if (this.gunBarrel.texture = c.Texture.fromImage(i.sprite),
+                    this.gunBarrel.anchor.set(.5, 1),
+                    this.gunBarrel.position.set(0, 0),
+                    this.gunBarrel.scale.set(.5 * i.scale.x / r, .5 * i.scale.y / r),
+                    this.gunBarrel.tint = i.tint,
+                    this.gunBarrel.visible = !0,
+                    i.magImg) {
+                        var o = i.magImg;
+                        this.gunMag.texture = c.Texture.fromImage(o.sprite),
+                        this.gunMag.anchor.set(.5, .5),
+                        this.gunMag.position.set(o.pos.x, o.pos.y),
+                        this.gunMag.scale.set(.25, .25),
+                        this.gunMag.tint = 16777215,
+                        this.gunMag.visible = !0,
+                        o.top ? this.container.addChild(this.gunMag) : this.container.addChildAt(this.gunMag, 0)
+                    } else
+                        this.gunMag.visible = !1;
+                    this.magTop = i.magImg && i.magImg.top;
+                    var n = w.create(-4.25, -1.75);
+                    a.pistol && a.isDual && (n = a.isDual ? w.create(-5.95, 0) : w.create(-4.75, -1.75)),
+                    this.container.position.set(n.x, n.y)
                 }
             }]),
             e
@@ -44634,7 +44622,7 @@ webpackJsonp([1], {
                 this.visualsDirty = !0),
                 a && (this.isNew = !0)
             },
-            It: function(e, t) {
+            At: function(e, t) {
                 var a = this.Y.curScope
                   , i = this.Y;
                 if (i.health = e.health,
@@ -44707,21 +44695,21 @@ webpackJsonp([1], {
                     this.nameText.text = P.name,
                     this.nameText.visible = !k && C
                 }
-                for (var A = null, I = null, D = a.te.c(), E = 0; E < D.length; E++) {
+                for (var I = null, A = null, D = a.te.c(), E = 0; E < D.length; E++) {
                     var O = D[E];
                     if (O.active && !O.dead && O.layer == this.Z.layer)
                         if (O.isBush) {
                             var B = .25 * this.rad;
-                            b.intersectCircle(O.collider, this.pos, B) && (A = O)
+                            b.intersectCircle(O.collider, this.pos, B) && (I = O)
                         } else if (O.isDoor && !O.door.open && O.door.playErrorFx) {
                             var L = this.rad + .25
                               , R = w.rotate(w.create(1, 0), O.rot)
                               , F = w.sub(O.pos, this.pos);
-                            w.dot(F, R) < 0 && b.intersectCircle(O.collider, this.pos, L) && (I = O)
+                            w.dot(F, R) < 0 && b.intersectCircle(O.collider, this.pos, L) && (A = O)
                         }
                 }
-                var j = null != A;
-                if (j && (this.insideObstacleType = A.type),
+                var j = null != I;
+                if (j && (this.insideObstacleType = I.type),
                 this.lastInsideObstacleTime -= e,
                 this.wasInsideObstacle != j && this.lastInsideObstacleTime < 0 && !this.isNew) {
                     var N = u.Defs[this.insideObstacleType];
@@ -44733,18 +44721,18 @@ webpackJsonp([1], {
                         layer: this.layer,
                         muffled: !0
                     });
-                    for (var q = w.normalizeSafe(w.sub(this.posOld, this.pos), w.create(1, 0)), V = j ? 1 : -1, U = Math.floor(y.random(3, 5)), G = 0; G < U; G++) {
+                    for (var q = w.normalizeSafe(w.sub(this.posOld, this.pos), w.create(1, 0)), V = j ? 1 : -1, G = Math.floor(y.random(3, 5)), U = 0; U < G; U++) {
                         var W = w.mul(w.rotate(w.mul(q, V), (Math.random() - .5) * Math.PI / 1.5), y.random(6, 8));
                         r.addParticle(N.hitParticle, this.layer, this.pos, W)
                     }
                 }
                 this.wasInsideObstacle = j;
                 var H = this.isNearDoorError;
-                if (this.isNearDoorError = null != I,
+                if (this.isNearDoorError = null != A,
                 this.doorErrorTicker -= e,
                 this.isNearDoorError && !H && this.doorErrorTicker <= 0) {
                     this.doorErrorTicker = .5;
-                    var K = u.Defs[I.type]
+                    var K = u.Defs[A.type]
                       , Z = K.door.sound.error;
                     i.playSound(Z, {
                         channel: "sfx",
@@ -44862,10 +44850,10 @@ webpackJsonp([1], {
                       , we = this.anim.bones[ge];
                     we.weight > 0 ? this.bones[ue].copy(z.lerp(we.weight, ye, we.pose)) : this.bones[ue].copy(ye)
                 }
-                (this.visualsDirty || this.throwableStatePrev != this.throwableState) && this.Ut(t, a),
+                (this.visualsDirty || this.throwableStatePrev != this.throwableState) && this.Gt(t, a),
                 this.visualsDirty = !1,
                 this.throwableStatePrev = this.throwableState,
-                this.Gt();
+                this.Ut();
                 for (var xe = this.layer, fe = b.createCircle(this.pos, m.player.maxVisualRadius), be = !1, _e = !1, Se = !1, ke = a.lt.c(), ve = 0; ve < ke.length; ve++) {
                     var ze = ke[ve];
                     if (ze.active) {
@@ -44875,10 +44863,10 @@ webpackJsonp([1], {
                             if (Pe) {
                                 _e = !0;
                                 var Ce = w.add(Te.center, w.mul(Te.downDir, -3))
-                                  , Ae = w.sub(Ce, this.pos)
-                                  , Ie = w.length(Ae);
-                                Ae = Ie > 1e-4 ? w.div(Ae, Ie) : w.create(1, 0),
-                                Se = S.intersectSegmentDist(a.te.c(), this.pos, Ae, Ie, .5, this.layer, !1) < Ie
+                                  , Ie = w.sub(Ce, this.pos)
+                                  , Ae = w.length(Ie);
+                                Ie = Ae > 1e-4 ? w.div(Ie, Ae) : w.create(1, 0),
+                                Se = S.intersectSegmentDist(a.te.c(), this.pos, Ie, Ae, .5, this.layer, !1) < Ae
                             }
                             k && Te.noCeilingReveal && Pe && 0 != this.layer && (this.noCeilingRevealTicker = .25)
                         }
@@ -44904,7 +44892,7 @@ webpackJsonp([1], {
                 this.container.scale.set(i, i),
                 this.container.visible = !this.Z.dead
             },
-            Ut: function(e, t) {
+            Gt: function(e, t) {
                 var a = m.items[this.Z.skin]
                   , i = a.skinImg
                   , r = this.Z.factionLeader;
@@ -44984,11 +44972,11 @@ webpackJsonp([1], {
                     var P = (m.items[this.Z.backpack],
                     [10.25, 11.5, 12.75])
                       , C = this.Nt()
-                      , A = P[x.min(C - 1, P.length - 1)]
-                      , I = .5 * (.4 + .03 * C);
+                      , I = P[x.min(C - 1, P.length - 1)]
+                      , A = .5 * (.4 + .03 * C);
                     this.backpackSprite.texture = c.Texture.fromImage("player-circle-base-01.img"),
-                    this.backpackSprite.position.set(-A, 0),
-                    this.backpackSprite.scale.set(I, I),
+                    this.backpackSprite.position.set(-I, 0),
+                    this.backpackSprite.scale.set(A, A),
                     this.backpackSprite.tint = i.backpackTint,
                     this.backpackSprite.visible = !0,
                     function(e, t, a) {
@@ -45060,14 +45048,14 @@ webpackJsonp([1], {
                 this.downed != this.wasDowned)
                     if (this.wasDowned = this.downed,
                     this.downed) {
-                        var U = this.bodyContainer.getChildIndex(this.footLContainer);
-                        this.bodyContainer.addChildAt(this.handLContainer, U),
-                        this.bodyContainer.addChildAt(this.handRContainer, U)
+                        var G = this.bodyContainer.getChildIndex(this.footLContainer);
+                        this.bodyContainer.addChildAt(this.handLContainer, G),
+                        this.bodyContainer.addChildAt(this.handRContainer, G)
                     } else
                         this.bodyContainer.addChild(this.handLContainer),
                         this.bodyContainer.addChild(this.handRContainer);
-                for (var G = [this.bodySubmergeSprite, this.handLSubmergeSprite, this.handRSubmergeSprite, this.footLSubmergeSprite, this.footRSubmergeSprite], W = t.getMapDef().biome.colors.playerSubmerge, H = 0; H < G.length; H++)
-                    G[H].tint = W;
+                for (var U = [this.bodySubmergeSprite, this.handLSubmergeSprite, this.handRSubmergeSprite, this.footLSubmergeSprite, this.footRSubmergeSprite], W = t.getMapDef().biome.colors.playerSubmerge, H = 0; H < U.length; H++)
+                    U[H].tint = W;
                 var K = r ? 1.25 : 1
                   , Z = m.items[this.Z.curWeapType];
                 if ("melee" == Z.type && "fists" != this.Z.curWeapType) {
@@ -45077,7 +45065,7 @@ webpackJsonp([1], {
                 this.bodyContainer.scale.set(K, K),
                 this.rad = m.player.radius * K
             },
-            Gt: function() {
+            Ut: function() {
                 var e = function(e, t) {
                     e.position.set(t.pos.x, t.pos.y),
                     e.pivot.set(-t.pivot.x, -t.pivot.y),
@@ -45229,13 +45217,13 @@ webpackJsonp([1], {
                         var P = M[T];
                         if (P.active && P.__id != this.__id && !P.Z.dead && y.sameLayer(P.layer, this.layer)) {
                             var C = w.normalizeSafe(w.sub(P.pos, this.pos), w.create(1, 0))
-                              , A = f.intersectCircleCircle(r, o, P.pos, P.rad);
-                            if (A && x.eqAbs(n, S.intersectSegmentDist(e.map.te.c(), this.pos, C, n, m.player.meleeHeight, this.layer, !1))) {
-                                var I = e.playerBarn.J(P.__id).teamId
+                              , I = f.intersectCircleCircle(r, o, P.pos, P.rad);
+                            if (I && x.eqAbs(n, S.intersectSegmentDist(e.map.te.c(), this.pos, C, n, m.player.meleeHeight, this.layer, !1))) {
+                                var A = e.playerBarn.J(P.__id).teamId
                                   , D = w.rotate(C, (Math.random() - .5) * Math.PI / 3);
                                 s.push({
-                                    pen: A.pen,
-                                    prio: I == z ? 2 : 0,
+                                    pen: I.pen,
+                                    prio: A == z ? 2 : 0,
                                     pos: w.copy(P.pos),
                                     vel: D,
                                     particle: "bloodSplat",
@@ -45345,7 +45333,7 @@ webpackJsonp([1], {
                     factionLeader: f.Z.factionLeader,
                     visible: !0
                 });
-                for (var b = g.getPlayerStatusUpdateRate(a, n.factionMode), _ = Object.keys(this.playerStatus), S = 0; S < _.length; S++) {
+                for (var b = g.getPlayerStatusUpdateRate(n.gameMode, n.teamMode), _ = Object.keys(this.playerStatus), S = 0; S < _.length; S++) {
                     var k = this.playerStatus[_[S]]
                       , v = k.playerId
                       , z = this.J(v)
@@ -45358,12 +45346,12 @@ webpackJsonp([1], {
                     var T = w.sub(k.posTarget, k.pos)
                       , P = w.length(T)
                       , C = P > 1e-4 ? w.div(T, P) : w.create(1, 0)
-                      , A = x.min(P, k.posDelta * k.posInterp);
-                    k.pos = w.add(k.pos, w.mul(C, A)),
+                      , I = x.min(P, k.posDelta * k.posInterp);
+                    k.pos = w.add(k.pos, w.mul(C, I)),
                     k.timeSinceVisible += e,
                     k.timeSinceUpdate += e;
-                    var I = k.dead && (z.teamId == y.teamId || k.factionLeader) ? .6 : 0;
-                    k.minimapAlpha = x.smoothstep(k.timeSinceVisible, 0, .1) * x.lerp(x.smoothstep(k.timeSinceUpdate, 2, 2.5), 1, I),
+                    var A = k.dead && (z.teamId == y.teamId || k.factionLeader) ? .6 : 0;
+                    k.minimapAlpha = x.smoothstep(k.timeSinceVisible, 0, .1) * x.lerp(x.smoothstep(k.timeSinceUpdate, 2, 2.5), 1, A),
                     k.minimapVisible = k.minimapAlpha > .01
                 }
             },
@@ -45486,7 +45474,7 @@ webpackJsonp([1], {
             $: function(e) {
                 return this.playerStatus[e]
             },
-            At: function(e, t) {
+            It: function(e, t) {
                 var a = this.getGroupInfo(e);
                 if (a.playerIds.length != t.players.length)
                     throw new Error("PlayerIds and groupStatus.players out of sync");
@@ -46515,7 +46503,7 @@ webpackJsonp([1], {
         e.exports = {
             shared: [{
                 meta: {
-                    image: "shared-0-50-4cf54900.png",
+                    image: "shared-0-50-d2c2ed2f.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -48706,7 +48694,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-1-50-3e5265cf.png",
+                    image: "shared-1-50-1e1d2dbb.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -51357,7 +51345,7 @@ webpackJsonp([1], {
                 }
             }, {
                 meta: {
-                    image: "shared-2-50-d152fefd.png",
+                    image: "shared-2-50-42443bbe.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -59489,7 +59477,7 @@ webpackJsonp([1], {
             }],
             gradient: [{
                 meta: {
-                    image: "gradient-0-50-bf5cbb2a.png",
+                    image: "gradient-0-50-a611d1a4.png",
                     size: {
                         w: 512,
                         h: 512
@@ -60381,7 +60369,7 @@ webpackJsonp([1], {
             }],
             snow: [{
                 meta: {
-                    image: "snow-0-50-3aea4efc.png",
+                    image: "snow-0-50-1e19952c.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -61673,7 +61661,7 @@ webpackJsonp([1], {
             }],
             faction: [{
                 meta: {
-                    image: "faction-0-50-4dc6bdf6.png",
+                    image: "faction-0-50-f7fde75b.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -62525,7 +62513,7 @@ webpackJsonp([1], {
             }],
             desert: [{
                 meta: {
-                    image: "desert-0-50-745e221a.png",
+                    image: "desert-0-50-bcfd69a7.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -63257,7 +63245,7 @@ webpackJsonp([1], {
             }],
             main: [{
                 meta: {
-                    image: "main-0-50-c22e8b99.png",
+                    image: "main-0-50-313573c1.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -64129,7 +64117,7 @@ webpackJsonp([1], {
             }],
             woods: [{
                 meta: {
-                    image: "woods-0-50-bd601ce7.png",
+                    image: "woods-0-50-d9d3d30d.png",
                     size: {
                         w: 2048,
                         h: 2048
@@ -65321,7 +65309,7 @@ webpackJsonp([1], {
             }],
             halloween: [{
                 meta: {
-                    image: "halloween-0-50-91b87284.png",
+                    image: "halloween-0-50-7bce584c.png",
                     size: {
                         w: 1024,
                         h: 1024
@@ -67079,12 +67067,12 @@ webpackJsonp([1], {
                         if (f.obj && f.obj.__id != w.lastSoundObjId && P > 7.5 && (w.lastSoundObjId = f.obj.__id,
                         w.playHitSfx)) {
                             var C = p.mul(p.normalizeSafe(T, p.create(1, 0)), -1)
-                              , A = s.Defs[f.obj.type];
-                            d.playHitFx(A.hitParticle, A.sound.bullet, w.pos, C, w.layer, t, a)
+                              , I = s.Defs[f.obj.type];
+                            d.playHitFx(I.hitParticle, I.sound.bullet, w.pos, C, w.layer, t, a)
                         }
-                        var I = r.getGroundSurface(w.pos, w.layer);
-                        w.posZ <= .01 && (w.inWater || "water" != I.type || t.addRippleParticle(w.pos, w.layer),
-                        w.inWater = "water" == I.type);
+                        var A = r.getGroundSurface(w.pos, w.layer);
+                        w.posZ <= .01 && (w.inWater || "water" != A.type || t.addRippleParticle(w.pos, w.layer),
+                        w.inWater = "water" == A.type);
                         var D = w.velZ;
                         if (w.velZ = (w.posZ - w.posZOld) / e,
                         !w.isNew && !w.grounded && w.velZ >= 0 && D < 0) {
@@ -67101,8 +67089,8 @@ webpackJsonp([1], {
                                 }
                             } else
                                 w.grounded = !0,
-                                E.name = u[I.type],
-                                void 0 === E.name && (E.name = "footstep_" + I.type,
+                                E.name = u[A.type],
+                                void 0 === E.name && (E.name = "footstep_" + A.type,
                                 E.fn = "playGroup",
                                 E.channel = "sfx");
                             E.name && w.playHitSfx && a[E.fn](E.name, {
@@ -67119,7 +67107,7 @@ webpackJsonp([1], {
                           , j = r.insideStructureMask(R);
                         !(w.posZ >= .25 && F && (1 & w.layer) == (1 & i.layer)) || j && 2 & i.layer || (B |= 2,
                         L += 100),
-                        w.alwaysRenderOntop && (L = 1e3,
+                        w.alwaysRenderOntop && 0 == i.layer && (L = 1e3,
                         B |= 2),
                         o.addPIXIObj(w.sprite, B, L);
                         var N = w.imgScale * c.remap(w.posZ, 0, n.projectile.maxHeight, 1, 4.75)
@@ -67508,9 +67496,9 @@ webpackJsonp([1], {
                     this.waterWidths.push(z);
                     for (var M = this.shoreWidth, T = null, P = 0; P < r.length; P++) {
                         var C = r[P]
-                          , A = C.spline.getClosestTtoPoint(y)
-                          , I = C.spline.getPos(A)
-                          , D = c.length(c.sub(I, y));
+                          , I = C.spline.getClosestTtoPoint(y)
+                          , A = C.spline.getPos(I)
+                          , D = c.length(c.sub(A, y));
                         D < 2 * C.waterWidth && (M = s.max(M, C.shoreWidth)),
                         (0 == h || h == t.length - 1) && D < 1 && !x && (T = C)
                     }
@@ -67543,10 +67531,10 @@ webpackJsonp([1], {
                     this.shorePoly.splice(h, 0, N),
                     this.shorePoly.splice(this.shorePoly.length - h, 0, q)
                 }
-                for (var V = c.create(Number.MAX_VALUE, Number.MAX_VALUE), U = c.create(-Number.MAX_VALUE, -Number.MAX_VALUE), G = 0; G < this.shorePoly.length; G++)
-                    V = c.minElems(V, this.shorePoly[G]),
-                    U = c.maxElems(U, this.shorePoly[G]);
-                this.aabb = n.createAabb(V, U, 0)
+                for (var V = c.create(Number.MAX_VALUE, Number.MAX_VALUE), G = c.create(-Number.MAX_VALUE, -Number.MAX_VALUE), U = 0; U < this.shorePoly.length; U++)
+                    V = c.minElems(V, this.shorePoly[U]),
+                    G = c.maxElems(G, this.shorePoly[U]);
+                this.aabb = n.createAabb(V, G, 0)
             }
             return r(e, [{
                 key: "distanceToShore",
@@ -68280,7 +68268,7 @@ webpackJsonp([1], {
         },
         e.exports = {
             RenderGroup: g,
-            Ae: c
+            Ie: c
         }
     },
     c73dee75: function(e, t, a) {
@@ -68409,11 +68397,11 @@ webpackJsonp([1], {
                             }
                         }
                         for (var C = 0; C < w.length; C++) {
-                            var A = w[C];
-                            if (A.active && !A.Z.dead && (d.sameLayer(A.Z.layer, f.layer) || 2 & A.Z.layer) && (A.__id != f.playerId || f.damageSelf)) {
-                                var I = null;
-                                if (A.hasActivePan()) {
-                                    var D = A
+                            var I = w[C];
+                            if (I.active && !I.Z.dead && (d.sameLayer(I.Z.layer, f.layer) || 2 & I.Z.layer) && (I.__id != f.playerId || f.damageSelf)) {
+                                var A = null;
+                                if (I.hasActivePan()) {
+                                    var D = I
                                       , E = D.getPanSegment()
                                       , O = i(E.p0, E.p1, D.posOld, D.dirOld)
                                       , B = i(E.p0, E.p1, D.pos, D.dir)
@@ -68422,26 +68410,26 @@ webpackJsonp([1], {
                                       , F = R || L;
                                     if (F) {
                                         var j = h.normalize(h.perp(h.sub(B.p1, B.p0)));
-                                        I = {
+                                        A = {
                                             point: F.point,
                                             normal: j
                                         }
                                     }
                                 }
-                                var N = s.intersectSegmentCircle(S, f.pos, A.pos, A.rad);
-                                if (N && (!I || h.length(h.sub(N.point, f.startPos)) < h.length(h.sub(I.point, f.startPos))) ? v.push({
+                                var N = s.intersectSegmentCircle(S, f.pos, I.pos, I.rad);
+                                if (N && (!A || h.length(h.sub(N.point, f.startPos)) < h.length(h.sub(A.point, f.startPos))) ? v.push({
                                     type: "player",
-                                    player: A,
+                                    player: I,
                                     point: N.point,
                                     normal: N.normal
-                                }) : I && v.push({
+                                }) : A && v.push({
                                     type: "pan",
                                     collidable: !0,
-                                    point: I.point,
-                                    normal: I.normal,
-                                    layer: A.layer
+                                    point: A.point,
+                                    normal: A.normal,
+                                    layer: I.layer
                                 }),
-                                N || I)
+                                N || A)
                                     break
                             }
                         }
@@ -68452,9 +68440,9 @@ webpackJsonp([1], {
                         v.sort(function(e, t) {
                             return e.dist - t.dist
                         });
-                        var U = !1
-                          , G = t.de(f.playerId);
-                        G && (G.Z.dead || G.Z.downed) && (U = !0);
+                        var G = !1
+                          , U = t.de(f.playerId);
+                        U && (U.Z.dead || U.Z.downed) && (G = !0);
                         for (var W = !1, H = 0; H < v.length; H++) {
                             var K = v[H];
                             if ("obstacle" == K.type) {
@@ -68462,7 +68450,7 @@ webpackJsonp([1], {
                                 r(Z.hitParticle, Z.sound.bullet, K.point, K.normal, f.layer, g, y),
                                 W = K.collidable
                             } else if ("player" == K.type) {
-                                if (!U) {
+                                if (!G) {
                                     var X = K.player
                                       , Y = h.sub(K.point, X.pos);
                                     Y.y *= -1,
@@ -68583,7 +68571,7 @@ webpackJsonp([1], {
             ,
             this.errorMessage = "",
             this.playEnabled = !1,
-            this.quickPlayPendingMode = 0,
+            this.quickPlayPendingModeIdx = -1,
             this.playTimeout = 0,
             this.pauseTime = 0,
             this.wasPlayingVideo = !1,
@@ -68691,13 +68679,13 @@ webpackJsonp([1], {
                     this.localization.localizeIndex(),
                     this.nameInput.maxLength = l.Constants.kPlayerNameMaxLen,
                     this.playSoloBtn.on("click", function() {
-                        e.tryQuickStartGame(1)
+                        e.tryQuickStartGame(0)
                     }),
                     this.playDuoBtn.on("click", function() {
-                        e.tryQuickStartGame(2)
+                        e.tryQuickStartGame(1)
                     }),
                     this.playSquadBtn.on("click", function() {
-                        e.tryQuickStartGame(4)
+                        e.tryQuickStartGame(2)
                     }),
                     this.serverSelect.change(function() {
                         var t = e.serverSelect.find(":selected").val();
@@ -68868,13 +68856,13 @@ webpackJsonp([1], {
                       , C = Math.max(window.screen.width, window.screen.height);
                     T *= window.devicePixelRatio,
                     C *= window.devicePixelRatio;
-                    var A = C < 1366 && T < 768
-                      , I = A || !this.config.get("highResTex") ? "low" : "high";
-                    (g.mobile && !g.tablet || g.webview && this.systemMemory <= 2147483648 || this.pixi.renderer.type == o.RENDERER_TYPE.CANVAS) && (I = "low");
+                    var I = C < 1366 && T < 768
+                      , A = I || !this.config.get("highResTex") ? "low" : "high";
+                    (g.mobile && !g.tablet || g.webview && this.systemMemory <= 2147483648 || this.pixi.renderer.type == o.RENDERER_TYPE.CANVAS) && (A = "low");
                     var D = x.getParameterByName("textureRes");
-                    D && (I = D),
+                    D && (A = D),
                     P.loadStaticDomImages(),
-                    this.textureManager = new M.TextureManager(this.pixi.renderer,I),
+                    this.textureManager = new M.TextureManager(this.pixi.renderer,A),
                     this.textureManager.loadAtlasList(["gradient", "shared", "main"]),
                     this.input = new f.ce(this.pixi.view),
                     this.inputBinds = new b.InputBinds(this.input,this.config),
@@ -68907,7 +68895,9 @@ webpackJsonp([1], {
                         R && (R.style.display = "none")
                     }
                     this.tryApplySiteInfo(),
-                    window.aiptag && (window.aiptag.gdprConsent = window.cookiesConsented)
+                    window.aiptag && (window.aiptag.gdprConsent = window.cookiesConsented,
+                    window.aiptag.consented = window.cookiesConsented,
+                    y.storeGeneric("ad_request", "main"))
                 }
             },
             onResize: function() {
@@ -68923,7 +68913,7 @@ webpackJsonp([1], {
                 r(".btn-keybind").css("display", g.mobile ? "none" : "inline-block"),
                 this.pixi && this.pixi.renderer.resize(g.screenWidth, g.screenHeight),
                 this.game && this.game.initialized && this.game.yt(),
-                this.refreshUi(!1)
+                this.refreshUi()
             },
             onPause: function() {
                 g.webview && (this.pauseTime = Date.now(),
@@ -68985,7 +68975,7 @@ webpackJsonp([1], {
             },
             setAppActive: function(e) {
                 this.active = e,
-                this.quickPlayPendingMode = 0,
+                this.quickPlayPendingModeIdx = -1,
                 this.sessionGames++,
                 this.refreshUi()
             },
@@ -69032,7 +69022,6 @@ webpackJsonp([1], {
             },
             refreshUi: function() {
                 var e = this;
-                !(arguments.length > 0 && void 0 !== arguments[0]) || arguments[0],
                 this.startMenuWrapper.css("display", this.active ? "flex" : "none"),
                 this.gameAreaWrapper.css({
                     display: this.active ? "none" : "block",
@@ -69050,11 +69039,11 @@ webpackJsonp([1], {
                 }),
                 this.serverWarning.html(this.errorMessage);
                 var a = function(t, a) {
-                    t.html(e.quickPlayPendingMode == a ? '<div class="ui-spinner"></div>' : t.attr("data-label"))
+                    t.html(e.quickPlayPendingModeIdx === a ? '<div class="ui-spinner"></div>' : t.attr("data-label"))
                 };
-                a(this.playSoloBtn, 1),
-                a(this.playDuoBtn, 2),
-                a(this.playSquadBtn, 4);
+                a(this.playSoloBtn, 0),
+                a(this.playDuoBtn, 1),
+                a(this.playSquadBtn, 2);
                 var i = this.teamMenu.active
                   , o = window.innerHeight <= 768
                   , n = {
@@ -69064,13 +69053,10 @@ webpackJsonp([1], {
                   , s = g.webview ? "#surviv-io_728x90_webview" : "#surviv-io_728x90";
                 r(s).css({
                     transform: "translate(" + n.x + ", " + n.y + ")"
-                }),
-                this.active ? (this.playSquadBtn.addClass("btn-faction-mode"),
-                r("#btn-start-team").addClass("btn-faction-mode")) : (this.playSquadBtn.removeClass("btn-faction-mode"),
-                r("#btn-start-team").removeClass("btn-faction-mode"))
+                })
             },
             tryJoinTeam: function(e, t) {
-                if (this.active && 0 === this.quickPlayPendingMode) {
+                if (this.active && -1 === this.quickPlayPendingModeIdx) {
                     var a = t || window.location.hash.slice(1);
                     (e || "" != a) && (this.setConfigFromDOM(),
                     this.teamMenu.connect(e, a),
@@ -69079,10 +69065,10 @@ webpackJsonp([1], {
             },
             tryQuickStartGame: function(e) {
                 var t = (new Date).getTime();
-                if (this.playEnabled && 0 === this.quickPlayPendingMode && !(t < this.playTimeout)) {
+                if (this.playEnabled && -1 === this.quickPlayPendingModeIdx && !(t < this.playTimeout)) {
                     this.playTimeout = t + 1e3,
                     this.errorMessage = "",
-                    this.quickPlayPendingMode = e,
+                    this.quickPlayPendingModeIdx = e,
                     this.setConfigFromDOM(),
                     this.refreshUi();
                     var a = n.protocolVersion
@@ -69096,9 +69082,9 @@ webpackJsonp([1], {
                         version: a,
                         region: i,
                         zones: o,
-                        teamMode: e,
                         playerCount: 1,
-                        autoFill: !0
+                        autoFill: !0,
+                        gameModeIdx: e
                     };
                     this.findGame(l)
                 }
@@ -69113,12 +69099,12 @@ webpackJsonp([1], {
                         };
                         "invalid_protocol" == e && t.showInvalidProtocolModal(),
                         t.errorMessage = i[e] || i.full,
-                        t.quickPlayPendingMode = 0,
+                        t.quickPlayPendingModeIdx = -1,
                         t.refreshUi()
                     } else
                         t.joinGame(a, function() {
                             t.errorMessage = t.localization.translate("index-failed-joining-game"),
-                            t.quickPlayPendingMode = 0,
+                            t.quickPlayPendingModeIdx = -1,
                             t.refreshUi()
                         })
                 })
@@ -69166,33 +69152,33 @@ webpackJsonp([1], {
                 document.body.appendChild(t)
             }(e)
         }();
-        var A = new i;
+        var I = new i;
         document.addEventListener("DOMContentLoaded", function(e) {
             setTimeout(function() {
-                A.a()
+                I.a()
             }, 0)
         }),
         window.addEventListener("load", function() {
             setTimeout(function() {
-                A.a()
+                I.a()
             }, 0)
         }),
         "#_=_" == window.location.hash && (window.location.hash = "",
         history.pushState("", document.title, window.location.pathname)),
         window.addEventListener("resize", function() {
-            A.onResize()
+            I.onResize()
         }),
         window.addEventListener("hashchange", function() {
-            A.tryJoinTeam(!1)
+            I.tryJoinTeam(!1)
         }),
         window.addEventListener("beforeunload", function(e) {
-            if (A.game && A.game.wt() && !g.webview) {
+            if (I.game && I.game.wt() && !g.webview) {
                 var t = "Do you want to reload the game?";
                 return e.returnValue = t,
                 t
             }
         });
-        var I = [];
+        var A = [];
         window.onerror = function(e, t, a, i, r) {
             if (-1 != e.indexOf("').innerText") || -1 != r.stack.indexOf("cdn.rawgit.com") || -1 != r.stack.indexOf("chrome-extension://"))
                 return void x.j();
@@ -69206,8 +69192,8 @@ webpackJsonp([1], {
                 browser: navigator.userAgent
             }
               , n = JSON.stringify(o);
-            -1 === I.indexOf(n) && (I.push(n),
-            /tpc.googlesyndication.com/.test(n) || (/surviv\.io\/js\/.*\.js/.test(n) && -1 == o.stacktrace.indexOf("chrome-extension://") && -1 == o.stacktrace.indexOf("cdn.rawgit.com") ? y.logWindowOnAppError(n) : y.logWindowOnError(n)))
+            -1 === A.indexOf(n) && (A.push(n),
+            /tpc.googlesyndication.com/.test(n) || (/surviv\.io\/js\/.*\.js/.test(n) && -1 == o.stacktrace.indexOf("chrome-extension://") && -1 == o.stacktrace.indexOf("cdn.rawgit.com") ? -1 !== o.msg.indexOf("TypeError: null is not an object (evaluating 't.transform._parentID=-1')") ? y.logError(n) : y.logWindowOnAppError(n) : y.logWindowOnError(n)))
         }
     },
     ce089fd5: function(e, t, a) {
@@ -69411,31 +69397,31 @@ webpackJsonp([1], {
             return e % 4 * .5 * Math.PI
         }
         function r(e) {
-            return Math.floor(ye.fmod(e + .25 * Math.PI, 2 * Math.PI) / (.5 * Math.PI))
+            return Math.floor(we.fmod(e + .25 * Math.PI, 2 * Math.PI) / (.5 * Math.PI))
         }
         function o(e) {
-            if (fe[e])
-                return fe[e];
+            if (be[e])
+                return be[e];
             var t = n(e);
-            return fe[e] = t,
+            return be[e] = t,
             t
         }
         function n(e) {
-            var t = Se[e];
+            var t = ke[e];
             if ("structure" == t.type) {
                 for (var a = [], r = 0; r < t.layers.length; r++) {
                     var n = t.layers[r]
                       , s = i(n.ori)
-                      , l = ge.transform(o(n.type), n.pos, s, 1);
-                    a.push(ge.toAabb(l))
+                      , l = ye.transform(o(n.type), n.pos, s, 1);
+                    a.push(ye.toAabb(l))
                 }
                 for (var c = 0; c < t.stairs.length; c++)
                     a.push(t.stairs[c].collision);
-                var m = ue.boundingAabb(a)
-                  , p = xe.create(1, 1);
-                return m.min = xe.sub(m.min, p),
-                m.max = xe.add(m.max, p),
-                ge.createAabb(m.min, m.max)
+                var m = ge.boundingAabb(a)
+                  , p = fe.create(1, 1);
+                return m.min = fe.sub(m.min, p),
+                m.max = fe.add(m.max, p),
+                ye.createAabb(m.min, m.max)
             }
             if ("building" == t.type) {
                 for (var d = [], h = 0; h < t.floor.surfaces.length; h++)
@@ -69448,14 +69434,14 @@ webpackJsonp([1], {
                     if ("function" == typeof y && (y = y()),
                     "" != y) {
                         var w = i(g.ori)
-                          , x = ge.transform(o(y), g.pos, w, g.scale);
-                        d.push(ge.toAabb(x))
+                          , x = ye.transform(o(y), g.pos, w, g.scale);
+                        d.push(ye.toAabb(x))
                     }
                 }
-                var f = ue.boundingAabb(d);
-                return ge.createAabb(f.min, f.max)
+                var f = ge.boundingAabb(d);
+                return ye.createAabb(f.min, f.max)
             }
-            return "decal" == t.type ? ge.toAabb(t.collision) : (he(t.collision),
+            return "decal" == t.type ? ye.toAabb(t.collision) : (ue(t.collision),
             t.collision)
         }
         function s(e, t, a) {
@@ -69478,11 +69464,11 @@ webpackJsonp([1], {
                     type: a,
                     weight: e[a]
                 });
-            he(t.length > 0);
+            ue(t.length > 0);
             for (var i = 0, r = 0; r < t.length; r++)
                 i += t[r].weight;
             return function() {
-                for (var e = we.random(0, i), a = 0; e > t[a].weight; )
+                for (var e = xe.random(0, i), a = 0; e > t[a].weight; )
                     e -= t[a].weight,
                     a++;
                 return t[a].type
@@ -69506,7 +69492,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .6
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.75),
+                collision: ye.createCircle(fe.create(0, 0), 1.75),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69539,7 +69525,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function d(e) {
             var t = {
@@ -69549,7 +69535,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.75),
+                collision: ye.createCircle(fe.create(0, 0), 1.75),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69582,7 +69568,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function h(e) {
             var t = {
@@ -69592,7 +69578,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .9
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.8, 3.4)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.8, 3.4)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69625,7 +69611,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function u(e) {
             var t = {
@@ -69635,7 +69621,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.5, 1)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.5, 1)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69668,7 +69654,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function g(e) {
             var t = {
@@ -69676,7 +69662,7 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 1), xe.create(2, 3.25)),
+                        collider: ye.createAabbExtents(fe.create(0, 1), fe.create(2, 3.25)),
                         color: 3815994
                     }]
                 },
@@ -69688,22 +69674,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 1), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 1), fe.create(2, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-generic-floor-02.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, .75), xe.create(2, 3.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, .75), xe.create(2, 3.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, .75), fe.create(2, 3.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, .75), fe.create(2, 3.25))],
                     imgs: [{
                         sprite: "map-bunker-generic-ceiling-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -69712,22 +69698,22 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_6",
-                    pos: xe.create(0, -2.2),
+                    pos: fe.create(0, -2.2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(-2.5, 1),
+                    pos: fe.create(-2.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(2.5, 1),
+                    pos: fe.create(2.5, 1),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function y(e) {
             var t = {
@@ -69737,7 +69723,7 @@ webpackJsonp([1], {
                     createMax: 1.2,
                     destroy: 1
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.4),
+                collision: ye.createCircle(fe.create(0, 0), 1.4),
                 height: 10,
                 collidable: !1,
                 destructible: !0,
@@ -69771,7 +69757,7 @@ webpackJsonp([1], {
                     enter: "bush_enter_01"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function w(e) {
             var t = {
@@ -69802,18 +69788,18 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "stone_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_initiative_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function x(e) {
             var t = {
@@ -69823,7 +69809,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .9
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.6)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.6)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69856,7 +69842,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function f(e) {
             var t = {
@@ -69866,7 +69852,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.6)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.6)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -69899,39 +69885,39 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function b(e) {
             var t = f({
-                collision: ge.createAabbExtents(xe.create(0, .8), xe.create(2.25, .8)),
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, .8), xe.create(2.25, 1.6))],
+                collision: ye.createAabbExtents(fe.create(0, .8), fe.create(2.25, .8)),
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, .8), fe.create(2.25, 1.6))],
                 terrain: {
                     river: {
                         centerWeight: 1
                     }
                 }
             });
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function _(e) {
             var t = [{
                 type: "container_wall_top",
-                pos: xe.create(0, 7.95),
+                pos: fe.create(0, 7.95),
                 scale: 1,
                 ori: 0
             }, {
                 type: "container_wall_side",
-                pos: xe.create(2.35, 2.1),
+                pos: fe.create(2.35, 2.1),
                 scale: 1,
                 ori: 0
             }, {
                 type: "container_wall_side",
-                pos: xe.create(-2.35, 2.1),
+                pos: fe.create(-2.35, 2.1),
                 scale: 1,
                 ori: 0
             }, {
                 type: e.loot_spawner_01 || "loot_tier_2",
-                pos: xe.create(0, 3.25),
+                pos: fe.create(0, 3.25),
                 scale: 1,
                 ori: 0
             }, {
@@ -69939,23 +69925,23 @@ webpackJsonp([1], {
                     loot_tier_1: 2,
                     "": 1
                 }),
-                pos: xe.create(0, .05),
+                pos: fe.create(0, .05),
                 scale: 1,
                 ori: 0
             }]
               , a = [{
                 type: "container_wall_side_open",
-                pos: xe.create(2.35, 0),
+                pos: fe.create(2.35, 0),
                 scale: 1,
                 ori: 0
             }, {
                 type: "container_wall_side_open",
-                pos: xe.create(-2.35, 0),
+                pos: fe.create(-2.35, 0),
                 scale: 1,
                 ori: 0
             }, {
                 type: "loot_tier_2",
-                pos: xe.create(0, -.05),
+                pos: fe.create(0, -.05),
                 scale: 1,
                 ori: 0
             }, {
@@ -69963,7 +69949,7 @@ webpackJsonp([1], {
                     loot_tier_1: 1,
                     "": 1
                 }),
-                pos: xe.create(0, .05),
+                pos: fe.create(0, .05),
                 scale: 1,
                 ori: 0
             }];
@@ -69983,7 +69969,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [e.open ? ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 11)) : ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 8))]
+                        collision: [e.open ? ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 11)) : ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 8))]
                     }],
                     imgs: [{
                         sprite: e.open ? "map-building-container-open-floor.img" : "map-building-container-floor-01.img",
@@ -69993,8 +69979,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [e.open ? ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 5.75)) : ge.createAabbExtents(xe.create(0, 2.25), xe.create(2.5, 5.5))],
-                    scopeOut: [e.open ? ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 11)) : ge.createAabbExtents(xe.create(0, -.5), xe.create(2.5, 8.75))],
+                    scopeIn: [e.open ? ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 5.75)) : ye.createAabbExtents(fe.create(0, 2.25), fe.create(2.5, 5.5))],
+                    scopeOut: [e.open ? ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 11)) : ye.createAabbExtents(fe.create(0, -.5), fe.create(2.5, 8.75))],
                     imgs: e.ceilingImgs || [{
                         sprite: e.ceilingSprite,
                         scale: .5,
@@ -70013,7 +69999,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .5
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 2.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 2.25)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70047,9 +70033,46 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function k(e) {
+            var t = {
+                airdropCrate: !0,
+                scale: {
+                    destroy: 1
+                },
+                destructible: !1,
+                health: 200,
+                hitParticle: "barrelChip",
+                explodeParticle: "airdropCrate02",
+                reflectBullets: !0,
+                loot: [],
+                map: {
+                    display: !1
+                },
+                button: {
+                    interactionRad: 2,
+                    interactionText: "game-unlock",
+                    useOnce: !0,
+                    destroyOnUse: !0,
+                    useDelay: 2.5,
+                    useDir: fe.create(-1, 0),
+                    useImg: "map-airdrop-04.img",
+                    useParticle: "airdropCrate03",
+                    sound: {
+                        on: "airdrop_open_01",
+                        off: ""
+                    }
+                },
+                sound: {
+                    bullet: "wall_bullet",
+                    punch: "metal_punch",
+                    explode: "airdrop_open_02"
+                }
+            };
+            return xe.mergeDeep(S(t), e || {})
+        }
+        function v(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70057,7 +70080,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(2.5, 1)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(2.5, 1)),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -70067,7 +70090,7 @@ webpackJsonp([1], {
                 reflectBullets: !0,
                 loot: [s("tier_world", 1, 1)],
                 lootSpawn: {
-                    offset: xe.create(0, -1),
+                    offset: fe.create(0, -1),
                     spdMult: 0
                 },
                 map: {
@@ -70094,9 +70117,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function v(e) {
+        function z(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70104,7 +70127,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(e.hinge, e.extents),
+                collision: ye.createAabbExtents(e.hinge, e.extents),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -70124,7 +70147,7 @@ webpackJsonp([1], {
                     autoCloseDelay: 1,
                     slideToOpen: !1,
                     slideOffset: 3.5,
-                    spriteAnchor: xe.create(.5, 1),
+                    spriteAnchor: fe.create(.5, 1),
                     sound: {
                         open: e.soundOpen || "door_open_01",
                         close: e.soundClose || "door_close_01",
@@ -70148,14 +70171,14 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return he(_e[e.material]),
-            we.mergeDeep(t, _e[e.material], e || {})
+            return ue(Se[e.material]),
+            xe.mergeDeep(t, Se[e.material], e || {})
         }
-        function z(e) {
-            var t = v({
+        function M(e) {
+            var t = z({
                 material: "concrete",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     interactionRad: 3,
                     openOneWay: !1,
@@ -70172,7 +70195,7 @@ webpackJsonp([1], {
                     },
                     casingImg: {
                         sprite: "map-door-slot-01.img",
-                        pos: xe.create(-2, 0),
+                        pos: fe.create(-2, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 1316379,
@@ -70183,9 +70206,9 @@ webpackJsonp([1], {
                     tint: 5373952
                 }
             });
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function M(e) {
+        function T(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70193,7 +70216,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(2.5, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(2.5, 1.25)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70226,9 +70249,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function T(e) {
+        function P(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70236,7 +70259,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .9
                 },
-                collision: ge.createAabbExtents(xe.create(0, .2), xe.create(2.25, .7)),
+                collision: ye.createAabbExtents(fe.create(0, .2), fe.create(2.25, .7)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70246,7 +70269,7 @@ webpackJsonp([1], {
                 reflectBullets: !1,
                 loot: [s("tier_world", 1, 1)],
                 lootSpawn: {
-                    offset: xe.create(0, -1),
+                    offset: fe.create(0, -1),
                     spdMult: 0
                 },
                 map: {
@@ -70273,9 +70296,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function P(e) {
+        function C(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70283,7 +70306,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(1.5, .6)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(1.5, .6)),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -70293,7 +70316,7 @@ webpackJsonp([1], {
                 reflectBullets: !0,
                 loot: [s("tier_world", 1, 1)],
                 lootSpawn: {
-                    offset: xe.create(0, -1),
+                    offset: fe.create(0, -1),
                     spdMult: 0
                 },
                 map: {
@@ -70320,9 +70343,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function C(e) {
+        function I(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70330,7 +70353,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1, 1)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1, 1)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70362,7 +70385,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function A(e) {
             var t = {
@@ -70373,7 +70396,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(1.7, 1.3)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(1.7, 1.3)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70406,9 +70429,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function I(e) {
+        function D(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70416,7 +70439,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 4.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 4.25)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70450,9 +70473,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function D(e) {
+        function E(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70460,7 +70483,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.5),
+                collision: ye.createCircle(fe.create(0, 0), 1.5),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70493,9 +70516,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function E(e) {
+        function O(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70503,7 +70526,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.5, .5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.5, .5)),
                 height: .3,
                 collidable: !0,
                 destructible: !1,
@@ -70541,7 +70564,7 @@ webpackJsonp([1], {
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-bottle-03.img",
                     sound: {
                         on: "button_press_01",
@@ -70549,9 +70572,9 @@ webpackJsonp([1], {
                     }
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function O(e) {
+        function B(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70559,7 +70582,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.9),
+                collision: ye.createCircle(fe.create(0, 0), 1.9),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70593,9 +70616,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function B(e) {
+        function L(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70603,7 +70626,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.9, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.9, 1.5)),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -70640,7 +70663,7 @@ webpackJsonp([1], {
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-recorder-02.img",
                     sound: {
                         on: "",
@@ -70648,9 +70671,9 @@ webpackJsonp([1], {
                     }
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function L(e) {
+        function R(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70658,7 +70681,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(1.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(1.7, 1.25)),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -70691,9 +70714,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function R(e) {
+        function F(e) {
             var t = {
                 type: "obstacle",
                 map: {
@@ -70706,7 +70729,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .5
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.1, 1.4)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.1, 1.4)),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -70729,9 +70752,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function F(e) {
+        function j(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70739,7 +70762,7 @@ webpackJsonp([1], {
                     createMax: 1.2,
                     destroy: .5
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.6),
+                collision: ye.createCircle(fe.create(0, 0), 1.6),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70773,9 +70796,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function j(e) {
+        function N(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70783,7 +70806,7 @@ webpackJsonp([1], {
                     createMax: 1.2,
                     destroy: .5
                 },
-                collision: ge.createCircle(xe.create(0, 0), 2.9),
+                collision: ye.createCircle(fe.create(0, 0), 2.9),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70820,9 +70843,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function N(e) {
+        function q(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70830,7 +70853,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2)),
                 height: .5,
                 collidable: !1,
                 destructible: !0,
@@ -70863,9 +70886,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function q(e) {
+        function V(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70873,7 +70896,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createCircle(xe.create(0, .25), 1.18),
+                collision: ye.createCircle(fe.create(0, .25), 1.18),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -70906,9 +70929,9 @@ webpackJsonp([1], {
                     beach: !1
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function V(e) {
+        function G(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -70916,8 +70939,8 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .5
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.55),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(5.75, 5.75)),
+                collision: ye.createCircle(fe.create(0, 0), 1.55),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(5.75, 5.75)),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -70950,7 +70973,7 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
         function U(e) {
             var t = {
@@ -70960,15 +70983,15 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.6),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(5.75, 5.75)),
+                collision: ye.createCircle(fe.create(0, 0), 1.6),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(5.75, 5.75)),
                 button: {
                     interactionRad: 1.2,
                     interactionText: "game-use",
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-tree-switch-04.img",
                     sound: {
                         on: "button_press_01",
@@ -71007,9 +71030,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function G(e) {
+        function W(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -71017,7 +71040,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.copy(e.extents)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.copy(e.extents)),
                 height: 10,
                 isWall: !0,
                 collidable: !0,
@@ -71038,10 +71061,10 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return he(_e[e.material]),
-            we.mergeDeep(t, _e[e.material], e || {})
+            return ue(Se[e.material]),
+            xe.mergeDeep(t, Se[e.material], e || {})
         }
-        function W(e) {
+        function H(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -71049,7 +71072,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createCircle(xe.create(0, 2.3), 4.6),
+                collision: ye.createCircle(fe.create(0, 2.3), 4.6),
                 height: 10,
                 collidable: !0,
                 destructible: !1,
@@ -71081,9 +71104,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function H(e) {
+        function K(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -71091,7 +71114,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -71121,21 +71144,21 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function K(e) {
+        function Z(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(-16, 7), xe.create(10.75, 11)),
+                        collider: ye.createAabbExtents(fe.create(-16, 7), fe.create(10.75, 11)),
                         color: 7820585
                     }, {
-                        collider: ge.createAabbExtents(xe.create(6, 0), xe.create(11.5, 18.25)),
+                        collider: ye.createAabbExtents(fe.create(6, 0), fe.create(11.5, 18.25)),
                         color: 9989427
                     }, {
-                        collider: ge.createAabbExtents(xe.create(22, 4), xe.create(4.5, 7.5)),
+                        collider: ye.createAabbExtents(fe.create(22, 4), fe.create(4.5, 7.5)),
                         color: 7820585
                     }]
                 },
@@ -71147,25 +71170,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(6, -1), xe.create(11.25, 18.25)), ge.createAabbExtents(xe.create(21.5, 4), xe.create(4.75, 7.25))]
+                        collision: [ye.createAabbExtents(fe.create(6, -1), fe.create(11.25, 18.25)), ye.createAabbExtents(fe.create(21.5, 4), fe.create(4.75, 7.25))]
                     }],
                     imgs: [{
                         sprite: "map-building-bank-floor-01.img",
-                        pos: xe.create(0, 6.96),
+                        pos: fe.create(0, 6.96),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-bank-floor-02.img",
-                        pos: xe.create(9.5, -12.5),
+                        pos: fe.create(9.5, -12.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(6, -1), xe.create(11.25, 18.25)), ge.createAabbExtents(xe.create(21.5, 4), xe.create(4.75, 7.25)), ge.createAabbExtents(xe.create(-16, 6), xe.create(10.25, 11))],
-                    scopeOut: [ge.createAabbExtents(xe.create(6, 1.25), xe.create(15.25, 20))],
+                    scopeIn: [ye.createAabbExtents(fe.create(6, -1), fe.create(11.25, 18.25)), ye.createAabbExtents(fe.create(21.5, 4), fe.create(4.75, 7.25)), ye.createAabbExtents(fe.create(-16, 6), fe.create(10.25, 11))],
+                    scopeOut: [ye.createAabbExtents(fe.create(6, 1.25), fe.create(15.25, 20))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -71174,19 +71197,19 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-bank-ceiling-01.img",
-                        pos: xe.create(-16, 7),
+                        pos: fe.create(-16, 7),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-bank-ceiling-02.img",
-                        pos: xe.create(6, 0),
+                        pos: fe.create(6, 0),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-bank-ceiling-03.img",
-                        pos: xe.create(22, 8),
+                        pos: fe.create(22, 8),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
@@ -71194,192 +71217,192 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_23",
-                    pos: xe.create(-14, 17),
+                    pos: fe.create(-14, 17),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_23",
-                    pos: xe.create(-25.9, 6),
+                    pos: fe.create(-25.9, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_20",
-                    pos: xe.create(-15.5, -5),
+                    pos: fe.create(-15.5, -5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-5, -7),
+                    pos: fe.create(-5, -7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-5, -16.5),
+                    pos: fe.create(-5, -16.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-2.5, -19),
+                    pos: fe.create(-2.5, -19),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(6, -19),
+                    pos: fe.create(6, -19),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(14.5, -19),
+                    pos: fe.create(14.5, -19),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(17, -16.5),
+                    pos: fe.create(17, -16.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(17, -6),
+                    pos: fe.create(17, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(1, -19.25),
+                    pos: fe.create(1, -19.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(11, -19.25),
+                    pos: fe.create(11, -19.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-5.25, -13.5),
+                    pos: fe.create(-5.25, -13.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(17.25, -13.5),
+                    pos: fe.create(17.25, -13.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(22, -3),
+                    pos: fe.create(22, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_15",
-                    pos: xe.create(26, 4),
+                    pos: fe.create(26, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(22, 11),
+                    pos: fe.create(22, 11),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(17, 14),
+                    pos: fe.create(17, 14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(14.5, 17),
+                    pos: fe.create(14.5, 17),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(4.5, 17),
+                    pos: fe.create(4.5, 17),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-1, 17.25),
+                    pos: fe.create(-1, 17.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.vault || "vault_01",
-                    pos: xe.create(-12, 6),
+                    pos: fe.create(-12, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bank_wall_int_4",
-                    pos: xe.create(-2.5, -5),
+                    pos: fe.create(-2.5, -5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_window_01",
-                    pos: xe.create(1, -5),
+                    pos: fe.create(1, -5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_wall_int_3",
-                    pos: xe.create(4, -5),
+                    pos: fe.create(4, -5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_wall_int_4",
-                    pos: xe.create(6, -3.5),
+                    pos: fe.create(6, -3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bank_window_01",
-                    pos: xe.create(6, 0),
+                    pos: fe.create(6, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bank_wall_int_4",
-                    pos: xe.create(6, 3.5),
+                    pos: fe.create(6, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bank_wall_int_4",
-                    pos: xe.create(8.5, 5),
+                    pos: fe.create(8.5, 5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_window_01",
-                    pos: xe.create(12, 5),
+                    pos: fe.create(12, 5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_wall_int_3",
-                    pos: xe.create(15, 5),
+                    pos: fe.create(15, 5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_wall_int_5",
-                    pos: xe.create(17, 4),
+                    pos: fe.create(17, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bank_wall_int_8",
-                    pos: xe.create(21.5, 4),
+                    pos: fe.create(21.5, 4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(17, -2.5),
+                    pos: fe.create(17, -2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(17, 10.5),
+                    pos: fe.create(17, 10.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(12.5, 17.25),
+                    pos: fe.create(12.5, 17.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "vending_01",
-                    pos: xe.create(4.5, -16.9),
+                    pos: fe.create(4.5, -16.9),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "stand_01",
-                    pos: xe.create(7.65, -17),
+                    pos: fe.create(7.65, -17),
                     scale: 1,
                     ori: 2
                 }, {
@@ -71387,7 +71410,7 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(23.5, .5),
+                    pos: fe.create(23.5, .5),
                     scale: 1,
                     ori: 3
                 }, {
@@ -71395,34 +71418,34 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(23.5, 7.5),
+                    pos: fe.create(23.5, 7.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "stand_01",
-                    pos: xe.create(15, 15),
+                    pos: fe.create(15, 15),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(4.5, 16.15),
+                    pos: fe.create(4.5, 16.15),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "bush_02",
-                    pos: xe.create(-2.5, -16.25),
+                    pos: fe.create(-2.5, -16.25),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "bush_02",
-                    pos: xe.create(14.5, -16.25),
+                    pos: fe.create(14.5, -16.25),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(19.75, 13.75),
+                    pos: fe.create(19.75, 13.75),
                     scale: .9,
                     ori: 0,
                     inheritOri: !1
@@ -71430,7 +71453,7 @@ webpackJsonp([1], {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(12, 0),
+                    pos: fe.create(12, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71438,34 +71461,34 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(1, 0),
+                    pos: fe.create(1, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-16.5, -12.5),
+                    pos: fe.create(-16.5, -12.5),
                     scale: 1.1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7.5, -7.25),
+                    pos: fe.create(-7.5, -7.25),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(21, -7),
+                    pos: fe.create(21, -7),
                     scale: .55,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(21, -16.25),
+                    pos: fe.create(21, -16.25),
                     scale: .55,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function Z(e) {
+        function X(e) {
             var t = {
                 type: "building",
                 map: {
@@ -71481,7 +71504,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(-3.5, 0), xe.create(10, 10.5))]
+                        collision: [ye.createAabbExtents(fe.create(-3.5, 0), fe.create(10, 10.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-vault-floor.img",
@@ -71491,8 +71514,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-3.5, 0), xe.create(9.25, 10.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-3.5, 0), xe.create(10, 10.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-3.5, 0), fe.create(9.25, 10.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-3.5, 0), fe.create(10, 10.5))],
                     vision: {
                         dist: 7.25,
                         width: 2.75,
@@ -71508,32 +71531,32 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thick_20",
-                    pos: xe.create(-12.5, 0),
+                    pos: fe.create(-12.5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thick_20",
-                    pos: xe.create(-3.5, -9.5),
+                    pos: fe.create(-3.5, -9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thick_20",
-                    pos: xe.create(-3.5, 9.5),
+                    pos: fe.create(-3.5, 9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thick_6",
-                    pos: xe.create(5.5, -6.45),
+                    pos: fe.create(5.5, -6.45),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thick_6",
-                    pos: xe.create(5.5, 6.45),
+                    pos: fe.create(5.5, 6.45),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vault_door_main",
-                    pos: xe.create(6.5, 3.5),
+                    pos: fe.create(6.5, 3.5),
                     scale: 1,
                     ori: 2
                 }, {
@@ -71541,7 +71564,7 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(-12.3, 5),
+                    pos: fe.create(-12.3, 5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -71549,7 +71572,7 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(-12.3, -5),
+                    pos: fe.create(-12.3, -5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -71557,7 +71580,7 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(-8, 9.3),
+                    pos: fe.create(-8, 9.3),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71565,7 +71588,7 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(-8, -9.3),
+                    pos: fe.create(-8, -9.3),
                     scale: 1,
                     ori: 2
                 }, {
@@ -71573,7 +71596,7 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(1, 9.3),
+                    pos: fe.create(1, 9.3),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71581,40 +71604,40 @@ webpackJsonp([1], {
                         deposit_box_01: 3,
                         deposit_box_02: e.gold_box || 1
                     }),
-                    pos: xe.create(1, -9.3),
+                    pos: fe.create(1, -9.3),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_05",
-                    pos: xe.create(-3.5, 6.5),
+                    pos: fe.create(-3.5, 6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_05",
-                    pos: xe.create(-3.5, -6.5),
+                    pos: fe.create(-3.5, -6.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.floor_loot || c({
                         loot_tier_vault_floor: 1
                     }),
-                    pos: xe.create(-3.5, 0),
+                    pos: fe.create(-3.5, 0),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function X(e) {
+        function Y(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 12), xe.create(5, 2)),
+                        collider: ye.createAabbExtents(fe.create(0, 12), fe.create(5, 2)),
                         color: 12300935
                     }, {
-                        collider: ge.createAabbExtents(xe.create(0, -2), xe.create(24.5, 12.8)),
+                        collider: ye.createAabbExtents(fe.create(0, -2), fe.create(24.5, 12.8)),
                         color: 3816739
                     }]
                 },
@@ -71622,12 +71645,12 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, -2), xe.create(28, 16.5)), ge.createAabbExtents(xe.create(0, 14), xe.create(7, 5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, -2), fe.create(28, 16.5)), ye.createAabbExtents(fe.create(0, 14), fe.create(7, 5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, -2), xe.create(25, 13.2)), ge.createAabbExtents(xe.create(0, 12), xe.create(5.5, 2.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, -2), fe.create(25, 13.2)), ye.createAabbExtents(fe.create(0, 12), fe.create(5.5, 2.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-barn-floor-01.img",
@@ -71637,8 +71660,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, -2), xe.create(24.5, 12.8)), ge.createAabbExtents(xe.create(0, 12), xe.create(5.5, 2.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, -14.5), xe.create(5.5, 4)), ge.createAabbExtents(xe.create(0, 14.5), xe.create(5.5, 4))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, -2), fe.create(24.5, 12.8)), ye.createAabbExtents(fe.create(0, 12), fe.create(5.5, 2.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, -14.5), fe.create(5.5, 4)), ye.createAabbExtents(fe.create(0, 14.5), fe.create(5.5, 4))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -71647,13 +71670,13 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-barn-ceiling-01.img",
-                        pos: xe.create(0, -2),
+                        pos: fe.create(0, -2),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-barn-ceiling-02.img",
-                        pos: xe.create(0, 13.2),
+                        pos: fe.create(0, 13.2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
@@ -71661,242 +71684,242 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-24.5, 9),
+                    pos: fe.create(-24.5, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(-22.5, 10.5),
+                    pos: fe.create(-22.5, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_12",
-                    pos: xe.create(-24.5, -2),
+                    pos: fe.create(-24.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-24.5, -13),
+                    pos: fe.create(-24.5, -13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(-22.5, -14.5),
+                    pos: fe.create(-22.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-24.75, 5.5),
+                    pos: fe.create(-24.75, 5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-24.75, -9.5),
+                    pos: fe.create(-24.75, -9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-19.5, 10.75),
+                    pos: fe.create(-19.5, 10.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-19.5, -14.75),
+                    pos: fe.create(-19.5, -14.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_16",
-                    pos: xe.create(-10, 10.5),
+                    pos: fe.create(-10, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_16",
-                    pos: xe.create(10, 10.5),
+                    pos: fe.create(10, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_16",
-                    pos: xe.create(-10, -14.5),
+                    pos: fe.create(-10, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(5, -14.5),
+                    pos: fe.create(5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-5.5, 13),
+                    pos: fe.create(-5.5, 13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(5.5, 13),
+                    pos: fe.create(5.5, 13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(-3.5, 14.5),
+                    pos: fe.create(-3.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(3.5, 14.5),
+                    pos: fe.create(3.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(9.5, -14.75),
+                    pos: fe.create(9.5, -14.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(2, 14.75),
+                    pos: fe.create(2, 14.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-2, -14.75),
+                    pos: fe.create(-2, -14.75),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(24.5, 9),
+                    pos: fe.create(24.5, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(22.5, 10.5),
+                    pos: fe.create(22.5, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_13",
-                    pos: xe.create(17.5, -14.5),
+                    pos: fe.create(17.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_19",
-                    pos: xe.create(24.5, -5.5),
+                    pos: fe.create(24.5, -5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_1",
-                    pos: xe.create(23.5, -1.5),
+                    pos: fe.create(23.5, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(24.75, 5.5),
+                    pos: fe.create(24.75, 5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(19.5, 10.75),
+                    pos: fe.create(19.5, 10.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "panicroom_01",
-                    pos: xe.create(19.5, -8),
+                    pos: fe.create(19.5, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_6",
-                    pos: xe.create(-21, .5),
+                    pos: fe.create(-21, .5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_6",
-                    pos: xe.create(-21, -4.5),
+                    pos: fe.create(-21, -4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_5",
-                    pos: xe.create(-11.5, .5),
+                    pos: fe.create(-11.5, .5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_2",
-                    pos: xe.create(-13, -4.5),
+                    pos: fe.create(-13, -4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_7",
-                    pos: xe.create(-6.5, -4.5),
+                    pos: fe.create(-6.5, -4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_8",
-                    pos: xe.create(-11.5, -10),
+                    pos: fe.create(-11.5, -10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_8",
-                    pos: xe.create(-7.5, 6),
+                    pos: fe.create(-7.5, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_5",
-                    pos: xe.create(-3.5, -11.5),
+                    pos: fe.create(-3.5, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_7",
-                    pos: xe.create(10.5, .5),
+                    pos: fe.create(10.5, .5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_5",
-                    pos: xe.create(14.5, 7.5),
+                    pos: fe.create(14.5, 7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_13",
-                    pos: xe.create(14.5, -7.5),
+                    pos: fe.create(14.5, -7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_4",
-                    pos: xe.create(17, -1.5),
+                    pos: fe.create(17, -1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-18, -4.5),
+                    pos: fe.create(-18, -4.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-18, .5),
+                    pos: fe.create(-18, .5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-3.5, -5),
+                    pos: fe.create(-3.5, -5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(14.5, 1),
+                    pos: fe.create(14.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(23, -1.5),
+                    pos: fe.create(23, -1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_column_1",
-                    pos: xe.create(-8, 1),
+                    pos: fe.create(-8, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_column_1",
-                    pos: xe.create(-11, -5),
+                    pos: fe.create(-11, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_column_1",
-                    pos: xe.create(15, 0),
+                    pos: fe.create(15, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71904,7 +71927,7 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(-7.5, -12),
+                    pos: fe.create(-7.5, -12),
                     scale: 1,
                     ori: 2
                 }, {
@@ -71912,7 +71935,7 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-12.5, 8.5),
+                    pos: fe.create(-12.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71920,7 +71943,7 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-5.5, 7.25),
+                    pos: fe.create(-5.5, 7.25),
                     scale: 1,
                     ori: 1
                 }, {
@@ -71928,43 +71951,43 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-13.5, -9.5),
+                    pos: fe.create(-13.5, -9.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "stand_01",
-                    pos: xe.create(16.5, 8.5),
+                    pos: fe.create(16.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stand_01",
-                    pos: xe.create(3.5, 12.5),
+                    pos: fe.create(3.5, 12.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "table_01",
-                    pos: xe.create(8, -8),
+                    pos: fe.create(8, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "oven_01",
-                    pos: xe.create(12.25, -1.5),
+                    pos: fe.create(12.25, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "refrigerator_01",
-                    pos: xe.create(8.75, -1.5),
+                    pos: fe.create(8.75, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bush_02",
-                    pos: xe.create(-22, -2),
+                    pos: fe.create(-22, -2),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "bush_02",
-                    pos: xe.create(12, 8),
+                    pos: fe.create(12, 8),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -71973,7 +71996,7 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(-19, -9.5),
+                    pos: fe.create(-19, -9.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -71981,37 +72004,37 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(-19, 5.5),
+                    pos: fe.create(-19, 5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_1",
-                    pos: xe.create(0, 5.5),
+                    pos: fe.create(0, 5.5),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function Y(e) {
+        function J(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(31.5, 8)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(31.5, 8)),
                         color: 5197647
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-14, -9.5), xe.create(2.5, 1.5)),
+                        collider: ye.createAabbExtents(fe.create(-14, -9.5), fe.create(2.5, 1.5)),
                         color: 3618615
                     }, {
-                        collider: ge.createAabbExtents(xe.create(14, -9.5), xe.create(2.5, 1.5)),
+                        collider: ye.createAabbExtents(fe.create(14, -9.5), fe.create(2.5, 1.5)),
                         color: 3618615
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-14, 9.5), xe.create(2.5, 1.5)),
+                        collider: ye.createAabbExtents(fe.create(-14, 9.5), fe.create(2.5, 1.5)),
                         color: 3618615
                     }, {
-                        collider: ge.createAabbExtents(xe.create(14, 9.5), xe.create(2.5, 1.5)),
+                        collider: ye.createAabbExtents(fe.create(14, 9.5), fe.create(2.5, 1.5)),
                         color: 3618615
                     }]
                 },
@@ -72023,7 +72046,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(31.5, 8))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(31.5, 8))]
                     }],
                     imgs: [{
                         sprite: "map-building-bridge-lg-floor.img",
@@ -72033,8 +72056,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(16.5, 7))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(16.5, 7))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(16.5, 7))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(16.5, 7))],
                     vision: {
                         dist: 10
                     },
@@ -72047,92 +72070,92 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bridge_rail_12",
-                    pos: xe.create(-22.5, 7.5),
+                    pos: fe.create(-22.5, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_12",
-                    pos: xe.create(-22.5, -7.5),
+                    pos: fe.create(-22.5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_12",
-                    pos: xe.create(22.5, 7.5),
+                    pos: fe.create(22.5, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_12",
-                    pos: xe.create(22.5, -7.5),
+                    pos: fe.create(22.5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_column_5x4",
-                    pos: xe.create(-14, -9),
+                    pos: fe.create(-14, -9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_column_5x4",
-                    pos: xe.create(-14, 9),
+                    pos: fe.create(-14, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_column_5x4",
-                    pos: xe.create(14, -9),
+                    pos: fe.create(14, -9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_column_5x4",
-                    pos: xe.create(14, 9),
+                    pos: fe.create(14, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(-9, 7.5),
+                    pos: fe.create(-9, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(-9, -7.5),
+                    pos: fe.create(-9, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(9, 7.5),
+                    pos: fe.create(9, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(9, -7.5),
+                    pos: fe.create(9, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_3",
-                    pos: xe.create(-5, 7.5),
+                    pos: fe.create(-5, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_3",
-                    pos: xe.create(-5, -7.5),
+                    pos: fe.create(-5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_3",
-                    pos: xe.create(5, 7.5),
+                    pos: fe.create(5, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_3",
-                    pos: xe.create(5, -7.5),
+                    pos: fe.create(5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_7",
-                    pos: xe.create(0, 7.5),
+                    pos: fe.create(0, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_7",
-                    pos: xe.create(0, -7.5),
+                    pos: fe.create(0, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72140,7 +72163,7 @@ webpackJsonp([1], {
                         loot_tier_1: 2,
                         "": 1
                     }),
-                    pos: xe.create(-22, 0),
+                    pos: fe.create(-22, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72148,55 +72171,55 @@ webpackJsonp([1], {
                         loot_tier_1: 2,
                         "": 1
                     }),
-                    pos: xe.create(22, 0),
+                    pos: fe.create(22, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-14, 2.75),
+                    pos: fe.create(-14, 2.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-10, 5),
+                    pos: fe.create(-10, 5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(0, 4.5),
+                    pos: fe.create(0, 4.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(0, -4.5),
+                    pos: fe.create(0, -4.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(10, -5),
+                    pos: fe.create(10, -5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(14, -2.75),
+                    pos: fe.create(14, -2.75),
                     scale: 1,
                     ori: 1
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function J(e) {
+        function Q(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, .5), xe.create(18, 12)),
+                        collider: ye.createAabbExtents(fe.create(0, .5), fe.create(18, 12)),
                         color: 3823128
                     }, {
-                        collider: ge.createAabbExtents(xe.create(0, -13), xe.create(17, 2)),
+                        collider: ye.createAabbExtents(fe.create(0, -13), fe.create(17, 2)),
                         color: 6368528
                     }]
                 },
@@ -72214,22 +72237,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, -1.5), xe.create(18, 14))]
+                        collision: [ye.createAabbExtents(fe.create(0, -1.5), fe.create(18, 14))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(4, -14), xe.create(3, 2.5)), ge.createAabbExtents(xe.create(-4, 13.5), xe.create(2, 1))]
+                        collision: [ye.createAabbExtents(fe.create(4, -14), fe.create(3, 2.5)), ye.createAabbExtents(fe.create(-4, 13.5), fe.create(2, 1))]
                     }],
                     imgs: [{
                         sprite: "map-building-cabin-floor.img",
-                        pos: xe.create(0, -1),
+                        pos: fe.create(0, -1),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, .5), xe.create(19, 12)), ge.createAabbExtents(xe.create(4, -13), xe.create(3, 2))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, .5), xe.create(21, 14)), ge.createAabbExtents(xe.create(4, -13), xe.create(3, 2))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, .5), fe.create(19, 12)), ye.createAabbExtents(fe.create(4, -13), fe.create(3, 2))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, .5), fe.create(21, 14)), ye.createAabbExtents(fe.create(4, -13), fe.create(3, 2))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -72241,19 +72264,19 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-cabin-ceiling-01a.img",
-                        pos: xe.create(0, .5),
+                        pos: fe.create(0, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-cabin-ceiling-01b.img",
-                        pos: xe.create(4, -13),
+                        pos: fe.create(4, -13),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-chimney-01.img",
-                        pos: xe.create(13, 2),
+                        pos: fe.create(13, 2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -72262,7 +72285,7 @@ webpackJsonp([1], {
                 },
                 occupiedEmitters: [{
                     type: "cabin_smoke_parent",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     rot: 0,
                     scale: 1,
                     layer: 0,
@@ -72270,117 +72293,117 @@ webpackJsonp([1], {
                 }],
                 mapObjects: [{
                     type: "brick_wall_ext_12",
-                    pos: xe.create(-12, 12),
+                    pos: fe.create(-12, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-2, 12.25),
+                    pos: fe.create(-2, 12.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_12",
-                    pos: xe.create(4, 12),
+                    pos: fe.create(4, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(11.5, 12.25),
+                    pos: fe.create(11.5, 12.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(15.5, 12),
+                    pos: fe.create(15.5, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-18.5, 9.5),
+                    pos: fe.create(-18.5, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-18.75, 5),
+                    pos: fe.create(-18.75, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-18.5, .5),
+                    pos: fe.create(-18.5, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-18.75, -4),
+                    pos: fe.create(-18.75, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-18.5, -8.5),
+                    pos: fe.create(-18.5, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-15.5, -11),
+                    pos: fe.create(-15.5, -11),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-11.5, -11.25),
+                    pos: fe.create(-11.5, -11.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_12",
-                    pos: xe.create(-4, -11),
+                    pos: fe.create(-4, -11),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(2, -11.25),
+                    pos: fe.create(2, -11.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_12",
-                    pos: xe.create(12, -11),
+                    pos: fe.create(12, -11),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_15",
-                    pos: xe.create(18.5, 5),
+                    pos: fe.create(18.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(18.75, -4),
+                    pos: fe.create(18.75, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(18.5, -8.5),
+                    pos: fe.create(18.5, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.cabin_wall_int_5 || "cabin_wall_int_5",
-                    pos: xe.create(-10.5, 9),
+                    pos: fe.create(-10.5, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.cabin_wall_int_10 || "cabin_wall_int_10",
-                    pos: xe.create(-13, 2),
+                    pos: fe.create(-13, 2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.cabin_wall_int_13 || "cabin_wall_int_13",
-                    pos: xe.create(-3.5, -4),
+                    pos: fe.create(-3.5, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-10.5, 2.5),
+                    pos: fe.create(-10.5, 2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-4, 2),
+                    pos: fe.create(-4, 2),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72388,12 +72411,12 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(-16, 9),
+                    pos: fe.create(-16, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stand_01",
-                    pos: xe.create(-12.5, 9.5),
+                    pos: fe.create(-12.5, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72401,17 +72424,17 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-15, 0),
+                    pos: fe.create(-15, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "pot_01",
-                    pos: xe.create(-16, -8.5),
+                    pos: fe.create(-16, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bed_lg_01",
-                    pos: xe.create(-7, -6.75),
+                    pos: fe.create(-7, -6.75),
                     scale: 1,
                     ori: 2
                 }, {
@@ -72422,59 +72445,59 @@ webpackJsonp([1], {
                         gun_mount_02: 10,
                         gun_mount_03: 1
                     }),
-                    pos: xe.create(4, 10.65),
+                    pos: fe.create(4, 10.65),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "table_01",
-                    pos: xe.create(4, 6.5),
+                    pos: fe.create(4, 6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stove_01",
-                    pos: xe.create(13, 2),
+                    pos: fe.create(13, 2),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "woodpile_01",
-                    pos: xe.create(13, -3),
+                    pos: fe.create(13, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "pot_01",
-                    pos: xe.create(16, 9.5),
+                    pos: fe.create(16, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "pot_01",
-                    pos: xe.create(16, -8.5),
+                    pos: fe.create(16, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.porch_01 || "",
-                    pos: xe.create(-1, -13.5),
+                    pos: fe.create(-1, -13.5),
                     scale: .9,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function Q(e) {
+        function $(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(7, 7)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(7, 7)),
                         color: 15181895
                     }, {
-                        collider: ge.createAabbExtents(xe.create(0, -18.9), xe.create(2, 12)),
+                        collider: ye.createAabbExtents(fe.create(0, -18.9), fe.create(2, 12)),
                         color: 6171907
                     }]
                 },
                 terrain: {
                     waterEdge: {
-                        dir: xe.create(0, 1),
+                        dir: fe.create(0, 1),
                         distMin: -8.5,
                         distMax: 0
                     }
@@ -72482,25 +72505,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(7, 7)), ge.createAabbExtents(xe.create(0, -18.9), xe.create(2, 12))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(7, 7)), ye.createAabbExtents(fe.create(0, -18.9), fe.create(2, 12))]
                     }],
                     imgs: [{
                         sprite: "map-building-hut-floor-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-hut-floor-02.img",
-                        pos: xe.create(0, -18.9),
+                        pos: fe.create(0, -18.9),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(6, 6))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(6, 6))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(6, 6))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(6, 6))],
                     vision: {
                         width: 4
                     },
@@ -72519,37 +72542,37 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "hut_wall_int_4",
-                    pos: xe.create(-4, -6.5),
+                    pos: fe.create(-4, -6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "hut_wall_int_4",
-                    pos: xe.create(4, -6.5),
+                    pos: fe.create(4, -6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "hut_wall_int_5",
-                    pos: xe.create(-6.5, 4.5),
+                    pos: fe.create(-6.5, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "hut_window_open_01",
-                    pos: xe.create(-6.75, .5),
+                    pos: fe.create(-6.75, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "hut_wall_int_6",
-                    pos: xe.create(-6.5, -4),
+                    pos: fe.create(-6.5, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "hut_wall_int_12",
-                    pos: xe.create(0, 6.5),
+                    pos: fe.create(0, 6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "hut_wall_int_14",
-                    pos: xe.create(6.5, 0),
+                    pos: fe.create(6.5, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72557,7 +72580,7 @@ webpackJsonp([1], {
                         pot_01: 2,
                         "": 1
                     }),
-                    pos: xe.create(4.5, 4.5),
+                    pos: fe.create(4.5, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72565,7 +72588,7 @@ webpackJsonp([1], {
                         pot_01: 2,
                         "": 1
                     }),
-                    pos: xe.create(4.5, -4.5),
+                    pos: fe.create(4.5, -4.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72573,7 +72596,7 @@ webpackJsonp([1], {
                         pot_01: 2,
                         "": 1
                     }),
-                    pos: xe.create(-4.5, 4.5),
+                    pos: fe.create(-4.5, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72581,34 +72604,34 @@ webpackJsonp([1], {
                         pot_01: 2,
                         "": 1
                     }),
-                    pos: xe.create(-4.5, -4.5),
+                    pos: fe.create(-4.5, -4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.specialLoot || "pot_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function $(e) {
+        function ee(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(-7.75, 3), xe.create(1, 2)),
+                        collider: ye.createAabbExtents(fe.create(-7.75, 3), fe.create(1, 2)),
                         color: 6171907
                     }, {
-                        collider: ge.createAabbExtents(xe.create(5, -4.75), xe.create(2, 1)),
+                        collider: ye.createAabbExtents(fe.create(5, -4.75), fe.create(2, 1)),
                         color: 6171907
                     }, {
-                        collider: ge.createAabbExtents(xe.create(1, 1.5), xe.create(8, 5.5)),
+                        collider: ye.createAabbExtents(fe.create(1, 1.5), fe.create(8, 5.5)),
                         color: 3754050
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-10.65, 7), xe.create(2, 12)),
+                        collider: ye.createAabbExtents(fe.create(-10.65, 7), fe.create(2, 12)),
                         color: 6171907
                     }]
                 },
@@ -72617,7 +72640,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(1, 1.5), xe.create(8, 5.5)), ge.createAabbExtents(xe.create(-10.65, 7), xe.create(2, 12)), ge.createAabbExtents(xe.create(-7.75, 3), xe.create(1, 2)), ge.createAabbExtents(xe.create(5, -4.75), xe.create(2, 1))]
+                        collision: [ye.createAabbExtents(fe.create(1, 1.5), fe.create(8, 5.5)), ye.createAabbExtents(fe.create(-10.65, 7), fe.create(2, 12)), ye.createAabbExtents(fe.create(-7.75, 3), fe.create(1, 2)), ye.createAabbExtents(fe.create(5, -4.75), fe.create(2, 1))]
                     }],
                     imgs: [{
                         sprite: "map-building-shack-floor-03.img",
@@ -72626,21 +72649,21 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-building-hut-floor-02.img",
-                        pos: xe.create(-10.65, 7),
+                        pos: fe.create(-10.65, 7),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(1, 1.5), xe.create(7.75, 5.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(1, 1.5), xe.create(7.75, 5.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(1, 1.5), fe.create(7.75, 5.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(1, 1.5), fe.create(7.75, 5.25))],
                     vision: {
                         width: 4
                     },
                     imgs: [{
                         sprite: "map-building-shack-ceiling-03.img",
-                        pos: xe.create(.5, .5),
+                        pos: fe.create(.5, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 10461087
@@ -72652,73 +72675,73 @@ webpackJsonp([1], {
                         residue: "map-shack-res-03.img"
                     }
                 },
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(-1.75, -4.25), xe.create(11.25, 4.75))],
-                bridgeWaterBounds: [ge.createAabbExtents(xe.create(-10.5, 15.5), xe.create(3.5, 6))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(-1.75, -4.25), fe.create(11.25, 4.75))],
+                bridgeWaterBounds: [ye.createAabbExtents(fe.create(-10.5, 15.5), fe.create(3.5, 6))],
                 mapObjects: [{
                     type: "shack_wall_ext_2",
-                    pos: xe.create(-6.5, 6),
+                    pos: fe.create(-6.5, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_ext_14",
-                    pos: xe.create(1, 6.5),
+                    pos: fe.create(1, 6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_ext_10",
-                    pos: xe.create(8.5, 2),
+                    pos: fe.create(8.5, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_ext_2",
-                    pos: xe.create(8, -3.5),
+                    pos: fe.create(8, -3.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_ext_9",
-                    pos: xe.create(-1.5, -3.5),
+                    pos: fe.create(-1.5, -3.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_ext_5",
-                    pos: xe.create(-6.5, -1.5),
+                    pos: fe.create(-6.5, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "pot_01",
-                    pos: xe.create(-4.25, -1.25),
+                    pos: fe.create(-4.25, -1.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "pot_01",
-                    pos: xe.create(-1.25, -1.25),
+                    pos: fe.create(-1.25, -1.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "table_01",
-                    pos: xe.create(5.5, 4),
+                    pos: fe.create(5.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-4.75, -5.75),
+                    pos: fe.create(-4.75, -5.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_20",
-                    pos: xe.create(-1, -5.75),
+                    pos: fe.create(-1, -5.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_leaf_pile",
-                    pos: xe.create(-10.65, 16),
+                    pos: fe.create(-10.65, 16),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function ee(e) {
+        function te(e) {
             var t = {
                 type: "building",
                 map: {
@@ -72730,39 +72753,39 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(15, 25)), ge.createAabbExtents(xe.create(-15, 9), xe.create(2.5, 4.5)), ge.createAabbExtents(xe.create(17.5, -7), xe.create(4.5, 2.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(15, 25)), ye.createAabbExtents(fe.create(-15, 9), fe.create(2.5, 4.5)), ye.createAabbExtents(fe.create(17.5, -7), fe.create(4.5, 2.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(13, 20))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(13, 20))]
                     }, {
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(2, 20))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(2, 20))]
                     }],
                     imgs: e.floor_images || [{
                         sprite: "map-building-greenhouse-floor-01.img",
-                        pos: xe.create(0, 10),
+                        pos: fe.create(0, 10),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-greenhouse-floor-01.img",
-                        pos: xe.create(0, -10),
+                        pos: fe.create(0, -10),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(0, 21),
+                        pos: fe.create(0, 21),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(0, -21),
+                        pos: fe.create(0, -21),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -72770,8 +72793,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(12.5, 19.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(14, 22))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(12.5, 19.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(14, 22))],
                     vision: {
                         dist: 7.5,
                         width: 2.75,
@@ -72780,13 +72803,13 @@ webpackJsonp([1], {
                     },
                     imgs: e.ceiling_images || [{
                         sprite: "map-building-greenhouse-ceiling-01.img",
-                        pos: xe.create(0, -9.85),
+                        pos: fe.create(0, -9.85),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-greenhouse-ceiling-01.img",
-                        pos: xe.create(0, 9.85),
+                        pos: fe.create(0, 9.85),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
@@ -72802,72 +72825,72 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "glass_wall_10",
-                    pos: xe.create(-7, 19.5),
+                    pos: fe.create(-7, 19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-7, -19.5),
+                    pos: fe.create(-7, -19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, 15),
+                    pos: fe.create(-12.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, 5),
+                    pos: fe.create(-12.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, -15),
+                    pos: fe.create(-12.5, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, -5),
+                    pos: fe.create(-12.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(7, 19.5),
+                    pos: fe.create(7, 19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(7, -19.5),
+                    pos: fe.create(7, -19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, 15),
+                    pos: fe.create(12.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, 5),
+                    pos: fe.create(12.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, -15),
+                    pos: fe.create(12.5, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, -5),
+                    pos: fe.create(12.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_05",
-                    pos: xe.create(2, 19.75),
+                    pos: fe.create(2, 19.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_05",
-                    pos: xe.create(-2, -19.75),
+                    pos: fe.create(-2, -19.75),
                     scale: 1,
                     ori: 3
                 }, {
@@ -72876,7 +72899,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(-4.5, 14.5),
+                    pos: fe.create(-4.5, 14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72885,7 +72908,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(-7, 2.5),
+                    pos: fe.create(-7, 2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72894,7 +72917,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(-7, -2.5),
+                    pos: fe.create(-7, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72903,7 +72926,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(-4.5, -14.5),
+                    pos: fe.create(-4.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72912,7 +72935,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(4.5, 14.5),
+                    pos: fe.create(4.5, 14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -72921,7 +72944,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(7, 2.5),
+                    pos: fe.create(7, 2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72930,7 +72953,7 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(7, -2.5),
+                    pos: fe.create(7, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -72939,57 +72962,57 @@ webpackJsonp([1], {
                         planter_02: 1,
                         planter_03: 1
                     }),
-                    pos: xe.create(4.5, -14.5),
+                    pos: fe.create(4.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-15, 11),
+                    pos: fe.create(-15, 11),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-15, 7),
+                    pos: fe.create(-15, 7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(15.5, -7),
+                    pos: fe.create(15.5, -7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(19.5, -7),
+                    pos: fe.create(19.5, -7),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "bunker_structure_08",
-                    pos: xe.create(-9.5, -15.5),
+                    pos: fe.create(-9.5, -15.5),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function te(e) {
+        function ae(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(-1.5, 20.5), xe.create(12.5, 4.5)),
+                        collider: ye.createAabbExtents(fe.create(-1.5, 20.5), fe.create(12.5, 4.5)),
                         color: 8671554
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-2, -23), xe.create(3, 2.5)),
+                        collider: ye.createAabbExtents(fe.create(-2, -23), fe.create(3, 2.5)),
                         color: 8671554
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-20.5, -22.5), xe.create(10, 2)),
+                        collider: ye.createAabbExtents(fe.create(-20.5, -22.5), fe.create(10, 2)),
                         color: 7750457
                     }, {
-                        collider: ge.createAabbExtents(xe.create(28, 1.5), xe.create(3.75, 3)),
+                        collider: ye.createAabbExtents(fe.create(28, 1.5), fe.create(3.75, 3)),
                         color: 7237230
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-3.5, -2), xe.create(28, 18.5)),
+                        collider: ye.createAabbExtents(fe.create(-3.5, -2), fe.create(28, 18.5)),
                         color: 6175023
                     }]
                 },
@@ -73001,46 +73024,46 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(-3.5, -2), xe.create(28, 18.5)), ge.createAabbExtents(xe.create(-1.5, 20.5), xe.create(12.5, 4.5)), ge.createAabbExtents(xe.create(0, 0), xe.create(20, 20))]
+                        collision: [ye.createAabbExtents(fe.create(-3.5, -2), fe.create(28, 18.5)), ye.createAabbExtents(fe.create(-1.5, 20.5), fe.create(12.5, 4.5)), ye.createAabbExtents(fe.create(0, 0), fe.create(20, 20))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(-21, -17), xe.create(11, 8)), ge.createAabbExtents(xe.create(-23, -6), xe.create(8, 3)), ge.createAabbExtents(xe.create(-2, -24), xe.create(2, 3)), ge.createAabbExtents(xe.create(28, 1.5), xe.create(3, 3))]
+                        collision: [ye.createAabbExtents(fe.create(-21, -17), fe.create(11, 8)), ye.createAabbExtents(fe.create(-23, -6), fe.create(8, 3)), ye.createAabbExtents(fe.create(-2, -24), fe.create(2, 3)), ye.createAabbExtents(fe.create(28, 1.5), fe.create(3, 3))]
                     }, {
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(-2, 4), xe.create(5, 5))]
+                        collision: [ye.createAabbExtents(fe.create(-2, 4), fe.create(5, 5))]
                     }, {
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(1, 13), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(1, 13), fe.create(2, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-building-mansion-floor-01a.img",
-                        pos: xe.create(-1.5, 22),
+                        pos: fe.create(-1.5, 22),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-floor-01b.img",
-                        pos: xe.create(-3.5, -2),
+                        pos: fe.create(-3.5, -2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-floor-01c.img",
-                        pos: xe.create(28.5, 1.5),
+                        pos: fe.create(28.5, 1.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-floor-01d.img",
-                        pos: xe.create(-15, -24),
+                        pos: fe.create(-15, -24),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-15, -22.4), xe.create(17, 2.2)), ge.createAabbExtents(xe.create(-3.5, -2), xe.create(28, 18.5)), ge.createAabbExtents(xe.create(-1.5, 20.6), xe.create(12, 4.2))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-15, -24.4), xe.create(21, 4.2)), ge.createAabbExtents(xe.create(-3.5, -2), xe.create(28, 18.5)), ge.createAabbExtents(xe.create(-9, 23.1), xe.create(5, 6.7))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-15, -22.4), fe.create(17, 2.2)), ye.createAabbExtents(fe.create(-3.5, -2), fe.create(28, 18.5)), ye.createAabbExtents(fe.create(-1.5, 20.6), fe.create(12, 4.2))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-15, -24.4), fe.create(21, 4.2)), ye.createAabbExtents(fe.create(-3.5, -2), fe.create(28, 18.5)), ye.createAabbExtents(fe.create(-9, 23.1), fe.create(5, 6.7))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -73056,287 +73079,287 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_9",
-                    pos: xe.create(-31.5, -16.5),
+                    pos: fe.create(-31.5, -16.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-31.75, -10.5),
+                    pos: fe.create(-31.75, -10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_19",
-                    pos: xe.create(-31.5, .5),
+                    pos: fe.create(-31.5, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-31.75, 11.5),
+                    pos: fe.create(-31.75, 11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-31.5, 15),
+                    pos: fe.create(-31.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_17",
-                    pos: xe.create(-22.5, 16.5),
+                    pos: fe.create(-22.5, 16.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(-13.5, 20.5),
+                    pos: fe.create(-13.5, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-13, 24.9),
+                    pos: fe.create(-13, 24.9),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_19",
-                    pos: xe.create(.5, 24.5),
+                    pos: fe.create(.5, 24.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(10.5, 20.5),
+                    pos: fe.create(10.5, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_13",
-                    pos: xe.create(17.5, 16.5),
+                    pos: fe.create(17.5, 16.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(24.5, 14),
+                    pos: fe.create(24.5, 14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(24.75, 9.5),
+                    pos: fe.create(24.75, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_18",
-                    pos: xe.create(24.5, -1),
+                    pos: fe.create(24.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(24.75, -11.5),
+                    pos: fe.create(24.75, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(24.5, -17),
+                    pos: fe.create(24.5, -17),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(20.5, -20.5),
+                    pos: fe.create(20.5, -20.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(15.5, -20.75),
+                    pos: fe.create(15.5, -20.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_14",
-                    pos: xe.create(7, -20.5),
+                    pos: fe.create(7, -20.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-4, -21),
+                    pos: fe.create(-4, -21),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-7, -20.5),
+                    pos: fe.create(-7, -20.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_short_7",
-                    pos: xe.create(28.5, 4.5),
+                    pos: fe.create(28.5, 4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_short_7",
-                    pos: xe.create(28.5, -1.5),
+                    pos: fe.create(28.5, -1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(-7, -20.5),
+                    pos: fe.create(-7, -20.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_column_1 || "mansion_column_1",
-                    pos: xe.create(-5, -24),
+                    pos: fe.create(-5, -24),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_column_1 || "mansion_column_1",
-                    pos: xe.create(1, -24),
+                    pos: fe.create(1, -24),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "saferoom_01",
-                    pos: xe.create(-25.5, 1.5),
+                    pos: fe.create(-25.5, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_12 || "mansion_wall_int_12",
-                    pos: xe.create(-25, -2.5),
+                    pos: fe.create(-25, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-19, -2.5),
+                    pos: fe.create(-19, -2.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.mansion_wall_int_1 || "mansion_wall_int_1",
-                    pos: xe.create(-30.5, 5.5),
+                    pos: fe.create(-30.5, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_03",
-                    pos: xe.create(-30.25, 5.5),
+                    pos: fe.create(-30.25, 5.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.mansion_wall_int_13 || "mansion_wall_int_13",
-                    pos: xe.create(-20.5, 5.5),
+                    pos: fe.create(-20.5, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_wall_int_7 || "mansion_wall_int_7",
-                    pos: xe.create(-19.5, 1.5),
+                    pos: fe.create(-19.5, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-14.5, 6),
+                    pos: fe.create(-14.5, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_6 || "mansion_wall_int_6",
-                    pos: xe.create(-14.5, 13),
+                    pos: fe.create(-14.5, 13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_6 || "mansion_wall_int_6",
-                    pos: xe.create(-14.5, -5),
+                    pos: fe.create(-14.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_10 || "mansion_wall_int_10",
-                    pos: xe.create(-10, -8.5),
+                    pos: fe.create(-10, -8.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_wall_int_11 || "mansion_wall_int_11",
-                    pos: xe.create(-9.5, -14.5),
+                    pos: fe.create(-9.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(-7.5, 14),
+                    pos: fe.create(-7.5, 14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(-1.5, 14),
+                    pos: fe.create(-1.5, 14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(3.5, 14),
+                    pos: fe.create(3.5, 14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_12",
-                    pos: xe.create(-2, 9.5),
+                    pos: fe.create(-2, 9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "stairs_01",
-                    pos: xe.create(-4.5, 12),
+                    pos: fe.create(-4.5, 12),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-7.5, 4),
+                    pos: fe.create(-7.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(3.5, 4),
+                    pos: fe.create(3.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_12",
-                    pos: xe.create(-2, -1.5),
+                    pos: fe.create(-2, -1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(10.5, 16),
+                    pos: fe.create(10.5, 16),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.mansion_wall_int_9 || "mansion_wall_int_9",
-                    pos: xe.create(10.5, 7.5),
+                    pos: fe.create(10.5, 7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(10.5, -1),
+                    pos: fe.create(10.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_8 || "mansion_wall_int_8",
-                    pos: xe.create(10.5, -5),
+                    pos: fe.create(10.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.mansion_wall_int_9 || "mansion_wall_int_9",
-                    pos: xe.create(15.5, 4.5),
+                    pos: fe.create(15.5, 4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_wall_int_9 || "mansion_wall_int_9",
-                    pos: xe.create(15.5, -1.5),
+                    pos: fe.create(15.5, -1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_wall_int_5 || "mansion_wall_int_5",
-                    pos: xe.create(19.5, 1.5),
+                    pos: fe.create(19.5, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(24, 1.5),
+                    pos: fe.create(24, 1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_wall_int_5 || "mansion_wall_int_5",
-                    pos: xe.create(3.5, -8.5),
+                    pos: fe.create(3.5, -8.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(6, -8.5),
+                    pos: fe.create(6, -8.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.mansion_wall_int_11 || "mansion_wall_int_11",
-                    pos: xe.create(5.5, -14.5),
+                    pos: fe.create(5.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73344,7 +73367,7 @@ webpackJsonp([1], {
                         bookshelf_01: 6,
                         bookshelf_02: 1
                     }),
-                    pos: xe.create(-27.25, 7.15),
+                    pos: fe.create(-27.25, 7.15),
                     scale: 1,
                     ori: 2
                 }, {
@@ -73352,7 +73375,7 @@ webpackJsonp([1], {
                         bookshelf_01: 6,
                         bookshelf_02: 1
                     }),
-                    pos: xe.create(-27.25, 14.85),
+                    pos: fe.create(-27.25, 14.85),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73360,17 +73383,17 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-11.5, -11.75),
+                    pos: fe.create(-11.5, -11.75),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "stand_01",
-                    pos: xe.create(-7.5, -10.5),
+                    pos: fe.create(-7.5, -10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stand_01",
-                    pos: xe.create(3.5, -10.5),
+                    pos: fe.create(3.5, -10.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73378,113 +73401,113 @@ webpackJsonp([1], {
                         bookshelf_01: 6,
                         bookshelf_02: 1
                     }),
-                    pos: xe.create(7.25, -16.25),
+                    pos: fe.create(7.25, -16.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "piano_01",
-                    pos: xe.create(14.9, -3.25),
+                    pos: fe.create(14.9, -3.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "toilet_01",
-                    pos: xe.create(17, 1.5),
+                    pos: fe.create(17, 1.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "refrigerator_01",
-                    pos: xe.create(22.15, 14.4),
+                    pos: fe.create(22.15, 14.4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "oven_01",
-                    pos: xe.create(12.75, 6.75),
+                    pos: fe.create(12.75, 6.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "oven_01",
-                    pos: xe.create(12.75, 10.25),
+                    pos: fe.create(12.75, 10.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "table_02",
-                    pos: xe.create(15.75, -14.25),
+                    pos: fe.create(15.75, -14.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.entry_loot || "",
-                    pos: xe.create(-2, -8.5),
+                    pos: fe.create(-2, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "loot_tier_mansion_floor",
-                    pos: xe.create(-2, -8.5),
+                    pos: fe.create(-2, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "",
-                    pos: xe.create(-21, 9.5),
+                    pos: fe.create(-21, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "",
-                    pos: xe.create(18, -8.5),
+                    pos: fe.create(18, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "",
-                    pos: xe.create(6, 20.5),
+                    pos: fe.create(6, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(-30.15, 15),
+                    pos: fe.create(-30.15, 15),
                     scale: .8,
                     ori: 0
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(1.5, 11.5),
+                    pos: fe.create(1.5, 11.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(8.5, 22.5),
+                    pos: fe.create(8.5, 22.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(22.5, 14.5),
+                    pos: fe.create(22.5, 14.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(22.5, -18.5),
+                    pos: fe.create(22.5, -18.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.tree || "tree_01",
-                    pos: xe.create(-2, 4),
+                    pos: fe.create(-2, 4),
                     scale: e.tree_scale || .6,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: e.tree_loot || "",
-                    pos: xe.create(-2.25, 4),
+                    pos: fe.create(-2.25, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.tree_loot || "",
-                    pos: xe.create(-1.75, 4),
+                    pos: fe.create(-1.75, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.tree_loot || "",
-                    pos: xe.create(-2, 4.25),
+                    pos: fe.create(-2, 4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.tree_loot || "",
-                    pos: xe.create(-2, 3.75),
+                    pos: fe.create(-2, 3.75),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73493,7 +73516,7 @@ webpackJsonp([1], {
                         bush_03: 1,
                         "": e.bush_chance || 0
                     }),
-                    pos: xe.create(-4.75, 1.25),
+                    pos: fe.create(-4.75, 1.25),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -73503,7 +73526,7 @@ webpackJsonp([1], {
                         bush_03: 1,
                         "": e.bush_chance || 0
                     }),
-                    pos: xe.create(.75, 1.25),
+                    pos: fe.create(.75, 1.25),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -73513,7 +73536,7 @@ webpackJsonp([1], {
                         bush_03: 1,
                         "": e.bush_chance || 0
                     }),
-                    pos: xe.create(-4.75, 6.75),
+                    pos: fe.create(-4.75, 6.75),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -73523,51 +73546,51 @@ webpackJsonp([1], {
                         bush_03: 1,
                         "": e.bush_chance || 0
                     }),
-                    pos: xe.create(.75, 6.75),
+                    pos: fe.create(.75, 6.75),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: e.porch_01 || "bush_01",
-                    pos: xe.create(-8, -23),
+                    pos: fe.create(-8, -23),
                     scale: .95,
                     ori: 0
                 }, {
                     type: e.porch_01 || "bush_01",
-                    pos: xe.create(4, -23),
+                    pos: fe.create(4, -23),
                     scale: .95,
                     ori: 0
                 }, {
                     type: "shack_01",
-                    pos: xe.create(-20.75, 22.5),
+                    pos: fe.create(-20.75, 22.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_01",
-                    pos: xe.create(13.25, 19.25),
+                    pos: fe.create(13.25, 19.25),
                     scale: .9,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_01",
-                    pos: xe.create(24, 24),
+                    pos: fe.create(24, 24),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(27, -4),
+                    pos: fe.create(27, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(29, -17.25),
+                    pos: fe.create(29, -17.25),
                     scale: .7,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function ae(e) {
+        function ie(e) {
             var t = {
                 type: "building",
                 map: {
@@ -73581,37 +73604,37 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "brick",
-                        collision: [ge.createAabbExtents(xe.create(18, 3), xe.create(7, 13)), ge.createAabbExtents(xe.create(5, 0), xe.create(6, 10))]
+                        collision: [ye.createAabbExtents(fe.create(18, 3), fe.create(7, 13)), ye.createAabbExtents(fe.create(5, 0), fe.create(6, 10))]
                     }],
                     imgs: [{
                         sprite: "map-building-mansion-cellar-02.img",
-                        pos: xe.create(-3.75, .25),
+                        pos: fe.create(-3.75, .25),
                         scale: 2,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-cellar-01a.img",
-                        pos: xe.create(11.5, 5.5),
+                        pos: fe.create(11.5, 5.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-cellar-01b.img",
-                        pos: xe.create(28.5, 1.5),
+                        pos: fe.create(28.5, 1.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-mansion-cellar-01c.img",
-                        pos: xe.create(11.5, -9),
+                        pos: fe.create(11.5, -9),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(18, 3), xe.create(7, 13)), ge.createAabbExtents(xe.create(5, 1.5), xe.create(6, 12))],
-                    scopeOut: [ge.createAabbExtents(xe.create(18, 3), xe.create(7, 13)), ge.createAabbExtents(xe.create(5, 1.5), xe.create(6, 12))],
+                    scopeIn: [ye.createAabbExtents(fe.create(18, 3), fe.create(7, 13)), ye.createAabbExtents(fe.create(5, 1.5), fe.create(6, 12))],
+                    scopeOut: [ye.createAabbExtents(fe.create(18, 3), fe.create(7, 13)), ye.createAabbExtents(fe.create(5, 1.5), fe.create(6, 12))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -73622,82 +73645,82 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_thicker_24",
-                    pos: xe.create(-2.5, 6),
+                    pos: fe.create(-2.5, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_8",
-                    pos: xe.create(0, -7.5),
+                    pos: fe.create(0, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_7",
-                    pos: xe.create(5.5, -9.5),
+                    pos: fe.create(5.5, -9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_9",
-                    pos: xe.create(11.5, -11.5),
+                    pos: fe.create(11.5, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_7",
-                    pos: xe.create(17.5, -9.5),
+                    pos: fe.create(17.5, -9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_5",
-                    pos: xe.create(21.5, -7.5),
+                    pos: fe.create(21.5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_8",
-                    pos: xe.create(25.5, -5),
+                    pos: fe.create(25.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_15",
-                    pos: xe.create(25.5, 11.5),
+                    pos: fe.create(25.5, 11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_16",
-                    pos: xe.create(16, 17.5),
+                    pos: fe.create(16, 17.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_7",
-                    pos: xe.create(9.5, 12.5),
+                    pos: fe.create(9.5, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_5",
-                    pos: xe.create(5.5, 10.5),
+                    pos: fe.create(5.5, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_5",
-                    pos: xe.create(29.5, 5.5),
+                    pos: fe.create(29.5, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_thicker_5",
-                    pos: xe.create(29.5, -2.5),
+                    pos: fe.create(29.5, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_7",
-                    pos: xe.create(31.5, 1.5),
+                    pos: fe.create(31.5, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_thicker_6",
-                    pos: xe.create(4.5, 15),
+                    pos: fe.create(4.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(1, 17.6),
+                    pos: fe.create(1, 17.6),
                     scale: 1,
                     ori: 1
                 }, {
@@ -73705,7 +73728,7 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(8.5, -9.53),
+                    pos: fe.create(8.5, -9.53),
                     scale: 1,
                     ori: 2
                 }, {
@@ -73713,7 +73736,7 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(11.5, -9.53),
+                    pos: fe.create(11.5, -9.53),
                     scale: 1,
                     ori: 2
                 }, {
@@ -73721,7 +73744,7 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(14.5, -9.53),
+                    pos: fe.create(14.5, -9.53),
                     scale: 1,
                     ori: 2
                 }, {
@@ -73729,7 +73752,7 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(12.75, 15.5),
+                    pos: fe.create(12.75, 15.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73737,7 +73760,7 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(15.75, 15.5),
+                    pos: fe.create(15.75, 15.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73745,12 +73768,12 @@ webpackJsonp([1], {
                         barrel_03: 9,
                         barrel_04: 1
                     }),
-                    pos: xe.create(18.75, 15.5),
+                    pos: fe.create(18.75, 15.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(22.25, 14.25),
+                    pos: fe.create(22.25, 14.25),
                     scale: .75,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -73759,59 +73782,59 @@ webpackJsonp([1], {
                         bookshelf_01: 7,
                         bookshelf_02: 1
                     }),
-                    pos: xe.create(22.75, 8),
+                    pos: fe.create(22.75, 8),
                     scale: 1,
                     ori: 3
                 }, {
                     type: e.mansion_column_1 || "mansion_column_1",
-                    pos: xe.create(5.5, 1.5),
+                    pos: fe.create(5.5, 1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mansion_column_1 || "mansion_column_1",
-                    pos: xe.create(17.5, 1.5),
+                    pos: fe.create(17.5, 1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.mid_obs_01 || "barrel_02",
-                    pos: xe.create(8.5, 1.5),
+                    pos: fe.create(8.5, 1.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(11.5, 1.5),
+                    pos: fe.create(11.5, 1.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: e.mid_obs_01 || "barrel_02",
-                    pos: xe.create(14.5, 1.5),
+                    pos: fe.create(14.5, 1.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "",
-                    pos: xe.create(16.5, 7.5),
+                    pos: fe.create(16.5, 7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_02 || "",
-                    pos: xe.create(11.5, -5.5),
+                    pos: fe.create(11.5, -5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(.5, -4.5),
+                    pos: fe.create(.5, -4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(22.5, 14.5),
+                    pos: fe.create(22.5, 14.5),
                     scale: 1,
                     ori: 3
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function ie(e) {
+        function re(e) {
             var t = {
                 type: "building",
                 map: {
@@ -73823,12 +73846,12 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 1.4), xe.create(5.5, 6.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 1.4), fe.create(5.5, 6.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 7))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 7))]
                     }],
                     imgs: [{
                         sprite: "map-building-outhouse-floor.img",
@@ -73838,8 +73861,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 1.45), xe.create(3.6, 3.2))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 1.4), xe.create(3.8, 3.4))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 1.45), fe.create(3.6, 3.2))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 1.4), fe.create(3.8, 3.4))],
                     imgs: [{
                         sprite: "map-building-outhouse-ceiling.img",
                         scale: .5,
@@ -73855,27 +73878,27 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "outhouse_wall_top",
-                    pos: xe.create(0, 4.46),
+                    pos: fe.create(0, 4.46),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "outhouse_wall_side",
-                    pos: xe.create(3.4, 1.73),
+                    pos: fe.create(3.4, 1.73),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "outhouse_wall_side",
-                    pos: xe.create(-3.4, 1.73),
+                    pos: fe.create(-3.4, 1.73),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "outhouse_wall_bot",
-                    pos: xe.create(-2.65, -1.52),
+                    pos: fe.create(-2.65, -1.52),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "outhouse_wall_bot",
-                    pos: xe.create(2.65, -1.52),
+                    pos: fe.create(2.65, -1.52),
                     scale: 1,
                     ori: 0
                 }, {
@@ -73883,47 +73906,47 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(0, 2),
+                    pos: fe.create(0, 2),
                     scale: .95,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function re(e) {
+        function oe(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(-21, -8), xe.create(21.25, 14)),
+                        collider: ye.createAabbExtents(fe.create(-21, -8), fe.create(21.25, 14)),
                         color: 5855577
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-24.5, 8.5), xe.create(17.75, 9.75)),
+                        collider: ye.createAabbExtents(fe.create(-24.5, 8.5), fe.create(17.75, 9.75)),
                         color: 3355970
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-3.5, 12), xe.create(3.5, 6.25)),
+                        collider: ye.createAabbExtents(fe.create(-3.5, 12), fe.create(3.5, 6.25)),
                         color: 4278620
                     }, {
-                        collider: ge.createAabbExtents(xe.create(10.35, 0), xe.create(10.5, 22)),
+                        collider: ye.createAabbExtents(fe.create(10.35, 0), fe.create(10.5, 22)),
                         color: 3355970
                     }, {
-                        collider: ge.createAabbExtents(xe.create(31.25, 12.5), xe.create(10.75, 9.5)),
+                        collider: ye.createAabbExtents(fe.create(31.25, 12.5), fe.create(10.75, 9.5)),
                         color: 3355970
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-3.5, 2.5), xe.create(2.25, 2.25)),
+                        collider: ye.createAabbExtents(fe.create(-3.5, 2.5), fe.create(2.25, 2.25)),
                         color: 6310464
                     }, {
-                        collider: ge.createCircle(xe.create(-30.5, -18), 1.5),
+                        collider: ye.createCircle(fe.create(-30.5, -18), 1.5),
                         color: 8026746
                     }, {
-                        collider: ge.createCircle(xe.create(-20.5, -10.5), 1.5),
+                        collider: ye.createCircle(fe.create(-20.5, -10.5), 1.5),
                         color: 8026746
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-38.5, -7), xe.create(1.4, 3.1)),
+                        collider: ye.createAabbExtents(fe.create(-38.5, -7), fe.create(1.4, 3.1)),
                         color: 13278307
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-7.5, -19.5), xe.create(3.1, 1.4)),
+                        collider: ye.createAabbExtents(fe.create(-7.5, -19.5), fe.create(3.1, 1.4)),
                         color: 13278307
                     }]
                 },
@@ -73935,28 +73958,28 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(-24.5, 8.5), xe.create(17.75, 9.75)), ge.createAabbExtents(xe.create(-3.5, 12), xe.create(3.5, 6.25)), ge.createAabbExtents(xe.create(10.35, 0), xe.create(10.5, 22)), ge.createAabbExtents(xe.create(31.25, 12.5), xe.create(10.75, 9.5))]
+                        collision: [ye.createAabbExtents(fe.create(-24.5, 8.5), fe.create(17.75, 9.75)), ye.createAabbExtents(fe.create(-3.5, 12), fe.create(3.5, 6.25)), ye.createAabbExtents(fe.create(10.35, 0), fe.create(10.5, 22)), ye.createAabbExtents(fe.create(31.25, 12.5), fe.create(10.75, 9.5))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(-21.5, -13), xe.create(21, 11.5)), ge.createAabbExtents(xe.create(-3.5, 2), xe.create(3, 3.5))]
+                        collision: [ye.createAabbExtents(fe.create(-21.5, -13), fe.create(21, 11.5)), ye.createAabbExtents(fe.create(-3.5, 2), fe.create(3, 3.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-police-floor-01.img",
-                        pos: xe.create(-9.5, 0),
+                        pos: fe.create(-9.5, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-police-floor-02.img",
-                        pos: xe.create(33, 0),
+                        pos: fe.create(33, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-24.5, 8.5), xe.create(17.75, 9.75)), ge.createAabbExtents(xe.create(-3.5, 12), xe.create(3.5, 6.25)), ge.createAabbExtents(xe.create(10.35, 0), xe.create(10.5, 22)), ge.createAabbExtents(xe.create(31.25, 12.5), xe.create(10.75, 9.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(12, 0), xe.create(12.75, 26))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-24.5, 8.5), fe.create(17.75, 9.75)), ye.createAabbExtents(fe.create(-3.5, 12), fe.create(3.5, 6.25)), ye.createAabbExtents(fe.create(10.35, 0), fe.create(10.5, 22)), ye.createAabbExtents(fe.create(31.25, 12.5), fe.create(10.75, 9.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(12, 0), fe.create(12.75, 26))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -73965,19 +73988,19 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-police-ceiling-01.img",
-                        pos: xe.create(-21.5, 8.5),
+                        pos: fe.create(-21.5, 8.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-police-ceiling-02.img",
-                        pos: xe.create(10.5, 0),
+                        pos: fe.create(10.5, 0),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-police-ceiling-03.img",
-                        pos: xe.create(31.96, 12.5),
+                        pos: fe.create(31.96, 12.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
@@ -73985,237 +74008,237 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_20",
-                    pos: xe.create(-42, 8.5),
+                    pos: fe.create(-42, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_41",
-                    pos: xe.create(-21, 18),
+                    pos: fe.create(-21, 18),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(-38, -1),
+                    pos: fe.create(-38, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_21",
-                    pos: xe.create(-18, -1),
+                    pos: fe.create(-18, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(-7, 2),
+                    pos: fe.create(-7, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_7",
-                    pos: xe.create(-4, 6),
+                    pos: fe.create(-4, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_16",
-                    pos: xe.create(0, -1.5),
+                    pos: fe.create(0, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-.5, -11),
+                    pos: fe.create(-.5, -11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_10",
-                    pos: xe.create(0, -17.5),
+                    pos: fe.create(0, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(3.5, -22),
+                    pos: fe.create(3.5, -22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(6.5, -22.5),
+                    pos: fe.create(6.5, -22.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(14.5, -22.5),
+                    pos: fe.create(14.5, -22.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_6",
-                    pos: xe.create(17.5, -22),
+                    pos: fe.create(17.5, -22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_11",
-                    pos: xe.create(21, -17),
+                    pos: fe.create(21, -17),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(21.5, -11.5),
+                    pos: fe.create(21.5, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_11",
-                    pos: xe.create(21, -2),
+                    pos: fe.create(21, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_20",
-                    pos: xe.create(31.5, 3),
+                    pos: fe.create(31.5, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_20",
-                    pos: xe.create(42, 12.5),
+                    pos: fe.create(42, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_33",
-                    pos: xe.create(25, 22),
+                    pos: fe.create(25, 22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(4.5, 22.5),
+                    pos: fe.create(4.5, 22.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(2.5, 22),
+                    pos: fe.create(2.5, 22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(0, 20),
+                    pos: fe.create(0, 20),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_2",
-                    pos: xe.create(-40.5, 8),
+                    pos: fe.create(-40.5, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_3",
-                    pos: xe.create(-34, 8),
+                    pos: fe.create(-34, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "cell_door_01",
-                    pos: xe.create(-35.5, 8),
+                    pos: fe.create(-35.5, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_8",
-                    pos: xe.create(-35, 3.5),
+                    pos: fe.create(-35, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_3",
-                    pos: xe.create(-27, 8),
+                    pos: fe.create(-27, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_8",
-                    pos: xe.create(-28, 3.5),
+                    pos: fe.create(-28, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "cell_door_01",
-                    pos: xe.create(-21.5, 8),
+                    pos: fe.create(-21.5, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_3",
-                    pos: xe.create(-20, 8),
+                    pos: fe.create(-20, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_8",
-                    pos: xe.create(-21, 3.5),
+                    pos: fe.create(-21, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "cell_door_01",
-                    pos: xe.create(-14.5, 8),
+                    pos: fe.create(-14.5, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_3",
-                    pos: xe.create(-13, 8),
+                    pos: fe.create(-13, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_8",
-                    pos: xe.create(-14, 3.5),
+                    pos: fe.create(-14, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "cell_door_01",
-                    pos: xe.create(-7.5, 8),
+                    pos: fe.create(-7.5, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_6",
-                    pos: xe.create(-7, 9.5),
+                    pos: fe.create(-7, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_7",
-                    pos: xe.create(-4, 13),
+                    pos: fe.create(-4, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-7, 17.5),
+                    pos: fe.create(-7, 17.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "police_wall_int_4",
-                    pos: xe.create(2.5, -1),
+                    pos: fe.create(2.5, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_window_01",
-                    pos: xe.create(6, -1),
+                    pos: fe.create(6, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_6",
-                    pos: xe.create(10.5, -1),
+                    pos: fe.create(10.5, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bank_window_01",
-                    pos: xe.create(15, -1),
+                    pos: fe.create(15, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "police_wall_int_4",
-                    pos: xe.create(18.5, -1),
+                    pos: fe.create(18.5, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(21, 3.5),
+                    pos: fe.create(21, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_10",
-                    pos: xe.create(21, 12.5),
+                    pos: fe.create(21, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(21, 21.5),
+                    pos: fe.create(21, 21.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "metal_wall_ext_10",
-                    pos: xe.create(35.5, 4),
+                    pos: fe.create(35.5, 4),
                     scale: 1,
                     ori: 1
                 }, {
@@ -74223,12 +74246,12 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(33, 4.15),
+                    pos: fe.create(33, 4.15),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "metal_wall_ext_10",
-                    pos: xe.create(35.5, 21),
+                    pos: fe.create(35.5, 21),
                     scale: 1,
                     ori: 1
                 }, {
@@ -74236,7 +74259,7 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(33, 20.85),
+                    pos: fe.create(33, 20.85),
                     scale: 1,
                     ori: 0
                 }, {
@@ -74244,12 +74267,12 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(38, 20.85),
+                    pos: fe.create(38, 20.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_18",
-                    pos: xe.create(41, 12.5),
+                    pos: fe.create(41, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -74257,7 +74280,7 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(40.85, 7.5),
+                    pos: fe.create(40.85, 7.5),
                     scale: 1,
                     ori: 3
                 }, {
@@ -74265,12 +74288,12 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(40.85, 17.5),
+                    pos: fe.create(40.85, 17.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(35.5, 12.5),
+                    pos: fe.create(35.5, 12.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -74278,7 +74301,7 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(38, 11.35),
+                    pos: fe.create(38, 11.35),
                     scale: 1,
                     ori: 0
                 }, {
@@ -74286,7 +74309,7 @@ webpackJsonp([1], {
                         locker_01: 8,
                         locker_02: 1
                     }),
-                    pos: xe.create(33, 13.65),
+                    pos: fe.create(33, 13.65),
                     scale: 1,
                     ori: 2
                 }, {
@@ -74294,7 +74317,7 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(-37, 1),
+                    pos: fe.create(-37, 1),
                     scale: 1,
                     ori: 2
                 }, {
@@ -74302,7 +74325,7 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(-23, 1),
+                    pos: fe.create(-23, 1),
                     scale: 1,
                     ori: 2
                 }, {
@@ -74310,7 +74333,7 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(-16, 1),
+                    pos: fe.create(-16, 1),
                     scale: 1,
                     ori: 2
                 }, {
@@ -74318,58 +74341,58 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(-9, 1),
+                    pos: fe.create(-9, 1),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "control_panel_01",
-                    pos: xe.create(-4.5, 9.5),
+                    pos: fe.create(-4.5, 9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-24.5, 20.25),
+                    pos: fe.create(-24.5, 20.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(14.5, 12.5),
+                    pos: fe.create(14.5, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(18.75, 12.5),
+                    pos: fe.create(18.75, 12.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(21.85, 12.5),
+                    pos: fe.create(21.85, 12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(10.5, 1.25),
+                    pos: fe.create(10.5, 1.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vending_01",
-                    pos: xe.create(2, -6.75),
+                    pos: fe.create(2, -6.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "stand_01",
-                    pos: xe.create(2, -14.5),
+                    pos: fe.create(2, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bush_01",
-                    pos: xe.create(2.5, -19.5),
+                    pos: fe.create(2.5, -19.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "bush_01",
-                    pos: xe.create(18.5, -19.5),
+                    pos: fe.create(18.5, -19.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -74377,91 +74400,91 @@ webpackJsonp([1], {
                     type: c({
                         loot_tier_police_floor: 1
                     }),
-                    pos: xe.create(-38.5, 4),
+                    pos: fe.create(-38.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(-31.5, 4),
+                    pos: fe.create(-31.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(-24.5, 4),
+                    pos: fe.create(-24.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(-17.5, 4),
+                    pos: fe.create(-17.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(-10.5, 4),
+                    pos: fe.create(-10.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-3.5, 2.5),
+                    pos: fe.create(-3.5, 2.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-38.5, -7),
+                    pos: fe.create(-38.5, -7),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-7.5, -19.5),
+                    pos: fe.create(-7.5, -19.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-30.5, -18),
+                    pos: fe.create(-30.5, -18),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-20.5, -10.5),
+                    pos: fe.create(-20.5, -10.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(39, -6),
+                    pos: fe.create(39, -6),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(28, -17.5),
+                    pos: fe.create(28, -17.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "hedgehog_01",
-                    pos: xe.create(39, -17.5),
+                    pos: fe.create(39, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(24.5, -.5),
+                    pos: fe.create(24.5, -.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function oe(e) {
+        function ne(e) {
             var t = {
                 type: "building",
                 map: {
@@ -74473,29 +74496,29 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(19, 17.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(19, 17.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(14.5, 13))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(14.5, 13))]
                     }],
                     imgs: [{
                         sprite: "map-building-house-floor-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(-1, 14.5),
+                        pos: fe.create(-1, 14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(0, -14.5),
+                        pos: fe.create(0, -14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -74503,8 +74526,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(14.5, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(16.5, 15))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(14.5, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(16.5, 15))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -74520,152 +74543,152 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_12",
-                    pos: xe.create(-9, 13),
+                    pos: fe.create(-9, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_14",
-                    pos: xe.create(8, 13),
+                    pos: fe.create(8, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(1, 13.25),
+                    pos: fe.create(1, 13.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-14.5, 10),
+                    pos: fe.create(-14.5, 10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_10",
-                    pos: xe.create(-14.5, -.5),
+                    pos: fe.create(-14.5, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-14.5, -10.5),
+                    pos: fe.create(-14.5, -10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-14.75, 6),
+                    pos: fe.create(-14.75, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-14.75, -7),
+                    pos: fe.create(-14.75, -7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-12.5, -13),
+                    pos: fe.create(-12.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-4.5, -13),
+                    pos: fe.create(-4.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(4.5, -13),
+                    pos: fe.create(4.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(12.5, -13),
+                    pos: fe.create(12.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-8.5, -13.25),
+                    pos: fe.create(-8.5, -13.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(8.5, -13.25),
+                    pos: fe.create(8.5, -13.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-2, -13.25),
+                    pos: fe.create(-2, -13.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(14.5, 8.5),
+                    pos: fe.create(14.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(14.5, -3),
+                    pos: fe.create(14.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_2",
-                    pos: xe.create(14.5, -11.5),
+                    pos: fe.create(14.5, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.75, -9),
+                    pos: fe.create(14.75, -9),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.75, 3),
+                    pos: fe.create(14.75, 3),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.house_wall_int_9 || "house_wall_int_9",
-                    pos: xe.create(-9.5, -1),
+                    pos: fe.create(-9.5, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_wall_int_5 || "house_wall_int_5",
-                    pos: xe.create(4.5, -6),
+                    pos: fe.create(4.5, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.house_wall_int_9 || "house_wall_int_9",
-                    pos: xe.create(9.5, -4),
+                    pos: fe.create(9.5, -4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_wall_int_8 || "house_wall_int_8",
-                    pos: xe.create(5.5, 8.5),
+                    pos: fe.create(5.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.house_wall_int_4 || "house_wall_int_4",
-                    pos: xe.create(8, 7),
+                    pos: fe.create(8, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(4.5, -12.5),
+                    pos: fe.create(4.5, -12.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(6, 2.5),
+                    pos: fe.create(6, 2.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(14, 7),
+                    pos: fe.create(14, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_column_1 || "house_column_1",
-                    pos: xe.create(6, 3.5),
+                    pos: fe.create(6, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.house_column_1 || "house_column_1",
-                    pos: xe.create(6, -2.5),
+                    pos: fe.create(6, -2.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -74673,12 +74696,12 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(8, 10),
+                    pos: fe.create(8, 10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "stand_01",
-                    pos: xe.create(12.25, -2),
+                    pos: fe.create(12.25, -2),
                     scale: 1,
                     ori: 3
                 }, {
@@ -74686,70 +74709,70 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(7.75, -6),
+                    pos: fe.create(7.75, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.stand || "",
-                    pos: xe.create(-12.25, -3),
+                    pos: fe.create(-12.25, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "table_01",
-                    pos: xe.create(-11.25, 1.75),
+                    pos: fe.create(-11.25, 1.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "oven_01",
-                    pos: xe.create(-7, 11),
+                    pos: fe.create(-7, 11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "refrigerator_01",
-                    pos: xe.create(-7, 1),
+                    pos: fe.create(-7, 1),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.plant || "bush_02",
-                    pos: e.plant_pos || xe.create(-12, -10.5),
+                    pos: e.plant_pos || fe.create(-12, -10.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: e.porch_01 || "",
-                    pos: xe.create(4.5, -15.5),
+                    pos: fe.create(4.5, -15.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: e.porch_01 || "",
-                    pos: xe.create(-5.25, 15.5),
+                    pos: fe.create(-5.25, 15.5),
                     scale: .9,
                     ori: 2
                 }, {
                     type: "loot_tier_1",
-                    pos: xe.create(0, 4.5),
+                    pos: fe.create(0, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(-10.25, -8.5),
+                    pos: fe.create(-10.25, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(-10, -8.75),
+                    pos: fe.create(-10, -8.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(-9.75, -8.25),
+                    pos: fe.create(-9.75, -8.25),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function ne(e) {
+        function se(e) {
             var t = {
                 type: "building",
                 map: {
@@ -74761,78 +74784,78 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, -1), xe.create(19, 18.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, -1), fe.create(19, 18.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(14.5, 13))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(14.5, 13))]
                     }],
                     imgs: [{
                         sprite: "map-building-house-floor-02.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(10, 14.5),
+                        pos: fe.create(10, 14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(0, -14.5),
+                        pos: fe.create(0, -14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(2.6, -14.5),
+                        pos: fe.create(2.6, -14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(5.2, -14.5),
+                        pos: fe.create(5.2, -14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(7.8, -14.5),
+                        pos: fe.create(7.8, -14.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(0, -16.25),
+                        pos: fe.create(0, -16.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(2.6, -16.25),
+                        pos: fe.create(2.6, -16.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(5.2, -16.25),
+                        pos: fe.create(5.2, -16.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-building-porch-01.img",
-                        pos: xe.create(7.8, -16.25),
+                        pos: fe.create(7.8, -16.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -74840,8 +74863,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(14.5, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(16.5, 15))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(14.5, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(16.5, 15))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -74858,142 +74881,142 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-12.5, 13),
+                    pos: fe.create(-12.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-8.5, 13.25),
+                    pos: fe.create(-8.5, 13.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_15",
-                    pos: xe.create(.5, 13),
+                    pos: fe.create(.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_3",
-                    pos: xe.create(13.5, 13),
+                    pos: fe.create(13.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(12, 13.25),
+                    pos: fe.create(12, 13.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-14.5, 10),
+                    pos: fe.create(-14.5, 10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_10",
-                    pos: xe.create(-14.5, -.5),
+                    pos: fe.create(-14.5, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_4",
-                    pos: xe.create(-14.5, -10.5),
+                    pos: fe.create(-14.5, -10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-14.75, 6),
+                    pos: fe.create(-14.75, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-14.75, -7),
+                    pos: fe.create(-14.75, -7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-12.5, -13),
+                    pos: fe.create(-12.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_5",
-                    pos: xe.create(-4.5, -13),
+                    pos: fe.create(-4.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_13",
-                    pos: xe.create(8.5, -13),
+                    pos: fe.create(8.5, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-8.5, -13.25),
+                    pos: fe.create(-8.5, -13.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-2, -13.25),
+                    pos: fe.create(-2, -13.25),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "brick_wall_ext_8",
-                    pos: xe.create(14.5, 8.5),
+                    pos: fe.create(14.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_9",
-                    pos: xe.create(14.5, -3),
+                    pos: fe.create(14.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_2",
-                    pos: xe.create(14.5, -11.5),
+                    pos: fe.create(14.5, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.75, -9),
+                    pos: fe.create(14.75, -9),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.75, 3),
+                    pos: fe.create(14.75, 3),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.house_wall_int_5 || "house_wall_int_5",
-                    pos: xe.create(-.5, 10),
+                    pos: fe.create(-.5, 10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.house_wall_int_14 || "house_wall_int_14",
-                    pos: xe.create(-7, 3),
+                    pos: fe.create(-7, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_wall_int_11 || "house_wall_int_11",
-                    pos: xe.create(-8.5, -2),
+                    pos: fe.create(-8.5, -2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_wall_int_4 || "house_wall_int_4",
-                    pos: xe.create(12, 1),
+                    pos: fe.create(12, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.house_wall_int_4 || "house_wall_int_4",
-                    pos: xe.create(12, -7),
+                    pos: fe.create(12, -7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-.5, 3.5),
+                    pos: fe.create(-.5, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(-3.5, -1.5),
+                    pos: fe.create(-3.5, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.house_column_1 || "house_column_1",
-                    pos: xe.create(4, -3),
+                    pos: fe.create(4, -3),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75001,12 +75024,12 @@ webpackJsonp([1], {
                         toilet_01: 5,
                         toilet_02: 1
                     }),
-                    pos: xe.create(-11.75, .5),
+                    pos: fe.create(-11.75, .5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.stand || "",
-                    pos: xe.create(-12.5, 11),
+                    pos: fe.create(-12.5, 11),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75014,7 +75037,7 @@ webpackJsonp([1], {
                         drawers_01: 7,
                         drawers_02: 1
                     }),
-                    pos: xe.create(-3.75, 11),
+                    pos: fe.create(-3.75, 11),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75022,60 +75045,60 @@ webpackJsonp([1], {
                         bookshelf_01: 7,
                         bookshelf_02: 1
                     }),
-                    pos: xe.create(13, -3),
+                    pos: fe.create(13, -3),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "table_03",
-                    pos: xe.create(-8.5, -6),
+                    pos: fe.create(-8.5, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "oven_01",
-                    pos: xe.create(-12.25, -11),
+                    pos: fe.create(-12.25, -11),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "refrigerator_01",
-                    pos: xe.create(-4.5, -11),
+                    pos: fe.create(-4.5, -11),
                     scale: 1,
                     ori: 2
                 }, {
                     type: e.plant || "bush_02",
-                    pos: e.plant_pos || xe.create(2, 10.5),
+                    pos: e.plant_pos || fe.create(2, 10.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "loot_tier_1",
-                    pos: xe.create(0, -4.5),
+                    pos: fe.create(0, -4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(4.25, 8.5),
+                    pos: fe.create(4.25, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(3.75, 8.5),
+                    pos: fe.create(3.75, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.plant_loot || "",
-                    pos: xe.create(4, 8.25),
+                    pos: fe.create(4, 8.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "grill_01",
-                    pos: xe.create(6, -15.25),
+                    pos: fe.create(6, -15.25),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function se(e) {
+        function le(e) {
             var t = {
                 type: "building",
                 map: {
@@ -75090,10 +75113,10 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, .9), xe.create(5.6, 3.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, .9), fe.create(5.6, 3.5))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(3.75, -4), xe.create(2.25, 1.5))]
+                        collision: [ye.createAabbExtents(fe.create(3.75, -4), fe.create(2.25, 1.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-shack-floor-01.img",
@@ -75103,8 +75126,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, .9), xe.create(5.6, 3.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, .8), xe.create(5.9, 3.8))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, .9), fe.create(5.6, 3.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, .8), fe.create(5.9, 3.8))],
                     vision: {
                         width: 4
                     },
@@ -75123,40 +75146,40 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "shack_wall_bot",
-                    pos: xe.create(-1.49, -2.4),
+                    pos: fe.create(-1.49, -2.4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_side_left",
-                    pos: xe.create(-5.55, .69),
+                    pos: fe.create(-5.55, .69),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_top",
-                    pos: xe.create(-.3, 4.33),
+                    pos: fe.create(-.3, 4.33),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_side_right",
-                    pos: xe.create(5.55, .95),
+                    pos: fe.create(5.55, .95),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(7.9, 2.85),
+                    pos: fe.create(7.9, 2.85),
                     scale: .8,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(7.45, -.9),
+                    pos: fe.create(7.45, -.9),
                     scale: .85,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_2: 1
                     }),
-                    pos: xe.create(-2, .8),
+                    pos: fe.create(-2, .8),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75164,14 +75187,14 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(2, .8),
+                    pos: fe.create(2, .8),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function le(e) {
+        function ce(e) {
             var t = {
                 type: "building",
                 map: {
@@ -75187,10 +75210,10 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 1), xe.create(5, 4))]
+                        collision: [ye.createAabbExtents(fe.create(0, 1), fe.create(5, 4))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(0, -4), xe.create(2, 1))]
+                        collision: [ye.createAabbExtents(fe.create(0, -4), fe.create(2, 1))]
                     }],
                     imgs: [{
                         sprite: "map-building-shack-floor-02.img",
@@ -75200,8 +75223,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 1), xe.create(4.75, 3.75))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 1), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 1), fe.create(4.75, 3.75))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 1), fe.create(0, 0))],
                     vision: {
                         width: 4
                     },
@@ -75220,58 +75243,58 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "barn_wall_int_2",
-                    pos: xe.create(-3, -2.5),
+                    pos: fe.create(-3, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_2",
-                    pos: xe.create(3, -2.5),
+                    pos: fe.create(3, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barn_wall_int_8",
-                    pos: xe.create(-4.5, 1),
+                    pos: fe.create(-4.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_8",
-                    pos: xe.create(4.5, 1),
+                    pos: fe.create(4.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_wall_int_8",
-                    pos: xe.create(0, 4.5),
+                    pos: fe.create(0, 4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(4, -4.5),
+                    pos: fe.create(4, -4.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: c({
                         loot_tier_1: 1
                     }),
-                    pos: xe.create(0, 1),
+                    pos: fe.create(0, 1),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function ce(e) {
+        function me(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(27, 0), xe.create(3, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(27, 0), fe.create(3, 12.25)),
                         color: 10066329
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-27, 0), xe.create(3, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(-27, 0), fe.create(3, 12.25)),
                         color: 10066329
                     }, {
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(24.5, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(24.5, 12.25)),
                         color: 5915450
                     }]
                 },
@@ -75280,21 +75303,21 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(35, 16))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(35, 16))],
                 floor: {
                     surfaces: [{
                         type: "warehouse",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(32, 12.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(32, 12.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-warehouse-floor-01.img",
-                        pos: xe.create(-15.615, 0),
+                        pos: fe.create(-15.615, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-warehouse-floor-01.img",
-                        pos: xe.create(15.615, 0),
+                        pos: fe.create(15.615, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -75302,8 +75325,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(24.5, 12.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(32, 12.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(24.5, 12.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(32, 12.5))],
                     vision: {
                         dist: 8,
                         width: 5
@@ -75317,78 +75340,78 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "warehouse_wall_side",
-                    pos: xe.create(0, 11.9),
+                    pos: fe.create(0, 11.9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_wall_edge",
-                    pos: xe.create(-24.4, 8.2),
+                    pos: fe.create(-24.4, 8.2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_wall_edge",
-                    pos: xe.create(24.4, 8.2),
+                    pos: fe.create(24.4, 8.2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_wall_side",
-                    pos: xe.create(0, -11.9),
+                    pos: fe.create(0, -11.9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_wall_edge",
-                    pos: xe.create(-24.4, -8.2),
+                    pos: fe.create(-24.4, -8.2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_wall_edge",
-                    pos: xe.create(24.4, -8.2),
+                    pos: fe.create(24.4, -8.2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.topLeftObs,
-                    pos: xe.create(-21.25, 8.75),
+                    pos: fe.create(-21.25, 8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "crate_04",
-                    pos: xe.create(-16.25, 8.75),
+                    pos: fe.create(-16.25, 8.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-21.25, -8.75),
+                    pos: fe.create(-21.25, -8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-16.5, -8.75),
+                    pos: fe.create(-16.5, -8.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: e.topRightObs,
-                    pos: xe.create(21.25, 8.75),
+                    pos: fe.create(21.25, 8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(16.5, 8.75),
+                    pos: fe.create(16.5, 8.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(16.25, -8.75),
+                    pos: fe.create(16.25, -8.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: e.botRightObs,
-                    pos: xe.create(21.25, -8.75),
+                    pos: fe.create(21.25, -8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
@@ -75398,62 +75421,62 @@ webpackJsonp([1], {
                         crate_02: 1,
                         crate_01: 3
                     }),
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "crate_01",
-                    pos: xe.create(5, 0),
+                    pos: fe.create(5, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-5, 0),
+                    pos: fe.create(-5, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: e.ignoreMapSpawnReplacement
                 }, {
                     type: "crate_04",
-                    pos: xe.create(0, 5),
+                    pos: fe.create(0, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(0, -5),
+                    pos: fe.create(0, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(-9, 6),
+                    pos: fe.create(-9, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: e.decoration_01 || "",
-                    pos: xe.create(9, -6),
+                    pos: fe.create(9, -6),
                     scale: 1,
                     ori: 0
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function me(e) {
+        function pe(e) {
             var t = {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(25, 0), xe.create(3, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(25, 0), fe.create(3, 12.25)),
                         color: 10066329
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-25, 0), xe.create(3, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(-25, 0), fe.create(3, 12.25)),
                         color: 10066329
                     }, {
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(22.5, 12.25)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(22.5, 12.25)),
                         color: 2240064
                     }]
                 },
@@ -75465,18 +75488,18 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "warehouse",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(27.5, 12.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(27.5, 12.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-warehouse-floor-02.img",
-                        pos: xe.create(-13.72, 0),
+                        pos: fe.create(-13.72, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-building-warehouse-floor-02.img",
-                        pos: xe.create(13.72, 0),
+                        pos: fe.create(13.72, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -75484,8 +75507,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(22, 12.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(27.5, 12.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(22, 12.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(27.5, 12.5))],
                     vision: {
                         dist: 8,
                         width: 5
@@ -75499,49 +75522,49 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_43",
-                    pos: xe.create(0, 12),
+                    pos: fe.create(0, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_8",
-                    pos: xe.create(-21.9, 8.5),
+                    pos: fe.create(-21.9, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_8",
-                    pos: xe.create(21.9, 8.5),
+                    pos: fe.create(21.9, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_43",
-                    pos: xe.create(0, -12),
+                    pos: fe.create(0, -12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_8",
-                    pos: xe.create(-21.9, -8.5),
+                    pos: fe.create(-21.9, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_8",
-                    pos: xe.create(21.9, -8.5),
+                    pos: fe.create(21.9, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-18.75, 8.75),
+                    pos: fe.create(-18.75, 8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-14, 8.75),
+                    pos: fe.create(-14, 8.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-18.75, -6),
+                    pos: fe.create(-18.75, -6),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75549,12 +75572,12 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(-19.5, -9.5),
+                    pos: fe.create(-19.5, -9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(18.75, 6),
+                    pos: fe.create(18.75, 6),
                     scale: 1,
                     ori: 0
                 }, {
@@ -75562,19 +75585,19 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(19.5, 9.5),
+                    pos: fe.create(19.5, 9.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(18.75, -8.75),
+                    pos: fe.create(18.75, -8.75),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(14, -8.75),
+                    pos: fe.create(14, -8.75),
                     scale: .9,
                     ori: 0
                 }, {
@@ -75582,51 +75605,51 @@ webpackJsonp([1], {
                         crate_08: 24,
                         crate_09: 1
                     }),
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(0, 5),
+                    pos: fe.create(0, 5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(0, -5),
+                    pos: fe.create(0, -5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(4, -5),
+                    pos: fe.create(4, -5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-4, 5),
+                    pos: fe.create(-4, 5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(4.5, 0),
+                    pos: fe.create(4.5, 0),
                     scale: .9,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-4.5, 0),
+                    pos: fe.create(-4.5, 0),
                     scale: .9,
                     ori: 0,
                     inheritOri: !1
                 }]
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function pe(e) {
+        function de(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -75634,7 +75657,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 2)),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -75660,9 +75683,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        function de(e) {
+        function he(e) {
             var t = {
                 type: "obstacle",
                 scale: {
@@ -75670,7 +75693,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 2)),
                 height: .2,
                 isWall: !0,
                 collidable: !0,
@@ -75694,19 +75717,19 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             };
-            return we.mergeDeep(t, e || {})
+            return xe.mergeDeep(t, e || {})
         }
-        var he = a("0e566746")
-          , ue = a("34e32c48")
-          , ge = a("6b42806d")
-          , ye = a("10899aea")
-          , we = a("1901e2d9")
-          , xe = a("c2a798c8")
-          , fe = {}
-          , be = {
+        var ue = a("0e566746")
+          , ge = a("34e32c48")
+          , ye = a("6b42806d")
+          , we = a("10899aea")
+          , xe = a("1901e2d9")
+          , fe = a("c2a798c8")
+          , be = {}
+          , _e = {
             DesertWheelActivated: 0
         }
-          , _e = {
+          , Se = {
             metal: {
                 destructible: !1,
                 reflectBullets: !0,
@@ -75787,7 +75810,7 @@ webpackJsonp([1], {
                 }
             }
         }
-          , Se = {
+          , ke = {
             barrel_01: p({}),
             barrel_01b: p({
                 img: {
@@ -75799,7 +75822,7 @@ webpackJsonp([1], {
                 health: 60
             }),
             barrel_03: d({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.25, .5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.25, .5)),
                 health: 20,
                 img: {
                     sprite: "map-barrel-03.img",
@@ -75808,7 +75831,7 @@ webpackJsonp([1], {
                 }
             }),
             barrel_04: d({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.25, .5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.25, .5)),
                 health: 20,
                 loot: [s("tier_soviet", 2, 3)],
                 img: {
@@ -75818,7 +75841,7 @@ webpackJsonp([1], {
                 }
             }),
             bed_sm_01: h({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.4, 3.4)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.4, 3.4)),
                 img: {
                     sprite: "map-bed-01.img"
                 }
@@ -75835,7 +75858,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.25),
+                collision: ye.createCircle(fe.create(0, 0), 1.25),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -75942,7 +75965,7 @@ webpackJsonp([1], {
                 }
             }),
             bush_06: y({
-                collision: ge.createCircle(xe.create(0, 0), 1.75),
+                collision: ye.createCircle(fe.create(0, 0), 1.75),
                 img: {
                     sprite: "map-bush-06.img",
                     residue: "map-bush-res-06.img"
@@ -75958,7 +75981,7 @@ webpackJsonp([1], {
                     createMin: 1,
                     createMax: 1
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.75),
+                collision: ye.createCircle(fe.create(0, 0), 1.75),
                 img: {
                     sprite: "map-bush-06.img",
                     residue: "map-bush-res-06.img",
@@ -76051,15 +76074,15 @@ webpackJsonp([1], {
                 },
                 loot: [s("tier_chest", 3, 4), s("tier_river_melee", 1, 1), l("outfitWaterElem", 1)]
             }),
-            control_panel_01: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.7)),
+            control_panel_01: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.7)),
                 button: {
                     interactionRad: 1.75,
                     interactionText: "game-use",
                     useOnce: !0,
                     useType: "cell_door_01",
                     useDelay: 1.1,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-control-panel-02.img",
                     sound: {
                         on: "cell_control_01",
@@ -76070,15 +76093,15 @@ webpackJsonp([1], {
                     sprite: "map-control-panel-01.img"
                 }
             }),
-            control_panel_02: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.7)),
+            control_panel_02: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.7)),
                 health: 175,
                 img: {
                     sprite: "map-control-panel-02.img"
                 }
             }),
-            control_panel_02b: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.7)),
+            control_panel_02b: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.7)),
                 destructible: !1,
                 button: {
                     interactionRad: 1.2,
@@ -76086,7 +76109,7 @@ webpackJsonp([1], {
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-control-panel-01.img",
                     sound: {
                         on: "button_press_01",
@@ -76097,22 +76120,22 @@ webpackJsonp([1], {
                     sprite: "map-control-panel-02.img"
                 }
             }),
-            control_panel_03: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.25, 1.2)),
+            control_panel_03: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.25, 1.2)),
                 health: 150,
                 img: {
                     sprite: "map-control-panel-03.img"
                 }
             }),
-            control_panel_04: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.7)),
+            control_panel_04: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.7)),
                 button: {
                     interactionRad: 1.75,
                     interactionText: "game-use",
                     useOnce: !0,
                     useType: "crossing_door_01",
                     useDelay: 4.25,
-                    useDir: xe.create(1, 0),
+                    useDir: fe.create(1, 0),
                     useImg: "map-control-panel-05.img",
                     sound: {
                         on: "cell_control_02",
@@ -76123,15 +76146,15 @@ webpackJsonp([1], {
                     sprite: "map-control-panel-04.img"
                 }
             }),
-            control_panel_06: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 1.2)),
+            control_panel_06: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 1.2)),
                 health: 200,
                 img: {
                     sprite: "map-control-panel-06.img"
                 }
             }),
-            switch_01: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.45, .55)),
+            switch_01: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.45, .55)),
                 destructible: !1,
                 button: {
                     interactionRad: 1.2,
@@ -76139,7 +76162,7 @@ webpackJsonp([1], {
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-switch-02.img",
                     sound: {
                         on: "button_press_01",
@@ -76150,8 +76173,8 @@ webpackJsonp([1], {
                     sprite: "map-switch-01.img"
                 }
             }),
-            switch_02: C({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.45, .55)),
+            switch_02: I({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.45, .55)),
                 destructible: !1,
                 img: {
                     sprite: "map-switch-02.img"
@@ -76164,7 +76187,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .85
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 1.5)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -76257,7 +76280,7 @@ webpackJsonp([1], {
             }),
             crate_03: S({
                 health: 100,
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.575, 1.575)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.575, 1.575)),
                 loot: [s("tier_throwables", 2, 4)],
                 map: {
                     color: 5066014,
@@ -76279,7 +76302,7 @@ webpackJsonp([1], {
                 health: 100,
                 hitParticle: "glassChip",
                 explodeParticle: ["glassPlank"],
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.575, 1.575)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.575, 1.575)),
                 loot: [l("snowball", 4), l("snowball", 4), l("snowball", 4)],
                 map: {
                     color: 31863,
@@ -76318,7 +76341,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_05: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2, 2)),
                 destructible: !1,
                 hitParticle: "goldChip",
                 loot: [],
@@ -76334,7 +76357,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_06: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.25, 1.1)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.25, 1.1)),
                 health: 175,
                 destructible: !0,
                 armorPlated: !0,
@@ -76427,7 +76450,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_11: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 scale: {
                     destroy: .75
                 },
@@ -76449,7 +76472,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_12: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.5, 3.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.5, 3.5)),
                 scale: {
                     destroy: .75
                 },
@@ -76471,7 +76494,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_13: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.5, 3.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.5, 3.5)),
                 scale: {
                     destroy: .75
                 },
@@ -76493,7 +76516,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_14: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.7, 1.25)),
                 health: 100,
                 loot: [s("tier_knives", 1, 1)],
                 map: {
@@ -76511,7 +76534,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_15: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.7, 1.25)),
                 health: 100,
                 loot: [s("tier_knives", 4, 4)],
                 map: {
@@ -76529,7 +76552,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_16: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.7, 1.25)),
                 health: 100,
                 loot: [s("tier_knives", 4, 4)],
                 map: {
@@ -76547,7 +76570,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_17: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.7, 1.25)),
                 health: 100,
                 loot: [l("ot38", 1), l("ot38", 1), l("ot38", 1), l("ot38", 1)],
                 map: {
@@ -76603,7 +76626,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_20: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.7, 1.7)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.7, 1.7)),
                 health: 75,
                 hitParticle: "greenChip",
                 explodeParticle: "greenPlank",
@@ -76625,7 +76648,7 @@ webpackJsonp([1], {
                 }
             }),
             crate_21: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.7, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.7, 1.25)),
                 health: 100,
                 loot: [l("outfitWhite", 1), l("outfitWhite", 1), l("ots38_dual", 1)],
                 map: {
@@ -76660,15 +76683,9 @@ webpackJsonp([1], {
                     explode: "crate_break_01"
                 }
             }),
-            airdrop_crate_01: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+            airdrop_crate_01: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-airdrop-02.img",
                     useParticle: "airdropCrate01",
                     sound: {
@@ -76676,38 +76693,16 @@ webpackJsonp([1], {
                         off: ""
                     }
                 },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
-                },
                 img: {
                     sprite: "map-airdrop-01.img",
                     residue: "none"
-                },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
                 },
                 destroyType: "crate_10",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate02",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate02"
             }),
-            airdrop_crate_02: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+            airdrop_crate_02: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-airdrop-02.img",
                     useParticle: "airdropCrate01",
                     sound: {
@@ -76715,38 +76710,16 @@ webpackJsonp([1], {
                         off: ""
                     }
                 },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
-                },
                 img: {
                     sprite: "map-airdrop-01.img",
                     residue: "none"
                 },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
-                },
                 destroyType: "crate_11",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate02",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate02"
             }),
-            airdrop_crate_03: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4, 4)),
+            airdrop_crate_03: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4, 4)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-airdrop-04.img",
                     useParticle: "airdropCrate03",
                     sound: {
@@ -76754,38 +76727,16 @@ webpackJsonp([1], {
                         off: ""
                     }
                 },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
-                },
                 img: {
                     sprite: "map-airdrop-03.img",
                     residue: "none"
-                },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
                 },
                 destroyType: "crate_12",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate04",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate04"
             }),
-            airdrop_crate_04: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4, 4)),
+            airdrop_crate_04: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4, 4)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-airdrop-04.img",
                     useParticle: "airdropCrate03",
                     sound: {
@@ -76793,77 +76744,33 @@ webpackJsonp([1], {
                         off: ""
                     }
                 },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
-                },
                 img: {
                     sprite: "map-airdrop-03.img",
                     residue: "none"
                 },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
-                },
                 destroyType: "crate_13",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate04",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate04"
             }),
-            airdrop_crate_01x: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+            airdrop_crate_01x: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-crate-13x.img",
                     useParticle: "airdropCrate01x",
                     sound: {
                         on: "airdrop_open_01",
                         off: ""
                     }
-                },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
                 },
                 img: {
                     sprite: "map-airdrop-01x.img",
                     residue: "none"
                 },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
-                },
                 destroyType: "crate_10",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate02x",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate02x"
             }),
-            airdrop_crate_02x: S({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+            airdrop_crate_02x: k({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 button: {
-                    interactionRad: 2,
-                    interactionText: "game-unlock",
-                    useOnce: !0,
-                    destroyOnUse: !0,
-                    useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
                     useImg: "map-crate-13x.img",
                     useParticle: "airdropCrate01x",
                     sound: {
@@ -76871,31 +76778,15 @@ webpackJsonp([1], {
                         off: ""
                     }
                 },
-                health: 200,
-                destructible: !1,
-                loot: [],
-                map: {
-                    display: !1
-                },
                 img: {
                     sprite: "map-airdrop-02x.img",
                     residue: "none"
                 },
-                sound: {
-                    bullet: "wall_bullet",
-                    punch: "metal_punch",
-                    explode: "airdrop_open_02"
-                },
                 destroyType: "crate_11",
-                scale: {
-                    destroy: 1
-                },
-                hitParticle: "barrelChip",
-                explodeParticle: "airdropCrate02x",
-                reflectBullets: !0
+                explodeParticle: "airdropCrate02x"
             }),
-            bottle_01: D({
-                collision: ge.createCircle(xe.create(0, 0), .5),
+            bottle_01: E({
+                collision: ye.createCircle(fe.create(0, 0), .5),
                 health: 12,
                 hitParticle: "bottleBrownChip",
                 explodeParticle: "bottleBrownBreak",
@@ -76911,8 +76802,8 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             }),
-            bottle_02: D({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.5, .5)),
+            bottle_02: E({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.5, .5)),
                 health: 20,
                 hitParticle: "bottleBlueChip",
                 explodeParticle: "bottleBlueBreak",
@@ -76928,41 +76819,41 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             }),
-            bottle_02r: E({
+            bottle_02r: O({
                 img: {
                     tint: 13172736
                 }
             }),
-            bottle_02o: E({
+            bottle_02o: O({
                 collidable: !1,
                 img: {
                     tint: 16734720
                 }
             }),
-            bottle_02y: E({
+            bottle_02y: O({
                 collidable: !1,
                 img: {
                     tint: 16776960
                 }
             }),
-            bottle_02g: E({
+            bottle_02g: O({
                 collidable: !1,
                 img: {
                     tint: 32768
                 }
             }),
-            bottle_02b: E({
+            bottle_02b: O({
                 img: {
                     tint: 27903
                 }
             }),
-            bottle_02i: E({
+            bottle_02i: O({
                 collidable: !1,
                 img: {
                     tint: 4915330
                 }
             }),
-            bottle_02v: E({
+            bottle_02v: O({
                 img: {
                     tint: 15631086
                 }
@@ -76979,7 +76870,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .5
                 },
-                collision: ge.createCircle(xe.create(0, 0), .5),
+                collision: ye.createCircle(fe.create(0, 0), .5),
                 height: .5,
                 collidable: !1,
                 destructible: !1,
@@ -77002,26 +76893,26 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             },
-            deposit_box_01: k({
+            deposit_box_01: v({
                 img: {
                     sprite: "map-deposit-box-01.img"
                 },
                 loot: [s("tier_world", 1, 1)]
             }),
-            deposit_box_02: k({
+            deposit_box_02: v({
                 explodeParticle: "depositBoxGoldBreak",
                 img: {
                     sprite: "map-deposit-box-02.img"
                 },
                 loot: [s("tier_soviet", 1, 2), s("tier_guns", 1, 1)]
             }),
-            drawers_01: M({
+            drawers_01: T({
                 img: {
                     sprite: "map-drawers-01.img"
                 },
                 loot: [s("tier_container", 1, 1)]
             }),
-            drawers_02: M({
+            drawers_02: T({
                 img: {
                     sprite: "map-drawers-02.img"
                 },
@@ -77034,7 +76925,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .8
                 },
-                collision: ge.createCircle(xe.create(.35, 0), 1),
+                collision: ye.createCircle(fe.create(.35, 0), 1),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -77069,54 +76960,54 @@ webpackJsonp([1], {
                 }
             },
             grill_01: A({
-                collision: ge.createCircle(xe.create(0, 0), 1.55),
+                collision: ye.createCircle(fe.create(0, 0), 1.55),
                 img: {
                     sprite: "map-grill-01.img"
                 }
             }),
-            gun_mount_01: T({
+            gun_mount_01: P({
                 loot: [l("m870", 1)],
                 img: {
                     sprite: "map-gun-mount-01.img"
                 }
             }),
-            gun_mount_02: T({
+            gun_mount_02: P({
                 loot: [l("mp220", 1)],
                 img: {
                     sprite: "map-gun-mount-02.img"
                 }
             }),
-            gun_mount_03: T({
+            gun_mount_03: P({
                 loot: [l("qbb97", 1)],
                 img: {
                     sprite: "map-gun-mount-03.img"
                 }
             }),
-            gun_mount_04: T({
+            gun_mount_04: P({
                 loot: [l("woodaxe_bloody", 1)],
                 img: {
                     sprite: "map-gun-mount-04.img"
                 }
             }),
-            gun_mount_05: T({
+            gun_mount_05: P({
                 loot: [l("m1100", 1)],
                 img: {
                     sprite: "map-gun-mount-05.img"
                 }
             }),
-            locker_01: P({
+            locker_01: C({
                 img: {
                     sprite: "map-locker-01.img"
                 },
                 loot: [s("tier_world", 1, 1)]
             }),
-            locker_02: P({
+            locker_02: C({
                 img: {
                     sprite: "map-locker-02.img"
                 },
                 loot: [s("tier_police", 1, 1)]
             }),
-            locker_03: P({
+            locker_03: C({
                 img: {
                     sprite: "map-locker-03.img"
                 },
@@ -77130,7 +77021,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.75, 1)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.75, 1)),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -77163,19 +77054,19 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             },
-            planter_01: I({}),
-            planter_02: I({
+            planter_01: D({}),
+            planter_02: D({
                 img: {
                     sprite: "map-planter-02.img"
                 }
             }),
-            planter_03: I({
+            planter_03: D({
                 img: {
                     sprite: "map-planter-03.img"
                 }
             }),
-            planter_04: I({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+            planter_04: D({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 img: {
                     sprite: "map-planter-04.img"
                 },
@@ -77186,7 +77077,7 @@ webpackJsonp([1], {
                     useOnce: !0,
                     useType: "",
                     useDelay: .25,
-                    useDir: xe.create(1, 0),
+                    useDir: fe.create(1, 0),
                     useImg: "map-planter-05.img",
                     sound: {
                         on: "watering_01",
@@ -77194,38 +77085,38 @@ webpackJsonp([1], {
                     }
                 }
             }),
-            planter_06: I({
+            planter_06: D({
                 img: {
                     sprite: "map-planter-06.img",
                     residue: "map-planter-res-02.img"
                 }
             }),
-            planter_07: I({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+            planter_07: D({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 img: {
                     sprite: "map-planter-07.img",
                     residue: "map-planter-res-03.img"
                 },
                 destructible: !0
             }),
-            pot_01: D({}),
-            pot_02: D({
+            pot_01: E({}),
+            pot_02: E({
                 img: {
                     sprite: "map-pot-02.img"
                 },
                 loot: [l("spas12", 1), l("outfitIslander", 1)]
             }),
-            power_box_01: C(),
-            pumpkin_01: O(),
-            pumpkin_02: O({
+            power_box_01: I(),
+            pumpkin_01: B(),
+            pumpkin_02: B({
                 health: 140,
                 img: {
                     sprite: "map-pumpkin-02.img"
                 },
                 loot: [s("tier_guns", 1, 2), s("tier_surviv", 1, 2), s("tier_skins", 1, 1)]
             }),
-            refrigerator_01: L(),
-            refrigerator_01b: L({
+            refrigerator_01: R(),
+            refrigerator_01b: R({
                 scale: {
                     createMin: 1,
                     createMax: 1,
@@ -77233,77 +77124,77 @@ webpackJsonp([1], {
                 },
                 health: 250
             }),
-            recorder_01: B({
+            recorder_01: L({
                 button: {
                     sound: {
                         on: "log_01"
                     }
                 }
             }),
-            recorder_02: B({
+            recorder_02: L({
                 button: {
                     sound: {
                         on: "log_02"
                     }
                 }
             }),
-            recorder_03: B({
+            recorder_03: L({
                 button: {
                     sound: {
                         on: "log_03"
                     }
                 }
             }),
-            recorder_04: B({
+            recorder_04: L({
                 button: {
                     sound: {
                         on: "log_04"
                     }
                 }
             }),
-            recorder_05: B({
+            recorder_05: L({
                 button: {
                     sound: {
                         on: "log_05"
                     }
                 }
             }),
-            recorder_06: B({
+            recorder_06: L({
                 button: {
                     sound: {
                         on: "log_06"
                     }
                 }
             }),
-            recorder_07: B({
+            recorder_07: L({
                 button: {
                     sound: {
                         on: "footstep_07"
                     }
                 }
             }),
-            recorder_08: B({
+            recorder_08: L({
                 button: {
                     sound: {
                         on: "footstep_08"
                     }
                 }
             }),
-            recorder_09: B({
+            recorder_09: L({
                 button: {
                     sound: {
                         on: "footstep_09"
                     }
                 }
             }),
-            recorder_10: B({
+            recorder_10: L({
                 button: {
                     sound: {
                         on: "cell_control_03"
                     }
                 }
             }),
-            recorder_11: B({
+            recorder_11: L({
                 button: {
                     sound: {
                         on: "log_11"
@@ -77317,7 +77208,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .85
                 },
-                collision: ge.createAabbExtents(xe.create(0, .05), xe.create(4, .2)),
+                collision: ye.createAabbExtents(fe.create(0, .05), fe.create(4, .2)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -77350,9 +77241,9 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             },
-            sandbags_01: R({}),
-            sandbags_02: R({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.1, 1.4)),
+            sandbags_01: F({}),
+            sandbags_02: F({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.1, 1.4)),
                 img: {
                     sprite: "map-sandbags-02.img"
                 }
@@ -77364,7 +77255,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createCircle(xe.create(0, 0), 7.75),
+                collision: ye.createCircle(fe.create(0, 0), 7.75),
                 height: 10,
                 collidable: !0,
                 destructible: !1,
@@ -77403,7 +77294,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2)),
                 height: .5,
                 collidable: !1,
                 destructible: !0,
@@ -77443,7 +77334,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .75
                 },
-                collision: ge.createAabbExtents(xe.create(0, .15), xe.create(1.25, 1.25)),
+                collision: ye.createAabbExtents(fe.create(0, .15), fe.create(1.25, 1.25)),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -77476,20 +77367,20 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             },
-            stone_01: F({}),
-            stone_01b: F({
+            stone_01: j({}),
+            stone_01b: j({
                 img: {
                     residue: "map-stone-res-01b.img"
                 }
             }),
-            stone_01f: F({
+            stone_01f: j({
                 map: {
                     display: !0,
                     color: 8224125,
                     scale: 1
                 }
             }),
-            stone_01x: F({
+            stone_01x: j({
                 map: {
                     display: !0,
                     color: 6052956,
@@ -77500,32 +77391,32 @@ webpackJsonp([1], {
                     residue: "map-stone-res-01x.img"
                 }
             }),
-            stone_02: F({
+            stone_02: j({
                 img: {
                     tint: 15066597
                 },
                 loot: [s("tier_surviv", 2, 3), l("ak47", 1), l("outfitKhaki", 1)]
             }),
-            stone_03: j({}),
-            stone_03b: j({
+            stone_03: N({}),
+            stone_03b: N({
                 img: {
                     sprite: "map-stone-03b.img",
                     residue: "map-stone-res-01.img"
                 }
             }),
-            stone_03f: j({
+            stone_03f: N({
                 img: {
                     sprite: "map-stone-03f.img",
                     residue: "map-stone-res-02f.img"
                 }
             }),
-            stone_03x: j({
+            stone_03x: N({
                 img: {
                     sprite: "map-stone-03x.img",
                     residue: "map-stone-res-02x.img"
                 }
             }),
-            stone_04: F({
+            stone_04: j({
                 stonePlated: !0,
                 scale: {
                     createMin: .8,
@@ -77545,13 +77436,13 @@ webpackJsonp([1], {
                     color: 1512466,
                     scale: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.8, 1.8)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.8, 1.8)),
                 img: {
                     sprite: "map-stone-04.img",
                     residue: "map-stone-res-04.img"
                 }
             }),
-            stone_05: F({
+            stone_05: j({
                 stonePlated: !0,
                 hitParticle: "rockEyeChip",
                 explodeParticle: "rockEyeBreak",
@@ -77566,19 +77457,19 @@ webpackJsonp([1], {
                     color: 1512466,
                     scale: 1
                 },
-                collision: ge.createCircle(xe.create(0, 0), 1.7),
+                collision: ye.createCircle(fe.create(0, 0), 1.7),
                 img: {
                     sprite: "map-stone-05.img",
                     residue: "map-stone-res-01b.img"
                 }
             }),
-            stove_01: C({
+            stove_01: I({
                 scale: {
                     createMin: 1,
                     createMax: 1,
                     destroy: .85
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3, 2.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3, 2.25)),
                 disableBuildingOccupied: !0,
                 damageCeiling: !0,
                 explosion: "explosion_stove",
@@ -77594,8 +77485,8 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             }),
-            stove_02: C({
-                collision: ge.createCircle(xe.create(0, 0), 1.5),
+            stove_02: I({
+                collision: ye.createCircle(fe.create(0, 0), 1.5),
                 disableBuildingOccupied: !0,
                 damageCeiling: !0,
                 explosion: "explosion_stove",
@@ -77611,14 +77502,14 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             }),
-            table_01: N(),
-            table_01x: N({
+            table_01: q(),
+            table_01x: q({
                 img: {
                     sprite: "map-table-01x.img"
                 }
             }),
-            table_02: N({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 2.5)),
+            table_02: q({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 2.5)),
                 health: 125,
                 img: {
                     sprite: "map-table-02.img",
@@ -77629,8 +77520,8 @@ webpackJsonp([1], {
                     zIdx: 60
                 }
             }),
-            table_02x: N({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 2.5)),
+            table_02x: q({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 2.5)),
                 health: 125,
                 img: {
                     sprite: "map-table-02x.img",
@@ -77641,8 +77532,8 @@ webpackJsonp([1], {
                     zIdx: 60
                 }
             }),
-            table_03: N({
-                collision: ge.createCircle(xe.create(0, 0), 2.5),
+            table_03: q({
+                collision: ye.createCircle(fe.create(0, 0), 2.5),
                 health: 125,
                 img: {
                     sprite: "map-table-03.img",
@@ -77653,8 +77544,8 @@ webpackJsonp([1], {
                     zIdx: 60
                 }
             }),
-            table_03x: N({
-                collision: ge.createCircle(xe.create(0, 0), 2.5),
+            table_03x: q({
+                collision: ye.createCircle(fe.create(0, 0), 2.5),
                 health: 125,
                 img: {
                     sprite: "map-table-03x.img",
@@ -77665,26 +77556,26 @@ webpackJsonp([1], {
                     zIdx: 60
                 }
             }),
-            toilet_01: q({
+            toilet_01: V({
                 img: {
                     sprite: "map-toilet-01.img"
                 },
                 loot: [s("tier_toilet", 2, 3)]
             }),
-            toilet_02: q({
+            toilet_02: V({
                 img: {
                     sprite: "map-toilet-02.img"
                 },
                 loot: [s("tier_soviet", 3, 4)]
             }),
-            toilet_02b: q({
+            toilet_02b: V({
                 img: {
                     sprite: "map-toilet-02.img",
                     tint: 11842740
                 },
                 loot: [l("fireaxe", 1)]
             }),
-            toilet_03: q({
+            toilet_03: V({
                 reflectBullets: !0,
                 hitParticle: "barrelChip",
                 explodeParticle: "toiletMetalBreak",
@@ -77699,7 +77590,7 @@ webpackJsonp([1], {
                     explode: "toilet_break_02"
                 }
             }),
-            toilet_04: q({
+            toilet_04: V({
                 reflectBullets: !0,
                 hitParticle: "barrelChip",
                 explodeParticle: "toiletMetalBreak",
@@ -77714,8 +77605,8 @@ webpackJsonp([1], {
                     explode: "toilet_break_02"
                 }
             }),
-            tree_01: V(),
-            tree_08f: V({
+            tree_01: G(),
+            tree_08f: G({
                 scale: {
                     createMin: 1.2,
                     createMax: 1.6
@@ -77732,15 +77623,15 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_01x: V({
+            tree_01x: G({
                 img: {
                     sprite: "map-tree-01x.img"
                 }
             }),
-            tree_02: V({
+            tree_02: G({
                 health: 120,
-                collision: ge.createCircle(xe.create(0, 0), 1.6),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(1.6, 1.6)),
+                collision: ye.createCircle(fe.create(0, 0), 1.6),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(1.6, 1.6)),
                 height: .5,
                 loot: [l("woodaxe", 1)],
                 map: {
@@ -77761,15 +77652,15 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            tree_03: V({
+            tree_03: G({
                 img: {
                     tint: 11645361
                 },
                 loot: [s("tier_surviv", 2, 3), l("mosin", 1), l("outfitWoodland", 1)]
             }),
-            tree_05: V({
-                collision: ge.createCircle(xe.create(0, 0), 2.3),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(12, 12)),
+            tree_05: G({
+                collision: ye.createCircle(fe.create(0, 0), 2.3),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(12, 12)),
                 scale: {
                     createMin: 1.2,
                     createMax: 1.3
@@ -77787,9 +77678,9 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_05b: V({
-                collision: ge.createCircle(xe.create(0, 0), 2.3),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(12, 12)),
+            tree_05b: G({
+                collision: ye.createCircle(fe.create(0, 0), 2.3),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(12, 12)),
                 scale: {
                     createMin: 1,
                     createMax: 1
@@ -77808,9 +77699,9 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_05c: V({
-                collision: ge.createCircle(xe.create(0, 0), 1.05),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(4, 4)),
+            tree_05c: G({
+                collision: ye.createCircle(fe.create(0, 0), 1.05),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(4, 4)),
                 scale: {
                     createMin: 1.6,
                     createMax: 1.6
@@ -77828,7 +77719,7 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_06: V({
+            tree_06: G({
                 img: {
                     sprite: "map-tree-06.img"
                 },
@@ -77836,7 +77727,7 @@ webpackJsonp([1], {
                     color: 7700520
                 }
             }),
-            tree_07: V({
+            tree_07: G({
                 scale: {
                     createMin: 1,
                     createMax: 1.2
@@ -77849,7 +77740,7 @@ webpackJsonp([1], {
                     sprite: "map-tree-07.img"
                 }
             }),
-            tree_08: V({
+            tree_08: G({
                 scale: {
                     createMin: 1.2,
                     createMax: 1.4
@@ -77865,7 +77756,7 @@ webpackJsonp([1], {
                     scale: .35
                 }
             }),
-            tree_08b: V({
+            tree_08b: G({
                 scale: {
                     createMin: 1.75,
                     createMax: 2
@@ -77883,7 +77774,7 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_08c: V({
+            tree_08c: G({
                 scale: {
                     createMin: 1.75,
                     createMax: 2
@@ -77902,10 +77793,10 @@ webpackJsonp([1], {
                     zIdx: 201
                 }
             }),
-            tree_09: V({
+            tree_09: G({
                 health: 120,
-                collision: ge.createCircle(xe.create(0, 0), 1.6),
-                aabb: ge.createAabbExtents(xe.create(0, 0), xe.create(5.75, 5.75)),
+                collision: ye.createCircle(fe.create(0, 0), 1.6),
+                aabb: ye.createAabbExtents(fe.create(0, 0), fe.create(5.75, 5.75)),
                 height: .5,
                 map: {
                     display: !0,
@@ -77927,8 +77818,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            tree_10: V({
-                collision: ge.createCircle(xe.create(0, 0), 1.25),
+            tree_10: G({
+                collision: ye.createCircle(fe.create(0, 0), 1.25),
                 scale: {
                     createMin: .9,
                     createMax: 1.1
@@ -77941,8 +77832,8 @@ webpackJsonp([1], {
                     sprite: "map-tree-10.img"
                 }
             }),
-            tree_11: V({
-                collision: ge.createCircle(xe.create(0, 0), 1.25),
+            tree_11: G({
+                collision: ye.createCircle(fe.create(0, 0), 1.25),
                 scale: {
                     createMin: 1,
                     createMax: 1
@@ -77975,7 +77866,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .9
                 },
-                collision: ge.createCircle(xe.create(0, 0), 2),
+                collision: ye.createCircle(fe.create(0, 0), 2),
                 height: .5,
                 collidable: !0,
                 destructible: !0,
@@ -78015,7 +77906,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: .95
                 },
-                collision: ge.createCircle(xe.create(0, 0), 3.1),
+                collision: ye.createCircle(fe.create(0, 0), 3.1),
                 height: .5,
                 collidable: !0,
                 destructible: !1,
@@ -78056,7 +77947,7 @@ webpackJsonp([1], {
                         createMax: 1,
                         destroy: .75
                     },
-                    collision: ge.createAabbExtents(xe.create(0, .15), xe.create(1.7, 1.25)),
+                    collision: ye.createAabbExtents(fe.create(0, .15), fe.create(1.7, 1.25)),
                     height: .5,
                     collidable: !0,
                     destructible: !0,
@@ -78089,16 +77980,16 @@ webpackJsonp([1], {
                         enter: "none"
                     }
                 };
-                return we.mergeDeep(t, {})
+                return xe.mergeDeep(t, {})
             }(),
-            wheel_01: W({
+            wheel_01: H({
                 button: {
                     interactionRad: 2,
                     interactionText: "game-use",
                     useOnce: !0,
                     useType: "",
                     useDelay: 2.5,
-                    useDir: xe.create(-1, 0),
+                    useDir: fe.create(-1, 0),
                     useImg: "map-wheel-02.img",
                     sound: {
                         on: "wheel_control_01",
@@ -78106,19 +77997,19 @@ webpackJsonp([1], {
                     }
                 }
             }),
-            wheel_02: W({
+            wheel_02: H({
                 img: {
                     sprite: "map-wheel-02.img"
                 }
             }),
-            wheel_03: W({
+            wheel_03: H({
                 img: {
                     sprite: "map-wheel-03.img"
                 }
             }),
-            woodpile_01: H({}),
-            woodpile_02: H({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(6, 3)),
+            woodpile_01: K({}),
+            woodpile_02: K({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(6, 3)),
                 health: 400,
                 destructible: !0,
                 img: {
@@ -78133,7 +78024,7 @@ webpackJsonp([1], {
                     createMax: 1,
                     destroy: 1
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 2)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 2)),
                 height: 10,
                 collidable: !0,
                 destructible: !0,
@@ -78158,15 +78049,15 @@ webpackJsonp([1], {
                     enter: "none"
                 }
             },
-            house_door_01: v({
+            house_door_01: z({
                 material: "wood",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2)
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2)
             }),
-            house_door_02: v({
+            house_door_02: z({
                 material: "metal",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     sound: {
                         open: "door_open_02",
@@ -78177,26 +78068,26 @@ webpackJsonp([1], {
                     tint: 4934475
                 }
             }),
-            house_door_03: v({
+            house_door_03: z({
                 material: "wood",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.5, 1.75),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.5, 1.75),
                 img: {
                     sprite: "map-door-03.img"
                 }
             }),
-            house_door_05: v({
+            house_door_05: z({
                 material: "glass",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 img: {
                     sprite: "map-door-05.img"
                 }
             }),
-            crossing_door_01: v({
+            crossing_door_01: z({
                 material: "metal",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     canUse: !1,
                     openOnce: !0,
@@ -78209,10 +78100,10 @@ webpackJsonp([1], {
                     tint: 3159362
                 }
             }),
-            cell_door_01: v({
+            cell_door_01: z({
                 material: "metal",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     canUse: !1,
                     openOnce: !0,
@@ -78225,10 +78116,10 @@ webpackJsonp([1], {
                     tint: 1776411
                 }
             }),
-            eye_door_01: v({
+            eye_door_01: z({
                 material: "metal",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     canUse: !1,
                     openOnce: !0,
@@ -78242,24 +78133,24 @@ webpackJsonp([1], {
                     tint: 921102
                 }
             }),
-            lab_door_01: z({
+            lab_door_01: M({
                 img: {
                     tint: 5373952
                 }
             }),
-            lab_door_02: z({
+            lab_door_02: M({
                 door: {
                     openOneWay: !0,
                     slideOffset: -3.75,
                     casingImg: {
-                        pos: xe.create(6, 0)
+                        pos: fe.create(6, 0)
                     }
                 },
                 img: {
                     tint: 5373952
                 }
             }),
-            lab_door_03: z({
+            lab_door_03: M({
                 door: {
                     openOneWay: !0
                 },
@@ -78267,19 +78158,19 @@ webpackJsonp([1], {
                     tint: 5373952
                 }
             }),
-            house_window_01: pe(),
-            house_window_broken_01: de(),
-            lab_window_01: pe({
+            house_window_01: de(),
+            house_window_broken_01: he(),
+            lab_window_01: de({
                 destroyType: "lab_window_broken_01"
             }),
-            lab_window_broken_01: de({
+            lab_window_broken_01: he({
                 img: {
                     tint: 1316379
                 }
             }),
-            container_05_collider: G({
+            container_05_collider: W({
                 material: "metal",
-                extents: xe.create(2.75, 6)
+                extents: fe.create(2.75, 6)
             }),
             container_05: {
                 type: "building",
@@ -78301,7 +78192,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))]
                     }],
                     imgs: [{
                         sprite: "",
@@ -78311,8 +78202,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 2.4), xe.create(2.5, 5.75))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 2.4), xe.create(2.5, 5.75))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 2.4), fe.create(2.5, 5.75))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 2.4), fe.create(2.5, 5.75))],
                     imgs: [{
                         sprite: "map-building-container-ceiling-05.img",
                         scale: .5,
@@ -78322,36 +78213,36 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "container_05_collider",
-                    pos: xe.create(0, 2.4),
+                    pos: fe.create(0, 2.4),
                     scale: 1,
                     ori: 0
                 }]
             },
-            greenhouse_01: ee({}),
-            greenhouse_02: ee({
+            greenhouse_01: te({}),
+            greenhouse_02: te({
                 floor_images: [{
                     sprite: "map-building-greenhouse-floor-02.img",
-                    pos: xe.create(0, 10),
+                    pos: fe.create(0, 10),
                     scale: .5,
                     alpha: 1,
                     tint: 16777215,
                     rot: 2
                 }, {
                     sprite: "map-building-greenhouse-floor-02.img",
-                    pos: xe.create(0, -10),
+                    pos: fe.create(0, -10),
                     scale: .5,
                     alpha: 1,
                     tint: 16777215
                 }, {
                     sprite: "map-building-porch-01.img",
-                    pos: xe.create(0, 21),
+                    pos: fe.create(0, 21),
                     scale: .5,
                     alpha: 1,
                     tint: 16777215,
                     rot: 0
                 }, {
                     sprite: "map-building-porch-01.img",
-                    pos: xe.create(0, -21),
+                    pos: fe.create(0, -21),
                     scale: .5,
                     alpha: 1,
                     tint: 16777215,
@@ -78365,72 +78256,72 @@ webpackJsonp([1], {
                 }],
                 mapObjects: [{
                     type: "glass_wall_10",
-                    pos: xe.create(-7, 19.5),
+                    pos: fe.create(-7, 19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-7, -19.5),
+                    pos: fe.create(-7, -19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, 15),
+                    pos: fe.create(-12.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, 5),
+                    pos: fe.create(-12.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, -15),
+                    pos: fe.create(-12.5, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(-12.5, -5),
+                    pos: fe.create(-12.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(7, 19.5),
+                    pos: fe.create(7, 19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(7, -19.5),
+                    pos: fe.create(7, -19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, 15),
+                    pos: fe.create(12.5, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, 5),
+                    pos: fe.create(12.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, -15),
+                    pos: fe.create(12.5, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_10",
-                    pos: xe.create(12.5, -5),
+                    pos: fe.create(12.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_05",
-                    pos: xe.create(2, 19.75),
+                    pos: fe.create(2, 19.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_05",
-                    pos: xe.create(-2, -19.75),
+                    pos: fe.create(-2, -19.75),
                     scale: 1,
                     ori: 3
                 }, {
@@ -78438,7 +78329,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(-4.5, 14.5),
+                    pos: fe.create(-4.5, 14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -78446,7 +78337,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(-7, 2.5),
+                    pos: fe.create(-7, 2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -78454,7 +78345,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(-7, -2.5),
+                    pos: fe.create(-7, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -78462,7 +78353,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(-4.5, -14.5),
+                    pos: fe.create(-4.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -78470,7 +78361,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(4.5, 14.5),
+                    pos: fe.create(4.5, 14.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -78478,7 +78369,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(7, 2.5),
+                    pos: fe.create(7, 2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -78486,7 +78377,7 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(7, -2.5),
+                    pos: fe.create(7, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -78494,32 +78385,32 @@ webpackJsonp([1], {
                         planter_06: 2,
                         "": 1
                     }),
-                    pos: xe.create(4.5, -14.5),
+                    pos: fe.create(4.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-15, 11),
+                    pos: fe.create(-15, 11),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-15, 7),
+                    pos: fe.create(-15, 7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(15.5, -7),
+                    pos: fe.create(15.5, -7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(19.5, -7),
+                    pos: fe.create(19.5, -7),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "bunker_structure_08b",
-                    pos: xe.create(-9.5, -15.5),
+                    pos: fe.create(-9.5, -15.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -78529,7 +78420,7 @@ webpackJsonp([1], {
                 map: {
                     display: !1,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 10), xe.create(3.6, 5.8)),
+                        collider: ye.createAabbExtents(fe.create(0, 10), fe.create(3.6, 5.8)),
                         color: 6707790
                     }]
                 },
@@ -78541,22 +78432,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-generic-floor-03.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, -.25), xe.create(1.5, 3.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, -.25), xe.create(1.5, 3.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, -.25), fe.create(1.5, 3.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, -.25), fe.create(1.5, 3.25))],
                     imgs: [{
                         sprite: "map-bunker-generic-ceiling-02.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -78565,26 +78456,26 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_5",
-                    pos: xe.create(0, -3),
+                    pos: fe.create(0, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(-2, .1),
+                    pos: fe.create(-2, .1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(2, .1),
+                    pos: fe.create(2, .1),
                     scale: 1,
                     ori: 0
                 }]
             },
-            lab_door_chrys: v({
+            lab_door_chrys: z({
                 destructible: !1,
                 material: "concrete",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.3, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.3, 2),
                 door: {
                     canUse: !1,
                     openOnce: !0,
@@ -78601,7 +78492,7 @@ webpackJsonp([1], {
                     },
                     casingImg: {
                         sprite: "map-door-slot-01.img",
-                        pos: xe.create(-2, 0),
+                        pos: fe.create(-2, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 1316379,
@@ -78627,28 +78518,28 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))]
+                        collision: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-chamber-floor-01a.img",
-                        pos: xe.create(0, 1.85),
+                        pos: fe.create(0, 1.85),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-chamber-floor-01b.img",
-                        pos: xe.create(11, -10.75),
+                        pos: fe.create(11, -10.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))],
                     imgs: [{
                         sprite: "map-bunker-chrys-chamber-ceiling-01.img",
-                        pos: xe.create(11.5, -11),
+                        pos: fe.create(11.5, -11),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -78668,116 +78559,116 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(0, 4),
+                    pos: fe.create(0, 4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_26",
-                    pos: xe.create(-3, -8.5),
+                    pos: fe.create(-3, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(3, 0),
+                    pos: fe.create(3, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(14, -3),
+                    pos: fe.create(14, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_25",
-                    pos: xe.create(11, -20),
+                    pos: fe.create(11, -20),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(25, -5.5),
+                    pos: fe.create(25, -5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(25, -17.5),
+                    pos: fe.create(25, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(4.5, -4.15),
+                    pos: fe.create(4.5, -4.15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_03",
-                    pos: xe.create(8, -4.15),
+                    pos: fe.create(8, -4.15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(.5, -16.5),
+                    pos: fe.create(.5, -16.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12, -9.5),
+                    pos: fe.create(12, -9.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12, -13.5),
+                    pos: fe.create(12, -13.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "couch_01",
-                    pos: xe.create(15.5, -11.5),
+                    pos: fe.create(15.5, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "screen_01",
-                    pos: xe.create(23, -11.5),
+                    pos: fe.create(23, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "switch_01",
-                    pos: xe.create(18.5, -4.25),
+                    pos: fe.create(18.5, -4.25),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "ichi"
                 }, {
                     type: "switch_01",
-                    pos: xe.create(21.5, -4.25),
+                    pos: fe.create(21.5, -4.25),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "shi"
                 }, {
                     type: "switch_01",
-                    pos: xe.create(18.5, -18.75),
+                    pos: fe.create(18.5, -18.75),
                     scale: 1,
                     ori: 2,
                     puzzlePiece: "ni"
                 }, {
                     type: "switch_01",
-                    pos: xe.create(21.5, -18.75),
+                    pos: fe.create(21.5, -18.75),
                     scale: 1,
                     ori: 2,
                     puzzlePiece: "san"
                 }, {
                     type: "lab_door_chrys",
-                    pos: xe.create(25.5, -9.5),
+                    pos: fe.create(25.5, -9.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bunker_chrys_compartment_01",
-                    pos: xe.create(39.5, -6),
+                    pos: fe.create(39.5, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_chrys_compartment_02",
-                    pos: xe.create(43.5, 19),
+                    pos: fe.create(43.5, 19),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_chrys_compartment_03",
-                    pos: xe.create(43.5, 43),
+                    pos: fe.create(43.5, 43),
                     scale: 1,
                     ori: 0
                 }]
@@ -78797,28 +78688,28 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))]
+                        collision: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-chamber-floor-01a.img",
-                        pos: xe.create(0, 1.85),
+                        pos: fe.create(0, 1.85),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-chamber-floor-01b.img",
-                        pos: xe.create(11, -10.75),
+                        pos: fe.create(11, -10.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(11, -12), xe.create(14.5, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(11, -12), fe.create(14.5, 9))],
                     imgs: [{
                         sprite: "map-bunker-chrys-chamber-ceiling-01.img",
-                        pos: xe.create(11.5, -11),
+                        pos: fe.create(11.5, -11),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -78826,112 +78717,112 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_5",
-                    pos: xe.create(0, 4),
+                    pos: fe.create(0, 4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_26",
-                    pos: xe.create(-3, -8.5),
+                    pos: fe.create(-3, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(3, 0),
+                    pos: fe.create(3, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(14, -3),
+                    pos: fe.create(14, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_25",
-                    pos: xe.create(11, -20),
+                    pos: fe.create(11, -20),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(25, -5.5),
+                    pos: fe.create(25, -5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(25, -17.5),
+                    pos: fe.create(25, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(4.5, -4.15),
+                    pos: fe.create(4.5, -4.15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(.5, -16.5),
+                    pos: fe.create(.5, -16.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12, -9.5),
+                    pos: fe.create(12, -9.5),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12, -13.5),
+                    pos: fe.create(12, -13.5),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "couch_01",
-                    pos: xe.create(15.5, -11.5),
+                    pos: fe.create(15.5, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "switch_02",
-                    pos: xe.create(18.5, -4.25),
+                    pos: fe.create(18.5, -4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "switch_02",
-                    pos: xe.create(21.5, -4.25),
+                    pos: fe.create(21.5, -4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "switch_02",
-                    pos: xe.create(18.5, -18.75),
+                    pos: fe.create(18.5, -18.75),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "switch_02",
-                    pos: xe.create(21.5, -18.75),
+                    pos: fe.create(21.5, -18.75),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(25.5, -9.5),
+                    pos: fe.create(25.5, -9.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bunker_chrys_compartment_01b",
-                    pos: xe.create(39.5, -6),
+                    pos: fe.create(39.5, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_chrys_compartment_02b",
-                    pos: xe.create(43.5, 19),
+                    pos: fe.create(43.5, 19),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_chrys_compartment_03",
-                    pos: xe.create(43.5, 43),
+                    pos: fe.create(43.5, 43),
                     scale: 1,
                     ori: 0
                 }]
             },
-            vault_door_chrys: v({
+            vault_door_chrys: z({
                 material: "metal",
-                hinge: xe.create(1, 3.5),
-                extents: xe.create(1, 3.5),
+                hinge: fe.create(1, 3.5),
+                extents: fe.create(1, 3.5),
                 img: {
                     sprite: "map-door-02.img"
                 },
@@ -78941,7 +78832,7 @@ webpackJsonp([1], {
                     openOneWay: -1,
                     openDelay: 4.1,
                     openOnce: !0,
-                    spriteAnchor: xe.create(.2, 1),
+                    spriteAnchor: fe.create(.2, 1),
                     sound: {
                         open: "none",
                         close: "none",
@@ -78964,34 +78855,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))]
+                        collision: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-floor-01a.img",
-                        pos: xe.create(-12.5, -4.5),
+                        pos: fe.create(-12.5, -4.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-compartment-floor-01b.img",
-                        pos: xe.create(3.5, 2),
+                        pos: fe.create(3.5, 2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-ceiling-01a.img",
-                        pos: xe.create(-10.5, -2.5),
+                        pos: fe.create(-10.5, -2.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
                     }, {
                         sprite: "map-bunker-chrys-compartment-ceiling-01b.img",
-                        pos: xe.create(4, 3),
+                        pos: fe.create(4, 3),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -79011,37 +78902,37 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-11, -2),
+                    pos: fe.create(-11, -2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-11, 1),
+                    pos: fe.create(-11, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_27",
-                    pos: xe.create(.5, -9),
+                    pos: fe.create(.5, -9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_42",
-                    pos: xe.create(15.5, 10.5),
+                    pos: fe.create(15.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_34",
-                    pos: xe.create(-7.5, 17),
+                    pos: fe.create(-7.5, 17),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(-3.5, 14.5),
+                    pos: fe.create(-3.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(11.5, 14.5),
+                    pos: fe.create(11.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -79049,7 +78940,7 @@ webpackJsonp([1], {
                         crate_01: 2,
                         crate_04: 1
                     }),
-                    pos: xe.create(1.5, 5),
+                    pos: fe.create(1.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79057,7 +78948,7 @@ webpackJsonp([1], {
                         crate_01: 2,
                         crate_04: 1
                     }),
-                    pos: xe.create(1.5, 0),
+                    pos: fe.create(1.5, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79065,7 +78956,7 @@ webpackJsonp([1], {
                         crate_01: 2,
                         crate_04: 1
                     }),
-                    pos: xe.create(6.5, 5),
+                    pos: fe.create(6.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79073,17 +78964,17 @@ webpackJsonp([1], {
                         crate_01: 2,
                         crate_04: 1
                     }),
-                    pos: xe.create(6.5, 0),
+                    pos: fe.create(6.5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vault_door_chrys",
-                    pos: xe.create(.5, 15.5),
+                    pos: fe.create(.5, 15.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "loot_tier_chrys_01",
-                    pos: xe.create(12, -5.5),
+                    pos: fe.create(12, -5.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -79103,34 +78994,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))]
+                        collision: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-floor-01a.img",
-                        pos: xe.create(-12.5, -4.5),
+                        pos: fe.create(-12.5, -4.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-compartment-floor-01c.img",
-                        pos: xe.create(3.5, 2),
+                        pos: fe.create(3.5, 2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 2), xe.create(14, 13))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 2), fe.create(14, 13))],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-ceiling-01a.img",
-                        pos: xe.create(-10.5, -2.5),
+                        pos: fe.create(-10.5, -2.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
                     }, {
                         sprite: "map-bunker-chrys-compartment-ceiling-01b.img",
-                        pos: xe.create(4, 3),
+                        pos: fe.create(4, 3),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -79150,37 +79041,37 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-11, -2),
+                    pos: fe.create(-11, -2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-11, 1),
+                    pos: fe.create(-11, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_27",
-                    pos: xe.create(.5, -9),
+                    pos: fe.create(.5, -9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_42",
-                    pos: xe.create(15.5, 10.5),
+                    pos: fe.create(15.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_34",
-                    pos: xe.create(-7.5, 17),
+                    pos: fe.create(-7.5, 17),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(-3.5, 14.5),
+                    pos: fe.create(-3.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(11.5, 14.5),
+                    pos: fe.create(11.5, 14.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -79188,7 +79079,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(-.5, 7),
+                    pos: fe.create(-.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79196,7 +79087,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(2.5, 7),
+                    pos: fe.create(2.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79204,7 +79095,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(5.5, 7),
+                    pos: fe.create(5.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79212,7 +79103,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(8.5, 7),
+                    pos: fe.create(8.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79220,7 +79111,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(-.5, 4),
+                    pos: fe.create(-.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79228,7 +79119,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(8.5, 4),
+                    pos: fe.create(8.5, 4),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79236,7 +79127,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(-.5, 1),
+                    pos: fe.create(-.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79244,7 +79135,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(8.5, 1),
+                    pos: fe.create(8.5, 1),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79252,7 +79143,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(-.5, -2),
+                    pos: fe.create(-.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79260,7 +79151,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(2.5, -2),
+                    pos: fe.create(2.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79268,7 +79159,7 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(5.5, -2),
+                    pos: fe.create(5.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
@@ -79276,17 +79167,17 @@ webpackJsonp([1], {
                         planter_07: 2,
                         "": 1
                     }),
-                    pos: xe.create(8.5, -2),
+                    pos: fe.create(8.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vault_door_chrys",
-                    pos: xe.create(.5, 15.5),
+                    pos: fe.create(.5, 15.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_spetsnaz_skin",
-                    pos: xe.create(12, -5.5),
+                    pos: fe.create(12, -5.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -79306,34 +79197,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 10))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 10))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-floor-02a.img",
-                        pos: xe.create(0, -2.75),
+                        pos: fe.create(0, -2.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-compartment-floor-02b.img",
-                        pos: xe.create(0, 9.75),
+                        pos: fe.create(0, 9.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 11))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 11))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 11))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 11))],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-ceiling-02a.img",
-                        pos: xe.create(0, 8.5),
+                        pos: fe.create(0, 8.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
                     }, {
                         sprite: "map-bunker-chrys-compartment-ceiling-02b.img",
-                        pos: xe.create(0, -2.5),
+                        pos: fe.create(0, -2.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -79341,47 +79232,47 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-8, 6),
+                    pos: fe.create(-8, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(8, 6),
+                    pos: fe.create(8, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-7.5, 10.5),
+                    pos: fe.create(-7.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(7.5, 10.5),
+                    pos: fe.create(7.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-4, 12),
+                    pos: fe.create(-4, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(4, 12),
+                    pos: fe.create(4, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_chrys_02",
-                    pos: xe.create(8, -6.5),
+                    pos: fe.create(8, -6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_12",
-                    pos: xe.create(0, 5),
+                    pos: fe.create(0, 5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_06",
-                    pos: xe.create(-8.5, 1.5),
+                    pos: fe.create(-8.5, 1.5),
                     scale: 1,
                     ori: 1
                 }]
@@ -79401,34 +79292,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 10))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 10))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-floor-02a.img",
-                        pos: xe.create(0, -2.75),
+                        pos: fe.create(0, -2.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-chrys-compartment-floor-02c.img",
-                        pos: xe.create(0, 9.75),
+                        pos: fe.create(0, 9.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 11))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 11))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 11))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 11))],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-ceiling-02a.img",
-                        pos: xe.create(0, 8.5),
+                        pos: fe.create(0, 8.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
                     }, {
                         sprite: "map-bunker-chrys-compartment-ceiling-02b.img",
-                        pos: xe.create(0, -2.5),
+                        pos: fe.create(0, -2.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731
@@ -79436,47 +79327,47 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-8, 6),
+                    pos: fe.create(-8, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(8, 6),
+                    pos: fe.create(8, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-7.5, 10.5),
+                    pos: fe.create(-7.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(7.5, 10.5),
+                    pos: fe.create(7.5, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-4, 12),
+                    pos: fe.create(-4, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(4, 12),
+                    pos: fe.create(4, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_chrys_01",
-                    pos: xe.create(8, -6.5),
+                    pos: fe.create(8, -6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "control_panel_06",
-                    pos: xe.create(-8.5, 1.5),
+                    pos: fe.create(-8.5, 1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_06",
-                    pos: xe.create(8.5, 1.5),
+                    pos: fe.create(8.5, 1.5),
                     scale: 1,
                     ori: 3
                 }]
@@ -79496,32 +79387,32 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, -1), xe.create(10, 14))]
+                        collision: [ye.createAabbExtents(fe.create(0, -1), fe.create(10, 14))]
                     }, {
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 11), xe.create(10, 4)), ge.createAabbExtents(xe.create(-7, -3), xe.create(3, 3)), ge.createAabbExtents(xe.create(8, -3), xe.create(2, 3))]
+                        collision: [ye.createAabbExtents(fe.create(0, 11), fe.create(10, 4)), ye.createAabbExtents(fe.create(-7, -3), fe.create(3, 3)), ye.createAabbExtents(fe.create(8, -3), fe.create(2, 3))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-floor-03a.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 13))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 13))],
                     imgs: [{
                         sprite: "map-bunker-chrys-compartment-ceiling-03a.img",
-                        pos: xe.create(0, -9.5),
+                        pos: fe.create(0, -9.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731,
                         rot: 0
                     }, {
                         sprite: "map-bunker-chrys-compartment-ceiling-03b.img",
-                        pos: xe.create(0, 3),
+                        pos: fe.create(0, 3),
                         scale: 1,
                         alpha: 1,
                         tint: 6182731,
@@ -79530,72 +79421,72 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(-7.5, -8),
+                    pos: fe.create(-7.5, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(7.5, -8),
+                    pos: fe.create(7.5, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-11, -7),
+                    pos: fe.create(-11, -7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(11, -7),
+                    pos: fe.create(11, -7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(-11.5, 4.5),
+                    pos: fe.create(-11.5, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(11.5, 4.5),
+                    pos: fe.create(11.5, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(0, 13),
+                    pos: fe.create(0, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(0, 4.75),
+                    pos: fe.create(0, 4.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(3, .5),
+                    pos: fe.create(3, .5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-3, .5),
+                    pos: fe.create(-3, .5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "wheel_03",
-                    pos: xe.create(0, 9.1),
+                    pos: fe.create(0, 9.1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wheel_03",
-                    pos: xe.create(-7.6, 1),
+                    pos: fe.create(-7.6, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wheel_03",
-                    pos: xe.create(7.6, 1),
+                    pos: fe.create(7.6, 1),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "loot_tier_chrys_03",
-                    pos: xe.create(0, -5.5),
+                    pos: fe.create(0, -5.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -79607,21 +79498,21 @@ webpackJsonp([1], {
                     beach: !1
                 },
                 ori: 0,
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(5, 5), xe.create(15, 15))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(5, 5), fe.create(15, 15))],
                 layers: [{
                     type: "bunker_chrys_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_chrys_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(11.5, -12.25), xe.create(14, 9.5)), ge.createAabbExtents(xe.create(40, 20), xe.create(14.45, 35))]
+                mask: [ye.createAabbExtents(fe.create(11.5, -12.25), fe.create(14, 9.5)), ye.createAabbExtents(fe.create(40, 20), fe.create(14.45, 35))]
             },
             bunker_structure_08b: {
                 type: "structure",
@@ -79630,25 +79521,25 @@ webpackJsonp([1], {
                     beach: !1
                 },
                 ori: 0,
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(5, 5), xe.create(15, 15))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(5, 5), fe.create(15, 15))],
                 layers: [{
                     type: "bunker_chrys_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_chrys_sublevel_01b",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(11.5, -12.25), xe.create(14, 9.5)), ge.createAabbExtents(xe.create(40, 20), xe.create(14.45, 35))]
+                mask: [ye.createAabbExtents(fe.create(11.5, -12.25), fe.create(14, 9.5)), ye.createAabbExtents(fe.create(40, 20), fe.create(14.45, 35))]
             },
-            hedgehog_wall: G({
+            hedgehog_wall: W({
                 material: "metal",
-                extents: xe.create(3, .5),
+                extents: fe.create(3, .5),
                 height: .5,
                 map: {
                     display: !0,
@@ -79683,12 +79574,12 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "hedgehog_wall",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "hedgehog_wall",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -79697,12 +79588,12 @@ webpackJsonp([1], {
             cache_02: w({
                 mapObjects: [{
                     type: "tree_03",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "decal_initiative_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1.2,
                     ori: 0,
                     inheritOri: !1
@@ -79711,12 +79602,12 @@ webpackJsonp([1], {
             cache_03: w({
                 mapObjects: [{
                     type: "bush_06",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_leaf_pile",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -79725,12 +79616,12 @@ webpackJsonp([1], {
             cache_04: w({
                 mapObjects: [{
                     type: "pumpkin_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_light_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1.5,
                     ori: 0,
                     inheritOri: !1
@@ -79739,12 +79630,12 @@ webpackJsonp([1], {
             cache_05: w({
                 mapObjects: [{
                     type: "pumpkin_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_light_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1.5,
                     ori: 0,
                     inheritOri: !1
@@ -79753,12 +79644,12 @@ webpackJsonp([1], {
             cache_06: w({
                 mapObjects: [{
                     type: "bush_07",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_leaf_pile",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -79767,12 +79658,12 @@ webpackJsonp([1], {
             cache_07: w({
                 mapObjects: [{
                     type: "barrel_01b",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_initiative_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1.1,
                     ori: 0,
                     inheritOri: !1
@@ -79781,12 +79672,12 @@ webpackJsonp([1], {
             candle_lit_01: w({
                 mapObjects: [{
                     type: "candle_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_light_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -79795,54 +79686,54 @@ webpackJsonp([1], {
             candle_lit_02: w({
                 mapObjects: [{
                     type: "candle_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_light_03",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }]
             }),
-            hut_wall_int_4: G({
+            hut_wall_int_4: W({
                 material: "wood",
-                extents: xe.create(.5, 2),
+                extents: fe.create(.5, 2),
                 hitParticle: "tanChip",
                 img: m("map-wall-04.img", 4608e3)
             }),
-            hut_wall_int_5: G({
+            hut_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-05.img", 4608e3)
             }),
-            hut_wall_int_6: G({
+            hut_wall_int_6: W({
                 material: "wood",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 hitParticle: "tanChip",
                 img: m("map-wall-06.img", 4608e3)
             }),
-            hut_wall_int_12: G({
+            hut_wall_int_12: W({
                 material: "wood",
-                extents: xe.create(.5, 6),
+                extents: fe.create(.5, 6),
                 hitParticle: "tanChip",
                 img: m("map-wall-12.img", 4608e3)
             }),
-            hut_wall_int_14: G({
+            hut_wall_int_14: W({
                 material: "wood",
-                extents: xe.create(.5, 7),
+                extents: fe.create(.5, 7),
                 hitParticle: "tanChip",
                 img: m("map-wall-14.img", 4608e3)
             }),
-            hut_window_open_01: de({
+            hut_window_open_01: he({
                 img: {
                     tint: 7681026
                 }
             }),
-            hut_01: Q({}),
-            hut_01x: Q({
+            hut_01: $({}),
+            hut_01x: $({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-hut-ceiling-01.img",
@@ -79851,14 +79742,14 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(4.5, .5),
+                        pos: fe.create(4.5, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(-.5, 5),
+                        pos: fe.create(-.5, 5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -79866,11 +79757,11 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            hut_02: Q({
+            hut_02: $({
                 ceilingImg: "map-building-hut-ceiling-02.img",
                 specialLoot: "pot_02"
             }),
-            hut_02x: Q({
+            hut_02x: $({
                 specialLoot: "pot_02",
                 ceiling: {
                     imgs: [{
@@ -79880,14 +79771,14 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(4.5, .5),
+                        pos: fe.create(4.5, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(.5, -4.5),
+                        pos: fe.create(.5, -4.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -79895,34 +79786,34 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            warehouse_wall_side: G({
+            warehouse_wall_side: W({
                 material: "metal",
-                extents: xe.create(25, .6)
+                extents: fe.create(25, .6)
             }),
-            warehouse_wall_edge: G({
+            warehouse_wall_edge: W({
                 material: "metal",
-                extents: xe.create(.6, 3.2)
+                extents: fe.create(.6, 3.2)
             }),
-            warehouse_01: ce({
+            warehouse_01: me({
                 topLeftObs: "crate_01",
                 topRightObs: "crate_01",
                 botRightObs: "crate_01",
                 ignoreMapSpawnReplacement: !0
             }),
-            warehouse_01b: ce({
+            warehouse_01b: me({
                 topLeftObs: "crate_01",
                 topRightObs: "crate_01",
                 botRightObs: "crate_01",
                 decoration_01: "candle_lit_01",
                 ignoreMapSpawnReplacement: !0
             }),
-            warehouse_01f: ce({
+            warehouse_01f: me({
                 topLeftObs: "crate_01",
                 topRightObs: "crate_01",
                 botRightObs: "crate_01",
                 ignoreMapSpawnReplacement: !1
             }),
-            warehouse_01x: ce({
+            warehouse_01x: me({
                 topLeftObs: "crate_01",
                 topRightObs: "crate_01",
                 botRightObs: "crate_01",
@@ -79935,28 +79826,28 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(7.5, 5),
+                        pos: fe.create(7.5, 5),
                         scale: .9,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(-8.5, 4),
+                        pos: fe.create(-8.5, 4),
                         scale: .9,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(22.25, 11.25),
+                        pos: fe.create(22.25, 11.25),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-22.25, -11.25),
+                        pos: fe.create(-22.25, -11.25),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
@@ -79964,8 +79855,8 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            warehouse_02: me({}),
-            warehouse_02x: me({
+            warehouse_02: pe({}),
+            warehouse_02x: pe({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-warehouse-ceiling-02.img",
@@ -79974,21 +79865,21 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(0, 4),
+                        pos: fe.create(0, 4),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(20.25, -9.75),
+                        pos: fe.create(20.25, -9.75),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-20.25, 9.75),
+                        pos: fe.create(-20.25, 9.75),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
@@ -80001,137 +79892,137 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(26, 70.5), xe.create(47, 7.5)),
+                        collider: ye.createAabbExtents(fe.create(26, 70.5), fe.create(47, 7.5)),
                         color: 5855577
                     }, {
-                        collider: ge.createAabbExtents(xe.create(15.5, 52.5), xe.create(57.5, 10.5)),
+                        collider: ye.createAabbExtents(fe.create(15.5, 52.5), fe.create(57.5, 10.5)),
                         color: 5855577
                     }, {
-                        collider: ge.createAabbExtents(xe.create(33, 11), xe.create(75, 31)),
+                        collider: ye.createAabbExtents(fe.create(33, 11), fe.create(75, 31)),
                         color: 5855577
                     }, {
-                        collider: ge.createAabbExtents(xe.create(5, -30), xe.create(47, 10)),
+                        collider: ye.createAabbExtents(fe.create(5, -30), fe.create(47, 10)),
                         color: 5855577
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-39.75, 11.25), xe.create(2, 51)),
+                        collider: ye.createAabbExtents(fe.create(-39.75, 11.25), fe.create(2, 51)),
                         color: 16109568
                     }, {
-                        collider: ge.createCircle(xe.create(-39, 55), 1.25),
+                        collider: ye.createCircle(fe.create(-39, 55), 1.25),
                         color: 6310464
                     }, {
-                        collider: ge.createCircle(xe.create(-39, 20.5), 1.25),
+                        collider: ye.createCircle(fe.create(-39, 20.5), 1.25),
                         color: 6310464
                     }, {
-                        collider: ge.createCircle(xe.create(-39, 2), 1.25),
+                        collider: ye.createCircle(fe.create(-39, 2), 1.25),
                         color: 6310464
                     }, {
-                        collider: ge.createCircle(xe.create(-39, -31.5), 1.25),
+                        collider: ye.createCircle(fe.create(-39, -31.5), 1.25),
                         color: 6310464
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-28, -30), xe.create(2, 2)),
+                        collider: ye.createAabbExtents(fe.create(-28, -30), fe.create(2, 2)),
                         color: 6697728
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-23, -33), xe.create(2, 2)),
+                        collider: ye.createAabbExtents(fe.create(-23, -33), fe.create(2, 2)),
                         color: 6697728
                     }, {
-                        collider: ge.createAabbExtents(xe.create(7, 70), xe.create(2, 2)),
+                        collider: ye.createAabbExtents(fe.create(7, 70), fe.create(2, 2)),
                         color: 6697728
                     }, {
-                        collider: ge.createAabbExtents(xe.create(12, 72), xe.create(2, 2)),
+                        collider: ye.createAabbExtents(fe.create(12, 72), fe.create(2, 2)),
                         color: 6697728
                     }, {
-                        collider: ge.createCircle(xe.create(-26.5, 54.75), 1.75),
+                        collider: ye.createCircle(fe.create(-26.5, 54.75), 1.75),
                         color: 8026746
                     }, {
-                        collider: ge.createCircle(xe.create(-23.5, 57), 1.75),
+                        collider: ye.createCircle(fe.create(-23.5, 57), 1.75),
                         color: 8026746
                     }, {
-                        collider: ge.createCircle(xe.create(84, -15.5), 1.75),
+                        collider: ye.createCircle(fe.create(84, -15.5), 1.75),
                         color: 8026746
                     }, {
-                        collider: ge.createCircle(xe.create(40, -35), 1.5),
+                        collider: ye.createCircle(fe.create(40, -35), 1.5),
                         color: 8026746
                     }, {
-                        collider: ge.createCircle(xe.create(65, 61), 1.5),
+                        collider: ye.createCircle(fe.create(65, 61), 1.5),
                         color: 8026746
                     }, {
-                        collider: ge.createAabbExtents(xe.create(44.5, -25), xe.create(1.4, 3.1)),
+                        collider: ye.createAabbExtents(fe.create(44.5, -25), fe.create(1.4, 3.1)),
                         color: 13278307
                     }, {
-                        collider: ge.createAabbExtents(xe.create(58, 47.5), xe.create(1.4, 3.1)),
+                        collider: ye.createAabbExtents(fe.create(58, 47.5), fe.create(1.4, 3.1)),
                         color: 13278307
                     }]
                 },
                 terrain: {
                     waterEdge: {
-                        dir: xe.create(-1, 0),
+                        dir: fe.create(-1, 0),
                         distMin: 72,
                         distMax: 72
                     }
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(26, 70.5), xe.create(47, 7.5)), ge.createAabbExtents(xe.create(15.5, 52.5), xe.create(57.5, 10.5)), ge.createAabbExtents(xe.create(33, 11), xe.create(75, 31)), ge.createAabbExtents(xe.create(5, -30), xe.create(47, 10))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(26, 70.5), fe.create(47, 7.5)), ye.createAabbExtents(fe.create(15.5, 52.5), fe.create(57.5, 10.5)), ye.createAabbExtents(fe.create(33, 11), fe.create(75, 31)), ye.createAabbExtents(fe.create(5, -30), fe.create(47, 10))],
                 floor: {
                     surfaces: [{
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(26, 70.5), xe.create(47, 7.5)), ge.createAabbExtents(xe.create(15.5, 52.5), xe.create(57.5, 10.5)), ge.createAabbExtents(xe.create(33, 11), xe.create(75, 31)), ge.createAabbExtents(xe.create(5, -30), xe.create(47, 10))]
+                        collision: [ye.createAabbExtents(fe.create(26, 70.5), fe.create(47, 7.5)), ye.createAabbExtents(fe.create(15.5, 52.5), fe.create(57.5, 10.5)), ye.createAabbExtents(fe.create(33, 11), fe.create(75, 31)), ye.createAabbExtents(fe.create(5, -30), fe.create(47, 10))]
                     }],
                     imgs: [{
                         sprite: "map-complex-warehouse-floor-01.img",
-                        pos: xe.create(-31.5, 37.25),
+                        pos: fe.create(-31.5, 37.25),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-complex-warehouse-floor-01.img",
-                        pos: xe.create(-31.5, -14.25),
+                        pos: fe.create(-31.5, -14.25),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         mirrorY: !0
                     }, {
                         sprite: "map-complex-warehouse-floor-02.img",
-                        pos: xe.create(25.95, 19),
+                        pos: fe.create(25.95, 19),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-complex-warehouse-floor-03.img",
-                        pos: xe.create(90.4, 26.5),
+                        pos: fe.create(90.4, 26.5),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         mirrorY: !0
                     }, {
                         sprite: "map-complex-warehouse-floor-03.img",
-                        pos: xe.create(90.4, -4.5),
+                        pos: fe.create(90.4, -4.5),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "warehouse_02",
-                    pos: xe.create(5, 0),
+                    pos: fe.create(5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_02",
-                    pos: xe.create(70, 0),
+                    pos: fe.create(70, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_02",
-                    pos: xe.create(18, 55),
+                    pos: fe.create(18, 55),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bollard_01",
-                    pos: xe.create(-39, 55),
+                    pos: fe.create(-39, 55),
                     scale: 1,
                     ori: 2
                 }, {
@@ -80141,17 +80032,17 @@ webpackJsonp([1], {
                         container_03: 1,
                         container_06: .12
                     }),
-                    pos: xe.create(-37.5, 38),
+                    pos: fe.create(-37.5, 38),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bollard_01",
-                    pos: xe.create(-39, 20.5),
+                    pos: fe.create(-39, 20.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bollard_01",
-                    pos: xe.create(-39, 2),
+                    pos: fe.create(-39, 2),
                     scale: 1,
                     ori: 2
                 }, {
@@ -80161,29 +80052,29 @@ webpackJsonp([1], {
                         container_03: 1,
                         container_06: .12
                     }),
-                    pos: xe.create(-37.5, -15),
+                    pos: fe.create(-37.5, -15),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bollard_01",
-                    pos: xe.create(-39, -31.5),
+                    pos: fe.create(-39, -31.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-28, -30),
+                    pos: fe.create(-28, -30),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-23, -33),
+                    pos: fe.create(-23, -33),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "container_04",
-                    pos: xe.create(-11.5, -26.575),
+                    pos: fe.create(-11.5, -26.575),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80195,7 +80086,7 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(-6, -29),
+                    pos: fe.create(-6, -29),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80207,27 +80098,27 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(9.5, -29),
+                    pos: fe.create(9.5, -29),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "container_04",
-                    pos: xe.create(15, -26.575),
+                    pos: fe.create(15, -26.575),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_02",
-                    pos: xe.create(37, -30),
+                    pos: fe.create(37, -30),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(44.5, -25),
+                    pos: fe.create(44.5, -25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(84, -15.5),
+                    pos: fe.create(84, -15.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80239,12 +80130,12 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(-3, 22),
+                    pos: fe.create(-3, 22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_04",
-                    pos: xe.create(-5.425, 27.5),
+                    pos: fe.create(-5.425, 27.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80256,22 +80147,22 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(-3, 33),
+                    pos: fe.create(-3, 33),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_04",
-                    pos: xe.create(28, 22),
+                    pos: fe.create(28, 22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_04",
-                    pos: xe.create(28, 27.5),
+                    pos: fe.create(28, 27.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_04",
-                    pos: xe.create(28, 33),
+                    pos: fe.create(28, 33),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80283,12 +80174,12 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(53, 22),
+                    pos: fe.create(53, 22),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "container_04",
-                    pos: xe.create(55.425, 27.5),
+                    pos: fe.create(55.425, 27.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80300,12 +80191,12 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(53, 33),
+                    pos: fe.create(53, 33),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "container_04",
-                    pos: xe.create(84, 22),
+                    pos: fe.create(84, 22),
                     scale: 1,
                     ori: 3
                 }, {
@@ -80317,39 +80208,39 @@ webpackJsonp([1], {
                         container_06: .12,
                         "": .75
                     }),
-                    pos: xe.create(86.425, 27.5),
+                    pos: fe.create(86.425, 27.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-26.5, 54.75),
+                    pos: fe.create(-26.5, 54.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-23.5, 57),
+                    pos: fe.create(-23.5, 57),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(7, 70),
+                    pos: fe.create(7, 70),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12, 72),
+                    pos: fe.create(12, 72),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "shack_02",
-                    pos: xe.create(60, 58),
+                    pos: fe.create(60, 58),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(58, 47.5),
+                    pos: fe.create(58, 47.5),
                     scale: 1,
                     ori: 1
                 }]
@@ -80364,24 +80255,24 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, -4), xe.create(55, 50))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, -4), fe.create(55, 50))],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(0, 0), xe.create(55, 55)),
+                    bound: ye.createAabbExtents(fe.create(0, 0), fe.create(55, 55)),
                     color: 5195792,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-28.5, 7), xe.create(7, 5)),
+                    bound: ye.createAabbExtents(fe.create(-28.5, 7), fe.create(7, 5)),
                     color: 5986827,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-24.5, -35), xe.create(5.5, 4.5)),
+                    bound: ye.createAabbExtents(fe.create(-24.5, -35), fe.create(5.5, 4.5)),
                     color: 5986827,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(20, 10), xe.create(20, 30)),
+                    bound: ye.createAabbExtents(fe.create(20, 10), fe.create(20, 30)),
                     color: 5986827,
                     roughness: .05,
                     offsetDist: .5
@@ -80389,18 +80280,18 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(55, 55))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(55, 55))]
                     }],
                     imgs: []
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "container_04",
-                    pos: xe.create(3.75, 14),
+                    pos: fe.create(3.75, 14),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80408,7 +80299,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-1.35, 10.25),
+                    pos: fe.create(-1.35, 10.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80417,18 +80308,18 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-6, 12.25),
+                    pos: fe.create(-6, 12.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-2, 14.5),
+                    pos: fe.create(-2, 14.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "warehouse_02",
-                    pos: xe.create(20, 10),
+                    pos: fe.create(20, 10),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80436,7 +80327,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(35, 24.25),
+                    pos: fe.create(35, 24.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80445,7 +80336,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(35, 29),
+                    pos: fe.create(35, 29),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80454,24 +80345,24 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(39.75, 27),
+                    pos: fe.create(39.75, 27),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_07",
-                    pos: xe.create(47, 13),
+                    pos: fe.create(47, 13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_02",
-                    pos: xe.create(50.5, 9.5),
+                    pos: fe.create(50.5, 9.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "bunker_structure_06",
-                    pos: xe.create(38, -12.5),
+                    pos: fe.create(38, -12.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80480,7 +80371,7 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(21, -32),
+                    pos: fe.create(21, -32),
                     scale: 1,
                     ori: 3
                 }, {
@@ -80489,17 +80380,17 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(21, -37.5),
+                    pos: fe.create(21, -37.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "tree_07",
-                    pos: xe.create(45.5, -31.5),
+                    pos: fe.create(45.5, -31.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_07",
-                    pos: xe.create(40.5, -36.5),
+                    pos: fe.create(40.5, -36.5),
                     scale: 1.1,
                     ori: 0
                 }, {
@@ -80507,7 +80398,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(21.75, -50),
+                    pos: fe.create(21.75, -50),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80516,70 +80407,70 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(26.75, -49),
+                    pos: fe.create(26.75, -49),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_02",
-                    pos: xe.create(44.5, -50.5),
+                    pos: fe.create(44.5, -50.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-9, 34),
+                    pos: fe.create(-9, 34),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_02",
-                    pos: xe.create(-13.5, 35.5),
+                    pos: fe.create(-13.5, 35.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-16.5, 32),
+                    pos: fe.create(-16.5, 32),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-20, 36),
+                    pos: fe.create(-20, 36),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-24.5, 33),
+                    pos: fe.create(-24.5, 33),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-31.5, 37),
+                    pos: fe.create(-31.5, 37),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-32.5, 32),
+                    pos: fe.create(-32.5, 32),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-40, 35.5),
+                    pos: fe.create(-40, 35.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-44.5, 32.5),
+                    pos: fe.create(-44.5, 32.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-33.5, 23.5),
+                    pos: fe.create(-33.5, 23.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-42.75, 21.5),
+                    pos: fe.create(-42.75, 21.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80587,7 +80478,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-30.5, 9),
+                    pos: fe.create(-30.5, 9),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80596,7 +80487,7 @@ webpackJsonp([1], {
                         chest_02: 1,
                         case_04: 1
                     }),
-                    pos: xe.create(-30.5, 4.75),
+                    pos: fe.create(-30.5, 4.75),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80604,33 +80495,33 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-25.75, 7),
+                    pos: fe.create(-25.75, 7),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-14.5, .5),
+                    pos: fe.create(-14.5, .5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-21, -8.75),
+                    pos: fe.create(-21, -8.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-36.5, -9),
+                    pos: fe.create(-36.5, -9),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-34, -11.5),
+                    pos: fe.create(-34, -11.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "outhouse_01",
-                    pos: xe.create(-48.5, -5),
+                    pos: fe.create(-48.5, -5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -80638,12 +80529,12 @@ webpackJsonp([1], {
                         outhouse_01: 5,
                         outhouse_02: 1
                     }),
-                    pos: xe.create(-48.5, -14.5),
+                    pos: fe.create(-48.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "woodpile_01",
-                    pos: xe.create(-51, -20.5),
+                    pos: fe.create(-51, -20.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80651,7 +80542,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-26.75, -36),
+                    pos: fe.create(-26.75, -36),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80660,53 +80551,53 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(-22, -34),
+                    pos: fe.create(-22, -34),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-14.5, -20),
+                    pos: fe.create(-14.5, -20),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-11.5, -23),
+                    pos: fe.create(-11.5, -23),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "tree_09",
-                    pos: xe.create(-15.5, -24),
+                    pos: fe.create(-15.5, -24),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-37, -34),
+                    pos: fe.create(-37, -34),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-31, -47),
+                    pos: fe.create(-31, -47),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "woodpile_02",
-                    pos: xe.create(-18.75, -45.5),
+                    pos: fe.create(-18.75, -45.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-2.5, -35.75),
+                    pos: fe.create(-2.5, -35.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(.75, -37.5),
+                    pos: fe.create(.75, -37.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "tree_07",
-                    pos: xe.create(1, -33),
+                    pos: fe.create(1, -33),
                     scale: 1.2,
                     ori: 0
                 }]
@@ -80721,19 +80612,19 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createCircle(xe.create(0, 0), 40)],
+                mapObstacleBounds: [ye.createCircle(fe.create(0, 0), 40)],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(5, 21.5), xe.create(5.5, 6)),
+                    bound: ye.createAabbExtents(fe.create(5, 21.5), fe.create(5.5, 6)),
                     color: 7563810,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-17.75, -14), xe.create(6, 4.5)),
+                    bound: ye.createAabbExtents(fe.create(-17.75, -14), fe.create(6, 4.5)),
                     color: 7563810,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(21.5, -10), xe.create(4.75, 3.5)),
+                    bound: ye.createAabbExtents(fe.create(21.5, -10), fe.create(4.75, 3.5)),
                     color: 7563810,
                     roughness: .05,
                     offsetDist: .5
@@ -80746,13 +80637,13 @@ webpackJsonp([1], {
                     imgs: []
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "tree_08c",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 2,
                     ori: 0
                 }, {
@@ -80760,7 +80651,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(2.5, 19.5),
+                    pos: fe.create(2.5, 19.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80769,7 +80660,7 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(7.5, 19),
+                    pos: fe.create(7.5, 19),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80778,28 +80669,28 @@ webpackJsonp([1], {
                         crate_01: 4,
                         crate_19: 1
                     }),
-                    pos: xe.create(3.5, 24.5),
+                    pos: fe.create(3.5, 24.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_04",
-                    pos: xe.create(-20.5, -13.25),
+                    pos: fe.create(-20.5, -13.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(-15, -14.5),
+                    pos: fe.create(-15, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(23.5, -9.25),
+                    pos: fe.create(23.5, -9.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(20, -11),
+                    pos: fe.create(20, -11),
                     scale: 1,
                     ori: 0
                 }]
@@ -80815,18 +80706,18 @@ webpackJsonp([1], {
                     beach: !1
                 },
                 ori: 0,
-                mapObstacleBounds: [ge.createCircle(xe.create(0, 0), 37)],
+                mapObstacleBounds: [ye.createCircle(fe.create(0, 0), 37)],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(-8.5, 24), xe.create(13, 9)),
+                    bound: ye.createAabbExtents(fe.create(-8.5, 24), fe.create(13, 9)),
                     color: 1446402
                 }, {
-                    bound: ge.createAabbExtents(xe.create(26.75, 8.5), xe.create(8, 5.5)),
+                    bound: ye.createAabbExtents(fe.create(26.75, 8.5), fe.create(8, 5.5)),
                     color: 1446402
                 }, {
-                    bound: ge.createAabbExtents(xe.create(23.75, -15.5), xe.create(7, 5.5)),
+                    bound: ye.createAabbExtents(fe.create(23.75, -15.5), fe.create(7, 5.5)),
                     color: 1446402
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-23.5, -10), xe.create(4.75, 3.5)),
+                    bound: ye.createAabbExtents(fe.create(-23.5, -10), fe.create(4.75, 3.5)),
                     color: 1446402
                 }],
                 floor: {
@@ -80837,38 +80728,38 @@ webpackJsonp([1], {
                     imgs: []
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "tree_05b",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1.5,
                     ori: 0
                 }, {
                     type: "candle_lit_01",
-                    pos: xe.create(-9, 3),
+                    pos: fe.create(-9, 3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "candle_lit_01",
-                    pos: xe.create(9, 3),
+                    pos: fe.create(9, 3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "candle_lit_01",
-                    pos: xe.create(-6.5, -7),
+                    pos: fe.create(-6.5, -7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "candle_lit_01",
-                    pos: xe.create(6.5, -7),
+                    pos: fe.create(6.5, -7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "candle_lit_01",
-                    pos: xe.create(0, 9),
+                    pos: fe.create(0, 9),
                     scale: 1,
                     ori: 0
                 }, {
@@ -80876,7 +80767,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-2.5, 29.5),
+                    pos: fe.create(-2.5, 29.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80885,7 +80776,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-6.5, 29),
+                    pos: fe.create(-6.5, 29),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80894,7 +80785,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-10.5, 29.5),
+                    pos: fe.create(-10.5, 29.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80903,7 +80794,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-14.5, 30),
+                    pos: fe.create(-14.5, 30),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80912,7 +80803,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(1.5, 23.5),
+                    pos: fe.create(1.5, 23.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80921,7 +80812,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-2.5, 24.5),
+                    pos: fe.create(-2.5, 24.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80930,7 +80821,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-6.5, 24),
+                    pos: fe.create(-6.5, 24),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80939,7 +80830,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-10.5, 24),
+                    pos: fe.create(-10.5, 24),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80948,7 +80839,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-14.5, 23.5),
+                    pos: fe.create(-14.5, 23.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80957,7 +80848,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-18.5, 24.5),
+                    pos: fe.create(-18.5, 24.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80966,7 +80857,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-2.5, 18.5),
+                    pos: fe.create(-2.5, 18.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80975,7 +80866,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-6.5, 18),
+                    pos: fe.create(-6.5, 18),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80984,7 +80875,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-10.5, 18.5),
+                    pos: fe.create(-10.5, 18.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -80993,7 +80884,7 @@ webpackJsonp([1], {
                         refrigerator_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(-14.5, 19),
+                    pos: fe.create(-14.5, 19),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81002,7 +80893,7 @@ webpackJsonp([1], {
                         "": 1,
                         table_01: 3
                     }),
-                    pos: xe.create(22.5, 6),
+                    pos: fe.create(22.5, 6),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81011,7 +80902,7 @@ webpackJsonp([1], {
                         "": 1,
                         table_01: 3
                     }),
-                    pos: xe.create(29, 6),
+                    pos: fe.create(29, 6),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81020,7 +80911,7 @@ webpackJsonp([1], {
                         "": 1,
                         table_01: 3
                     }),
-                    pos: xe.create(24.5, 11),
+                    pos: fe.create(24.5, 11),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81029,7 +80920,7 @@ webpackJsonp([1], {
                         "": 1,
                         table_01: 3
                     }),
-                    pos: xe.create(31, 11),
+                    pos: fe.create(31, 11),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81038,7 +80929,7 @@ webpackJsonp([1], {
                         oven_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(20, -13),
+                    pos: fe.create(20, -13),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81047,7 +80938,7 @@ webpackJsonp([1], {
                         oven_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(24, -12.5),
+                    pos: fe.create(24, -12.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81056,7 +80947,7 @@ webpackJsonp([1], {
                         oven_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(28, -13.5),
+                    pos: fe.create(28, -13.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81065,7 +80956,7 @@ webpackJsonp([1], {
                         oven_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(22, -18.5),
+                    pos: fe.create(22, -18.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81074,7 +80965,7 @@ webpackJsonp([1], {
                         oven_01: 3,
                         "": 1
                     }),
-                    pos: xe.create(26, -18.5),
+                    pos: fe.create(26, -18.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81083,7 +80974,7 @@ webpackJsonp([1], {
                         "": 1,
                         cache_03: 3
                     }),
-                    pos: xe.create(-.5, -23),
+                    pos: fe.create(-.5, -23),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81092,7 +80983,7 @@ webpackJsonp([1], {
                         "": 1,
                         cache_03: 3
                     }),
-                    pos: xe.create(-6, -24),
+                    pos: fe.create(-6, -24),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81101,7 +80992,7 @@ webpackJsonp([1], {
                         "": 1,
                         cache_03: 3
                     }),
-                    pos: xe.create(-3, -27.5),
+                    pos: fe.create(-3, -27.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81110,7 +81001,7 @@ webpackJsonp([1], {
                         "": 1,
                         vending_01: 3
                     }),
-                    pos: xe.create(-25.5, -9.25),
+                    pos: fe.create(-25.5, -9.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81119,15 +81010,15 @@ webpackJsonp([1], {
                         "": 1,
                         vending_01: 3
                     }),
-                    pos: xe.create(-22, -11),
+                    pos: fe.create(-22, -11),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }]
             },
-            archway_column_1: G({
+            archway_column_1: W({
                 material: "wood",
-                extents: xe.create(1, 1),
+                extents: fe.create(1, 1),
                 img: Object.assign(m("map-column-01.img", 7290644), {
                     residue: "map-drawers-res.img"
                 })
@@ -81146,7 +81037,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 1))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 1))]
                     }],
                     imgs: [{
                         sprite: "",
@@ -81173,17 +81064,17 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "archway_column_1",
-                    pos: xe.create(-10, 0),
+                    pos: fe.create(-10, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "archway_column_1",
-                    pos: xe.create(10, 0),
+                    pos: fe.create(10, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_1",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -81198,19 +81089,19 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(65, 102)), ge.createAabbExtents(xe.create(0, 0), xe.create(20, 120)), ge.createAabbExtents(xe.create(-60, 40), xe.create(10, 5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(65, 102)), ye.createAabbExtents(fe.create(0, 0), fe.create(20, 120)), ye.createAabbExtents(fe.create(-60, 40), fe.create(10, 5))],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(0, 0), xe.create(60, 95)),
+                    bound: ye.createAabbExtents(fe.create(0, 0), fe.create(60, 95)),
                     color: 12813354,
                     roughness: .1,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(0, 0), xe.create(10, 96)),
+                    bound: ye.createAabbExtents(fe.create(0, 0), fe.create(10, 96)),
                     color: 9396511,
                     roughness: .1,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-33, 40), xe.create(27, 5)),
+                    bound: ye.createAabbExtents(fe.create(-33, 40), fe.create(27, 5)),
                     color: 9396511,
                     roughness: .1,
                     offsetDist: 1
@@ -81218,145 +81109,145 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(55, 25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(55, 25))]
                     }],
                     imgs: []
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "archway_01",
-                    pos: xe.create(0, 95),
+                    pos: fe.create(0, 95),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "archway_01",
-                    pos: xe.create(0, -95),
+                    pos: fe.create(0, -95),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_01",
-                    pos: xe.create(40, -50),
+                    pos: fe.create(40, -50),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "cabin_01",
-                    pos: xe.create(37, 20),
+                    pos: fe.create(37, 20),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "cabin_01",
-                    pos: xe.create(35, 70),
+                    pos: fe.create(35, 70),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "barn_01",
-                    pos: xe.create(-34, -60),
+                    pos: fe.create(-34, -60),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "bank_01b",
-                    pos: xe.create(-35, 0),
+                    pos: fe.create(-35, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "saloon_structure_01",
-                    pos: xe.create(-35, 70),
+                    pos: fe.create(-35, 70),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(5, 76),
+                    pos: fe.create(5, 76),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-6.75, 71),
+                    pos: fe.create(-6.75, 71),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-6.75, 67),
+                    pos: fe.create(-6.75, 67),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-50, 42),
+                    pos: fe.create(-50, 42),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-4, 44),
+                    pos: fe.create(-4, 44),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-1.5, 46.5),
+                    pos: fe.create(-1.5, 46.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_18",
-                    pos: xe.create(.25, 42),
+                    pos: fe.create(.25, 42),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-21, 31.5),
+                    pos: fe.create(-21, 31.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-15, 31.5),
+                    pos: fe.create(-15, 31.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(13, 34),
+                    pos: fe.create(13, 34),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(7, 8),
+                    pos: fe.create(7, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7.25, -12.5),
+                    pos: fe.create(-7.25, -12.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-7.25, -22),
+                    pos: fe.create(-7.25, -22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_18",
-                    pos: xe.create(2.5, -56.5),
+                    pos: fe.create(2.5, -56.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-1.5, -59),
+                    pos: fe.create(-1.5, -59),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(1.5, -61),
+                    pos: fe.create(1.5, -61),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-5.5, -74),
+                    pos: fe.create(-5.5, -74),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(7.5, -82),
+                    pos: fe.create(7.5, -82),
                     scale: 1,
                     ori: 0
                 }]
@@ -81371,19 +81262,19 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, -3), xe.create(50, 60)), ge.createAabbExtents(xe.create(0, 0), xe.create(60, 15))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, -3), fe.create(50, 60)), ye.createAabbExtents(fe.create(0, 0), fe.create(60, 15))],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(0, -3), xe.create(45, 55)),
+                    bound: ye.createAabbExtents(fe.create(0, -3), fe.create(45, 55)),
                     color: 12813354,
                     roughness: .1,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(0, 0), xe.create(46, 10)),
+                    bound: ye.createAabbExtents(fe.create(0, 0), fe.create(46, 10)),
                     color: 9396511,
                     roughness: .1,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(0, 2), xe.create(5, 50.5)),
+                    bound: ye.createAabbExtents(fe.create(0, 2), fe.create(5, 50.5)),
                     color: 9396511,
                     roughness: .1,
                     offsetDist: 1
@@ -81391,100 +81282,100 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))]
                     }],
                     imgs: []
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "archway_01",
-                    pos: xe.create(45, 0),
+                    pos: fe.create(45, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "archway_01",
-                    pos: xe.create(-45, 0),
+                    pos: fe.create(-45, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_red_01",
-                    pos: xe.create(24, 30),
+                    pos: fe.create(24, 30),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "house_red_02",
-                    pos: xe.create(-24, 30),
+                    pos: fe.create(-24, 30),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "bank_01b",
-                    pos: xe.create(-10, -34),
+                    pos: fe.create(-10, -34),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "shack_01",
-                    pos: xe.create(31, -26),
+                    pos: fe.create(31, -26),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "outhouse_01",
-                    pos: xe.create(28, -46),
+                    pos: fe.create(28, -46),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_06",
-                    pos: xe.create(29, -36),
+                    pos: fe.create(29, -36),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-4.75, 34),
+                    pos: fe.create(-4.75, 34),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-4.75, 30),
+                    pos: fe.create(-4.75, 30),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(-9, 10),
+                    pos: fe.create(-9, 10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_18",
-                    pos: xe.create(2.5, 1.5),
+                    pos: fe.create(2.5, 1.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-2, -1),
+                    pos: fe.create(-2, -1),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(1.5, -3),
+                    pos: fe.create(1.5, -3),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(16, -10),
+                    pos: fe.create(16, -10),
                     scale: 1,
                     ori: 1
                 }]
             },
-            statue_01: F({
+            statue_01: j({
                 scale: {
                     createMin: 1,
                     createMax: 1,
                     destroy: .5
                 },
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4.4, 4.4)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4.4, 4.4)),
                 destructible: !1,
                 map: {
                     display: !0,
@@ -81496,10 +81387,10 @@ webpackJsonp([1], {
                     scale: .5
                 }
             }),
-            statue_top_01: F({
+            statue_top_01: j({
                 health: 500,
                 height: 10,
-                collision: ge.createCircle(xe.create(0, 0), 2.45),
+                collision: ye.createCircle(fe.create(0, 0), 2.45),
                 scale: {
                     createMin: 1,
                     createMax: 1,
@@ -81518,10 +81409,10 @@ webpackJsonp([1], {
                     zIdx: 60
                 }
             }),
-            statue_top_02: F({
+            statue_top_02: j({
                 health: 500,
                 height: 10,
-                collision: ge.createCircle(xe.create(0, 0), 2.45),
+                collision: ye.createCircle(fe.create(0, 0), 2.45),
                 scale: {
                     createMin: 1,
                     createMax: 1,
@@ -81560,12 +81451,12 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "statue_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "statue_top_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -81590,18 +81481,18 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "statue_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "statue_top_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
             },
-            statue_02: F({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4.4, 4.4)),
+            statue_02: j({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4.4, 4.4)),
                 destructible: !1,
                 map: {
                     display: !0,
@@ -81618,16 +81509,16 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(70.75, .5), xe.create(30, 54.5)),
+                        collider: ye.createAabbExtents(fe.create(70.75, .5), fe.create(30, 54.5)),
                         color: 3815994
                     }, {
-                        collider: ge.createAabbExtents(xe.create(77.5, 64), xe.create(23, 10)),
+                        collider: ye.createAabbExtents(fe.create(77.5, 64), fe.create(23, 10)),
                         color: 3815994
                     }, {
-                        collider: ge.createAabbExtents(xe.create(111, -29.5), xe.create(10.5, 24.5)),
+                        collider: ye.createAabbExtents(fe.create(111, -29.5), fe.create(10.5, 24.5)),
                         color: 3815994
                     }, {
-                        collider: ge.createAabbExtents(xe.create(50, 0), xe.create(4.4, 4.4)),
+                        collider: ye.createAabbExtents(fe.create(50, 0), fe.create(4.4, 4.4)),
                         color: 5723991
                     }]
                 },
@@ -81637,36 +81528,36 @@ webpackJsonp([1], {
                     },
                     spawnPriority: 100
                 },
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(-41, 0), xe.create(6, 10)), ge.createAabbExtents(xe.create(41, 0), xe.create(6, 10)), ge.createAabbExtents(xe.create(81, 0), xe.create(40, 54)), ge.createAabbExtents(xe.create(78, 64), xe.create(23, 10)), ge.createAabbExtents(xe.create(-76, -22), xe.create(36, 24)), ge.createAabbExtents(xe.create(-72, 22), xe.create(27, 25))],
-                bridgeWaterBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 5))],
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(71, 0), xe.create(31, 56)), ge.createAabbExtents(xe.create(77, 65), xe.create(24, 10)), ge.createAabbExtents(xe.create(112, -30), xe.create(10, 26)), ge.createAabbExtents(xe.create(106, 19.5), xe.create(8, 7.25)), ge.createAabbExtents(xe.create(-71, 32), xe.create(27, 15)), ge.createAabbExtents(xe.create(-71, 16), xe.create(8, 6)), ge.createAabbExtents(xe.create(-75, -34), xe.create(40, 19)), ge.createAabbExtents(xe.create(-57, -10), xe.create(5, 11)), ge.createAabbExtents(xe.create(-86, -10), xe.create(5, 11)), ge.createAabbExtents(xe.create(-21, 0), xe.create(100, 8)), ge.createAabbExtents(xe.create(-109, 30), xe.create(7, 7.25)), ge.createAabbExtents(xe.create(0, 0), xe.create(40, 15))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(-41, 0), fe.create(6, 10)), ye.createAabbExtents(fe.create(41, 0), fe.create(6, 10)), ye.createAabbExtents(fe.create(81, 0), fe.create(40, 54)), ye.createAabbExtents(fe.create(78, 64), fe.create(23, 10)), ye.createAabbExtents(fe.create(-76, -22), fe.create(36, 24)), ye.createAabbExtents(fe.create(-72, 22), fe.create(27, 25))],
+                bridgeWaterBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(71, 0), fe.create(31, 56)), ye.createAabbExtents(fe.create(77, 65), fe.create(24, 10)), ye.createAabbExtents(fe.create(112, -30), fe.create(10, 26)), ye.createAabbExtents(fe.create(106, 19.5), fe.create(8, 7.25)), ye.createAabbExtents(fe.create(-71, 32), fe.create(27, 15)), ye.createAabbExtents(fe.create(-71, 16), fe.create(8, 6)), ye.createAabbExtents(fe.create(-75, -34), fe.create(40, 19)), ye.createAabbExtents(fe.create(-57, -10), fe.create(5, 11)), ye.createAabbExtents(fe.create(-86, -10), fe.create(5, 11)), ye.createAabbExtents(fe.create(-21, 0), fe.create(100, 8)), ye.createAabbExtents(fe.create(-109, 30), fe.create(7, 7.25)), ye.createAabbExtents(fe.create(0, 0), fe.create(40, 15))],
                 mapGroundPatches: [{
-                    bound: ge.createAabbExtents(xe.create(-20, 0), xe.create(100, 6)),
+                    bound: ye.createAabbExtents(fe.create(-20, 0), fe.create(100, 6)),
                     color: 6632211,
                     roughness: .05,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-71, 10), xe.create(2, 9)),
+                    bound: ye.createAabbExtents(fe.create(-71, 10), fe.create(2, 9)),
                     color: 6632211,
                     roughness: 0,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-57, -10), xe.create(2, 9)),
+                    bound: ye.createAabbExtents(fe.create(-57, -10), fe.create(2, 9)),
                     color: 6632211,
                     roughness: 0,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-109, 30), xe.create(6, 6.25)),
+                    bound: ye.createAabbExtents(fe.create(-109, 30), fe.create(6, 6.25)),
                     color: 3293977,
                     roughness: .05,
                     offsetDist: .5
                 }, {
-                    bound: ge.createAabbExtents(xe.create(-86, -10), xe.create(2, 9)),
+                    bound: ye.createAabbExtents(fe.create(-86, -10), fe.create(2, 9)),
                     color: 6632211,
                     roughness: 0,
                     offsetDist: 1
                 }, {
-                    bound: ge.createAabbExtents(xe.create(106, 19.5), xe.create(7, 6.25)),
+                    bound: ye.createAabbExtents(fe.create(106, 19.5), fe.create(7, 6.25)),
                     color: 3293977,
                     roughness: .05,
                     offsetDist: .5
@@ -81674,47 +81565,47 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "grass",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(70.75, .5), xe.create(30, 54.5)), ge.createAabbExtents(xe.create(77.5, 64), xe.create(23, 10)), ge.createAabbExtents(xe.create(111, -29.5), xe.create(10.5, 24.5))]
+                        collision: [ye.createAabbExtents(fe.create(70.75, .5), fe.create(30, 54.5)), ye.createAabbExtents(fe.create(77.5, 64), fe.create(23, 10)), ye.createAabbExtents(fe.create(111, -29.5), fe.create(10.5, 24.5))]
                     }],
                     imgs: [{
                         sprite: "map-complex-warehouse-floor-04.img",
-                        pos: xe.create(81, 10),
+                        pos: fe.create(81, 10),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     imgs: []
                 },
                 mapObjects: [{
                     type: "bridge_xlg_structure_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barn_01",
-                    pos: xe.create(-71, 30),
+                    pos: fe.create(-71, 30),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_red_01",
-                    pos: xe.create(-56, -30),
+                    pos: fe.create(-56, -30),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_red_02",
-                    pos: xe.create(-96, -30),
+                    pos: fe.create(-96, -30),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "sandbags_02",
-                    pos: xe.create(-68, 2),
+                    pos: fe.create(-68, 2),
                     scale: 1,
                     ori: 0
                 }, {
@@ -81722,7 +81613,7 @@ webpackJsonp([1], {
                         crate_02: 1,
                         crate_01: 3
                     }),
-                    pos: xe.create(-85, 1),
+                    pos: fe.create(-85, 1),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81731,29 +81622,29 @@ webpackJsonp([1], {
                         crate_02: 1,
                         crate_01: 3
                     }),
-                    pos: xe.create(-90, -1),
+                    pos: fe.create(-90, -1),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_02f",
-                    pos: xe.create(-106.5, 32.25),
+                    pos: fe.create(-106.5, 32.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-111.25, 32.25),
+                    pos: fe.create(-111.25, 32.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-108, 27.25),
+                    pos: fe.create(-108, 27.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "statue_structure_01",
-                    pos: xe.create(-50, 0),
+                    pos: fe.create(-50, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -81762,7 +81653,7 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(45, 36),
+                    pos: fe.create(45, 36),
                     scale: 1,
                     ori: 2
                 }, {
@@ -81771,17 +81662,17 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(51, 36),
+                    pos: fe.create(51, 36),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "shack_02",
-                    pos: xe.create(47, 20),
+                    pos: fe.create(47, 20),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "warehouse_02",
-                    pos: xe.create(78, 40),
+                    pos: fe.create(78, 40),
                     scale: 1,
                     ori: 1
                 }, {
@@ -81790,41 +81681,41 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(95, 44),
+                    pos: fe.create(95, 44),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "statue_structure_02",
-                    pos: xe.create(50, 0),
+                    pos: fe.create(50, 0),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_01",
-                    pos: xe.create(74.5, -.5),
+                    pos: fe.create(74.5, -.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(79.5, .25),
+                    pos: fe.create(79.5, .25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(106, 22),
+                    pos: fe.create(106, 22),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(104.5, 17.25),
+                    pos: fe.create(104.5, 17.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_22",
-                    pos: xe.create(109.25, 17.25),
+                    pos: fe.create(109.25, 17.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -81834,7 +81725,7 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(85, -13),
+                    pos: fe.create(85, -13),
                     scale: 1,
                     ori: 1
                 }, {
@@ -81843,17 +81734,17 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(45, -36),
+                    pos: fe.create(45, -36),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_02",
-                    pos: xe.create(47, -20),
+                    pos: fe.create(47, -20),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "warehouse_02",
-                    pos: xe.create(86, -30),
+                    pos: fe.create(86, -30),
                     scale: 1,
                     ori: 0
                 }, {
@@ -81862,37 +81753,37 @@ webpackJsonp([1], {
                         container_02: 1,
                         container_03: 1
                     }),
-                    pos: xe.create(72, -47),
+                    pos: fe.create(72, -47),
                     scale: 1,
                     ori: 1
                 }]
             },
-            shack_wall_top: G({
+            shack_wall_top: W({
                 material: "wood",
-                extents: xe.create(5.6, .35),
+                extents: fe.create(5.6, .35),
                 height: 10,
                 img: m("map-wall-shack-top.img")
             }),
-            shack_wall_side_left: G({
+            shack_wall_side_left: W({
                 material: "wood",
-                extents: xe.create(.35, 3.43),
+                extents: fe.create(.35, 3.43),
                 height: 10,
                 img: m("map-wall-shack-left.img")
             }),
-            shack_wall_side_right: G({
+            shack_wall_side_right: W({
                 material: "wood",
-                extents: xe.create(.35, 3.8),
+                extents: fe.create(.35, 3.8),
                 height: 10,
                 img: m("map-wall-shack-right.img")
             }),
-            shack_wall_bot: G({
+            shack_wall_bot: W({
                 material: "wood",
-                extents: xe.create(3.75, .35),
+                extents: fe.create(3.75, .35),
                 height: 10,
                 img: m("map-wall-shack-bot.img")
             }),
-            shack_01: se(),
-            shack_01x: se({
+            shack_01: le(),
+            shack_01x: le({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-shack-ceiling-01.img",
@@ -81901,14 +81792,14 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(-4, 2.5),
+                        pos: fe.create(-4, 2.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(3.5, -.5),
+                        pos: fe.create(3.5, -.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -81916,8 +81807,8 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            shack_02: le({}),
-            shack_02x: le({
+            shack_02: ce({}),
+            shack_02x: ce({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-shack-ceiling-02.img",
@@ -81926,7 +81817,7 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(-2, 1),
+                        pos: fe.create(-2, 1),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -81934,37 +81825,37 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            shack_wall_ext_2: G({
+            shack_wall_ext_2: W({
                 material: "wood",
-                extents: xe.create(.5, 1),
+                extents: fe.create(.5, 1),
                 hitParticle: "tanChip",
                 img: m("map-wall-02.img", 12556639)
             }),
-            shack_wall_ext_5: G({
+            shack_wall_ext_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-05.img", 12556639)
             }),
-            shack_wall_ext_9: G({
+            shack_wall_ext_9: W({
                 material: "wood",
-                extents: xe.create(.5, 4.5),
+                extents: fe.create(.5, 4.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-09.img", 12556639)
             }),
-            shack_wall_ext_10: G({
+            shack_wall_ext_10: W({
                 material: "wood",
-                extents: xe.create(.5, 5),
+                extents: fe.create(.5, 5),
                 hitParticle: "tanChip",
                 img: m("map-wall-10.img", 12556639)
             }),
-            shack_wall_ext_14: G({
+            shack_wall_ext_14: W({
                 material: "wood",
-                extents: xe.create(.5, 7),
+                extents: fe.create(.5, 7),
                 hitParticle: "tanChip",
                 img: m("map-wall-14.img", 12556639)
             }),
-            shack_03a: $({
+            shack_03a: ee({
                 terrain: {
                     bridge: {
                         nearbyWidthMult: 1
@@ -81976,10 +81867,10 @@ webpackJsonp([1], {
                     }
                 }
             }),
-            shack_03b: $({
+            shack_03b: ee({
                 terrain: {
                     waterEdge: {
-                        dir: xe.create(0, 1),
+                        dir: fe.create(0, 1),
                         distMin: 4,
                         distMax: 5
                     }
@@ -81987,23 +81878,23 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(-7.75, 3), xe.create(1, 2)),
+                        collider: ye.createAabbExtents(fe.create(-7.75, 3), fe.create(1, 2)),
                         color: 6171907
                     }, {
-                        collider: ge.createAabbExtents(xe.create(5, -4.75), xe.create(2, 1)),
+                        collider: ye.createAabbExtents(fe.create(5, -4.75), fe.create(2, 1)),
                         color: 6171907
                     }, {
-                        collider: ge.createAabbExtents(xe.create(1, 1.5), xe.create(8, 5.5)),
+                        collider: ye.createAabbExtents(fe.create(1, 1.5), fe.create(8, 5.5)),
                         color: 5730406
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-10.65, 9), xe.create(2, 12)),
+                        collider: ye.createAabbExtents(fe.create(-10.65, 9), fe.create(2, 12)),
                         color: 6171907
                     }]
                 },
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(1, 1.5), xe.create(8, 5.5)), ge.createAabbExtents(xe.create(-10.65, 9), xe.create(2, 12)), ge.createAabbExtents(xe.create(-7.75, 3), xe.create(1, 2)), ge.createAabbExtents(xe.create(5, -4.75), xe.create(2, 1))]
+                        collision: [ye.createAabbExtents(fe.create(1, 1.5), fe.create(8, 5.5)), ye.createAabbExtents(fe.create(-10.65, 9), fe.create(2, 12)), ye.createAabbExtents(fe.create(-7.75, 3), fe.create(1, 2)), ye.createAabbExtents(fe.create(5, -4.75), fe.create(2, 1))]
                     }],
                     imgs: [{
                         sprite: "map-building-shack-floor-03.img",
@@ -82012,7 +81903,7 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-building-hut-floor-02.img",
-                        pos: xe.create(-10.65, 9),
+                        pos: fe.create(-10.65, 9),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
@@ -82021,14 +81912,14 @@ webpackJsonp([1], {
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-shack-ceiling-03.img",
-                        pos: xe.create(.5, .5),
+                        pos: fe.create(.5, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }]
                 }
             }),
-            shack_03x: $({
+            shack_03x: ee({
                 terrain: {
                     bridge: {
                         nearbyWidthMult: 1
@@ -82042,13 +81933,13 @@ webpackJsonp([1], {
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-shack-ceiling-03.img",
-                        pos: xe.create(.5, .5),
+                        pos: fe.create(.5, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 10461087
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(3.75, 1.75),
+                        pos: fe.create(3.75, 1.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -82056,35 +81947,35 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            outhouse_wall_top: G({
+            outhouse_wall_top: W({
                 material: "wood",
-                extents: xe.create(3.2, .35),
+                extents: fe.create(3.2, .35),
                 height: 10,
                 hitParticle: "outhouseChip",
                 explodeParticle: "outhousePlank",
                 health: 100,
                 img: m("map-wall-outhouse-top.img")
             }),
-            outhouse_wall_side: G({
+            outhouse_wall_side: W({
                 material: "wood",
-                extents: xe.create(.35, 3.1),
+                extents: fe.create(.35, 3.1),
                 height: 10,
                 hitParticle: "outhouseChip",
                 explodeParticle: "outhousePlank",
                 health: 100,
                 img: m("map-wall-outhouse-side.img")
             }),
-            outhouse_wall_bot: G({
+            outhouse_wall_bot: W({
                 material: "wood",
-                extents: xe.create(1.15, .35),
+                extents: fe.create(1.15, .35),
                 height: 10,
                 hitParticle: "outhouseChip",
                 explodeParticle: "outhousePlank",
                 health: 100,
                 img: m("map-wall-outhouse-bot.img")
             }),
-            outhouse_01: ie({}),
-            outhouse_01x: ie({
+            outhouse_01: re({}),
+            outhouse_01x: re({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-outhouse-ceiling.img",
@@ -82093,7 +81984,7 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(2.25, 0),
+                        pos: fe.create(2.25, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -82101,10 +81992,10 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            outhouse_02: ie({
+            outhouse_02: re({
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 1.45), xe.create(3.6, 3.2))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 1.4), xe.create(3.8, 3.4))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 1.45), fe.create(3.6, 3.2))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 1.4), fe.create(3.8, 3.4))],
                     imgs: [{
                         sprite: "map-building-outhouse-ceiling.img",
                         scale: .5,
@@ -82120,386 +82011,386 @@ webpackJsonp([1], {
                 },
                 obs: "toilet_02b"
             }),
-            brick_wall_ext_1: G({
+            brick_wall_ext_1: W({
                 material: "brick",
-                extents: xe.create(.5, .5)
+                extents: fe.create(.5, .5)
             }),
-            brick_wall_ext_2: G({
+            brick_wall_ext_2: W({
                 material: "brick",
-                extents: xe.create(.5, 1)
+                extents: fe.create(.5, 1)
             }),
-            brick_wall_ext_3: G({
+            brick_wall_ext_3: W({
                 material: "brick",
-                extents: xe.create(.5, 1.5)
+                extents: fe.create(.5, 1.5)
             }),
-            brick_wall_ext_4: G({
+            brick_wall_ext_4: W({
                 material: "brick",
-                extents: xe.create(.5, 2)
+                extents: fe.create(.5, 2)
             }),
-            brick_wall_ext_5: G({
+            brick_wall_ext_5: W({
                 material: "brick",
-                extents: xe.create(.5, 2.5)
+                extents: fe.create(.5, 2.5)
             }),
-            brick_wall_ext_6: G({
+            brick_wall_ext_6: W({
                 material: "brick",
-                extents: xe.create(.5, 3)
+                extents: fe.create(.5, 3)
             }),
-            brick_wall_ext_7: G({
+            brick_wall_ext_7: W({
                 material: "brick",
-                extents: xe.create(.5, 3.5)
+                extents: fe.create(.5, 3.5)
             }),
-            brick_wall_ext_8: G({
+            brick_wall_ext_8: W({
                 material: "brick",
-                extents: xe.create(.5, 4)
+                extents: fe.create(.5, 4)
             }),
-            brick_wall_ext_9: G({
+            brick_wall_ext_9: W({
                 material: "brick",
-                extents: xe.create(.5, 4.5)
+                extents: fe.create(.5, 4.5)
             }),
-            brick_wall_ext_10: G({
+            brick_wall_ext_10: W({
                 material: "brick",
-                extents: xe.create(.5, 5)
+                extents: fe.create(.5, 5)
             }),
-            brick_wall_ext_11: G({
+            brick_wall_ext_11: W({
                 material: "brick",
-                extents: xe.create(.5, 5.5)
+                extents: fe.create(.5, 5.5)
             }),
-            brick_wall_ext_12: G({
+            brick_wall_ext_12: W({
                 material: "brick",
-                extents: xe.create(.5, 6)
+                extents: fe.create(.5, 6)
             }),
-            brick_wall_ext_13: G({
+            brick_wall_ext_13: W({
                 material: "brick",
-                extents: xe.create(.5, 6.5)
+                extents: fe.create(.5, 6.5)
             }),
-            brick_wall_ext_14: G({
+            brick_wall_ext_14: W({
                 material: "brick",
-                extents: xe.create(.5, 7)
+                extents: fe.create(.5, 7)
             }),
-            brick_wall_ext_15: G({
+            brick_wall_ext_15: W({
                 material: "brick",
-                extents: xe.create(.5, 7.5)
+                extents: fe.create(.5, 7.5)
             }),
-            brick_wall_ext_16: G({
+            brick_wall_ext_16: W({
                 material: "brick",
-                extents: xe.create(.5, 8)
+                extents: fe.create(.5, 8)
             }),
-            brick_wall_ext_17: G({
+            brick_wall_ext_17: W({
                 material: "brick",
-                extents: xe.create(.5, 8.5)
+                extents: fe.create(.5, 8.5)
             }),
-            brick_wall_ext_18: G({
+            brick_wall_ext_18: W({
                 material: "brick",
-                extents: xe.create(.5, 9)
+                extents: fe.create(.5, 9)
             }),
-            brick_wall_ext_19: G({
+            brick_wall_ext_19: W({
                 material: "brick",
-                extents: xe.create(.5, 9.5)
+                extents: fe.create(.5, 9.5)
             }),
-            brick_wall_ext_20: G({
+            brick_wall_ext_20: W({
                 material: "brick",
-                extents: xe.create(.5, 10)
+                extents: fe.create(.5, 10)
             }),
-            brick_wall_ext_21: G({
+            brick_wall_ext_21: W({
                 material: "brick",
-                extents: xe.create(.5, 10.5)
+                extents: fe.create(.5, 10.5)
             }),
-            brick_wall_ext_23: G({
+            brick_wall_ext_23: W({
                 material: "brick",
-                extents: xe.create(.5, 11.5)
+                extents: fe.create(.5, 11.5)
             }),
-            brick_wall_ext_33: G({
+            brick_wall_ext_33: W({
                 material: "brick",
-                extents: xe.create(.5, 16.5)
+                extents: fe.create(.5, 16.5)
             }),
-            brick_wall_ext_41: G({
+            brick_wall_ext_41: W({
                 material: "brick",
-                extents: xe.create(.5, 20.5)
+                extents: fe.create(.5, 20.5)
             }),
-            brick_wall_ext_short_7: G({
+            brick_wall_ext_short_7: W({
                 material: "brick",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 height: .5
             }),
-            brick_wall_ext_thicker_4: G({
+            brick_wall_ext_thicker_4: W({
                 material: "brick",
-                extents: xe.create(1.5, 2)
+                extents: fe.create(1.5, 2)
             }),
-            brick_wall_ext_thicker_5: G({
+            brick_wall_ext_thicker_5: W({
                 material: "brick",
-                extents: xe.create(1.5, 2.5)
+                extents: fe.create(1.5, 2.5)
             }),
-            brick_wall_ext_thicker_6: G({
+            brick_wall_ext_thicker_6: W({
                 material: "brick",
-                extents: xe.create(1.5, 3)
+                extents: fe.create(1.5, 3)
             }),
-            brick_wall_ext_thicker_7: G({
+            brick_wall_ext_thicker_7: W({
                 material: "brick",
-                extents: xe.create(1.5, 3.5)
+                extents: fe.create(1.5, 3.5)
             }),
-            brick_wall_ext_thicker_8: G({
+            brick_wall_ext_thicker_8: W({
                 material: "brick",
-                extents: xe.create(1.5, 4)
+                extents: fe.create(1.5, 4)
             }),
-            brick_wall_ext_thicker_9: G({
+            brick_wall_ext_thicker_9: W({
                 material: "brick",
-                extents: xe.create(1.5, 4.5)
+                extents: fe.create(1.5, 4.5)
             }),
-            brick_wall_ext_thicker_15: G({
+            brick_wall_ext_thicker_15: W({
                 material: "brick",
-                extents: xe.create(1.5, 7.5)
+                extents: fe.create(1.5, 7.5)
             }),
-            brick_wall_ext_thicker_16: G({
+            brick_wall_ext_thicker_16: W({
                 material: "brick",
-                extents: xe.create(1.5, 8)
+                extents: fe.create(1.5, 8)
             }),
-            brick_wall_ext_thicker_24: G({
+            brick_wall_ext_thicker_24: W({
                 material: "brick",
-                extents: xe.create(1.5, 12)
+                extents: fe.create(1.5, 12)
             }),
-            metal_wall_ext_3: G({
+            metal_wall_ext_3: W({
                 material: "metal",
-                extents: xe.create(.5, 1.5)
+                extents: fe.create(.5, 1.5)
             }),
-            metal_wall_ext_4: G({
+            metal_wall_ext_4: W({
                 material: "metal",
-                extents: xe.create(.5, 2)
+                extents: fe.create(.5, 2)
             }),
-            metal_wall_ext_5: G({
+            metal_wall_ext_5: W({
                 material: "metal",
-                extents: xe.create(.5, 2.5)
+                extents: fe.create(.5, 2.5)
             }),
-            metal_wall_ext_6: G({
+            metal_wall_ext_6: W({
                 material: "metal",
-                extents: xe.create(.5, 3)
+                extents: fe.create(.5, 3)
             }),
-            metal_wall_ext_7: G({
+            metal_wall_ext_7: W({
                 material: "metal",
-                extents: xe.create(.5, 3.5)
+                extents: fe.create(.5, 3.5)
             }),
-            metal_wall_ext_8: G({
+            metal_wall_ext_8: W({
                 material: "metal",
-                extents: xe.create(.5, 4)
+                extents: fe.create(.5, 4)
             }),
-            metal_wall_ext_9: G({
+            metal_wall_ext_9: W({
                 material: "metal",
-                extents: xe.create(.5, 4.5)
+                extents: fe.create(.5, 4.5)
             }),
-            metal_wall_ext_10: G({
+            metal_wall_ext_10: W({
                 material: "metal",
-                extents: xe.create(.5, 5)
+                extents: fe.create(.5, 5)
             }),
-            metal_wall_ext_12: G({
+            metal_wall_ext_12: W({
                 material: "metal",
-                extents: xe.create(.5, 6)
+                extents: fe.create(.5, 6)
             }),
-            metal_wall_ext_18: G({
+            metal_wall_ext_18: W({
                 material: "metal",
-                extents: xe.create(.5, 9)
+                extents: fe.create(.5, 9)
             }),
-            metal_wall_ext_43: G({
+            metal_wall_ext_43: W({
                 material: "metal",
-                extents: xe.create(.5, 21.5)
+                extents: fe.create(.5, 21.5)
             }),
-            metal_wall_ext_short_6: G({
+            metal_wall_ext_short_6: W({
                 material: "metal",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 height: .5
             }),
-            metal_wall_ext_short_7: G({
+            metal_wall_ext_short_7: W({
                 material: "metal",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 height: .5
             }),
-            metal_wall_ext_thick_6: G({
+            metal_wall_ext_thick_6: W({
                 material: "metal",
-                extents: xe.create(1, 3)
+                extents: fe.create(1, 3)
             }),
-            metal_wall_ext_thick_20: G({
+            metal_wall_ext_thick_20: W({
                 material: "metal",
-                extents: xe.create(1, 10)
+                extents: fe.create(1, 10)
             }),
-            metal_wall_ext_thicker_4: G({
+            metal_wall_ext_thicker_4: W({
                 material: "metal",
-                extents: xe.create(1.5, 2)
+                extents: fe.create(1.5, 2)
             }),
-            metal_wall_ext_thicker_5: G({
+            metal_wall_ext_thicker_5: W({
                 material: "metal",
-                extents: xe.create(1.5, 2.5)
+                extents: fe.create(1.5, 2.5)
             }),
-            metal_wall_ext_thicker_6: G({
+            metal_wall_ext_thicker_6: W({
                 material: "metal",
-                extents: xe.create(1.5, 3)
+                extents: fe.create(1.5, 3)
             }),
-            metal_wall_ext_thicker_7: G({
+            metal_wall_ext_thicker_7: W({
                 material: "metal",
-                extents: xe.create(1.5, 3.5)
+                extents: fe.create(1.5, 3.5)
             }),
-            metal_wall_ext_thicker_8: G({
+            metal_wall_ext_thicker_8: W({
                 material: "metal",
-                extents: xe.create(1.5, 4)
+                extents: fe.create(1.5, 4)
             }),
-            metal_wall_ext_thicker_9: G({
+            metal_wall_ext_thicker_9: W({
                 material: "metal",
-                extents: xe.create(1.5, 4.5)
+                extents: fe.create(1.5, 4.5)
             }),
-            metal_wall_ext_thicker_10: G({
+            metal_wall_ext_thicker_10: W({
                 material: "metal",
-                extents: xe.create(1.5, 5)
+                extents: fe.create(1.5, 5)
             }),
-            metal_wall_ext_thicker_11: G({
+            metal_wall_ext_thicker_11: W({
                 material: "metal",
-                extents: xe.create(1.5, 5.5)
+                extents: fe.create(1.5, 5.5)
             }),
-            metal_wall_ext_thicker_12: G({
+            metal_wall_ext_thicker_12: W({
                 material: "metal",
-                extents: xe.create(1.5, 6)
+                extents: fe.create(1.5, 6)
             }),
-            metal_wall_ext_thicker_13: G({
+            metal_wall_ext_thicker_13: W({
                 material: "metal",
-                extents: xe.create(1.5, 6.5)
+                extents: fe.create(1.5, 6.5)
             }),
-            metal_wall_ext_thicker_14: G({
+            metal_wall_ext_thicker_14: W({
                 material: "metal",
-                extents: xe.create(1.5, 7)
+                extents: fe.create(1.5, 7)
             }),
-            metal_wall_ext_thicker_15: G({
+            metal_wall_ext_thicker_15: W({
                 material: "metal",
-                extents: xe.create(1.5, 7.5)
+                extents: fe.create(1.5, 7.5)
             }),
-            metal_wall_ext_thicker_16: G({
+            metal_wall_ext_thicker_16: W({
                 material: "metal",
-                extents: xe.create(1.5, 8)
+                extents: fe.create(1.5, 8)
             }),
-            metal_wall_ext_thicker_17: G({
+            metal_wall_ext_thicker_17: W({
                 material: "metal",
-                extents: xe.create(1.5, 8.5)
+                extents: fe.create(1.5, 8.5)
             }),
-            metal_wall_ext_thicker_18: G({
+            metal_wall_ext_thicker_18: W({
                 material: "metal",
-                extents: xe.create(1.5, 9)
+                extents: fe.create(1.5, 9)
             }),
-            metal_wall_ext_thicker_19: G({
+            metal_wall_ext_thicker_19: W({
                 material: "metal",
-                extents: xe.create(1.5, 9.5)
+                extents: fe.create(1.5, 9.5)
             }),
-            metal_wall_ext_thicker_20: G({
+            metal_wall_ext_thicker_20: W({
                 material: "metal",
-                extents: xe.create(1.5, 10)
+                extents: fe.create(1.5, 10)
             }),
-            metal_wall_ext_thicker_21: G({
+            metal_wall_ext_thicker_21: W({
                 material: "metal",
-                extents: xe.create(1.5, 10.5)
+                extents: fe.create(1.5, 10.5)
             }),
-            metal_wall_ext_thicker_22: G({
+            metal_wall_ext_thicker_22: W({
                 material: "metal",
-                extents: xe.create(1.5, 11)
+                extents: fe.create(1.5, 11)
             }),
-            metal_wall_ext_thicker_23: G({
+            metal_wall_ext_thicker_23: W({
                 material: "metal",
-                extents: xe.create(1.5, 11.5)
+                extents: fe.create(1.5, 11.5)
             }),
-            metal_wall_ext_thicker_24: G({
+            metal_wall_ext_thicker_24: W({
                 material: "metal",
-                extents: xe.create(1.5, 12)
+                extents: fe.create(1.5, 12)
             }),
-            metal_wall_ext_thicker_25: G({
+            metal_wall_ext_thicker_25: W({
                 material: "metal",
-                extents: xe.create(1.5, 12.5)
+                extents: fe.create(1.5, 12.5)
             }),
-            metal_wall_ext_thicker_26: G({
+            metal_wall_ext_thicker_26: W({
                 material: "metal",
-                extents: xe.create(1.5, 13)
+                extents: fe.create(1.5, 13)
             }),
-            metal_wall_ext_thicker_27: G({
+            metal_wall_ext_thicker_27: W({
                 material: "metal",
-                extents: xe.create(1.5, 13.5)
+                extents: fe.create(1.5, 13.5)
             }),
-            metal_wall_ext_thicker_28: G({
+            metal_wall_ext_thicker_28: W({
                 material: "metal",
-                extents: xe.create(1.5, 14.5)
+                extents: fe.create(1.5, 14.5)
             }),
-            metal_wall_ext_thicker_29: G({
+            metal_wall_ext_thicker_29: W({
                 material: "metal",
-                extents: xe.create(1.5, 14.5)
+                extents: fe.create(1.5, 14.5)
             }),
-            metal_wall_ext_thicker_32: G({
+            metal_wall_ext_thicker_32: W({
                 material: "metal",
-                extents: xe.create(1.5, 16)
+                extents: fe.create(1.5, 16)
             }),
-            metal_wall_ext_thicker_34: G({
+            metal_wall_ext_thicker_34: W({
                 material: "metal",
-                extents: xe.create(1.5, 17)
+                extents: fe.create(1.5, 17)
             }),
-            metal_wall_ext_thicker_35: G({
+            metal_wall_ext_thicker_35: W({
                 material: "metal",
-                extents: xe.create(1.5, 17.5)
+                extents: fe.create(1.5, 17.5)
             }),
-            metal_wall_ext_thicker_42: G({
+            metal_wall_ext_thicker_42: W({
                 material: "metal",
-                extents: xe.create(1.5, 21)
+                extents: fe.create(1.5, 21)
             }),
-            metal_wall_ext_thicker_48: G({
+            metal_wall_ext_thicker_48: W({
                 material: "metal",
-                extents: xe.create(1.5, 24)
+                extents: fe.create(1.5, 24)
             }),
-            glass_wall_10: G({
+            glass_wall_10: W({
                 material: "glass",
-                extents: xe.create(.5, 5),
+                extents: fe.create(.5, 5),
                 health: 50,
                 img: m("map-wall-glass-10.img")
             }),
-            glass_wall_12: G({
+            glass_wall_12: W({
                 material: "glass",
-                extents: xe.create(.5, 6),
+                extents: fe.create(.5, 6),
                 health: 50,
                 img: m("map-wall-glass-12.img")
             }),
-            glass_wall_12_2: G({
+            glass_wall_12_2: W({
                 material: "glass",
-                extents: xe.create(1, 6),
+                extents: fe.create(1, 6),
                 health: 5e3,
                 img: m("map-wall-glass-12-2.img")
             }),
-            concrete_wall_ext_2: G({
+            concrete_wall_ext_2: W({
                 material: "concrete",
-                extents: xe.create(.5, 1)
+                extents: fe.create(.5, 1)
             }),
-            concrete_wall_ext_5: G({
+            concrete_wall_ext_5: W({
                 material: "concrete",
-                extents: xe.create(.5, 2.5)
+                extents: fe.create(.5, 2.5)
             }),
-            concrete_wall_ext_6: G({
+            concrete_wall_ext_6: W({
                 material: "concrete",
-                extents: xe.create(.5, 3)
+                extents: fe.create(.5, 3)
             }),
-            concrete_wall_ext_7: G({
+            concrete_wall_ext_7: W({
                 material: "concrete",
-                extents: xe.create(.5, 3.5)
+                extents: fe.create(.5, 3.5)
             }),
-            concrete_wall_ext_8: G({
+            concrete_wall_ext_8: W({
                 material: "concrete",
-                extents: xe.create(.5, 4)
+                extents: fe.create(.5, 4)
             }),
-            concrete_wall_ext_11: G({
+            concrete_wall_ext_11: W({
                 material: "concrete",
-                extents: xe.create(.5, 5.5)
+                extents: fe.create(.5, 5.5)
             }),
-            concrete_wall_ext_13: G({
+            concrete_wall_ext_13: W({
                 material: "concrete",
-                extents: xe.create(.5, 6.5)
+                extents: fe.create(.5, 6.5)
             }),
-            concrete_wall_ext_15: G({
+            concrete_wall_ext_15: W({
                 material: "concrete",
-                extents: xe.create(.5, 7.5)
+                extents: fe.create(.5, 7.5)
             }),
-            concrete_wall_ext_16: G({
+            concrete_wall_ext_16: W({
                 material: "concrete",
-                extents: xe.create(.5, 8)
+                extents: fe.create(.5, 8)
             }),
-            concrete_wall_ext_17: G({
+            concrete_wall_ext_17: W({
                 material: "concrete",
-                extents: xe.create(.5, 8.5)
+                extents: fe.create(.5, 8.5)
             }),
             panicroom_01: {
                 type: "building",
@@ -82516,7 +82407,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 6))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 6))]
                     }],
                     imgs: [{
                         sprite: "map-building-panicroom-floor.img",
@@ -82526,8 +82417,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 6))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(4.5, 6))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 6))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(4.5, 6))],
                     imgs: [{
                         sprite: "map-building-panicroom-ceiling.img",
                         scale: .5,
@@ -82537,27 +82428,27 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_12",
-                    pos: xe.create(-4, 0),
+                    pos: fe.create(-4, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_3",
-                    pos: xe.create(-2, 5.5),
+                    pos: fe.create(-2, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(0, -5.5),
+                    pos: fe.create(0, -5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_12",
-                    pos: xe.create(4, 0),
+                    pos: fe.create(4, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_2",
-                    pos: xe.create(0, -.05),
+                    pos: fe.create(0, -.05),
                     scale: 1,
                     ori: 0
                 }, {
@@ -82565,97 +82456,97 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         "": 1
                     }),
-                    pos: xe.create(0, .05),
+                    pos: fe.create(0, .05),
                     scale: 1,
                     ori: 0
                 }]
             },
-            barn_wall_int_2: G({
+            barn_wall_int_2: W({
                 material: "wood",
-                extents: xe.create(.5, 1),
+                extents: fe.create(.5, 1),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-02-rounded.img", 7173701)
             }),
-            barn_wall_int_4: G({
+            barn_wall_int_4: W({
                 material: "wood",
-                extents: xe.create(.5, 2),
+                extents: fe.create(.5, 2),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-04-rounded.img", 7173701)
             }),
-            barn_wall_int_5: G({
+            barn_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-05-rounded.img", 7173701)
             }),
-            barn_wall_int_6: G({
+            barn_wall_int_6: W({
                 material: "wood",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-06-rounded.img", 7173701)
             }),
-            barn_wall_int_7: G({
+            barn_wall_int_7: W({
                 material: "wood",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-07-rounded.img", 7173701)
             }),
-            barn_wall_int_8: G({
+            barn_wall_int_8: W({
                 material: "wood",
-                extents: xe.create(.5, 4),
+                extents: fe.create(.5, 4),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-08-rounded.img", 7173701)
             }),
-            barn_wall_int_11: G({
+            barn_wall_int_11: W({
                 material: "wood",
-                extents: xe.create(.5, 5.5),
+                extents: fe.create(.5, 5.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-11-rounded.img", 7173701)
             }),
-            barn_wall_int_13: G({
+            barn_wall_int_13: W({
                 material: "wood",
-                extents: xe.create(.5, 6.5),
+                extents: fe.create(.5, 6.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-13-rounded.img", 7173701)
             }),
-            barn_column_1: G({
+            barn_column_1: W({
                 material: "concrete",
-                extents: xe.create(1, 1),
+                extents: fe.create(1, 1),
                 hitParticle: "ltgreenChip",
                 img: m("map-column-01.img", 2764060)
             }),
-            barn_01: X({}),
-            barn_01x: X({
+            barn_01: Y({}),
+            barn_01x: Y({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-barn-ceiling-01.img",
-                        pos: xe.create(0, -2),
+                        pos: fe.create(0, -2),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-barn-ceiling-02.img",
-                        pos: xe.create(0, 13.2),
+                        pos: fe.create(0, 13.2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(-14.5, 5.5),
+                        pos: fe.create(-14.5, 5.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(-.5, -9),
+                        pos: fe.create(-.5, -9),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-03.img",
-                        pos: xe.create(14.5, 5.5),
+                        pos: fe.create(14.5, 5.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -82663,74 +82554,74 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            bank_wall_int_3: G({
+            bank_wall_int_3: W({
                 material: "wood",
-                extents: xe.create(.5, 1.5),
+                extents: fe.create(.5, 1.5),
                 img: m("map-wall-03-rounded.img", 7951934)
             }),
-            bank_wall_int_4: G({
+            bank_wall_int_4: W({
                 material: "wood",
-                extents: xe.create(.5, 2),
+                extents: fe.create(.5, 2),
                 img: m("map-wall-04-rounded.img", 7951934)
             }),
-            bank_wall_int_5: G({
+            bank_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 img: m("map-wall-05-rounded.img", 7951934)
             }),
-            bank_wall_int_8: G({
+            bank_wall_int_8: W({
                 material: "wood",
-                extents: xe.create(.5, 4),
+                extents: fe.create(.5, 4),
                 img: m("map-wall-08-rounded.img", 7951934)
             }),
-            bank_01: K({}),
-            bank_01b: K({
+            bank_01: Z({}),
+            bank_01b: Z({
                 vault: "vault_01b"
             }),
-            bank_01x: K({
+            bank_01x: Z({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-bank-ceiling-01.img",
-                        pos: xe.create(-16, 7),
+                        pos: fe.create(-16, 7),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-bank-ceiling-02.img",
-                        pos: xe.create(6, 0),
+                        pos: fe.create(6, 0),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-bank-ceiling-03.img",
-                        pos: xe.create(22, 8),
+                        pos: fe.create(22, 8),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(-13, 0),
+                        pos: fe.create(-13, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(1.25, 9.25),
+                        pos: fe.create(1.25, 9.25),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(13.75, 15.25),
+                        pos: fe.create(13.75, 15.25),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(15.25, -15.75),
+                        pos: fe.create(15.25, -15.75),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
@@ -82738,10 +82629,10 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            vault_door_main: v({
+            vault_door_main: z({
                 material: "metal",
-                hinge: xe.create(1, 3.5),
-                extents: xe.create(1, 3.5),
+                hinge: fe.create(1, 3.5),
+                extents: fe.create(1, 3.5),
                 img: {
                     sprite: "map-door-02.img"
                 },
@@ -82751,7 +82642,7 @@ webpackJsonp([1], {
                     openOneWay: -1,
                     openDelay: 4.1,
                     openOnce: !0,
-                    spriteAnchor: xe.create(.2, 1),
+                    spriteAnchor: fe.create(.2, 1),
                     sound: {
                         open: "none",
                         close: "none",
@@ -82759,105 +82650,105 @@ webpackJsonp([1], {
                     }
                 }
             }),
-            vault_01: Z({}),
-            vault_01b: Z({
+            vault_01: X({}),
+            vault_01b: X({
                 gold_box: 9,
                 floor_loot: "loot_tier_stonehammer"
             }),
-            police_wall_int_2: G({
+            police_wall_int_2: W({
                 material: "wood",
-                extents: xe.create(.5, 1),
+                extents: fe.create(.5, 1),
                 img: m("map-wall-02-rounded.img", 1777447)
             }),
-            police_wall_int_3: G({
+            police_wall_int_3: W({
                 material: "wood",
-                extents: xe.create(.5, 1.5),
+                extents: fe.create(.5, 1.5),
                 img: m("map-wall-03-rounded.img", 1777447)
             }),
-            police_wall_int_4: G({
+            police_wall_int_4: W({
                 material: "wood",
-                extents: xe.create(.5, 2),
+                extents: fe.create(.5, 2),
                 img: m("map-wall-04-rounded.img", 1777447)
             }),
-            police_wall_int_6: G({
+            police_wall_int_6: W({
                 material: "wood",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 img: m("map-wall-06-rounded.img", 1777447)
             }),
-            police_wall_int_7: G({
+            police_wall_int_7: W({
                 material: "wood",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 img: m("map-wall-07-rounded.img", 1777447)
             }),
-            police_wall_int_8: G({
+            police_wall_int_8: W({
                 material: "wood",
-                extents: xe.create(.5, 4),
+                extents: fe.create(.5, 4),
                 img: m("map-wall-08-rounded.img", 1777447)
             }),
-            police_wall_int_10: G({
+            police_wall_int_10: W({
                 material: "wood",
-                extents: xe.create(.5, 5),
+                extents: fe.create(.5, 5),
                 img: m("map-wall-10-rounded.img", 1777447)
             }),
-            police_01: re({}),
-            police_01x: re({
+            police_01: oe({}),
+            police_01x: oe({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-police-ceiling-01.img",
-                        pos: xe.create(-21.5, 8.5),
+                        pos: fe.create(-21.5, 8.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-police-ceiling-02.img",
-                        pos: xe.create(10.5, 0),
+                        pos: fe.create(10.5, 0),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-police-ceiling-03.img",
-                        pos: xe.create(31.96, 12.5),
+                        pos: fe.create(31.96, 12.5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(13, 17.5),
+                        pos: fe.create(13, 17.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 3
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(-21, 14),
+                        pos: fe.create(-21, 14),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-03.img",
-                        pos: xe.create(30.25, 6.25),
+                        pos: fe.create(30.25, 6.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-07.img",
-                        pos: xe.create(4.5, -3.25),
+                        pos: fe.create(4.5, -3.25),
                         scale: .6,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-40.25, 14.75),
+                        pos: fe.create(-40.25, 14.75),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
                         rot: 3
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-38.75, .75),
+                        pos: fe.create(-38.75, .75),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
@@ -82865,56 +82756,56 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            house_wall_int_4: G({
+            house_wall_int_4: W({
                 material: "wood",
-                extents: xe.create(.5, 2),
+                extents: fe.create(.5, 2),
                 hitParticle: "tanChip",
                 img: m("map-wall-04-rounded.img", 10584424)
             }),
-            house_wall_int_5: G({
+            house_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-05-rounded.img", 10584424)
             }),
-            house_wall_int_8: G({
+            house_wall_int_8: W({
                 material: "wood",
-                extents: xe.create(.5, 4),
+                extents: fe.create(.5, 4),
                 hitParticle: "tanChip",
                 img: m("map-wall-08-rounded.img", 10584424)
             }),
-            house_wall_int_9: G({
+            house_wall_int_9: W({
                 material: "wood",
-                extents: xe.create(.5, 4.5),
+                extents: fe.create(.5, 4.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-09-rounded.img", 10584424)
             }),
-            house_wall_int_11: G({
+            house_wall_int_11: W({
                 material: "wood",
-                extents: xe.create(.5, 5.5),
+                extents: fe.create(.5, 5.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-11-rounded.img", 10584424)
             }),
-            house_wall_int_14: G({
+            house_wall_int_14: W({
                 material: "wood",
-                extents: xe.create(.5, 7),
+                extents: fe.create(.5, 7),
                 hitParticle: "tanChip",
                 img: m("map-wall-14-rounded.img", 10584424)
             }),
-            house_column_1: G({
+            house_column_1: W({
                 material: "concrete",
-                extents: xe.create(1, 1),
+                extents: fe.create(1, 1),
                 hitParticle: "tanChip",
                 img: m("map-column-01.img", 5587506)
             }),
-            house_red_01: oe({
+            house_red_01: ne({
                 stand: "stand_01"
             }),
-            house_red_01b: oe({
+            house_red_01b: ne({
                 porch_01: "cache_05",
                 stand: "stand_01"
             }),
-            house_red_01x: oe({
+            house_red_01x: ne({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-house-ceiling.img",
@@ -82923,23 +82814,23 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(-5.5, 8.5),
+                        pos: fe.create(-5.5, 8.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(4.5, -7),
+                        pos: fe.create(4.5, -7),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 }
             }),
-            house_red_02: ne({
+            house_red_02: se({
                 stand: "stand_01"
             }),
-            house_red_02x: ne({
+            house_red_02x: se({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-house-ceiling.img",
@@ -82949,14 +82840,14 @@ webpackJsonp([1], {
                         rot: 2
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(3.5, 6),
+                        pos: fe.create(3.5, 6),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(-4.5, -8),
+                        pos: fe.create(-4.5, -8),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -82964,63 +82855,63 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            cabin_wall_int_5: G({
+            cabin_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-05-rounded.img", 10584424)
             }),
-            cabin_wall_int_10: G({
+            cabin_wall_int_10: W({
                 material: "wood",
-                extents: xe.create(.5, 5),
+                extents: fe.create(.5, 5),
                 hitParticle: "tanChip",
                 img: m("map-wall-10-rounded.img", 10584424)
             }),
-            cabin_wall_int_13: G({
+            cabin_wall_int_13: W({
                 material: "wood",
-                extents: xe.create(.5, 6.5),
+                extents: fe.create(.5, 6.5),
                 hitParticle: "tanChip",
                 img: m("map-wall-13-rounded.img", 10584424)
             }),
-            cabin_01: J({}),
-            cabin_01x: J({
+            cabin_01: Q({}),
+            cabin_01x: Q({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-cabin-ceiling-01a.img",
-                        pos: xe.create(0, .5),
+                        pos: fe.create(0, .5),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-cabin-ceiling-01b.img",
-                        pos: xe.create(4, -13),
+                        pos: fe.create(4, -13),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(-13, 6),
+                        pos: fe.create(-13, 6),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(-3.5, -6.25),
+                        pos: fe.create(-3.5, -6.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-03.img",
-                        pos: xe.create(10.75, 8.25),
+                        pos: fe.create(10.75, 8.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-chimney-01.img",
-                        pos: xe.create(13, 2),
+                        pos: fe.create(13, 2),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -83028,7 +82919,7 @@ webpackJsonp([1], {
                     }]
                 }
             }),
-            cabin_02: J({
+            cabin_02: Q({
                 cabin_mount: "gun_mount_02",
                 porch_01: "cache_05"
             }),
@@ -83037,10 +82928,10 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(2.5, 0), xe.create(2.4, 10.25)),
+                        collider: ye.createAabbExtents(fe.create(2.5, 0), fe.create(2.4, 10.25)),
                         color: 8862486
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-2.45, 7.75), xe.create(2.6, 2.5)),
+                        collider: ye.createAabbExtents(fe.create(-2.45, 7.75), fe.create(2.6, 2.5)),
                         color: 8862486
                     }]
                 },
@@ -83051,23 +82942,23 @@ webpackJsonp([1], {
                         nearbyWidthMult: .75
                     }
                 },
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(2.5, -10.5), xe.create(2.5, 1.5))],
-                bridgeWaterBounds: [ge.createAabbExtents(xe.create(0, 7.75), xe.create(5.5, 3.5))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(2.5, -10.5), fe.create(2.5, 1.5))],
+                bridgeWaterBounds: [ye.createAabbExtents(fe.create(0, 7.75), fe.create(5.5, 3.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(2.5, 0), xe.create(2.4, 10.25)), ge.createAabbExtents(xe.create(-2.45, 7.75), xe.create(2.6, 2.5))]
+                        collision: [ye.createAabbExtents(fe.create(2.5, 0), fe.create(2.4, 10.25)), ye.createAabbExtents(fe.create(-2.45, 7.75), fe.create(2.6, 2.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-dock-floor-01a.img",
-                        pos: xe.create(-2.5, 7.85),
+                        pos: fe.create(-2.5, 7.85),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-dock-floor-01b.img",
-                        pos: xe.create(2.5, 0),
+                        pos: fe.create(2.5, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
@@ -83080,7 +82971,7 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bollard_01",
-                    pos: xe.create(-4.25, 7.75),
+                    pos: fe.create(-4.25, 7.75),
                     scale: .8,
                     ori: 2
                 }, {
@@ -83088,74 +82979,74 @@ webpackJsonp([1], {
                         barrel_01: 1,
                         crate_01: 1
                     }),
-                    pos: xe.create(3, 8.25),
+                    pos: fe.create(3, 8.25),
                     scale: .75,
                     ori: 0
                 }]
             },
-            mansion_wall_int_1: G({
+            mansion_wall_int_1: W({
                 material: "wood",
-                extents: xe.create(.5, .5),
+                extents: fe.create(.5, .5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-01-rounded.img", 16768917)
             }),
-            mansion_wall_int_5: G({
+            mansion_wall_int_5: W({
                 material: "wood",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-05-rounded.img", 16768917)
             }),
-            mansion_wall_int_6: G({
+            mansion_wall_int_6: W({
                 material: "wood",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-06-rounded.img", 16768917)
             }),
-            mansion_wall_int_7: G({
+            mansion_wall_int_7: W({
                 material: "wood",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-07-rounded.img", 16768917)
             }),
-            mansion_wall_int_8: G({
+            mansion_wall_int_8: W({
                 material: "wood",
-                extents: xe.create(.5, 4),
+                extents: fe.create(.5, 4),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-08-rounded.img", 16768917)
             }),
-            mansion_wall_int_9: G({
+            mansion_wall_int_9: W({
                 material: "wood",
-                extents: xe.create(.5, 4.5),
+                extents: fe.create(.5, 4.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-09-rounded.img", 16768917)
             }),
-            mansion_wall_int_10: G({
+            mansion_wall_int_10: W({
                 material: "wood",
-                extents: xe.create(.5, 5),
+                extents: fe.create(.5, 5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-10-rounded.img", 16768917)
             }),
-            mansion_wall_int_11: G({
+            mansion_wall_int_11: W({
                 material: "wood",
-                extents: xe.create(.5, 5.5),
+                extents: fe.create(.5, 5.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-11-rounded.img", 16768917)
             }),
-            mansion_wall_int_12: G({
+            mansion_wall_int_12: W({
                 material: "wood",
-                extents: xe.create(.5, 6),
+                extents: fe.create(.5, 6),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-12-rounded.img", 16768917)
             }),
-            mansion_wall_int_13: G({
+            mansion_wall_int_13: W({
                 material: "wood",
-                extents: xe.create(.5, 6.5),
+                extents: fe.create(.5, 6.5),
                 hitParticle: "ltgreenChip",
                 img: m("map-wall-13-rounded.img", 16768917)
             }),
-            mansion_column_1: G({
+            mansion_column_1: W({
                 material: "concrete",
-                extents: xe.create(1, 1),
+                extents: fe.create(1, 1),
                 hitParticle: "tanChip",
                 img: m("map-column-01.img", 7432016)
             }),
@@ -83174,7 +83065,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(6, 4))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(6, 4))]
                     }],
                     imgs: [{
                         sprite: "map-building-saferoom-floor.img",
@@ -83184,8 +83075,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 3))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 3))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 3))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 3))],
                     imgs: [{
                         sprite: "map-building-saferoom-ceiling.img",
                         scale: .5,
@@ -83195,22 +83086,22 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_7",
-                    pos: xe.create(-5, 0),
+                    pos: fe.create(-5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_6",
-                    pos: xe.create(1.5, 3),
+                    pos: fe.create(1.5, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_9",
-                    pos: xe.create(0, -3),
+                    pos: fe.create(0, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(5, 0),
+                    pos: fe.create(5, 0),
                     scale: 1,
                     ori: 0
                 }, {
@@ -83219,13 +83110,13 @@ webpackJsonp([1], {
                         case_02: .025,
                         chest_02: 1
                     }),
-                    pos: xe.create(2.5, 0),
+                    pos: fe.create(2.5, 0),
                     scale: 1,
                     ori: 3
                 }]
             },
-            mansion_01: te({}),
-            mansion_01x: te({
+            mansion_01: ae({}),
+            mansion_01x: ae({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-mansion-ceiling.img",
@@ -83234,49 +83125,49 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-01.img",
-                        pos: xe.create(6, 19.5),
+                        pos: fe.create(6, 19.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-02.img",
-                        pos: xe.create(-16, 8),
+                        pos: fe.create(-16, 8),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-03.img",
-                        pos: xe.create(20.25, -1.75),
+                        pos: fe.create(20.25, -1.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-04.img",
-                        pos: xe.create(10.25, -13.25),
+                        pos: fe.create(10.25, -13.25),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-05.img",
-                        pos: xe.create(10.25, 6.25),
+                        pos: fe.create(10.25, 6.25),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-07.img",
-                        pos: xe.create(-21.25, -20.25),
+                        pos: fe.create(-21.25, -20.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-29.75, 13.25),
+                        pos: fe.create(-29.75, 13.25),
                         scale: .75,
                         alpha: 1,
                         tint: 16777215,
@@ -83288,14 +83179,14 @@ webpackJsonp([1], {
                 tree_loot: "loot_tier_1",
                 bush_chance: 999
             }),
-            mansion_02: te({
+            mansion_02: ae({
                 decoration_01: "decal_web_01",
                 decoration_02: "candle_lit_01",
                 porch_01: "cache_05",
                 entry_loot: ""
             }),
-            mansion_cellar_01: ae({}),
-            mansion_cellar_02: ae({
+            mansion_cellar_01: ie({}),
+            mansion_cellar_02: ie({
                 decoration_01: "decal_web_01",
                 decoration_02: "candle_lit_01",
                 mid_obs_01: "pumpkin_01"
@@ -83308,22 +83199,22 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "mansion_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "mansion_cellar_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(28, 1.5), xe.create(3, 2.55)),
-                    downDir: xe.create(-1, 0),
+                    collision: ye.createAabbExtents(fe.create(28, 1.5), fe.create(3, 2.55)),
+                    downDir: fe.create(-1, 0),
                     noCeilingReveal: !0
                 }, {
-                    collision: ge.createAabbExtents(xe.create(1, 13.5), xe.create(2, 3.5)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(1, 13.5), fe.create(2, 3.5)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(10, -.1), xe.create(15, 10.1)), ge.createAabbExtents(xe.create(17.5, 13.5), xe.create(7.49, 3.49))]
+                mask: [ye.createAabbExtents(fe.create(10, -.1), fe.create(15, 10.1)), ye.createAabbExtents(fe.create(17.5, 13.5), fe.create(7.49, 3.49))]
             },
             mansion_structure_02: {
                 type: "structure",
@@ -83333,31 +83224,31 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "mansion_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "mansion_cellar_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(28, 1.5), xe.create(3, 2.55)),
-                    downDir: xe.create(-1, 0),
+                    collision: ye.createAabbExtents(fe.create(28, 1.5), fe.create(3, 2.55)),
+                    downDir: fe.create(-1, 0),
                     noCeilingReveal: !0
                 }, {
-                    collision: ge.createAabbExtents(xe.create(1, 13.5), xe.create(2, 3.5)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(1, 13.5), fe.create(2, 3.5)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(10, -.1), xe.create(15, 10.1)), ge.createAabbExtents(xe.create(17.5, 13.5), xe.create(7.49, 3.49))]
+                mask: [ye.createAabbExtents(fe.create(10, -.1), fe.create(15, 10.1)), ye.createAabbExtents(fe.create(17.5, 13.5), fe.create(7.49, 3.49))]
             },
-            saloon_column_1: G({
+            saloon_column_1: W({
                 material: "woodPerm",
-                extents: xe.create(1, 1),
+                extents: fe.create(1, 1),
                 hitParticle: "blackChip",
                 img: m("map-column-01.img", 1710618)
             }),
-            saloon_bar_small: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 5)),
+            saloon_bar_small: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 5)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -83366,8 +83257,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            saloon_bar_large: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 7.5)),
+            saloon_bar_large: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 7.5)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -83376,8 +83267,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            saloon_bar_back_large: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.75, 5)),
+            saloon_bar_back_large: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.75, 5)),
                 img: {
                     sprite: "map-saloon-bar-01.img",
                     scale: .5,
@@ -83386,8 +83277,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            saloon_bar_back_small: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.75, 1.5)),
+            saloon_bar_back_small: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.75, 1.5)),
                 img: {
                     sprite: "map-saloon-bar-02.img",
                     scale: .5,
@@ -83396,12 +83287,12 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            saloon_door_secret: v({
+            saloon_door_secret: z({
                 destructible: !1,
                 material: "wood",
                 hitParticle: "woodChip",
-                hinge: xe.create(0, 2),
-                extents: xe.create(.75, 2),
+                hinge: fe.create(0, 2),
+                extents: fe.create(.75, 2),
                 door: {
                     canUse: !1,
                     openOnce: !0,
@@ -83423,74 +83314,74 @@ webpackJsonp([1], {
                     zIdx: 9
                 }
             }),
-            wood_perm_wall_ext_5: G({
+            wood_perm_wall_ext_5: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 2.5),
+                extents: fe.create(.5, 2.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_6: G({
+            wood_perm_wall_ext_6: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 3),
+                extents: fe.create(.5, 3),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_7: G({
+            wood_perm_wall_ext_7: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 3.5),
+                extents: fe.create(.5, 3.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_14: G({
+            wood_perm_wall_ext_14: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 7),
+                extents: fe.create(.5, 7),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_17: G({
+            wood_perm_wall_ext_17: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 8.5),
+                extents: fe.create(.5, 8.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_35: G({
+            wood_perm_wall_ext_35: W({
                 material: "woodPerm",
-                extents: xe.create(.5, 17.5),
+                extents: fe.create(.5, 17.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_6: G({
+            wood_perm_wall_ext_thicker_6: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 3),
+                extents: fe.create(1.5, 3),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_7: G({
+            wood_perm_wall_ext_thicker_7: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 3.5),
+                extents: fe.create(1.5, 3.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_8: G({
+            wood_perm_wall_ext_thicker_8: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 4),
+                extents: fe.create(1.5, 4),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_10: G({
+            wood_perm_wall_ext_thicker_10: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 5),
+                extents: fe.create(1.5, 5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_12: G({
+            wood_perm_wall_ext_thicker_12: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 6),
+                extents: fe.create(1.5, 6),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_13: G({
+            wood_perm_wall_ext_thicker_13: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 6.5),
+                extents: fe.create(1.5, 6.5),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_18: G({
+            wood_perm_wall_ext_thicker_18: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 9),
+                extents: fe.create(1.5, 9),
                 hitParticle: "blackChip"
             }),
-            wood_perm_wall_ext_thicker_21: G({
+            wood_perm_wall_ext_thicker_21: W({
                 material: "woodPerm",
-                extents: xe.create(1.5, 10.5),
+                extents: fe.create(1.5, 10.5),
                 hitParticle: "blackChip"
             }),
             saloon_01: {
@@ -83498,16 +83389,16 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(20.5, 20.5)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(20.5, 20.5)),
                         color: 5252110
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-1, 1), xe.create(19, 19)),
+                        collider: ye.createAabbExtents(fe.create(-1, 1), fe.create(19, 19)),
                         color: 4337194
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-3, 3), xe.create(17, 17)),
+                        collider: ye.createAabbExtents(fe.create(-3, 3), fe.create(17, 17)),
                         color: 2499104
                     }, {
-                        collider: ge.createAabbExtents(xe.create(-23.5, 1), xe.create(3, 2)),
+                        collider: ye.createAabbExtents(fe.create(-23.5, 1), fe.create(3, 2)),
                         color: 3485483
                     }]
                 },
@@ -83515,12 +83406,12 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(22.5, 22.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(22.5, 22.5))],
                 zIdx: 1,
                 floor: {
                     surfaces: [{
                         type: "house",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(20.5, 20.5)), ge.createAabbExtents(xe.create(-23.5, 1), xe.create(3, 2))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(20.5, 20.5)), ye.createAabbExtents(fe.create(-23.5, 1), fe.create(3, 2))]
                     }],
                     imgs: [{
                         sprite: "map-building-saloon-floor-01.img",
@@ -83529,15 +83420,15 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-building-saloon-ceiling-02.img",
-                        pos: xe.create(-23.5, 1),
+                        pos: fe.create(-23.5, 1),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-1, 1), xe.create(19, 19))],
-                    scopeOut: [ge.createAabbExtents(xe.create(1, -1), xe.create(21.5, 21.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-1, 1), fe.create(19, 19))],
+                    scopeOut: [ye.createAabbExtents(fe.create(1, -1), fe.create(21.5, 21.5))],
                     vision: {
                         dist: 5.5,
                         width: 2.75,
@@ -83549,19 +83440,19 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-saloon-ceiling-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-building-saloon-ceiling-02.img",
-                        pos: xe.create(-23.5, 1),
+                        pos: fe.create(-23.5, 1),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-chimney-01.img",
-                        pos: xe.create(-3, 3),
+                        pos: fe.create(-3, 3),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -83570,7 +83461,7 @@ webpackJsonp([1], {
                 },
                 occupiedEmitters: [{
                     type: "cabin_smoke_parent",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     rot: 0,
                     scale: 1,
                     layer: 0,
@@ -83594,216 +83485,216 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "wood_perm_wall_ext_17",
-                    pos: xe.create(-20, 11),
+                    pos: fe.create(-20, 11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_5",
-                    pos: xe.create(-23, 3),
+                    pos: fe.create(-23, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_5",
-                    pos: xe.create(-26, 1),
+                    pos: fe.create(-26, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_5",
-                    pos: xe.create(-22, 1),
+                    pos: fe.create(-22, 1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_5",
-                    pos: xe.create(-23, -1),
+                    pos: fe.create(-23, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_14",
-                    pos: xe.create(-20, -7.5),
+                    pos: fe.create(-20, -7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_35",
-                    pos: xe.create(-3, 20),
+                    pos: fe.create(-3, 20),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_6",
-                    pos: xe.create(-16.5, -14),
+                    pos: fe.create(-16.5, -14),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-12, -14.25),
+                    pos: fe.create(-12, -14.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_7",
-                    pos: xe.create(-7, -14),
+                    pos: fe.create(-7, -14),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(-2, -14.25),
+                    pos: fe.create(-2, -14.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_7",
-                    pos: xe.create(3, -14),
+                    pos: fe.create(3, -14),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_6",
-                    pos: xe.create(14, 16.5),
+                    pos: fe.create(14, 16.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.25, 12),
+                    pos: fe.create(14.25, 12),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_7",
-                    pos: xe.create(14, 7),
+                    pos: fe.create(14, 7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_window_01",
-                    pos: xe.create(14.25, 2),
+                    pos: fe.create(14.25, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_7",
-                    pos: xe.create(14, -3),
+                    pos: fe.create(14, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "saloon_bar_back_large",
-                    pos: xe.create(-18.75, 7.5),
+                    pos: fe.create(-18.75, 7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "saloon_door_secret",
-                    pos: xe.create(-18.75, 2.5),
+                    pos: fe.create(-18.75, 2.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "saloon_bar_back_small",
-                    pos: xe.create(-18.75, -2),
+                    pos: fe.create(-18.75, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 11.25),
+                    pos: fe.create(-18.75, 11.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 10),
+                    pos: fe.create(-18.75, 10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 9),
+                    pos: fe.create(-18.75, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 6),
+                    pos: fe.create(-18.75, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 5),
+                    pos: fe.create(-18.75, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-18.75, 3.75),
+                    pos: fe.create(-18.75, 3.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_02v",
-                    pos: xe.create(-18.75, -1.75),
+                    pos: fe.create(-18.75, -1.75),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "violet"
                 }, {
                     type: "saloon_bar_large",
-                    pos: xe.create(-11, 5),
+                    pos: fe.create(-11, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "saloon_bar_small",
-                    pos: xe.create(-14.5, -4),
+                    pos: fe.create(-14.5, -4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-10.75, 11),
+                    pos: fe.create(-10.75, 11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_02r",
-                    pos: xe.create(-11, 8),
+                    pos: fe.create(-11, 8),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "red"
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-11, 6.25),
+                    pos: fe.create(-11, 6.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-10.75, 5),
+                    pos: fe.create(-10.75, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-11, 1.5),
+                    pos: fe.create(-11, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-10.75, -1),
+                    pos: fe.create(-10.75, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_02b",
-                    pos: xe.create(-11, -2.5),
+                    pos: fe.create(-11, -2.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "blue"
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-13, -4),
+                    pos: fe.create(-13, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-15, -4.25),
+                    pos: fe.create(-15, -4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_01",
-                    pos: xe.create(-16.5, -4),
+                    pos: fe.create(-16.5, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(-17.5, 17.5),
+                    pos: fe.create(-17.5, 17.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "barrel"
                 }, {
                     type: "piano_01",
-                    pos: xe.create(-18, -9.5),
+                    pos: fe.create(-18, -9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_1",
-                    pos: xe.create(-16, -9.5),
+                    pos: fe.create(-16, -9.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -83811,108 +83702,108 @@ webpackJsonp([1], {
                         gun_mount_01: 100,
                         gun_mount_02: 10
                     }),
-                    pos: xe.create(-.5, 18.75),
+                    pos: fe.create(-.5, 18.75),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "gun"
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(-3, -7),
+                    pos: fe.create(-3, -7),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(-.5, -4.5),
+                    pos: fe.create(-.5, -4.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "stove_02",
-                    pos: xe.create(-3, 3),
+                    pos: fe.create(-3, 3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_02g",
-                    pos: xe.create(7.25, 10.5),
+                    pos: fe.create(7.25, 10.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "green"
                 }, {
                     type: "table_03",
-                    pos: xe.create(7.25, 10.5),
+                    pos: fe.create(7.25, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "table_03",
-                    pos: xe.create(7.25, .5),
+                    pos: fe.create(7.25, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bottle_02i",
-                    pos: xe.create(12.5, 4.5),
+                    pos: fe.create(12.5, 4.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "indigo"
                 }, {
                     type: "crate_01",
-                    pos: xe.create(11, 17),
+                    pos: fe.create(11, 17),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "bottle_02y",
-                    pos: xe.create(8, 18.5),
+                    pos: fe.create(8, 18.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "yellow"
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-23, 11.5),
+                    pos: fe.create(-23, 11.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "bush_01",
-                    pos: xe.create(-23.5, 7),
+                    pos: fe.create(-23.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-23, -5),
+                    pos: fe.create(-23, -5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "saloon_column_1",
-                    pos: xe.create(-19.5, -17.5),
+                    pos: fe.create(-19.5, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(-10, -16.5),
+                    pos: fe.create(-10, -16.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "bottle_02o",
-                    pos: xe.create(3.75, -17.5),
+                    pos: fe.create(3.75, -17.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "orange"
                 }, {
                     type: "saloon_column_1",
-                    pos: xe.create(5.5, -17.5),
+                    pos: fe.create(5.5, -17.5),
                     scale: 1,
                     ori: 0,
                     puzzlePiece: "column"
                 }, {
                     type: "saloon_column_1",
-                    pos: xe.create(17.5, 19.5),
+                    pos: fe.create(17.5, 19.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_02",
-                    pos: xe.create(16.5, 9),
+                    pos: fe.create(16.5, 9),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "saloon_column_1",
-                    pos: xe.create(17.5, -5.5),
+                    pos: fe.create(17.5, -5.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -83932,22 +83823,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "brick",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(15, 9))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(15, 9))]
                     }],
                     imgs: [{
                         sprite: "map-building-saloon-cellar-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(15, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(15, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(15, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(15, 9))],
                     imgs: [{
                         sprite: "",
-                        pos: xe.create(-2, 3.5),
+                        pos: fe.create(-2, 3.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -83959,92 +83850,92 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "wood_perm_wall_ext_thicker_18",
-                    pos: xe.create(-8, 10),
+                    pos: fe.create(-8, 10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_5",
-                    pos: xe.create(1.5, 7),
+                    pos: fe.create(1.5, 7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_12",
-                    pos: xe.create(-4.5, 4),
+                    pos: fe.create(-4.5, 4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_thicker_13",
-                    pos: xe.create(-16, 2),
+                    pos: fe.create(-16, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_8",
-                    pos: xe.create(-13.5, -6),
+                    pos: fe.create(-13.5, -6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_thicker_7",
-                    pos: xe.create(-8, -8),
+                    pos: fe.create(-8, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_13",
-                    pos: xe.create(0, -10),
+                    pos: fe.create(0, -10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_thicker_7",
-                    pos: xe.create(8, -8),
+                    pos: fe.create(8, -8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_8",
-                    pos: xe.create(13.5, -6),
+                    pos: fe.create(13.5, -6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_thicker_13",
-                    pos: xe.create(16, 2),
+                    pos: fe.create(16, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_10",
-                    pos: xe.create(12.5, 10),
+                    pos: fe.create(12.5, 10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "wood_perm_wall_ext_thicker_6",
-                    pos: xe.create(9, 5.5),
+                    pos: fe.create(9, 5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "wood_perm_wall_ext_thicker_21",
-                    pos: xe.create(0, 1),
+                    pos: fe.create(0, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_vector45",
-                    pos: xe.create(0, -4),
+                    pos: fe.create(0, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_04",
-                    pos: xe.create(-3, -8.03),
+                    pos: fe.create(-3, -8.03),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "barrel_04",
-                    pos: xe.create(0, -8.03),
+                    pos: fe.create(0, -8.03),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "barrel_04",
-                    pos: xe.create(3, -8.03),
+                    pos: fe.create(3, -8.03),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "recorder_04",
-                    pos: xe.create(12.5, 6.5),
+                    pos: fe.create(12.5, 6.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -84057,18 +83948,18 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "saloon_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "saloon_cellar_01",
-                    pos: xe.create(-19, -6),
+                    pos: fe.create(-19, -6),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(-19.5, .75), xe.create(1.5, 2)),
-                    downDir: xe.create(-1, 0)
+                    collision: ye.createAabbExtents(fe.create(-19.5, .75), fe.create(1.5, 2)),
+                    downDir: fe.create(-1, 0)
                 }],
-                mask: [ge.createAabbExtents(xe.create(-30, .75), xe.create(10, 5))]
+                mask: [ye.createAabbExtents(fe.create(-30, .75), fe.create(10, 5))]
             },
             bunker_egg_01: {
                 type: "building",
@@ -84085,19 +83976,19 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 7.75), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 7.75), fe.create(2, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-generic-floor-01.img",
-                        pos: xe.create(0, 7.5),
+                        pos: fe.create(0, 7.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                     vision: {
                         dist: 5,
                         width: 2.75,
@@ -84108,53 +83999,53 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(0, 5.3),
+                    pos: fe.create(0, 5.3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(-2.5, 8.5),
+                    pos: fe.create(-2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(2.5, 8.5),
+                    pos: fe.create(2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(5, 8),
+                    pos: fe.create(5, 8),
                     scale: 1.05,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-5, 7.5),
+                    pos: fe.create(-5, 7.5),
                     scale: 1.1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-1.25, 15.75),
+                    pos: fe.create(-1.25, 15.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_01",
-                    pos: xe.create(-5, -0),
+                    pos: fe.create(-5, -0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stone_01",
-                    pos: xe.create(-5.75, -1.5),
+                    pos: fe.create(-5.75, -1.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "decal_vent_02",
-                    pos: xe.create(4.5, -8.5),
+                    pos: fe.create(4.5, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bush_01",
-                    pos: xe.create(5.75, -6.75),
+                    pos: fe.create(5.75, -6.75),
                     scale: 1,
                     ori: 0
                 }]
@@ -84174,25 +84065,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))]
+                        collision: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-egg-chamber-floor-01a.img",
-                        pos: xe.create(-.15, -4.6),
+                        pos: fe.create(-.15, -4.6),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-egg-chamber-floor-01b.img",
-                        pos: xe.create(0, 9.25),
+                        pos: fe.create(0, 9.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))],
                     imgs: [{
                         sprite: "map-bunker-egg-chamber-ceiling-01.img",
                         scale: 1,
@@ -84206,58 +84097,58 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(0, 11.5),
+                    pos: fe.create(0, 11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-3.5, 8),
+                    pos: fe.create(-3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(3.5, 8),
+                    pos: fe.create(3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-7, 5.5),
+                    pos: fe.create(-7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(7, 5.5),
+                    pos: fe.create(7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(-10.5, -3),
+                    pos: fe.create(-10.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(10.5, -3),
+                    pos: fe.create(10.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_24",
-                    pos: xe.create(0, -14.5),
+                    pos: fe.create(0, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-2, 5),
+                    pos: fe.create(-2, 5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_07",
-                    pos: xe.create(0, -4.5),
+                    pos: fe.create(0, -4.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7, -11),
+                    pos: fe.create(-7, -11),
                     scale: .9,
                     ori: 0
                 }]
@@ -84277,25 +84168,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))]
+                        collision: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-egg-chamber-floor-01a.img",
-                        pos: xe.create(-.15, -4.6),
+                        pos: fe.create(-.15, -4.6),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-egg-chamber-floor-01b.img",
-                        pos: xe.create(0, 9.25),
+                        pos: fe.create(0, 9.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, -4.5), xe.create(10, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, -4.5), fe.create(10, 9))],
                     imgs: [{
                         sprite: "map-bunker-egg-chamber-ceiling-01.img",
                         scale: 1,
@@ -84309,58 +84200,58 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(0, 11.5),
+                    pos: fe.create(0, 11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-3.5, 8),
+                    pos: fe.create(-3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(3.5, 8),
+                    pos: fe.create(3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-7, 5.5),
+                    pos: fe.create(-7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(7, 5.5),
+                    pos: fe.create(7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(-10.5, -3),
+                    pos: fe.create(-10.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(10.5, -3),
+                    pos: fe.create(10.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_24",
-                    pos: xe.create(0, -14.5),
+                    pos: fe.create(0, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-2, 5),
+                    pos: fe.create(-2, 5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_07b",
-                    pos: xe.create(0, -4.5),
+                    pos: fe.create(0, -4.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7, -11),
+                    pos: fe.create(-7, -11),
                     scale: .9,
                     ori: 0
                 }]
@@ -84371,21 +84262,21 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 5), xe.create(7.5, 12.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 5), fe.create(7.5, 12.5))],
                 layers: [{
                     type: "bunker_egg_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_egg_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 8.4), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 8.4), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, -3.7), xe.create(10, 9.5))]
+                mask: [ye.createAabbExtents(fe.create(0, -3.7), fe.create(10, 9.5))]
             },
             bunker_structure_01b: {
                 type: "structure",
@@ -84393,31 +84284,31 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 5), xe.create(7.5, 12.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 5), fe.create(7.5, 12.5))],
                 layers: [{
                     type: "bunker_egg_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_egg_sublevel_02",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 8.4), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 8.4), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, -3.7), xe.create(10, 9.5))]
+                mask: [ye.createAabbExtents(fe.create(0, -3.7), fe.create(10, 9.5))]
             },
             bunker_hydra_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(20.25, 3.5), xe.create(6.25, 5.5)),
+                        collider: ye.createAabbExtents(fe.create(20.25, 3.5), fe.create(6.25, 5.5)),
                         color: 2894892
                     }, {
-                        collider: ge.createAabbExtents(xe.create(32.25, 3.5), xe.create(6.75, 9.25)),
+                        collider: ye.createAabbExtents(fe.create(32.25, 3.5), fe.create(6.75, 9.25)),
                         color: 3815994
                     }]
                 },
@@ -84429,38 +84320,38 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(20.25, 3.5), xe.create(6.25, 5.5)), ge.createAabbExtents(xe.create(32.25, 3.5), xe.create(6.75, 9.25))]
+                        collision: [ye.createAabbExtents(fe.create(20.25, 3.5), fe.create(6.25, 5.5)), ye.createAabbExtents(fe.create(32.25, 3.5), fe.create(6.75, 9.25))]
                     }, {
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(16.25, 3.5), xe.create(3.25, 2)), ge.createAabbExtents(xe.create(-16.5, -90.75), xe.create(2, 3.25)), ge.createAabbExtents(xe.create(40, -50.5), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(16.25, 3.5), fe.create(3.25, 2)), ye.createAabbExtents(fe.create(-16.5, -90.75), fe.create(2, 3.25)), ye.createAabbExtents(fe.create(40, -50.5), fe.create(2, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hydra-floor-01.img",
-                        pos: xe.create(25.75, 3.5),
+                        pos: fe.create(25.75, 3.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-generic-floor-01.img",
-                        pos: xe.create(-16.5, -90),
+                        pos: fe.create(-16.5, -90),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-bunker-generic-floor-01.img",
-                        pos: xe.create(40, -51),
+                        pos: fe.create(40, -51),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(19.25, 3.5), xe.create(6.25, 5.5)), ge.createAabbExtents(xe.create(32.25, 3.5), xe.create(6.75, 9.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(19.25, 3.5), xe.create(6.25, 5.5)), ge.createAabbExtents(xe.create(32.25, 3.5), xe.create(6.75, 9.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(19.25, 3.5), fe.create(6.25, 5.5)), ye.createAabbExtents(fe.create(32.25, 3.5), fe.create(6.75, 9.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(19.25, 3.5), fe.create(6.25, 5.5)), ye.createAabbExtents(fe.create(32.25, 3.5), fe.create(6.75, 9.25))],
                     imgs: [{
                         sprite: "map-bunker-hydra-ceiling-01.img",
-                        pos: xe.create(25.75, 3.5),
+                        pos: fe.create(25.75, 3.5),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
@@ -84474,67 +84365,67 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_13",
-                    pos: xe.create(18.75, 9.5),
+                    pos: fe.create(18.75, 9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_13",
-                    pos: xe.create(18.75, -2.5),
+                    pos: fe.create(18.75, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_11",
-                    pos: xe.create(12.75, 3.5),
+                    pos: fe.create(12.75, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_7",
-                    pos: xe.create(25.75, 9),
+                    pos: fe.create(25.75, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_7",
-                    pos: xe.create(25.75, -2),
+                    pos: fe.create(25.75, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_2",
-                    pos: xe.create(26.25, 12.5),
+                    pos: fe.create(26.25, 12.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_2",
-                    pos: xe.create(26.25, -5.5),
+                    pos: fe.create(26.25, -5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_8",
-                    pos: xe.create(35.25, 12.5),
+                    pos: fe.create(35.25, 12.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_8",
-                    pos: xe.create(35.25, -5.5),
+                    pos: fe.create(35.25, -5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "concrete_wall_ext_17",
-                    pos: xe.create(38.75, 3.5),
+                    pos: fe.create(38.75, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_7",
-                    pos: xe.create(32.75, 8.5),
+                    pos: fe.create(32.75, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "police_wall_int_2",
-                    pos: xe.create(33.25, 4.5),
+                    pos: fe.create(33.25, 4.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_01",
-                    pos: xe.create(38.25, 4.5),
+                    pos: fe.create(38.25, 4.5),
                     scale: 1,
                     ori: 1
                 }, {
@@ -84542,112 +84433,112 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(35.75, 10.5),
+                    pos: fe.create(35.75, 10.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_08",
-                    pos: xe.create(35.75, -2.5),
+                    pos: fe.create(35.75, -2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(13, 3.5),
+                    pos: fe.create(13, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(17, 6),
+                    pos: fe.create(17, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(17, 1),
+                    pos: fe.create(17, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "decal_vent_01",
-                    pos: xe.create(-1.5, 8),
+                    pos: fe.create(-1.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_02",
-                    pos: xe.create(8, -.5),
+                    pos: fe.create(8, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(-16.5, -87.75),
+                    pos: fe.create(-16.5, -87.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(-19, -91),
+                    pos: fe.create(-19, -91),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(-14, -91),
+                    pos: fe.create(-14, -91),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_01",
-                    pos: xe.create(-15.15, -79.55),
+                    pos: fe.create(-15.15, -79.55),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(40, -53.25),
+                    pos: fe.create(40, -53.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(37.5, -50),
+                    pos: fe.create(37.5, -50),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(42.5, -50),
+                    pos: fe.create(42.5, -50),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_02",
-                    pos: xe.create(40, -60.5),
+                    pos: fe.create(40, -60.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-11.5, -92),
+                    pos: fe.create(-11.5, -92),
                     scale: 1.05,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-21.5, -92.5),
+                    pos: fe.create(-21.5, -92.5),
                     scale: 1.1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(-17.5, -83.25),
+                    pos: fe.create(-17.5, -83.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(45, -50),
+                    pos: fe.create(45, -50),
                     scale: 1.05,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(35, -50.5),
+                    pos: fe.create(35, -50.5),
                     scale: 1.1,
                     ori: 0
                 }, {
                     type: "tree_01",
-                    pos: xe.create(38.75, -42.25),
+                    pos: fe.create(38.75, -42.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_hydra_01",
-                    pos: xe.create(3.5, -48.5),
+                    pos: fe.create(3.5, -48.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
@@ -84668,55 +84559,55 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(3.5, 3), xe.create(9.5, 9))]
+                        collision: [ye.createAabbExtents(fe.create(3.5, 3), fe.create(9.5, 9))]
                     }, {
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(-15.5, -79.5), xe.create(3, 8)), ge.createAabbExtents(xe.create(40.5, -62), xe.create(9.5, 8))]
+                        collision: [ye.createAabbExtents(fe.create(-15.5, -79.5), fe.create(3, 8)), ye.createAabbExtents(fe.create(40.5, -62), fe.create(9.5, 8))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hydra-chamber-floor-01a.img",
-                        pos: xe.create(17.5, 3.5),
+                        pos: fe.create(17.5, 3.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hydra-chamber-floor-01b.img",
-                        pos: xe.create(3.5, 2.5),
+                        pos: fe.create(3.5, 2.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hydra-chamber-floor-02.img",
-                        pos: xe.create(-15.5, -83),
+                        pos: fe.create(-15.5, -83),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hydra-chamber-floor-03.img",
-                        pos: xe.create(40.5, -58.5),
+                        pos: fe.create(40.5, -58.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(3.5, 2.25), xe.create(10, 10)), ge.createAabbExtents(xe.create(-15, -77), xe.create(5.5, 10.5)), ge.createAabbExtents(xe.create(38, -62), xe.create(11.5, 8))],
-                    scopeOut: [ge.createAabbExtents(xe.create(3.5, 2.25), xe.create(10, 10)), ge.createAabbExtents(xe.create(-15, -77), xe.create(5.5, 10.5)), ge.createAabbExtents(xe.create(38, -62), xe.create(11.5, 8))],
+                    scopeIn: [ye.createAabbExtents(fe.create(3.5, 2.25), fe.create(10, 10)), ye.createAabbExtents(fe.create(-15, -77), fe.create(5.5, 10.5)), ye.createAabbExtents(fe.create(38, -62), fe.create(11.5, 8))],
+                    scopeOut: [ye.createAabbExtents(fe.create(3.5, 2.25), fe.create(10, 10)), ye.createAabbExtents(fe.create(-15, -77), fe.create(5.5, 10.5)), ye.createAabbExtents(fe.create(38, -62), fe.create(11.5, 8))],
                     imgs: [{
                         sprite: "map-bunker-hydra-chamber-ceiling-01.img",
-                        pos: xe.create(7, 2),
+                        pos: fe.create(7, 2),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
                     }, {
                         sprite: "map-bunker-hydra-chamber-ceiling-02.img",
-                        pos: xe.create(-13.5, -76.5),
+                        pos: fe.create(-13.5, -76.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
                     }, {
                         sprite: "map-bunker-hydra-chamber-ceiling-03.img",
-                        pos: xe.create(38, -62),
+                        pos: fe.create(38, -62),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -84728,224 +84619,224 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(20, 3.5),
+                    pos: fe.create(20, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(16.5, 7),
+                    pos: fe.create(16.5, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(16.5, 0),
+                    pos: fe.create(16.5, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(14, 12),
+                    pos: fe.create(14, 12),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(14, -5),
+                    pos: fe.create(14, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(2, 13.5),
+                    pos: fe.create(2, 13.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(-7, 2.5),
+                    pos: fe.create(-7, 2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(-3, -6.5),
+                    pos: fe.create(-3, -6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(10, -6.5),
+                    pos: fe.create(10, -6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(13.5, 5.5),
+                    pos: fe.create(13.5, 5.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-.5, -7.5),
+                    pos: fe.create(-.5, -7.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(7.5, -7.5),
+                    pos: fe.create(7.5, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(0, 7.25),
+                    pos: fe.create(0, 7.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(10.25, -2.75),
+                    pos: fe.create(10.25, -2.75),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(10.25, 9.75),
+                    pos: fe.create(10.25, 9.75),
                     scale: .9,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-3.5, -3),
+                    pos: fe.create(-3.5, -3),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_23",
-                    pos: xe.create(-20, -83),
+                    pos: fe.create(-20, -83),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(-11, -79),
+                    pos: fe.create(-11, -79),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-13, -90.5),
+                    pos: fe.create(-13, -90.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(-16.5, -94),
+                    pos: fe.create(-16.5, -94),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-18.5, -87.5),
+                    pos: fe.create(-18.5, -87.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-12.15, -79),
+                    pos: fe.create(-12.15, -79),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-12.15, -74.5),
+                    pos: fe.create(-12.15, -74.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-12.15, -83.5),
+                    pos: fe.create(-12.15, -83.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(40, -47),
+                    pos: fe.create(40, -47),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(36.5, -50.5),
+                    pos: fe.create(36.5, -50.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(43.5, -50.5),
+                    pos: fe.create(43.5, -50.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(33, -53),
+                    pos: fe.create(33, -53),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(30, -55),
+                    pos: fe.create(30, -55),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(30, -66),
+                    pos: fe.create(30, -66),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_16",
-                    pos: xe.create(36.5, -71),
+                    pos: fe.create(36.5, -71),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(48.25, -70),
+                    pos: fe.create(48.25, -70),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(50, -62),
+                    pos: fe.create(50, -62),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(48.25, -54),
+                    pos: fe.create(48.25, -54),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(38, -53.5),
+                    pos: fe.create(38, -53.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_08",
-                    pos: xe.create(34, -67),
+                    pos: fe.create(34, -67),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "locker_01",
-                    pos: xe.create(46.5, -55.15),
+                    pos: fe.create(46.5, -55.15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(48.9, -57.5),
+                    pos: fe.create(48.9, -57.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(48.9, -62),
+                    pos: fe.create(48.9, -62),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(48.9, -66.5),
+                    pos: fe.create(48.9, -66.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(46.5, -68.85),
+                    pos: fe.create(46.5, -68.85),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bunker_hydra_compartment_01",
-                    pos: xe.create(3.5, -18.95),
+                    pos: fe.create(3.5, -18.95),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_hydra_compartment_02",
-                    pos: xe.create(6, -50),
+                    pos: fe.create(6, -50),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_hydra_compartment_03",
-                    pos: xe.create(10.5, -74.95),
+                    pos: fe.create(10.5, -74.95),
                     scale: 1,
                     ori: 0
                 }]
@@ -84965,7 +84856,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 1.5), xe.create(9.5, 12.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, 1.5), fe.create(9.5, 12.5))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-floor-01.img",
@@ -84975,11 +84866,11 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 1.25), xe.create(10, 10))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 1.25), xe.create(10, 10))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 1.25), fe.create(10, 10))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 1.25), fe.create(10, 10))],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-ceiling-01.img",
-                        pos: xe.create(0, 1.25),
+                        pos: fe.create(0, 1.25),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -84987,84 +84878,84 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_17",
-                    pos: xe.create(-9.75, 3),
+                    pos: fe.create(-9.75, 3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(-6.5, 9.75),
+                    pos: fe.create(-6.5, 9.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(6.5, 10.5),
+                    pos: fe.create(6.5, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(10.5, 1.5),
+                    pos: fe.create(10.5, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(-7.5, -6.75),
+                    pos: fe.create(-7.5, -6.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(8, -7.5),
+                    pos: fe.create(8, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_08",
-                    pos: xe.create(6.5, 6.5),
+                    pos: fe.create(6.5, 6.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "sandbags_01",
-                    pos: xe.create(4.75, 1.5),
+                    pos: fe.create(4.75, 1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-4, -8.5),
+                    pos: fe.create(-4, -8.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(4, -8.5),
+                    pos: fe.create(4, -8.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-6, 8.4),
+                    pos: fe.create(-6, 8.4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-8.35, 6),
+                    pos: fe.create(-8.35, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-8.35, 1.5),
+                    pos: fe.create(-8.35, 1.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-8.35, -3),
+                    pos: fe.create(-8.35, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "locker_01",
-                    pos: xe.create(-6, -5.4),
+                    pos: fe.create(-6, -5.4),
                     scale: 1,
                     ori: 2
                 }]
             },
-            metal_wall_column_5x12: G({
+            metal_wall_column_5x12: W({
                 material: "metal",
-                extents: xe.create(2.5, 6)
+                extents: fe.create(2.5, 6)
             }),
             bunker_hydra_compartment_02: {
                 type: "building",
@@ -85081,22 +84972,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(-2.5, 16), xe.create(22, 4)), ge.createAabbExtents(xe.create(-2.5, 9.5), xe.create(6, 2.5)), ge.createAabbExtents(xe.create(0, -4.5), xe.create(25, 17))]
+                        collision: [ye.createAabbExtents(fe.create(-2.5, 16), fe.create(22, 4)), ye.createAabbExtents(fe.create(-2.5, 9.5), fe.create(6, 2.5)), ye.createAabbExtents(fe.create(0, -4.5), fe.create(25, 17))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-floor-02.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-2, 3), xe.create(22.5, 19.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-2, 3), xe.create(22.5, 19.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-2, 3), fe.create(22.5, 19.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-2, 3), fe.create(22.5, 19.5))],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-ceiling-02.img",
-                        pos: xe.create(0, 1),
+                        pos: fe.create(0, 1),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -85104,199 +84995,199 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(-17, 21.75),
+                    pos: fe.create(-17, 21.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(12, 21.75),
+                    pos: fe.create(12, 21.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_42",
-                    pos: xe.create(-26, -.5),
+                    pos: fe.create(-26, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_29",
-                    pos: xe.create(21, 6),
+                    pos: fe.create(21, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-19, -18.5),
+                    pos: fe.create(-19, -18.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-18.5, -14),
+                    pos: fe.create(-18.5, -14),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(-15, -15),
+                    pos: fe.create(-15, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(-9, -16),
+                    pos: fe.create(-9, -16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(4, -16),
+                    pos: fe.create(4, -16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(10, -15),
+                    pos: fe.create(10, -15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(17, -14),
+                    pos: fe.create(17, -14),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_column_5x12",
-                    pos: xe.create(-14.5, 13),
+                    pos: fe.create(-14.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_column_5x12",
-                    pos: xe.create(9.5, 13),
+                    pos: fe.create(9.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(-7, 12),
+                    pos: fe.create(-7, 12),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(2, 12),
+                    pos: fe.create(2, 12),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "lab_window_01",
-                    pos: xe.create(-7, 7),
+                    pos: fe.create(-7, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_window_01",
-                    pos: xe.create(-4, 7),
+                    pos: fe.create(-4, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_window_01",
-                    pos: xe.create(-1, 7),
+                    pos: fe.create(-1, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_window_01",
-                    pos: xe.create(2, 7),
+                    pos: fe.create(2, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_4",
-                    pos: xe.create(-9, 8.5),
+                    pos: fe.create(-9, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_4",
-                    pos: xe.create(4, 8.5),
+                    pos: fe.create(4, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-20.5, 13),
+                    pos: fe.create(-20.5, 13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(15.5, 13),
+                    pos: fe.create(15.5, 13),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-17.5, 7.75),
+                    pos: fe.create(-17.5, 7.75),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "vat_01",
-                    pos: xe.create(-12.25, 7.5),
+                    pos: fe.create(-12.25, 7.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "vat_01",
-                    pos: xe.create(-12, -2.5),
+                    pos: fe.create(-12, -2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vat_01",
-                    pos: xe.create(-18, -2.5),
+                    pos: fe.create(-18, -2.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "vat_02",
-                    pos: xe.create(-2.5, 1.5),
+                    pos: fe.create(-2.5, 1.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "power_box_01",
-                    pos: xe.create(-2.5, -3),
+                    pos: fe.create(-2.5, -3),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_01",
-                    pos: xe.create(12.5, 7.75),
+                    pos: fe.create(12.5, 7.75),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "vat_01",
-                    pos: xe.create(7.25, 7.5),
+                    pos: fe.create(7.25, 7.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "vat_01",
-                    pos: xe.create(7, -2.5),
+                    pos: fe.create(7, -2.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "vat_01",
-                    pos: xe.create(13, -2.5),
+                    pos: fe.create(13, -2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "vat_01",
-                    pos: xe.create(-10.75, -11.5),
+                    pos: fe.create(-10.75, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-4.5, -16.5),
+                    pos: fe.create(-4.5, -16.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "vat_01",
-                    pos: xe.create(5.75, -11.5),
+                    pos: fe.create(5.75, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(1.5, -14.15),
+                    pos: fe.create(1.5, -14.15),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_03",
-                    pos: xe.create(-20.5, -16.5),
+                    pos: fe.create(-20.5, -16.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_02",
-                    pos: xe.create(20.5, -8.5),
+                    pos: fe.create(20.5, -8.5),
                     scale: 1,
                     ori: 2
                 }]
@@ -85316,22 +85207,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, 2), xe.create(9, 8.75))]
+                        collision: [ye.createAabbExtents(fe.create(0, 2), fe.create(9, 8.75))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-floor-03.img",
-                        pos: xe.create(0, -.5),
+                        pos: fe.create(0, -.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, .75), xe.create(10, 7.75))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, .75), xe.create(10, 7.75))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, .75), fe.create(10, 7.75))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, .75), fe.create(10, 7.75))],
                     imgs: [{
                         sprite: "map-bunker-hydra-compartment-ceiling-03.img",
-                        pos: xe.create(0, 1),
+                        pos: fe.create(0, 1),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -85339,44 +85230,44 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_17",
-                    pos: xe.create(-10.5, -1),
+                    pos: fe.create(-10.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(0, -8),
+                    pos: fe.create(0, -8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(10.5, -1),
+                    pos: fe.create(10.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_14",
-                    pos: xe.create(2, 6),
+                    pos: fe.create(2, 6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-6.5, -1.5),
+                    pos: fe.create(-6.5, -1.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-1.75, 2),
+                    pos: fe.create(-1.75, 2),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-2, -2),
+                    pos: fe.create(-2, -2),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "case_03",
-                    pos: xe.create(7, -4),
+                    pos: fe.create(7, -4),
                     scale: 1,
                     ori: 3
                 }]
@@ -85387,34 +85278,34 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(25.5, 3.5), xe.create(16, 11.5)), ge.createAabbExtents(xe.create(-16.5, -89.5), xe.create(7, 7.5)), ge.createAabbExtents(xe.create(40, -47.25), xe.create(6.5, 7.25)), ge.createAabbExtents(xe.create(3.5, -48.5), xe.create(3, 3))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(25.5, 3.5), fe.create(16, 11.5)), ye.createAabbExtents(fe.create(-16.5, -89.5), fe.create(7, 7.5)), ye.createAabbExtents(fe.create(40, -47.25), fe.create(6.5, 7.25)), ye.createAabbExtents(fe.create(3.5, -48.5), fe.create(3, 3))],
                 layers: [{
                     type: "bunker_hydra_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_hydra_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(16.4, 3.5), xe.create(2.6, 2)),
-                    downDir: xe.create(-1, 0)
+                    collision: ye.createAabbExtents(fe.create(16.4, 3.5), fe.create(2.6, 2)),
+                    downDir: fe.create(-1, 0)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(-16.5, -90.4), xe.create(2, 3.1)),
-                    downDir: xe.create(0, 1)
+                    collision: ye.createAabbExtents(fe.create(-16.5, -90.4), fe.create(2, 3.1)),
+                    downDir: fe.create(0, 1)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(40, -50.5), xe.create(2, 3.1)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(40, -50.5), fe.create(2, 3.1)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(3.5, -7.2), xe.create(10.75, 20)), ge.createAabbExtents(xe.create(-15, -79.75), xe.create(5, 8.5)), ge.createAabbExtents(xe.create(39, -61.85), xe.create(12, 9)), ge.createAabbExtents(xe.create(3.5, -49.2), xe.create(23.49, 21.99)), ge.createAabbExtents(xe.create(10.5, -76.7), xe.create(10, 5.5))]
+                mask: [ye.createAabbExtents(fe.create(3.5, -7.2), fe.create(10.75, 20)), ye.createAabbExtents(fe.create(-15, -79.75), fe.create(5, 8.5)), ye.createAabbExtents(fe.create(39, -61.85), fe.create(12, 9)), ye.createAabbExtents(fe.create(3.5, -49.2), fe.create(23.49, 21.99)), ye.createAabbExtents(fe.create(10.5, -76.7), fe.create(10, 5.5))]
             },
             bunker_storm_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 10), xe.create(3.6, 5.8)),
+                        collider: ye.createAabbExtents(fe.create(0, 10), fe.create(3.6, 5.8)),
                         color: 6707790
                     }]
                 },
@@ -85426,25 +85317,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 7.75), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 7.75), fe.create(2, 3.25))]
                     }, {
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 13.5), xe.create(3.75, 2.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, 13.5), fe.create(3.75, 2.5))]
                     }, {
                         type: "asphalt",
-                        collision: [ge.createAabbExtents(xe.create(5, 13.75), xe.create(1.25, 2.25))]
+                        collision: [ye.createAabbExtents(fe.create(5, 13.75), fe.create(1.25, 2.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-storm-floor-02.img",
-                        pos: xe.create(1.25, 10),
+                        pos: fe.create(1.25, 10),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 10), xe.create(3.5, 5.6))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 10), xe.create(3.8, 5.9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 10), fe.create(3.5, 5.6))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 10), fe.create(3.8, 5.9))],
                     vision: {
                         dist: 5,
                         width: 2.75,
@@ -85453,7 +85344,7 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-shack-ceiling-01.img",
-                        pos: xe.create(-1, 10),
+                        pos: fe.create(-1, 10),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -85468,69 +85359,69 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(0, 5.3),
+                    pos: fe.create(0, 5.3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(-2.5, 8.5),
+                    pos: fe.create(-2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(2.5, 8.5),
+                    pos: fe.create(2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_bot",
-                    pos: xe.create(3.39, 8.6),
+                    pos: fe.create(3.39, 8.6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_side_left",
-                    pos: xe.create(.3, 4.52),
+                    pos: fe.create(.3, 4.52),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_top",
-                    pos: xe.create(-3.39, 9.73),
+                    pos: fe.create(-3.39, 9.73),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_side_right",
-                    pos: xe.create(0, 15.58),
+                    pos: fe.create(0, 15.58),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-2, 17.9),
+                    pos: fe.create(-2, 17.9),
                     scale: .8,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(1.45, 17.7),
+                    pos: fe.create(1.45, 17.7),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "decal_vent_01",
-                    pos: xe.create(-5, -0),
+                    pos: fe.create(-5, -0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_02",
-                    pos: xe.create(4.5, -8.5),
+                    pos: fe.create(4.5, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "stone_01",
-                    pos: xe.create(-4.25, -1.5),
+                    pos: fe.create(-4.25, -1.5),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "bush_01",
-                    pos: xe.create(3.75, -6.75),
+                    pos: fe.create(3.75, -6.75),
                     scale: 1,
                     ori: 0
                 }]
@@ -85550,25 +85441,25 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(1, -4.4), xe.create(10.5, 9))]
+                        collision: [ye.createAabbExtents(fe.create(1, -4.4), fe.create(10.5, 9))]
                     }, {
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(19, -5.5), xe.create(7.5, 8))]
+                        collision: [ye.createAabbExtents(fe.create(19, -5.5), fe.create(7.5, 8))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-storm-chamber-floor-01.img",
-                        pos: xe.create(8.5, -1),
+                        pos: fe.create(8.5, -1),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(8.5, -4.5), xe.create(18, 9.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(8.5, -4.5), xe.create(18, 9.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(8.5, -4.5), fe.create(18, 9.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(8.5, -4.5), fe.create(18, 9.5))],
                     imgs: [{
                         sprite: "map-bunker-storm-chamber-ceiling-01.img",
-                        pos: xe.create(8.5, -1),
+                        pos: fe.create(8.5, -1),
                         scale: 1,
                         alpha: 1,
                         tint: 16777215
@@ -85580,113 +85471,113 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(0, 11.5),
+                    pos: fe.create(0, 11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-3.5, 8),
+                    pos: fe.create(-3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(3.5, 8),
+                    pos: fe.create(3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-7, 5.5),
+                    pos: fe.create(-7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(7, 5.5),
+                    pos: fe.create(7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(-10.5, -3),
+                    pos: fe.create(-10.5, -3),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(-1.5, -14.5),
+                    pos: fe.create(-1.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(10.5, -11),
+                    pos: fe.create(10.5, -11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(12.5, -11),
+                    pos: fe.create(12.5, -11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(21.5, -14.5),
+                    pos: fe.create(21.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(27.5, -5.5),
+                    pos: fe.create(27.5, -5.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_17",
-                    pos: xe.create(20.5, 3.5),
+                    pos: fe.create(20.5, 3.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(10.5, 2.5),
+                    pos: fe.create(10.5, 2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(12.5, 0),
+                    pos: fe.create(12.5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-2, 5),
+                    pos: fe.create(-2, 5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-6.5, 1.5),
+                    pos: fe.create(-6.5, 1.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(6, -1.5),
+                    pos: fe.create(6, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(4, -6.5),
+                    pos: fe.create(4, -6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(16, -11.5),
+                    pos: fe.create(16, -11.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "control_panel_02",
-                    pos: xe.create(20, -11.25),
+                    pos: fe.create(20, -11.25),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(24, -11.5),
+                    pos: fe.create(24, -11.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crate_08",
-                    pos: xe.create(23.5, -.5),
+                    pos: fe.create(23.5, -.5),
                     scale: 1,
                     ori: 0
                 }, {
@@ -85694,17 +85585,17 @@ webpackJsonp([1], {
                         case_03: 1,
                         chest_02: 9
                     }),
-                    pos: xe.create(16.5, .25),
+                    pos: fe.create(16.5, .25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(11.5, -2),
+                    pos: fe.create(11.5, -2),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7, -11),
+                    pos: fe.create(-7, -11),
                     scale: .9,
                     ori: 0
                 }]
@@ -85715,31 +85606,31 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(0, 6), xe.create(7, 16.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(0, 6), fe.create(7, 16.5))],
                 layers: [{
                     type: "bunker_storm_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_storm_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 8.4), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 8.4), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(8.5, -3.7), xe.create(18, 9.5))]
+                mask: [ye.createAabbExtents(fe.create(8.5, -3.7), fe.create(18, 9.5))]
             },
             bunker_conch_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(20, 3.35), xe.create(5.5, 2.5)),
+                        collider: ye.createAabbExtents(fe.create(20, 3.35), fe.create(5.5, 2.5)),
                         color: 2703694
                     }, {
-                        collider: ge.createAabbExtents(xe.create(46.5, -32.55), xe.create(5.5, 2.5)),
+                        collider: ye.createAabbExtents(fe.create(46.5, -32.55), fe.create(5.5, 2.5)),
                         color: 2703694
                     }]
                 },
@@ -85751,34 +85642,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(16.25, 3.5), xe.create(3.25, 2)), ge.createAabbExtents(xe.create(44.25, -32.5), xe.create(3.25, 2)), ge.createAabbExtents(xe.create(22, 3.35), xe.create(8, 2.5)), ge.createAabbExtents(xe.create(50.5, -32.55), xe.create(8, 2.5))]
+                        collision: [ye.createAabbExtents(fe.create(16.25, 3.5), fe.create(3.25, 2)), ye.createAabbExtents(fe.create(44.25, -32.5), fe.create(3.25, 2)), ye.createAabbExtents(fe.create(22, 3.35), fe.create(8, 2.5)), ye.createAabbExtents(fe.create(50.5, -32.55), fe.create(8, 2.5))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-conch-floor-01.img",
-                        pos: xe.create(20.75, 3.45),
+                        pos: fe.create(20.75, 3.45),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-conch-floor-01.img",
-                        pos: xe.create(48.75, -32.45),
+                        pos: fe.create(48.75, -32.45),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(19, 3.35), xe.create(5.5, 2.5)), ge.createAabbExtents(xe.create(47.5, -32.55), xe.create(5.5, 2.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(22, 3.35), xe.create(8, 2.5)), ge.createAabbExtents(xe.create(50.5, -32.55), xe.create(8, 2.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(19, 3.35), fe.create(5.5, 2.5)), ye.createAabbExtents(fe.create(47.5, -32.55), fe.create(5.5, 2.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(22, 3.35), fe.create(8, 2.5)), ye.createAabbExtents(fe.create(50.5, -32.55), fe.create(8, 2.5))],
                     imgs: [{
                         sprite: "map-bunker-conch-ceiling-01.img",
-                        pos: xe.create(19.25, 3.35),
+                        pos: fe.create(19.25, 3.35),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-conch-ceiling-01.img",
-                        pos: xe.create(47.25, -32.55),
+                        pos: fe.create(47.25, -32.55),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
@@ -85787,59 +85678,59 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "container_wall_top",
-                    pos: xe.create(13.7, 3.35),
+                    pos: fe.create(13.7, 3.35),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_wall_side",
-                    pos: xe.create(19.6, 5.7),
+                    pos: fe.create(19.6, 5.7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_wall_side",
-                    pos: xe.create(19.6, 1),
+                    pos: fe.create(19.6, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(24, 9),
+                    pos: fe.create(24, 9),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(18, -2),
+                    pos: fe.create(18, -2),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "container_wall_top",
-                    pos: xe.create(41.7, -32.55),
+                    pos: fe.create(41.7, -32.55),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_wall_side",
-                    pos: xe.create(47.6, -34.9),
+                    pos: fe.create(47.6, -34.9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "container_wall_side",
-                    pos: xe.create(47.6, -30.2),
+                    pos: fe.create(47.6, -30.2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(47, -27),
+                    pos: fe.create(47, -27),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(40, -37),
+                    pos: fe.create(40, -37),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_03",
-                    pos: xe.create(-2, -13.5),
+                    pos: fe.create(-2, -13.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -85859,34 +85750,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(1, 4), xe.create(12.5, 3.5)), ge.createAabbExtents(xe.create(28, -30), xe.create(13.5, 4.5))]
+                        collision: [ye.createAabbExtents(fe.create(1, 4), fe.create(12.5, 3.5)), ye.createAabbExtents(fe.create(28, -30), fe.create(13.5, 4.5))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-conch-chamber-floor-01.img",
-                        pos: xe.create(4, 5),
+                        pos: fe.create(4, 5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-conch-chamber-floor-02.img",
-                        pos: xe.create(34.86, -29.9),
+                        pos: fe.create(34.86, -29.9),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(1, 3.5), xe.create(12.5, 5)), ge.createAabbExtents(xe.create(26.75, -30), xe.create(15.25, 4.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(1, 3.5), xe.create(12.5, 5)), ge.createAabbExtents(xe.create(26.75, -30), xe.create(15.25, 4.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(1, 3.5), fe.create(12.5, 5)), ye.createAabbExtents(fe.create(26.75, -30), fe.create(15.25, 4.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(1, 3.5), fe.create(12.5, 5)), ye.createAabbExtents(fe.create(26.75, -30), fe.create(15.25, 4.5))],
                     imgs: [{
                         sprite: "map-bunker-conch-chamber-ceiling-01.img",
-                        pos: xe.create(-2, 3.5),
+                        pos: fe.create(-2, 3.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
                     }, {
                         sprite: "map-bunker-conch-chamber-ceiling-02.img",
-                        pos: xe.create(26.25, -29.9),
+                        pos: fe.create(26.25, -29.9),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -85898,119 +85789,119 @@ webpackJsonp([1], {
                 },
                 occupiedEmitters: [{
                     type: "bunker_bubbles_01",
-                    pos: xe.create(-2, -13.5),
+                    pos: fe.create(-2, -13.5),
                     rot: 0,
                     scale: .5,
                     layer: 0
                 }],
                 mapObjects: [{
                     type: "house_door_02",
-                    pos: xe.create(13.5, 1.35),
+                    pos: fe.create(13.5, 1.35),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(20, 3.5),
+                    pos: fe.create(20, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(16.5, 6.7),
+                    pos: fe.create(16.5, 6.7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_29",
-                    pos: xe.create(7, 0),
+                    pos: fe.create(7, 0),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_16",
-                    pos: xe.create(5.5, 9),
+                    pos: fe.create(5.5, 9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_9",
-                    pos: xe.create(-7, 7),
+                    pos: fe.create(-7, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(-13, 3.5),
+                    pos: fe.create(-13, 3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(9.5, 7.85),
+                    pos: fe.create(9.5, 7.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(5, 7.85),
+                    pos: fe.create(5, 7.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(.5, 7.85),
+                    pos: fe.create(.5, 7.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_pipes_01",
-                    pos: xe.create(-4.5, 5),
+                    pos: fe.create(-4.5, 5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(41.5, -34.55),
+                    pos: fe.create(41.5, -34.55),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(48, -32.4),
+                    pos: fe.create(48, -32.4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(38.5, -35.9),
+                    pos: fe.create(38.5, -35.9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(42, -29.2),
+                    pos: fe.create(42, -29.2),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(34, -26.7),
+                    pos: fe.create(34, -26.7),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(27, -33.4),
+                    pos: fe.create(27, -33.4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(20, -30.9),
+                    pos: fe.create(20, -30.9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(23.5, -23.9),
+                    pos: fe.create(23.5, -23.9),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "decal_pipes_04",
-                    pos: xe.create(22, -29.9),
+                    pos: fe.create(22, -29.9),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "loot_tier_2",
-                    pos: xe.create(31, -30),
+                    pos: fe.create(31, -30),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_conch_compartment_01",
-                    pos: xe.create(-1.5, -12.4),
+                    pos: fe.create(-1.5, -12.4),
                     scale: 1,
                     ori: 0
                 }]
@@ -86030,28 +85921,28 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "water",
-                        collision: [ge.createAabbExtents(xe.create(1, -2.5), xe.create(15, 15.5))]
+                        collision: [ye.createAabbExtents(fe.create(1, -2.5), fe.create(15, 15.5))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-conch-compartment-floor-01a.img",
-                        pos: xe.create(-3, -.75),
+                        pos: fe.create(-3, -.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-conch-compartment-floor-01b.img",
-                        pos: xe.create(9.75, -17.5),
+                        pos: fe.create(9.75, -17.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-1.5, -1), xe.create(12.5, 12)), ge.createAabbExtents(xe.create(9.5, -14.5), xe.create(4, 2.5))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-1.5, -1), xe.create(12.5, 12)), ge.createAabbExtents(xe.create(9.5, -14.5), xe.create(4, 2.5))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-1.5, -1), fe.create(12.5, 12)), ye.createAabbExtents(fe.create(9.5, -14.5), fe.create(4, 2.5))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-1.5, -1), fe.create(12.5, 12)), ye.createAabbExtents(fe.create(9.5, -14.5), fe.create(4, 2.5))],
                     imgs: [{
                         sprite: "map-bunker-conch-compartment-ceiling-01.img",
-                        pos: xe.create(-.75, -5.5),
+                        pos: fe.create(-.75, -5.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -86063,135 +85954,135 @@ webpackJsonp([1], {
                 },
                 occupiedEmitters: [{
                     type: "bunker_bubbles_01",
-                    pos: xe.create(-.5, -1),
+                    pos: fe.create(-.5, -1),
                     rot: 0,
                     scale: .5,
                     layer: 0
                 }],
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(-11.5, 8.5),
+                    pos: fe.create(-11.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-15, 7.5),
+                    pos: fe.create(-15, 7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(-15.5, .5),
+                    pos: fe.create(-15.5, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(-13.5, -6.5),
+                    pos: fe.create(-13.5, -6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(-11.5, -11.5),
+                    pos: fe.create(-11.5, -11.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(-3.5, -13.5),
+                    pos: fe.create(-3.5, -13.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_5",
-                    pos: xe.create(4.5, -14.5),
+                    pos: fe.create(4.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(9.5, -18.5),
+                    pos: fe.create(9.5, -18.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(13.5, -11.5),
+                    pos: fe.create(13.5, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(11.5, -.5),
+                    pos: fe.create(11.5, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(3.5, 10.5),
+                    pos: fe.create(3.5, 10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-10, 11),
+                    pos: fe.create(-10, 11),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(-12.25, 4.25),
+                    pos: fe.create(-12.25, 4.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_02",
-                    pos: xe.create(-12, .25),
+                    pos: fe.create(-12, .25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(-3, 8.75),
+                    pos: fe.create(-3, 8.75),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_09",
-                    pos: xe.create(2.75, 6.25),
+                    pos: fe.create(2.75, 6.25),
                     scale: 1,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(7.5, 6.25),
+                    pos: fe.create(7.5, 6.25),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "decal_pipes_02",
-                    pos: xe.create(7.25, 7.25),
+                    pos: fe.create(7.25, 7.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-3.75, -2),
+                    pos: fe.create(-3.75, -2),
                     scale: .8,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-1.25, -4.25),
+                    pos: fe.create(-1.25, -4.25),
                     scale: .8,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-7.5, -9.5),
+                    pos: fe.create(-7.5, -9.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(3.5, -9.5),
+                    pos: fe.create(3.5, -9.5),
                     scale: 1,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "decal_pipes_03",
-                    pos: xe.create(-5.25, -9.25),
+                    pos: fe.create(-5.25, -9.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(13.5, -17),
+                    pos: fe.create(13.5, -17),
                     scale: 1,
                     ori: 0
                 }]
@@ -86200,38 +86091,38 @@ webpackJsonp([1], {
                 type: "structure",
                 terrain: {
                     waterEdge: {
-                        dir: xe.create(-1, 0),
+                        dir: fe.create(-1, 0),
                         distMin: 15,
                         distMax: 16
                     }
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(21, 3.5), xe.create(9.5, 8)), ge.createAabbExtents(xe.create(48, -32.5), xe.create(10, 8))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(21, 3.5), fe.create(9.5, 8)), ye.createAabbExtents(fe.create(48, -32.5), fe.create(10, 8))],
                 layers: [{
                     type: "bunker_conch_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_conch_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(16.9, 3.5), xe.create(2.6, 2)),
-                    downDir: xe.create(-1, 0)
+                    collision: ye.createAabbExtents(fe.create(16.9, 3.5), fe.create(2.6, 2)),
+                    downDir: fe.create(-1, 0)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(44.9, -32.5), xe.create(2.6, 2)),
-                    downDir: xe.create(-1, 0)
+                    collision: ye.createAabbExtents(fe.create(44.9, -32.5), fe.create(2.6, 2)),
+                    downDir: fe.create(-1, 0)
                 }],
-                mask: [ge.createAabbExtents(xe.create(-1.5, -9.2), xe.create(15.7, 22)), ge.createAabbExtents(xe.create(28.25, -32), xe.create(14, 8))]
+                mask: [ye.createAabbExtents(fe.create(-1.5, -9.2), fe.create(15.7, 22)), ye.createAabbExtents(fe.create(28.25, -32), fe.create(14, 8))]
             },
             bunker_crossing_stairs_01: g({}),
             bunker_crossing_stairs_01b: g({
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, .75), xe.create(2, 3.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, .75), xe.create(2, 3.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, .75), fe.create(2, 3.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, .75), fe.create(2, 3.25))],
                     imgs: [{
                         sprite: "map-bunker-crossing-ceiling-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -86244,7 +86135,7 @@ webpackJsonp([1], {
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(5, 5)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(5, 5)),
                         color: 1984867
                     }]
                 },
@@ -86257,7 +86148,7 @@ webpackJsonp([1], {
                     surfaces: [],
                     imgs: [{
                         sprite: "map-bunker-crossing-floor-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
@@ -86270,22 +86161,22 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bunker_crossing_stairs_01b",
-                    pos: xe.create(34.5, 28.5),
+                    pos: fe.create(34.5, 28.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "bunker_crossing_stairs_01b",
-                    pos: xe.create(-36, 20),
+                    pos: fe.create(-36, 20),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bunker_crossing_stairs_01b",
-                    pos: xe.create(36, -14),
+                    pos: fe.create(36, -14),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_crossing_stairs_01",
-                    pos: xe.create(-34.5, -22.5),
+                    pos: fe.create(-34.5, -22.5),
                     scale: 1,
                     ori: 1
                 }]
@@ -86305,32 +86196,32 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 3.25), xe.create(38, 28))]
+                        collision: [ye.createAabbExtents(fe.create(0, 3.25), fe.create(38, 28))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-crossing-chamber-floor-01.img",
-                        pos: xe.create(-11.44, 24),
+                        pos: fe.create(-11.44, 24),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-bunker-crossing-chamber-floor-03.img",
-                        pos: xe.create(28.5, 23.5),
+                        pos: fe.create(28.5, 23.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 2
                     }, {
                         sprite: "map-bunker-crossing-chamber-floor-02.img",
-                        pos: xe.create(-28.5, -17.5),
+                        pos: fe.create(-28.5, -17.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-bunker-crossing-chamber-floor-01.img",
-                        pos: xe.create(11.45, -18),
+                        pos: fe.create(11.45, -18),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -86338,17 +86229,17 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-3, 27.5), xe.create(35.1, 5)), ge.createAabbExtents(xe.create(3, -21.5), xe.create(35.1, 5)), ge.createAabbExtents(xe.create(-4, 20.5), xe.create(3, 3)), ge.createAabbExtents(xe.create(4, -14.5), xe.create(3, 3))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-3, -27.5), xe.create(35, 5)), ge.createAabbExtents(xe.create(3, -21.5), xe.create(35, 5)), ge.createAabbExtents(xe.create(-4, 20.5), xe.create(3, 3)), ge.createAabbExtents(xe.create(4, -14.5), xe.create(3, 3))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-3, 27.5), fe.create(35.1, 5)), ye.createAabbExtents(fe.create(3, -21.5), fe.create(35.1, 5)), ye.createAabbExtents(fe.create(-4, 20.5), fe.create(3, 3)), ye.createAabbExtents(fe.create(4, -14.5), fe.create(3, 3))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-3, -27.5), fe.create(35, 5)), ye.createAabbExtents(fe.create(3, -21.5), fe.create(35, 5)), ye.createAabbExtents(fe.create(-4, 20.5), fe.create(3, 3)), ye.createAabbExtents(fe.create(4, -14.5), fe.create(3, 3))],
                     imgs: [{
                         sprite: "map-bunker-crossing-chamber-ceiling-01.img",
-                        pos: xe.create(-3.5, 24),
+                        pos: fe.create(-3.5, 24),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
                     }, {
                         sprite: "map-bunker-crossing-chamber-ceiling-01.img",
-                        pos: xe.create(3.5, -18),
+                        pos: fe.create(3.5, -18),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335,
@@ -86361,172 +86252,172 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(38.5, 28.5),
+                    pos: fe.create(38.5, 28.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(32, 30.5),
+                    pos: fe.create(32, 30.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "decal_pipes_05",
-                    pos: xe.create(13, 28.5),
+                    pos: fe.create(13, 28.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_48",
-                    pos: xe.create(15, 32),
+                    pos: fe.create(15, 32),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_35",
-                    pos: xe.create(21.5, 25),
+                    pos: fe.create(21.5, 25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(2.5, 23.5),
+                    pos: fe.create(2.5, 23.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-.5, 20.5),
+                    pos: fe.create(-.5, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-7.5, 20.5),
+                    pos: fe.create(-7.5, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_32",
-                    pos: xe.create(-22, 29),
+                    pos: fe.create(-22, 29),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(-39.5, 23),
+                    pos: fe.create(-39.5, 23),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(-36, 16),
+                    pos: fe.create(-36, 16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-38, 22.5),
+                    pos: fe.create(-38, 22.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-32.5, 19.5),
+                    pos: fe.create(-32.5, 19.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_22",
-                    pos: xe.create(-20, 22),
+                    pos: fe.create(-20, 22),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-4.5, 29),
+                    pos: fe.create(-4.5, 29),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(-38.5, -22.5),
+                    pos: fe.create(-38.5, -22.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-32, -20.5),
+                    pos: fe.create(-32, -20.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "decal_pipes_05",
-                    pos: xe.create(-12, -22.5),
+                    pos: fe.create(-12, -22.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "metal_wall_ext_thicker_48",
-                    pos: xe.create(-15, -26),
+                    pos: fe.create(-15, -26),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(-31.5, -19),
+                    pos: fe.create(-31.5, -19),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_16",
-                    pos: xe.create(-12, -19),
+                    pos: fe.create(-12, -19),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-2.5, -17.5),
+                    pos: fe.create(-2.5, -17.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(.5, -14.5),
+                    pos: fe.create(.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(7.5, -14.5),
+                    pos: fe.create(7.5, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_32",
-                    pos: xe.create(22, -23),
+                    pos: fe.create(22, -23),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(39.5, -17),
+                    pos: fe.create(39.5, -17),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(36, -10),
+                    pos: fe.create(36, -10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(38, -16.5),
+                    pos: fe.create(38, -16.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(32.5, -13.5),
+                    pos: fe.create(32.5, -13.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_22",
-                    pos: xe.create(20, -16),
+                    pos: fe.create(20, -16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(4.5, -23),
+                    pos: fe.create(4.5, -23),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-12.5, -22.25),
+                    pos: fe.create(-12.5, -22.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-7, -22.75),
+                    pos: fe.create(-7, -22.75),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_crossing_compartment_01",
-                    pos: xe.create(1.5, 0),
+                    pos: fe.create(1.5, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -86546,7 +86437,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "water",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))]
                     }],
                     imgs: [{
                         sprite: "",
@@ -86556,8 +86447,8 @@ webpackJsonp([1], {
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(3.75, 2))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(3.75, 2))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(3.75, 2))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(3.75, 2))],
                     imgs: [{
                         sprite: "map-building-crossing-bathroom-ceiling.img",
                         scale: .5,
@@ -86570,7 +86461,7 @@ webpackJsonp([1], {
                         toilet_03: 5,
                         toilet_04: 1
                     }),
-                    pos: xe.create(2, 0),
+                    pos: fe.create(2, 0),
                     scale: 1,
                     ori: 3
                 }]
@@ -86590,34 +86481,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "water",
-                        collision: [ge.createAabbExtents(xe.create(-1, 3), xe.create(17, 17.5))]
+                        collision: [ye.createAabbExtents(fe.create(-1, 3), fe.create(17, 17.5))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-crossing-compartment-floor-02.img",
-                        pos: xe.create(-22.5, -10),
+                        pos: fe.create(-22.5, -10),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-crossing-compartment-floor-01.img",
-                        pos: xe.create(4, 3),
+                        pos: fe.create(4, 3),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(4, 3), xe.create(22, 14.5)), ge.createAabbExtents(xe.create(-22, -11), xe.create(4.5, 9))],
-                    scopeOut: [ge.createAabbExtents(xe.create(4, 3), xe.create(22, 14.5)), ge.createAabbExtents(xe.create(-22, -11), xe.create(4.5, 9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(4, 3), fe.create(22, 14.5)), ye.createAabbExtents(fe.create(-22, -11), fe.create(4.5, 9))],
+                    scopeOut: [ye.createAabbExtents(fe.create(4, 3), fe.create(22, 14.5)), ye.createAabbExtents(fe.create(-22, -11), fe.create(4.5, 9))],
                     imgs: [{
                         sprite: "map-bunker-crossing-compartment-ceiling-01a.img",
-                        pos: xe.create(-22.475, -11),
+                        pos: fe.create(-22.475, -11),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
                     }, {
                         sprite: "map-bunker-crossing-compartment-ceiling-01b.img",
-                        pos: xe.create(3.975, 3),
+                        pos: fe.create(3.975, 3),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -86629,213 +86520,213 @@ webpackJsonp([1], {
                 },
                 occupiedEmitters: [{
                     type: "bunker_bubbles_02",
-                    pos: xe.create(-1.5, 0),
+                    pos: fe.create(-1.5, 0),
                     rot: 0,
                     scale: .5,
                     layer: 0
                 }],
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(-14, 16),
+                    pos: fe.create(-14, 16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-7.5, 17.5),
+                    pos: fe.create(-7.5, 17.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(5.5, 16),
+                    pos: fe.create(5.5, 16),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(16, 13.5),
+                    pos: fe.create(16, 13.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(22, 8),
+                    pos: fe.create(22, 8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(28, 4.5),
+                    pos: fe.create(28, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(17.5, 6.5),
+                    pos: fe.create(17.5, 6.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "bunker_crossing_bathroom",
-                    pos: xe.create(22, 4.5),
+                    pos: fe.create(22, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(22, 1),
+                    pos: fe.create(22, 1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(16, -6),
+                    pos: fe.create(16, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(9.5, -10),
+                    pos: fe.create(9.5, -10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(4.5, -11.5),
+                    pos: fe.create(4.5, -11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_19",
-                    pos: xe.create(-9, -10),
+                    pos: fe.create(-9, -10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-19.5, -8),
+                    pos: fe.create(-19.5, -8),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(-20, -14.5),
+                    pos: fe.create(-20, -14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_17",
-                    pos: xe.create(-27, -11),
+                    pos: fe.create(-27, -11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(-23, -1),
+                    pos: fe.create(-23, -1),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_14",
-                    pos: xe.create(-19, 7.5),
+                    pos: fe.create(-19, 7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "control_panel_04",
-                    pos: xe.create(-15.25, 8.5),
+                    pos: fe.create(-15.25, 8.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(-15.5, 12.75),
+                    pos: fe.create(-15.5, 12.75),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "control_panel_03",
-                    pos: xe.create(-15.5, 4.25),
+                    pos: fe.create(-15.5, 4.25),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-5, 10.25),
+                    pos: fe.create(-5, 10.25),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-3.25, 12.5),
+                    pos: fe.create(-3.25, 12.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(1.15, 14.85),
+                    pos: fe.create(1.15, 14.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_03",
-                    pos: xe.create(4.5, 14.85),
+                    pos: fe.create(4.5, 14.85),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bookshelf_01",
-                    pos: xe.create(10.5, 13),
+                    pos: fe.create(10.5, 13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bed_sm_01",
-                    pos: xe.create(10.5, 10),
+                    pos: fe.create(10.5, 10),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-4.5, -6.25),
+                    pos: fe.create(-4.5, -6.25),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-3, -2.5),
+                    pos: fe.create(-3, -2.5),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-1, -6.25),
+                    pos: fe.create(-1, -6.25),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(14, -.5),
+                    pos: fe.create(14, -.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "refrigerator_01",
-                    pos: xe.create(8.25, -6.5),
+                    pos: fe.create(8.25, -6.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "oven_01",
-                    pos: xe.create(12.25, -6.5),
+                    pos: fe.create(12.25, -6.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "crossing_door_01",
-                    pos: xe.create(-17.85, -2.5),
+                    pos: fe.create(-17.85, -2.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "couch_01",
-                    pos: xe.create(-12, 0),
+                    pos: fe.create(-12, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "screen_01",
-                    pos: xe.create(-12, -7.5),
+                    pos: fe.create(-12, -7.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-23.5, -4.5),
+                    pos: fe.create(-23.5, -4.5),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "loot_tier_woodaxe",
-                    pos: xe.create(-23.5, -8.5),
+                    pos: fe.create(-23.5, -8.5),
                     scale: .8,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-23.5, -14),
+                    pos: fe.create(-23.5, -14),
                     scale: .8,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crossing_door_01",
-                    pos: xe.create(-21.5, -20.15),
+                    pos: fe.create(-21.5, -20.15),
                     scale: 1,
                     ori: 1
                 }]
@@ -86850,39 +86741,39 @@ webpackJsonp([1], {
                     },
                     spawnPriority: 100
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(35.5, 28.5), xe.create(6, 6)), ge.createAabbExtents(xe.create(-36, 19), xe.create(6, 6)), ge.createAabbExtents(xe.create(36, -13), xe.create(6, 6)), ge.createAabbExtents(xe.create(-35.5, -22.5), xe.create(6, 6)), ge.createAabbExtents(xe.create(0, 0), xe.create(6, 6))],
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(35.5, 28.5), xe.create(5, 5)), ge.createAabbExtents(xe.create(-36, 19), xe.create(5, 5)), ge.createAabbExtents(xe.create(36, -13), xe.create(5, 5)), ge.createAabbExtents(xe.create(-35.5, -22.5), xe.create(5, 5))],
-                bridgeWaterBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(35.5, 28.5), fe.create(6, 6)), ye.createAabbExtents(fe.create(-36, 19), fe.create(6, 6)), ye.createAabbExtents(fe.create(36, -13), fe.create(6, 6)), ye.createAabbExtents(fe.create(-35.5, -22.5), fe.create(6, 6)), ye.createAabbExtents(fe.create(0, 0), fe.create(6, 6))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(35.5, 28.5), fe.create(5, 5)), ye.createAabbExtents(fe.create(-36, 19), fe.create(5, 5)), ye.createAabbExtents(fe.create(36, -13), fe.create(5, 5)), ye.createAabbExtents(fe.create(-35.5, -22.5), fe.create(5, 5))],
+                bridgeWaterBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 5))],
                 layers: [{
                     type: "bunker_crossing_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_crossing_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(35.6, 28.5), xe.create(2.6, 2)),
-                    downDir: xe.create(-1, 0)
+                    collision: ye.createAabbExtents(fe.create(35.6, 28.5), fe.create(2.6, 2)),
+                    downDir: fe.create(-1, 0)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(-36, 19), xe.create(2, 2.6)),
-                    downDir: xe.create(0, 1)
+                    collision: ye.createAabbExtents(fe.create(-36, 19), fe.create(2, 2.6)),
+                    downDir: fe.create(0, 1)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(36, -13), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(36, -13), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }, {
-                    collision: ge.createAabbExtents(xe.create(-35.5, -22.5), xe.create(2.6, 2)),
-                    downDir: xe.create(1, 0)
+                    collision: ye.createAabbExtents(fe.create(-35.5, -22.5), fe.create(2.6, 2)),
+                    downDir: fe.create(1, 0)
                 }],
-                mask: [ge.createAabbExtents(xe.create(-3.7, 27), xe.create(36.5, 5)), ge.createAabbExtents(xe.create(3.7, -21), xe.create(36.5, 5)), ge.createAabbExtents(xe.create(0, 3), xe.create(30, 18.95))]
+                mask: [ye.createAabbExtents(fe.create(-3.7, 27), fe.create(36.5, 5)), ye.createAabbExtents(fe.create(3.7, -21), fe.create(36.5, 5)), ye.createAabbExtents(fe.create(0, 3), fe.create(30, 18.95))]
             },
             bunker_hatchet_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 10), xe.create(3.6, 5.8)),
+                        collider: ye.createAabbExtents(fe.create(0, 10), fe.create(3.6, 5.8)),
                         color: 6707790
                     }]
                 },
@@ -86894,22 +86785,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 7.75), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 7.75), fe.create(2, 3.25))]
                     }, {
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 13.5), xe.create(3.75, 2.5)), ge.createAabbExtents(xe.create(5, 13.75), xe.create(1.25, 2.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 13.5), fe.create(3.75, 2.5)), ye.createAabbExtents(fe.create(5, 13.75), fe.create(1.25, 2.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-storm-floor-02.img",
-                        pos: xe.create(1.25, 10),
+                        pos: fe.create(1.25, 10),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 10), xe.create(3.5, 5.6))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 10), xe.create(3.8, 5.9))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 10), fe.create(3.5, 5.6))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 10), fe.create(3.8, 5.9))],
                     vision: {
                         dist: 5,
                         width: 2.75,
@@ -86918,7 +86809,7 @@ webpackJsonp([1], {
                     },
                     imgs: [{
                         sprite: "map-building-shack-ceiling-01.img",
-                        pos: xe.create(-1, 10),
+                        pos: fe.create(-1, 10),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -86933,63 +86824,63 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_short_6",
-                    pos: xe.create(0, 5.3),
+                    pos: fe.create(0, 5.3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(-2.5, 8.5),
+                    pos: fe.create(-2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_short_7",
-                    pos: xe.create(2.5, 8.5),
+                    pos: fe.create(2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "shack_wall_bot",
-                    pos: xe.create(3.39, 8.6),
+                    pos: fe.create(3.39, 8.6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_side_left",
-                    pos: xe.create(.3, 4.52),
+                    pos: fe.create(.3, 4.52),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_top",
-                    pos: xe.create(-3.39, 9.73),
+                    pos: fe.create(-3.39, 9.73),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "shack_wall_side_right",
-                    pos: xe.create(0, 15.58),
+                    pos: fe.create(0, 15.58),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-2, 17.9),
+                    pos: fe.create(-2, 17.9),
                     scale: .8,
                     ori: 0,
                     inheritOri: !1
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(1.45, 17.7),
+                    pos: fe.create(1.45, 17.7),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "decal_vent_01",
-                    pos: xe.create(5, 0),
+                    pos: fe.create(5, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "decal_vent_02",
-                    pos: xe.create(5, -8.5),
+                    pos: fe.create(5, -8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "tree_07",
-                    pos: xe.create(6.75, -4.5),
+                    pos: fe.create(6.75, -4.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -87009,34 +86900,34 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(-3, -4.4), xe.create(13, 9))]
+                        collision: [ye.createAabbExtents(fe.create(-3, -4.4), fe.create(13, 9))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hatchet-chamber-floor-01a.img",
-                        pos: xe.create(0, -4.5),
+                        pos: fe.create(0, -4.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-chamber-floor-01b.img",
-                        pos: xe.create(0, 9.25),
+                        pos: fe.create(0, 9.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-chamber-floor-01c.img",
-                        pos: xe.create(-15, -9.475),
+                        pos: fe.create(-15, -9.475),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(-3, -4.4), xe.create(13, 9.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(-3, -4.4), xe.create(13, 9.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(-3, -4.4), fe.create(13, 9.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(-3, -4.4), fe.create(13, 9.25))],
                     imgs: [{
                         sprite: "map-bunker-hatchet-chamber-ceiling-01.img",
-                        pos: xe.create(-3, -4.5),
+                        pos: fe.create(-3, -4.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87048,88 +86939,88 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(0, 11.5),
+                    pos: fe.create(0, 11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-3.5, 8),
+                    pos: fe.create(-3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(3.5, 8),
+                    pos: fe.create(3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(-8.5, 5.5),
+                    pos: fe.create(-8.5, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(8.5, 5.5),
+                    pos: fe.create(8.5, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(10.5, -6),
+                    pos: fe.create(10.5, -6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(-10.5, -1),
+                    pos: fe.create(-10.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_14",
-                    pos: xe.create(-16, -7.5),
+                    pos: fe.create(-16, -7.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_25",
-                    pos: xe.create(-3.5, -14.5),
+                    pos: fe.create(-3.5, -14.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-2, 5),
+                    pos: fe.create(-2, 5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-5, .5),
+                    pos: fe.create(-5, .5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(6.75, -10.75),
+                    pos: fe.create(6.75, -10.75),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(0, -11),
+                    pos: fe.create(0, -11),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(7, -4),
+                    pos: fe.create(7, -4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bunker_hatchet_compartment_01",
-                    pos: xe.create(-32, -1.5),
+                    pos: fe.create(-32, -1.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_hatchet_compartment_02",
-                    pos: xe.create(-63.5, -4),
+                    pos: fe.create(-63.5, -4),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bunker_hatchet_compartment_03",
-                    pos: xe.create(-55, 20.5),
+                    pos: fe.create(-55, 20.5),
                     scale: 1,
                     ori: 0
                 }]
@@ -87149,22 +87040,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 13))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 13))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-floor-01.img",
-                        pos: xe.create(0, .5),
+                        pos: fe.create(0, .5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 13))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 13))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 13))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 13))],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-ceiling-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87172,97 +87063,97 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(10.5, 2),
+                    pos: fe.create(10.5, 2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(3.5, 7),
+                    pos: fe.create(3.5, 7),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(-3.5, 14.5),
+                    pos: fe.create(-3.5, 14.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(-10.5, 6),
+                    pos: fe.create(-10.5, 6),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_32",
-                    pos: xe.create(0, -13),
+                    pos: fe.create(0, -13),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_14",
-                    pos: xe.create(-16, -6),
+                    pos: fe.create(-16, -6),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(16, -7.5),
+                    pos: fe.create(16, -7.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-16, -7.5),
+                    pos: fe.create(-16, -7.5),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-9, 12.5),
+                    pos: fe.create(-9, 12.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "metal_wall_ext_10",
-                    pos: xe.create(8.65, -.5),
+                    pos: fe.create(8.65, -.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_10",
-                    pos: xe.create(3, 5.15),
+                    pos: fe.create(3, 5.15),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "locker_01",
-                    pos: xe.create(.5, 5),
+                    pos: fe.create(.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(5.5, 5),
+                    pos: fe.create(5.5, 5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "locker_01",
-                    pos: xe.create(8.5, 2),
+                    pos: fe.create(8.5, 2),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "locker_01",
-                    pos: xe.create(8.5, -3),
+                    pos: fe.create(8.5, -3),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(1.5, -.5),
+                    pos: fe.create(1.5, -.5),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "fire_ext_01",
-                    pos: xe.create(.5, -11.25),
+                    pos: fe.create(.5, -11.25),
                     scale: .9,
                     ori: 1
                 }, {
                     type: "couch_01",
-                    pos: xe.create(-7.5, -2.5),
+                    pos: fe.create(-7.5, -2.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-7, 8.5),
+                    pos: fe.create(-7, 8.5),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
@@ -87283,40 +87174,40 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 15))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 15))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-floor-02a.img",
-                        pos: xe.create(4, -8.25),
+                        pos: fe.create(4, -8.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-02b.img",
-                        pos: xe.create(.75, 6),
+                        pos: fe.create(.75, 6),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-02c.img",
-                        pos: xe.create(-14, .5),
+                        pos: fe.create(-14, .5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-02d.img",
-                        pos: xe.create(-6.27, 14.25),
+                        pos: fe.create(-6.27, 14.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 15))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(16, 15))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 15))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(16, 15))],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-ceiling-02.img",
-                        pos: xe.create(-.5, -.5),
+                        pos: fe.create(-.5, -.5),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87324,140 +87215,140 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(11.5, -10.5),
+                    pos: fe.create(11.5, -10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_13",
-                    pos: xe.create(10, 4.5),
+                    pos: fe.create(10, 4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(3, 9.5),
+                    pos: fe.create(3, 9.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(6, -13),
+                    pos: fe.create(6, -13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_12",
-                    pos: xe.create(-1.5, -16.5),
+                    pos: fe.create(-1.5, -16.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_7",
-                    pos: xe.create(-9, -13.5),
+                    pos: fe.create(-9, -13.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_11",
-                    pos: xe.create(-13, -8.5),
+                    pos: fe.create(-13, -8.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_15",
-                    pos: xe.create(-17, .5),
+                    pos: fe.create(-17, .5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_6",
-                    pos: xe.create(-12.5, 6.5),
+                    pos: fe.create(-12.5, 6.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_25",
-                    pos: xe.create(-11, 20.5),
+                    pos: fe.create(-11, 20.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_14",
-                    pos: xe.create(-4, 15),
+                    pos: fe.create(-4, 15),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "lab_door_01",
-                    pos: xe.create(-5.5, 15),
+                    pos: fe.create(-5.5, 15),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-1.25, .5),
+                    pos: fe.create(-1.25, .5),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(2.75, -1.75),
+                    pos: fe.create(2.75, -1.75),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_04",
-                    pos: xe.create(3, 2.5),
+                    pos: fe.create(3, 2.5),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-7.5, 11),
+                    pos: fe.create(-7.5, 11),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "control_panel_06",
-                    pos: xe.create(2, 6.25),
+                    pos: fe.create(2, 6.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "control_panel_06",
-                    pos: xe.create(6.75, 1.5),
+                    pos: fe.create(6.75, 1.5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "loot_tier_hatchet_melee",
-                    pos: xe.create(6.75, 6.25),
+                    pos: fe.create(6.75, 6.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_12_2",
-                    pos: xe.create(-10.5, -1),
+                    pos: fe.create(-10.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "glass_wall_12_2",
-                    pos: xe.create(-1.5, -10),
+                    pos: fe.create(-1.5, -10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_imperial_skin",
-                    pos: xe.create(-13.5, -4.5),
+                    pos: fe.create(-13.5, -4.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_pineapple_skin",
-                    pos: xe.create(-13.5, -1),
+                    pos: fe.create(-13.5, -1),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_tarkhany_skin",
-                    pos: xe.create(-13.5, 2.5),
+                    pos: fe.create(-13.5, 2.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_spetsnaz_skin",
-                    pos: xe.create(-5, -13),
+                    pos: fe.create(-5, -13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_lumber_skin",
-                    pos: xe.create(-1.5, -13),
+                    pos: fe.create(-1.5, -13),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "loot_tier_verde_skin",
-                    pos: xe.create(2, -13),
+                    pos: fe.create(2, -13),
                     scale: 1,
                     ori: 0
                 }]
@@ -87477,40 +87368,40 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(19, 10))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(19, 10))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-floor-03a.img",
-                        pos: xe.create(-14.5, -8.5),
+                        pos: fe.create(-14.5, -8.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-03b.img",
-                        pos: xe.create(-9, 3),
+                        pos: fe.create(-9, 3),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-03c.img",
-                        pos: xe.create(5.5, -.25),
+                        pos: fe.create(5.5, -.25),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-hatchet-compartment-floor-03d.img",
-                        pos: xe.create(14.5, -3.75),
+                        pos: fe.create(14.5, -3.75),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(19, 10))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(19, 10))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(19, 10))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(19, 10))],
                     imgs: [{
                         sprite: "map-bunker-hatchet-compartment-ceiling-03.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87518,59 +87409,59 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_25",
-                    pos: xe.create(1.5, -4),
+                    pos: fe.create(1.5, -4),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(12, 3),
+                    pos: fe.create(12, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_10",
-                    pos: xe.create(1.5, 6.5),
+                    pos: fe.create(1.5, 6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_21",
-                    pos: xe.create(-10.5, 10),
+                    pos: fe.create(-10.5, 10),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "crate_01",
-                    pos: xe.create(-16, -5),
+                    pos: fe.create(-16, -5),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_01",
-                    pos: xe.create(3, -.5),
+                    pos: fe.create(3, -.5),
                     scale: .85,
                     ori: 0,
                     ignoreMapSpawnReplacement: !0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-11.75, -1.05),
+                    pos: fe.create(-11.75, -1.05),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "crate_06",
-                    pos: xe.create(-7, -1.05),
+                    pos: fe.create(-7, -1.05),
                     scale: .85,
                     ori: 0
                 }, {
                     type: "case_03",
-                    pos: xe.create(-2.5, 6.5),
+                    pos: fe.create(-2.5, 6.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-7, 6.75),
+                    pos: fe.create(-7, 6.75),
                     scale: .9,
                     ori: 0
                 }, {
                     type: "barrel_01",
-                    pos: xe.create(-11, 5.5),
+                    pos: fe.create(-11, 5.5),
                     scale: .9,
                     ori: 0
                 }]
@@ -87581,28 +87472,28 @@ webpackJsonp([1], {
                     grass: !0,
                     beach: !1
                 },
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(1, 6), xe.create(7, 13.5))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(1, 6), fe.create(7, 13.5))],
                 layers: [{
                     type: "bunker_hatchet_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_hatchet_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 8.4), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 8.4), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(-3, -3.7), xe.create(13, 9.5)), ge.createAabbExtents(xe.create(-48.025, 6), xe.create(32, 24.95))]
+                mask: [ye.createAabbExtents(fe.create(-3, -3.7), fe.create(13, 9.5)), ye.createAabbExtents(fe.create(-48.025, 6), fe.create(32, 24.95))]
             },
             bunker_eye_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 7.5), xe.create(2, 3.25)),
+                        collider: ye.createAabbExtents(fe.create(0, 7.5), fe.create(2, 3.25)),
                         color: 6946816
                     }]
                 },
@@ -87614,22 +87505,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "container",
-                        collision: [ge.createAabbExtents(xe.create(0, 7.75), xe.create(2, 3.25))]
+                        collision: [ye.createAabbExtents(fe.create(0, 7.75), fe.create(2, 3.25))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-generic-floor-01.img",
-                        pos: xe.create(0, 7.5),
+                        pos: fe.create(0, 7.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 8.25), xe.create(2, 3.25))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 8.25), xe.create(2, 3.25))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 8.25), fe.create(2, 3.25))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 8.25), fe.create(2, 3.25))],
                     imgs: [{
                         sprite: "map-bunker-generic-ceiling-01.img",
-                        pos: xe.create(0, 7.5),
+                        pos: fe.create(0, 7.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215,
@@ -87650,30 +87541,30 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_6",
-                    pos: xe.create(0, 5.3),
+                    pos: fe.create(0, 5.3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(-2.5, 8.5),
+                    pos: fe.create(-2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_7",
-                    pos: xe.create(2.5, 8.5),
+                    pos: fe.create(2.5, 8.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bush_01",
-                    pos: xe.create(5, 23),
+                    pos: fe.create(5, 23),
                     scale: 1.2,
                     ori: 0
                 }]
             },
-            vault_door_eye: v({
+            vault_door_eye: z({
                 material: "metal",
-                hinge: xe.create(1, 3.5),
-                extents: xe.create(1, 3.5),
+                hinge: fe.create(1, 3.5),
+                extents: fe.create(1, 3.5),
                 img: {
                     sprite: "map-door-02.img"
                 },
@@ -87684,7 +87575,7 @@ webpackJsonp([1], {
                     openDelay: .1,
                     openOnce: !0,
                     canUse: !1,
-                    spriteAnchor: xe.create(.2, 1),
+                    spriteAnchor: fe.create(.2, 1),
                     sound: {
                         open: "none",
                         close: "none",
@@ -87692,13 +87583,13 @@ webpackJsonp([1], {
                     }
                 }
             }),
-            metal_wall_column_4x8: G({
+            metal_wall_column_4x8: W({
                 material: "metal",
-                extents: xe.create(2, 4)
+                extents: fe.create(2, 4)
             }),
-            stone_wall_int_4: G({
+            stone_wall_int_4: W({
                 material: "stone",
-                extents: xe.create(.6, 2),
+                extents: fe.create(.6, 2),
                 img: m("map-wall-04-stone.img", 16777215)
             }),
             bunker_eye_sublevel_01: {
@@ -87716,28 +87607,28 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "bunker",
-                        collision: [ge.createAabbExtents(xe.create(0, -12), xe.create(14, 17))]
+                        collision: [ye.createAabbExtents(fe.create(0, -12), fe.create(14, 17))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-eye-chamber-floor-01a.img",
-                        pos: xe.create(0, -8.5),
+                        pos: fe.create(0, -8.5),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }, {
                         sprite: "map-bunker-eye-chamber-floor-01b.img",
-                        pos: xe.create(13, -23),
+                        pos: fe.create(13, -23),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, -12), xe.create(14, 17))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, -12), xe.create(14, 17))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, -12), fe.create(14, 17))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, -12), fe.create(14, 17))],
                     imgs: [{
                         sprite: "map-bunker-eye-chamber-ceiling-01.img",
-                        pos: xe.create(0, -12),
+                        pos: fe.create(0, -12),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87761,167 +87652,167 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "concrete_wall_ext_6",
-                    pos: xe.create(0, 11.5),
+                    pos: fe.create(0, 11.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(-3.5, 8),
+                    pos: fe.create(-3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(3.5, 8),
+                    pos: fe.create(3.5, 8),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(-7, 5.5),
+                    pos: fe.create(-7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(7, 5.5),
+                    pos: fe.create(7, 5.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_34",
-                    pos: xe.create(-10.5, -10),
+                    pos: fe.create(-10.5, -10),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(13, -26.5),
+                    pos: fe.create(13, -26.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_4",
-                    pos: xe.create(15.5, -23),
+                    pos: fe.create(15.5, -23),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_8",
-                    pos: xe.create(13, -19.5),
+                    pos: fe.create(13, -19.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_ext_thicker_24",
-                    pos: xe.create(10.5, -5),
+                    pos: fe.create(10.5, -5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(-7.5, -29),
+                    pos: fe.create(-7.5, -29),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "metal_wall_column_4x8",
-                    pos: xe.create(7.5, -29),
+                    pos: fe.create(7.5, -29),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "house_door_02",
-                    pos: xe.create(-2, 5),
+                    pos: fe.create(-2, 5),
                     scale: 1,
                     ori: 3
                 }, {
                     type: "stone_04",
-                    pos: xe.create(12, -23),
+                    pos: fe.create(12, -23),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "stone_wall_int_4",
-                    pos: xe.create(9.4, -23),
+                    pos: fe.create(9.4, -23),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "recorder_08",
-                    pos: xe.create(7.5, 2),
+                    pos: fe.create(7.5, 2),
                     scale: 1,
                     ori: 2
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, 1),
+                    pos: fe.create(-7, 1),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "swine"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, -4),
+                    pos: fe.create(-7, -4),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "egg"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, -9),
+                    pos: fe.create(-7, -9),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "storm"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, -14),
+                    pos: fe.create(-7, -14),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "caduceus"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, -19),
+                    pos: fe.create(-7, -19),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "crossing"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(-7, -24),
+                    pos: fe.create(-7, -24),
                     scale: 1,
                     ori: 1,
                     puzzlePiece: "conch"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(7, -4),
+                    pos: fe.create(7, -4),
                     scale: 1,
                     ori: 3,
                     puzzlePiece: "cloud"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(7, -9),
+                    pos: fe.create(7, -9),
                     scale: 1,
                     ori: 3,
                     puzzlePiece: "hydra"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(7, -14),
+                    pos: fe.create(7, -14),
                     scale: 1,
                     ori: 3,
                     puzzlePiece: "hatchet"
                 }, {
                     type: "control_panel_02b",
-                    pos: xe.create(7, -19),
+                    pos: fe.create(7, -19),
                     scale: 1,
                     ori: 3,
                     puzzlePiece: "harpsichord"
                 }, {
                     type: "candle_lit_02",
-                    pos: xe.create(0, -1.5),
+                    pos: fe.create(0, -1.5),
                     scale: .75,
                     ori: 0
                 }, {
                     type: "candle_lit_02",
-                    pos: xe.create(0, -11.5),
+                    pos: fe.create(0, -11.5),
                     scale: .75,
                     ori: 0
                 }, {
                     type: "candle_lit_02",
-                    pos: xe.create(0, -21.5),
+                    pos: fe.create(0, -21.5),
                     scale: .75,
                     ori: 0
                 }, {
                     type: "vault_door_eye",
-                    pos: xe.create(3.5, -30),
+                    pos: fe.create(3.5, -30),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bunker_eye_compartment_01",
-                    pos: xe.create(0, -39),
+                    pos: fe.create(0, -39),
                     scale: 1,
                     ori: 0
                 }]
@@ -87941,22 +87832,22 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "tile",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 10))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 10))]
                     }],
                     imgs: [{
                         sprite: "map-bunker-eye-compartment-floor-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: .5,
                         alpha: 1,
                         tint: 16777215
                     }]
                 },
                 ceiling: {
-                    scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 10))],
-                    scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(10, 10))],
+                    scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 10))],
+                    scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(10, 10))],
                     imgs: [{
                         sprite: "map-bunker-eye-compartment-ceiling-01.img",
-                        pos: xe.create(0, 0),
+                        pos: fe.create(0, 0),
                         scale: 1,
                         alpha: 1,
                         tint: 6250335
@@ -87964,27 +87855,27 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(10.5, -2),
+                    pos: fe.create(10.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_20",
-                    pos: xe.create(-10.5, -2),
+                    pos: fe.create(-10.5, -2),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "metal_wall_ext_thicker_18",
-                    pos: xe.create(0, -10.5),
+                    pos: fe.create(0, -10.5),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "loot_tier_eye_02",
-                    pos: xe.create(0, -3.5),
+                    pos: fe.create(0, -3.5),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "recorder_09",
-                    pos: xe.create(-7, -7),
+                    pos: fe.create(-7, -7),
                     scale: 1,
                     ori: 2
                 }]
@@ -87996,32 +87887,32 @@ webpackJsonp([1], {
                     beach: !1
                 },
                 ori: 2,
-                mapObstacleBounds: [ge.createAabbExtents(xe.create(-1, 8), xe.create(7, 6)), ge.createAabbExtents(xe.create(-40, -70), xe.create(2, 2)), ge.createAabbExtents(xe.create(40, -70), xe.create(2, 2)), ge.createAabbExtents(xe.create(0, -30), xe.create(2, 2)), ge.createAabbExtents(xe.create(5, 23), xe.create(2, 2))],
+                mapObstacleBounds: [ye.createAabbExtents(fe.create(-1, 8), fe.create(7, 6)), ye.createAabbExtents(fe.create(-40, -70), fe.create(2, 2)), ye.createAabbExtents(fe.create(40, -70), fe.create(2, 2)), ye.createAabbExtents(fe.create(0, -30), fe.create(2, 2)), ye.createAabbExtents(fe.create(5, 23), fe.create(2, 2))],
                 layers: [{
                     type: "bunker_eye_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bunker_eye_sublevel_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, 8.4), xe.create(2, 2.6)),
-                    downDir: xe.create(0, -1)
+                    collision: ye.createAabbExtents(fe.create(0, 8.4), fe.create(2, 2.6)),
+                    downDir: fe.create(0, -1)
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, -22.2), xe.create(13.5, 28))]
+                mask: [ye.createAabbExtents(fe.create(0, -22.2), fe.create(13.5, 28))]
             },
-            bridge_lg_under_column: G({
+            bridge_lg_under_column: W({
                 material: "concrete",
-                extents: xe.create(2.5, 10)
+                extents: fe.create(2.5, 10)
             }),
-            concrete_wall_column_5x4: G({
+            concrete_wall_column_5x4: W({
                 material: "concrete",
-                extents: xe.create(2.5, 2)
+                extents: fe.create(2.5, 2)
             }),
-            bridge_rail_3: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 2)),
+            bridge_rail_3: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 2)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -88030,8 +87921,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            bridge_rail_12: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 6.5)),
+            bridge_rail_12: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 6.5)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -88040,8 +87931,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            bridge_lg_01: Y({}),
-            bridge_lg_01x: Y({
+            bridge_lg_01: J({}),
+            bridge_lg_01x: J({
                 ceiling: {
                     imgs: [{
                         sprite: "map-building-bridge-lg-ceiling.img",
@@ -88050,28 +87941,28 @@ webpackJsonp([1], {
                         tint: 16777215
                     }, {
                         sprite: "map-snow-03.img",
-                        pos: xe.create(-10, -4),
+                        pos: fe.create(-10, -4),
                         scale: .4,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-07.img",
-                        pos: xe.create(8, 4),
+                        pos: fe.create(8, 4),
                         scale: .4,
                         alpha: 1,
                         tint: 16777215,
                         rot: 0
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(15, -5.25),
+                        pos: fe.create(15, -5.25),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
                         rot: 1
                     }, {
                         sprite: "map-snow-06.img",
-                        pos: xe.create(-15, 5.25),
+                        pos: fe.create(-15, 5.25),
                         scale: .667,
                         alpha: 1,
                         tint: 16777215,
@@ -88106,12 +87997,12 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bridge_lg_under_column",
-                    pos: xe.create(-14, 0),
+                    pos: fe.create(-14, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bridge_lg_under_column",
-                    pos: xe.create(14, 0),
+                    pos: fe.create(14, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -88125,36 +88016,36 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "bridge_lg_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bridge_lg_under_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0,
                     underground: !1
                 }],
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(-34, 0), xe.create(6, 9)), ge.createAabbExtents(xe.create(34, 0), xe.create(6, 9))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(-34, 0), fe.create(6, 9)), ye.createAabbExtents(fe.create(34, 0), fe.create(6, 9))],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, -9.5), xe.create(11.5, 1.5)),
-                    downDir: xe.create(0, 1),
+                    collision: ye.createAabbExtents(fe.create(0, -9.5), fe.create(11.5, 1.5)),
+                    downDir: fe.create(0, 1),
                     lootOnly: !0
                 }, {
-                    collision: ge.createAabbExtents(xe.create(0, 9.5), xe.create(11.5, 1.5)),
-                    downDir: xe.create(0, -1),
+                    collision: ye.createAabbExtents(fe.create(0, 9.5), fe.create(11.5, 1.5)),
+                    downDir: fe.create(0, -1),
                     lootOnly: !0
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, 0), xe.create(12, 8))]
+                mask: [ye.createAabbExtents(fe.create(0, 0), fe.create(12, 8))]
             },
-            bridge_xlg_under_column: G({
+            bridge_xlg_under_column: W({
                 material: "concrete",
-                extents: xe.create(2.5, 14)
+                extents: fe.create(2.5, 14)
             }),
-            concrete_wall_column_9x4: G({
+            concrete_wall_column_9x4: W({
                 material: "concrete",
-                extents: xe.create(4.5, 2)
+                extents: fe.create(4.5, 2)
             }),
-            bridge_rail_20: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 10)),
+            bridge_rail_20: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 10)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -88169,19 +88060,19 @@ webpackJsonp([1], {
                     map: {
                         display: !0,
                         shapes: [{
-                            collider: ge.createAabbExtents(xe.create(0, 0), xe.create(38.5, 12)),
+                            collider: ye.createAabbExtents(fe.create(0, 0), fe.create(38.5, 12)),
                             color: 2894124
                         }, {
-                            collider: ge.createAabbExtents(xe.create(-16, -13), xe.create(3, 1.5)),
+                            collider: ye.createAabbExtents(fe.create(-16, -13), fe.create(3, 1.5)),
                             color: 3618615
                         }, {
-                            collider: ge.createAabbExtents(xe.create(16, -13), xe.create(3, 1.5)),
+                            collider: ye.createAabbExtents(fe.create(16, -13), fe.create(3, 1.5)),
                             color: 3618615
                         }, {
-                            collider: ge.createAabbExtents(xe.create(-16, 13), xe.create(3, 1.5)),
+                            collider: ye.createAabbExtents(fe.create(-16, 13), fe.create(3, 1.5)),
                             color: 3618615
                         }, {
-                            collider: ge.createAabbExtents(xe.create(16, 13), xe.create(3, 1.5)),
+                            collider: ye.createAabbExtents(fe.create(16, 13), fe.create(3, 1.5)),
                             color: 3618615
                         }]
                     },
@@ -88193,7 +88084,7 @@ webpackJsonp([1], {
                     floor: {
                         surfaces: [{
                             type: "asphalt",
-                            collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(38.5, 12))]
+                            collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(38.5, 12))]
                         }],
                         imgs: [{
                             sprite: "map-building-bridge-xlg-floor.img",
@@ -88203,183 +88094,183 @@ webpackJsonp([1], {
                         }]
                     },
                     ceiling: {
-                        scopeIn: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
-                        scopeOut: [ge.createAabbExtents(xe.create(0, 0), xe.create(0, 0))],
+                        scopeIn: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
+                        scopeOut: [ye.createAabbExtents(fe.create(0, 0), fe.create(0, 0))],
                         imgs: []
                     },
                     mapObjects: [{
                         type: "bridge_rail_20",
-                        pos: xe.create(-26, 11.5),
+                        pos: fe.create(-26, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_20",
-                        pos: xe.create(-26, -11.5),
+                        pos: fe.create(-26, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_20",
-                        pos: xe.create(26, 11.5),
+                        pos: fe.create(26, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_20",
-                        pos: xe.create(26, -11.5),
+                        pos: fe.create(26, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_column_9x4",
-                        pos: xe.create(-16, -13),
+                        pos: fe.create(-16, -13),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "concrete_wall_column_9x4",
-                        pos: xe.create(-16, 13),
+                        pos: fe.create(-16, 13),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "concrete_wall_column_9x4",
-                        pos: xe.create(16, -13),
+                        pos: fe.create(16, -13),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "concrete_wall_column_9x4",
-                        pos: xe.create(16, 13),
+                        pos: fe.create(16, 13),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "concrete_wall_ext_5",
-                        pos: xe.create(-9, 11.5),
+                        pos: fe.create(-9, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_ext_5",
-                        pos: xe.create(-9, -11.5),
+                        pos: fe.create(-9, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_ext_5",
-                        pos: xe.create(9, 11.5),
+                        pos: fe.create(9, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_ext_5",
-                        pos: xe.create(9, -11.5),
+                        pos: fe.create(9, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_3",
-                        pos: xe.create(-5, 11.5),
+                        pos: fe.create(-5, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_3",
-                        pos: xe.create(-5, -11.5),
+                        pos: fe.create(-5, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_3",
-                        pos: xe.create(5, 11.5),
+                        pos: fe.create(5, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "bridge_rail_3",
-                        pos: xe.create(5, -11.5),
+                        pos: fe.create(5, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_ext_7",
-                        pos: xe.create(0, 11.5),
+                        pos: fe.create(0, 11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "concrete_wall_ext_7",
-                        pos: xe.create(0, -11.5),
+                        pos: fe.create(0, -11.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "loot_tier_1",
-                        pos: xe.create(-25, 3),
+                        pos: fe.create(-25, 3),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "loot_tier_1",
-                        pos: xe.create(25, 3),
+                        pos: fe.create(25, 3),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "sandbags_01",
-                        pos: xe.create(-14, 6.5),
+                        pos: fe.create(-14, 6.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "sandbags_01",
-                        pos: xe.create(-20, -8),
+                        pos: fe.create(-20, -8),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "barrel_01",
-                        pos: xe.create(-14, -8),
+                        pos: fe.create(-14, -8),
                         scale: .9,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(0, 2.5),
+                        pos: fe.create(0, 2.5),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(0, -2.5),
+                        pos: fe.create(0, -2.5),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_04",
-                        pos: xe.create(0, 7.5),
+                        pos: fe.create(0, 7.5),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_04",
-                        pos: xe.create(0, -7.5),
+                        pos: fe.create(0, -7.5),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(-5, 0),
+                        pos: fe.create(-5, 0),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(5, 0),
+                        pos: fe.create(5, 0),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(-27, -8),
+                        pos: fe.create(-27, -8),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "crate_01",
-                        pos: xe.create(27, -8),
+                        pos: fe.create(27, -8),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "sandbags_01",
-                        pos: xe.create(14, 6.5),
+                        pos: fe.create(14, 6.5),
                         scale: 1,
                         ori: 1
                     }, {
                         type: "sandbags_01",
-                        pos: xe.create(20, -8),
+                        pos: fe.create(20, -8),
                         scale: 1,
                         ori: 0
                     }, {
                         type: "barrel_01",
-                        pos: xe.create(14, -8),
+                        pos: fe.create(14, -8),
                         scale: .9,
                         ori: 0
                     }]
                 };
-                return we.mergeDeep(t, e || {})
+                return xe.mergeDeep(t, e || {})
             }({}),
             bridge_xlg_under_01: {
                 type: "building",
@@ -88408,12 +88299,12 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bridge_xlg_under_column",
-                    pos: xe.create(-14, 0),
+                    pos: fe.create(-14, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "bridge_xlg_under_column",
-                    pos: xe.create(14, 0),
+                    pos: fe.create(14, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -88427,29 +88318,29 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "bridge_xlg_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bridge_xlg_under_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0,
                     underground: !1
                 }],
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(-41, 0), xe.create(5, 10)), ge.createAabbExtents(xe.create(41, 0), xe.create(5, 10))],
-                bridgeWaterBounds: [ge.createAabbExtents(xe.create(0, 0), xe.create(5, 5))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(-41, 0), fe.create(5, 10)), ye.createAabbExtents(fe.create(41, 0), fe.create(5, 10))],
+                bridgeWaterBounds: [ye.createAabbExtents(fe.create(0, 0), fe.create(5, 5))],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, -13.5), xe.create(11.5, 1.5)),
-                    downDir: xe.create(0, 1),
+                    collision: ye.createAabbExtents(fe.create(0, -13.5), fe.create(11.5, 1.5)),
+                    downDir: fe.create(0, 1),
                     lootOnly: !0
                 }, {
-                    collision: ge.createAabbExtents(xe.create(0, 13.5), xe.create(11.5, 1.5)),
-                    downDir: xe.create(0, -1),
+                    collision: ye.createAabbExtents(fe.create(0, 13.5), fe.create(11.5, 1.5)),
+                    downDir: fe.create(0, -1),
                     lootOnly: !0
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, 0), xe.create(12, 12))]
+                mask: [ye.createAabbExtents(fe.create(0, 0), fe.create(12, 12))]
             },
-            bridge_rail_28: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.4, 14)),
+            bridge_rail_28: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.4, 14)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -88458,8 +88349,8 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            brick_wall_ext_3_0_low: de({
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(.5, 1.5)),
+            brick_wall_ext_3_0_low: he({
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(.5, 1.5)),
                 img: {
                     sprite: "",
                     scale: .5,
@@ -88468,16 +88359,16 @@ webpackJsonp([1], {
                     zIdx: 10
                 }
             }),
-            brick_wall_ext_11_5: G({
+            brick_wall_ext_11_5: W({
                 material: "brick",
-                extents: xe.create(.5, 5.75)
+                extents: fe.create(.5, 5.75)
             }),
             bridge_md_01: {
                 type: "building",
                 map: {
                     display: !0,
                     shapes: [{
-                        collider: ge.createAabbExtents(xe.create(0, 0), xe.create(14, 3.5)),
+                        collider: ye.createAabbExtents(fe.create(0, 0), fe.create(14, 3.5)),
                         color: 9322264
                     }]
                 },
@@ -88489,7 +88380,7 @@ webpackJsonp([1], {
                 floor: {
                     surfaces: [{
                         type: "shack",
-                        collision: [ge.createAabbExtents(xe.create(0, 0), xe.create(13.5, 3.5))]
+                        collision: [ye.createAabbExtents(fe.create(0, 0), fe.create(13.5, 3.5))]
                     }],
                     imgs: [{
                         sprite: "map-building-bridge-md-floor.img",
@@ -88505,32 +88396,32 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "bridge_rail_28",
-                    pos: xe.create(0, 3),
+                    pos: fe.create(0, 3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "bridge_rail_28",
-                    pos: xe.create(0, -3),
+                    pos: fe.create(0, -3),
                     scale: 1,
                     ori: 1
                 }, {
                     type: "brick_wall_ext_3_0_low",
-                    pos: xe.create(-6, 4.25),
+                    pos: fe.create(-6, 4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3_0_low",
-                    pos: xe.create(6, 4.25),
+                    pos: fe.create(6, 4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3_0_low",
-                    pos: xe.create(-6, -4.25),
+                    pos: fe.create(-6, -4.25),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_3_0_low",
-                    pos: xe.create(6, -4.25),
+                    pos: fe.create(6, -4.25),
                     scale: 1,
                     ori: 0
                 }, {
@@ -88538,7 +88429,7 @@ webpackJsonp([1], {
                         loot_tier_1: 1,
                         loot_tier_2: 1
                     }),
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -88570,12 +88461,12 @@ webpackJsonp([1], {
                 },
                 mapObjects: [{
                     type: "brick_wall_ext_11_5",
-                    pos: xe.create(-6, 0),
+                    pos: fe.create(-6, 0),
                     scale: 1,
                     ori: 0
                 }, {
                     type: "brick_wall_ext_11_5",
-                    pos: xe.create(6, 0),
+                    pos: fe.create(6, 0),
                     scale: 1,
                     ori: 0
                 }]
@@ -88589,37 +88480,37 @@ webpackJsonp([1], {
                 },
                 layers: [{
                     type: "bridge_md_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0
                 }, {
                     type: "bridge_md_under_01",
-                    pos: xe.create(0, 0),
+                    pos: fe.create(0, 0),
                     ori: 0,
                     underground: !1
                 }],
-                bridgeLandBounds: [ge.createAabbExtents(xe.create(-15.5, 0), xe.create(3, 5)), ge.createAabbExtents(xe.create(15.5, 0), xe.create(3, 5))],
+                bridgeLandBounds: [ye.createAabbExtents(fe.create(-15.5, 0), fe.create(3, 5)), ye.createAabbExtents(fe.create(15.5, 0), fe.create(3, 5))],
                 stairs: [{
-                    collision: ge.createAabbExtents(xe.create(0, -4.75), xe.create(5.5, 1.25)),
-                    downDir: xe.create(0, 1),
+                    collision: ye.createAabbExtents(fe.create(0, -4.75), fe.create(5.5, 1.25)),
+                    downDir: fe.create(0, 1),
                     lootOnly: !0
                 }, {
-                    collision: ge.createAabbExtents(xe.create(0, 4.75), xe.create(5.5, 1.25)),
-                    downDir: xe.create(0, -1),
+                    collision: ye.createAabbExtents(fe.create(0, 4.75), fe.create(5.5, 1.25)),
+                    downDir: fe.create(0, -1),
                     lootOnly: !0
                 }],
-                mask: [ge.createAabbExtents(xe.create(0, 0), xe.create(6.5, 3.6))]
+                mask: [ye.createAabbExtents(fe.create(0, 0), fe.create(6.5, 3.6))]
             },
-            container_wall_top: G({
+            container_wall_top: W({
                 material: "metal",
-                extents: xe.create(2.75, .4)
+                extents: fe.create(2.75, .4)
             }),
-            container_wall_side: G({
+            container_wall_side: W({
                 material: "metal",
-                extents: xe.create(.4, 5.5)
+                extents: fe.create(.4, 5.5)
             }),
-            container_wall_side_open: G({
+            container_wall_side_open: W({
                 material: "metal",
-                extents: xe.create(.4, 6)
+                extents: fe.create(.4, 6)
             }),
             container_01: _({
                 open: !1,
@@ -88651,7 +88542,7 @@ webpackJsonp([1], {
                     tint: 2703694
                 }, {
                     sprite: "map-snow-05.img",
-                    pos: xe.create(0, 3),
+                    pos: fe.create(0, 3),
                     scale: .6,
                     alpha: 1,
                     tint: 16777215,
@@ -88667,7 +88558,7 @@ webpackJsonp([1], {
             }),
             loot_tier_1: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_world",
                 terrain: {
                     grass: !0,
@@ -88677,7 +88568,7 @@ webpackJsonp([1], {
             },
             loot_tier_2: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_container",
                 terrain: {
                     grass: !0,
@@ -88687,7 +88578,7 @@ webpackJsonp([1], {
             },
             loot_tier_beach: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_world",
                 terrain: {
                     grass: !1,
@@ -88696,7 +88587,7 @@ webpackJsonp([1], {
             },
             loot_tier_vault_floor: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_vault_floor",
                 terrain: {
                     grass: !0,
@@ -88705,7 +88596,7 @@ webpackJsonp([1], {
             },
             loot_tier_police_floor: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_police_floor",
                 terrain: {
                     grass: !0,
@@ -88714,7 +88605,7 @@ webpackJsonp([1], {
             },
             loot_tier_mansion_floor: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_mansion_floor",
                 terrain: {
                     grass: !0,
@@ -88723,7 +88614,7 @@ webpackJsonp([1], {
             },
             loot_tier_sv98: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_sv98",
                 terrain: {
                     grass: !0,
@@ -88732,7 +88623,7 @@ webpackJsonp([1], {
             },
             loot_tier_scopes_sniper: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_scopes_sniper",
                 terrain: {
                     grass: !0,
@@ -88741,7 +88632,7 @@ webpackJsonp([1], {
             },
             loot_tier_woodaxe: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_woodaxe",
                 terrain: {
                     grass: !0,
@@ -88750,7 +88641,7 @@ webpackJsonp([1], {
             },
             loot_tier_fireaxe: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_fireaxe",
                 terrain: {
                     grass: !0,
@@ -88759,7 +88650,7 @@ webpackJsonp([1], {
             },
             loot_tier_stonehammer: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_stonehammer",
                 terrain: {
                     grass: !0,
@@ -88768,7 +88659,7 @@ webpackJsonp([1], {
             },
             loot_tier_hatchet_melee: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_hatchet_melee",
                 terrain: {
                     grass: !0,
@@ -88777,7 +88668,7 @@ webpackJsonp([1], {
             },
             loot_tier_leaf_pile: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_leaf_pile",
                 terrain: {
                     grass: !0,
@@ -88786,7 +88677,7 @@ webpackJsonp([1], {
             },
             loot_tier_islander_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_islander_skin",
                 terrain: {
                     grass: !0,
@@ -88795,7 +88686,7 @@ webpackJsonp([1], {
             },
             loot_tier_verde_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_verde_skin",
                 terrain: {
                     grass: !0,
@@ -88804,7 +88695,7 @@ webpackJsonp([1], {
             },
             loot_tier_lumber_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_lumber_skin",
                 terrain: {
                     grass: !0,
@@ -88813,7 +88704,7 @@ webpackJsonp([1], {
             },
             loot_tier_imperial_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_imperial_skin",
                 terrain: {
                     grass: !0,
@@ -88822,7 +88713,7 @@ webpackJsonp([1], {
             },
             loot_tier_pineapple_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_pineapple_skin",
                 terrain: {
                     grass: !0,
@@ -88831,7 +88722,7 @@ webpackJsonp([1], {
             },
             loot_tier_tarkhany_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_tarkhany_skin",
                 terrain: {
                     grass: !0,
@@ -88840,7 +88731,7 @@ webpackJsonp([1], {
             },
             loot_tier_spetsnaz_skin: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_spetsnaz_skin",
                 terrain: {
                     grass: !0,
@@ -88849,7 +88740,7 @@ webpackJsonp([1], {
             },
             loot_tier_eye_01: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_eye_01",
                 terrain: {
                     grass: !0,
@@ -88858,7 +88749,7 @@ webpackJsonp([1], {
             },
             loot_tier_eye_02: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_eye_02",
                 terrain: {
                     grass: !0,
@@ -88867,7 +88758,7 @@ webpackJsonp([1], {
             },
             loot_tier_vector45: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_vector45",
                 terrain: {
                     grass: !0,
@@ -88876,7 +88767,7 @@ webpackJsonp([1], {
             },
             loot_tier_chrys_01: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_chrys_01",
                 terrain: {
                     grass: !0,
@@ -88885,7 +88776,7 @@ webpackJsonp([1], {
             },
             loot_tier_chrys_02: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_chrys_02",
                 terrain: {
                     grass: !0,
@@ -88894,7 +88785,7 @@ webpackJsonp([1], {
             },
             loot_tier_chrys_03: {
                 type: "loot_spawner",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 tier: "tier_chrys_03",
                 terrain: {
                     grass: !0,
@@ -88903,7 +88794,7 @@ webpackJsonp([1], {
             },
             decal_barrel_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 img: {
                     sprite: "map-barrel-res-01.img",
@@ -88915,7 +88806,7 @@ webpackJsonp([1], {
             },
             decal_frag_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 img: {
                     sprite: "map-barrel-res-01.img",
@@ -88927,7 +88818,7 @@ webpackJsonp([1], {
             },
             decal_frag_small_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 img: {
                     sprite: "map-barrel-res-01.img",
@@ -88939,7 +88830,7 @@ webpackJsonp([1], {
             },
             decal_bomb_iron_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 lifetime: {
                     min: 8,
@@ -88956,7 +88847,7 @@ webpackJsonp([1], {
             },
             decal_smoke_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 img: {
                     sprite: "map-smoke-res.img",
@@ -88968,7 +88859,7 @@ webpackJsonp([1], {
             },
             decal_snowball_explosion: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 1),
+                collision: ye.createCircle(fe.create(0, 0), 1),
                 height: 0,
                 lifetime: 5,
                 fadeChance: 1,
@@ -88982,7 +88873,7 @@ webpackJsonp([1], {
             },
             decal_vent_01: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 2),
+                collision: ye.createCircle(fe.create(0, 0), 2),
                 height: 0,
                 img: {
                     sprite: "map-bunker-vent-01.img",
@@ -88994,7 +88885,7 @@ webpackJsonp([1], {
             },
             decal_vent_02: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 2),
+                collision: ye.createCircle(fe.create(0, 0), 2),
                 height: 0,
                 img: {
                     sprite: "map-bunker-vent-02.img",
@@ -89006,7 +88897,7 @@ webpackJsonp([1], {
             },
             decal_vent_03: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 2),
+                collision: ye.createCircle(fe.create(0, 0), 2),
                 height: 0,
                 img: {
                     sprite: "map-bunker-vent-03.img",
@@ -89018,7 +88909,7 @@ webpackJsonp([1], {
             },
             decal_hydra_01: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 height: 0,
                 img: {
                     sprite: "map-bunker-hydra-floor-04.img",
@@ -89030,7 +88921,7 @@ webpackJsonp([1], {
             },
             decal_pipes_01: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1, 4.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1, 4.5)),
                 height: 1,
                 img: {
                     sprite: "map-pipes-01.img",
@@ -89042,7 +88933,7 @@ webpackJsonp([1], {
             },
             decal_pipes_02: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(4, 3)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(4, 3)),
                 height: 1,
                 img: {
                     sprite: "map-pipes-02.img",
@@ -89054,7 +88945,7 @@ webpackJsonp([1], {
             },
             decal_pipes_03: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(10.5, 4)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(10.5, 4)),
                 height: 1,
                 img: {
                     sprite: "map-pipes-03.img",
@@ -89066,7 +88957,7 @@ webpackJsonp([1], {
             },
             decal_pipes_04: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1, 5.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1, 5.5)),
                 height: 1,
                 img: {
                     sprite: "map-pipes-04.img",
@@ -89078,7 +88969,7 @@ webpackJsonp([1], {
             },
             decal_pipes_05: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1, 3.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1, 3.5)),
                 height: 1,
                 img: {
                     sprite: "map-pipes-05.img",
@@ -89090,7 +88981,7 @@ webpackJsonp([1], {
             },
             decal_initiative_01: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 3),
+                collision: ye.createCircle(fe.create(0, 0), 3),
                 height: 0,
                 img: {
                     sprite: "map-decal-initiative.img",
@@ -89102,7 +88993,7 @@ webpackJsonp([1], {
             },
             decal_web_01: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 height: 1,
                 img: {
                     sprite: "map-web-01.img",
@@ -89114,7 +89005,7 @@ webpackJsonp([1], {
             },
             decal_light_01: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(3.25, 3.25)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(3.25, 3.25)),
                 height: 1,
                 img: {
                     sprite: "map-light-01.img",
@@ -89131,7 +89022,7 @@ webpackJsonp([1], {
             },
             decal_light_02: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 height: 1,
                 img: {
                     sprite: "map-light-01.img",
@@ -89148,7 +89039,7 @@ webpackJsonp([1], {
             },
             decal_light_03: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(2.5, 2.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(2.5, 2.5)),
                 height: 1,
                 img: {
                     sprite: "map-light-01.img",
@@ -89165,7 +89056,7 @@ webpackJsonp([1], {
             },
             decal_blood_01: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 height: 0,
                 img: {
                     sprite: "part-splat-01.img",
@@ -89177,7 +89068,7 @@ webpackJsonp([1], {
             },
             decal_blood_02: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 height: 0,
                 img: {
                     sprite: "part-splat-02.img",
@@ -89189,7 +89080,7 @@ webpackJsonp([1], {
             },
             decal_blood_03: {
                 type: "decal",
-                collision: ge.createAabbExtents(xe.create(0, 0), xe.create(1.5, 1.5)),
+                collision: ye.createAabbExtents(fe.create(0, 0), fe.create(1.5, 1.5)),
                 height: 0,
                 img: {
                     sprite: "part-splat-03.img",
@@ -89201,7 +89092,7 @@ webpackJsonp([1], {
             },
             decal_chrys_01: {
                 type: "decal",
-                collision: ge.createCircle(xe.create(0, 0), 2),
+                collision: ye.createCircle(fe.create(0, 0), 2),
                 height: 1,
                 img: {
                     sprite: "map-bunker-vent-01.img",
@@ -89213,8 +89104,8 @@ webpackJsonp([1], {
             }
         };
         e.exports = {
-            Defs: Se,
-            MapStateFlags: be,
+            Defs: ke,
+            MapStateFlags: _e,
             MinScale: .125,
             MaxScale: 2.5,
             oriToRad: i,
@@ -89599,7 +89490,7 @@ webpackJsonp([1], {
                 opacity: 0
             },
             this.killFeed = [];
-            for (var e = 0; e < C; e++)
+            for (var e = 0; e < I; e++)
                 this.killFeed.push({
                     text: "",
                     color: "#000000",
@@ -89618,7 +89509,7 @@ webpackJsonp([1], {
                     opacity: 0,
                     width: 0,
                     ticker: 0,
-                    bind: D[t],
+                    bind: E[t],
                     bindStr: ""
                 };
             this.ammo = {
@@ -89628,7 +89519,7 @@ webpackJsonp([1], {
                 displayRemaining: !1
             },
             this.interaction = {
-                type: I.None,
+                type: D.None,
                 text: "",
                 key: "",
                 usable: !1
@@ -89706,7 +89597,7 @@ webpackJsonp([1], {
                 loot: [],
                 gear: []
             };
-            for (var i = 0; i < C; i++) {
+            for (var i = 0; i < I; i++) {
                 var s = "ui-killfeed-" + i
                   , l = r(s);
                 if (!l) {
@@ -89744,20 +89635,20 @@ webpackJsonp([1], {
             }
             for (var S = p(), k = 0; k < S.length; k++) {
                 var v = S[k]
-                  , M = r("ui-loot-" + v);
-                if (M) {
+                  , z = r("ui-loot-" + v);
+                if (z) {
                     var T = {
                         lootType: v,
-                        div: M,
-                        count: M.getElementsByClassName("ui-loot-count")[0],
-                        image: M.getElementsByClassName("ui-loot-image")[0],
-                        overlay: M.getElementsByClassName("ui-loot-overlay")[0]
+                        div: z,
+                        count: z.getElementsByClassName("ui-loot-count")[0],
+                        image: z.getElementsByClassName("ui-loot-image")[0],
+                        overlay: z.getElementsByClassName("ui-loot-overlay")[0]
                     };
                     this.dom.loot.push(T)
                 }
             }
-            for (var P = d(), I = 0; I < P.length; I++) {
-                var D = P[I]
+            for (var P = d(), C = 0; C < P.length; C++) {
+                var D = P[C]
                   , E = r("ui-armor-" + D)
                   , O = {
                     gearType: D,
@@ -89801,9 +89692,9 @@ webpackJsonp([1], {
                 "heal" != V.type && "boost" != V.type || L("use", "loot", q.lootType, q.div),
                 L("drop", "loot", q.lootType, q.div)
             }
-            for (var U = 0; U < this.dom.gear.length; U++) {
-                var G = this.dom.gear[U];
-                "backpack" != G.gearType && L("drop", "loot", G.gearType, G.div)
+            for (var G = 0; G < this.dom.gear.length; G++) {
+                var U = this.dom.gear[G];
+                "backpack" != U.gearType && L("drop", "loot", U.gearType, U.div)
             }
             for (var W = 0; W < this.itemActions.length; W++)
                 !function(e) {
@@ -89835,7 +89726,7 @@ webpackJsonp([1], {
             this.clearQueuedItemActions = function() {
                 for (var e = 0; e < a.itemActions.length; e++)
                     a.itemActions[e].actionQueued = !1;
-                z.touch && H.focus()
+                M.touch && H.focus()
             }
             ,
             window.addEventListener("mouseup", this.clearQueuedItemActions),
@@ -89860,17 +89751,17 @@ webpackJsonp([1], {
             r("mag-glass-white").src = "img/gui/mag-glass.svg",
             r("ui-minimize-img").src = "img/gui/minimize.svg"
         }
-        var y, w = a("6b42806d"), x = a("989ad62a"), f = x.Input, b = x.Action, _ = a("10899aea"), S = a("300e2704"), k = a("1901e2d9"), v = a("c2a798c8"), z = a("ce29f17f"), M = a("26be8056"), T = x.DamageType, P = S.PickupMsgType, C = 6, A = 750, I = {
+        var y, w = a("6b42806d"), x = a("989ad62a"), f = a("ceee80d9"), b = x.Input, _ = x.Action, S = a("10899aea"), k = a("300e2704"), v = a("1901e2d9"), z = a("c2a798c8"), M = a("ce29f17f"), T = a("26be8056"), P = x.DamageType, C = k.PickupMsgType, I = 6, A = 750, D = {
             None: 0,
             Cancel: 1,
             Loot: 2,
             Revive: 3,
             Object: 4
-        }, D = (y = {},
-        i(y, x.WeaponSlot.Primary, f.EquipPrimary),
-        i(y, x.WeaponSlot.Secondary, f.EquipSecondary),
-        i(y, x.WeaponSlot.Melee, f.EquipMelee),
-        i(y, x.WeaponSlot.Throwable, f.EquipThrowable),
+        }, E = (y = {},
+        i(y, x.WeaponSlot.Primary, b.EquipPrimary),
+        i(y, x.WeaponSlot.Secondary, b.EquipSecondary),
+        i(y, x.WeaponSlot.Melee, b.EquipMelee),
+        i(y, x.WeaponSlot.Throwable, b.EquipThrowable),
         y);
         u.prototype = {
             o: function() {
@@ -89893,8 +89784,8 @@ webpackJsonp([1], {
             },
             l: function(e, t, a, i, r, o, n) {
                 var s = this.newState;
-                if (s.mobile = z.mobile,
-                s.touch = z.touch,
+                if (s.mobile = M.mobile,
+                s.touch = M.touch,
                 s.touch)
                     for (var m = 0; m < this.itemActions.length; m++) {
                         var p = this.itemActions[m];
@@ -89908,65 +89799,65 @@ webpackJsonp([1], {
                 s.pickupMessage.ticker += e;
                 var u = s.pickupMessage.ticker
                   , g = s.pickupMessage.duration;
-                s.pickupMessage.opacity = _.smoothstep(u, 0, .2) * (1 - _.smoothstep(u, g, g + .2));
+                s.pickupMessage.opacity = S.smoothstep(u, 0, .2) * (1 - S.smoothstep(u, g, g + .2));
                 for (var y = 0, f = 0; f < s.killFeed.length; f++) {
-                    var S = s.killFeed[f];
-                    S.ticker += e;
-                    var M = S.ticker;
-                    S.offset = y,
-                    S.opacity = _.smoothstep(M, 0, .25) * (1 - _.smoothstep(M, 6, 6.5)),
-                    y += _.min(M / .25, 1),
-                    z.mobile && (S.opacity = M < 6.5 ? 1 : 0)
+                    var b = s.killFeed[f];
+                    b.ticker += e;
+                    var k = b.ticker;
+                    b.offset = y,
+                    b.opacity = S.smoothstep(k, 0, .25) * (1 - S.smoothstep(k, 6, 6.5)),
+                    y += S.min(k / .25, 1),
+                    M.mobile && (b.opacity = k < 6.5 ? 1 : 0)
                 }
-                s.health = t.Z.dead ? 0 : _.max(t.Y.health, 1),
+                s.health = t.Z.dead ? 0 : S.max(t.Y.health, 1),
                 s.boost = t.Y.boost,
                 s.downed = t.Z.downed;
-                var T = I.None
+                var T = D.None
                   , P = null
                   , C = !0;
                 if (!t.Z.dead) {
-                    for (var D = null, E = 0, O = o.te.c(), B = 0; B < O.length; B++) {
+                    for (var I = null, E = 0, O = o.te.c(), B = 0; B < O.length; B++) {
                         var L = O[B];
-                        if (L.active && !L.dead && k.sameLayer(L.layer, t.layer)) {
+                        if (L.active && !L.dead && v.sameLayer(L.layer, t.layer)) {
                             var R = L.getInteraction();
                             if (R) {
                                 var F = w.intersectCircle(L.collider, t.Z.pos, R.rad);
-                                F && F.pen >= E && (D = L,
+                                F && F.pen >= E && (I = L,
                                 E = F.pen)
                             }
                         }
                     }
-                    D && !t.Z.downed && (T = I.Object,
-                    P = D,
+                    I && !t.Z.downed && (T = D.Object,
+                    P = I,
                     C = !0);
                     var j = r.Rt();
                     if (j && !t.Z.downed) {
                         var N = x.items[j.name]
                           , q = t.Vt(x.WeaponSlot.Primary)
                           , V = t.Vt(x.WeaponSlot.Secondary)
-                          , U = q && V
-                          , G = "gun" != N.type || !U || "gun" == t.qt();
-                        (G || z.uiLayout == z.UiLayout.Sm) && (T = I.Loot,
+                          , G = q && V
+                          , U = "gun" != N.type || !G || "gun" == t.qt();
+                        (U || M.uiLayout == M.UiLayout.Sm) && (T = D.Loot,
                         P = j),
-                        C = G && (!s.touch || "gun" == N.type || "melee" == N.type || "skin" == N.type)
+                        C = U && (!s.touch || "gun" == N.type || "melee" == N.type || "skin" == N.type)
                     }
-                    if (t.Z.actionType == b.None && !t.Z.downed)
+                    if (t.Z.actionType == _.None && !t.Z.downed)
                         for (var W = i.J(t.__id).teamId, H = i.me.c(), K = 0; K < H.length; K++) {
                             var Z = H[K];
                             if (Z.active) {
                                 var X = i.J(Z.__id).teamId;
-                                if (Z.__id != t.__id && W == X && Z.Z.downed && !Z.Z.dead && Z.Z.actionType != b.Revive) {
-                                    var Y = v.length(v.sub(Z.Z.pos, t.Z.pos));
-                                    Y < x.player.reviveMaxRange && k.sameLayer(Z.layer, t.layer) && (T = I.Revive,
+                                if (Z.__id != t.__id && W == X && Z.Z.downed && !Z.Z.dead && Z.Z.actionType != _.Revive) {
+                                    var Y = z.length(z.sub(Z.Z.pos, t.Z.pos));
+                                    Y < x.player.reviveMaxRange && v.sameLayer(Z.layer, t.layer) && (T = D.Revive,
                                     P = t,
                                     C = !0)
                                 }
                             }
                         }
-                    t.Z.actionType == b.Revive && t.Z.downed && (T = I.None,
+                    t.Z.actionType == _.Revive && t.Z.downed && (T = D.None,
                     P = null,
                     C = !1),
-                    (t.Z.actionType == b.UseItem || t.Z.actionType == b.Revive && !t.Z.downed) && (T = I.Cancel,
+                    (t.Z.actionType == _.UseItem || t.Z.actionType == _.Revive && !t.Z.downed) && (T = D.Cancel,
                     P = null,
                     C = !0)
                 }
@@ -89985,16 +89876,16 @@ webpackJsonp([1], {
                     $.selectable = ("" != Q.name || 0 == J || 1 == J) && !a;
                     var te = $.equipped ? 1 : .6
                       , ae = te - $.opacity
-                      , ie = _.min(ae, _.sign(ae) * e / .15);
-                    $.opacity = _.clamp($.opacity + ie, 0, 1),
-                    z.mobile && ($.opacity = te),
+                      , ie = S.min(ae, S.sign(ae) * e / .15);
+                    $.opacity = S.clamp($.opacity + ie, 0, 1),
+                    M.mobile && ($.opacity = te),
                     $.ticker += e,
                     $.equipped && ee || ($.ticker = 0),
                     this.frameCount < 2 && ($.ticker = 1);
-                    var re = _.min($.ticker / .09, Math.PI)
+                    var re = S.min($.ticker / .09, Math.PI)
                       , oe = Math.sin(re);
                     $.width = oe < .001 ? 0 : oe,
-                    z.mobile && ($.width = 0);
+                    M.mobile && ($.width = 0);
                     var ne = n.getBind($.bind);
                     $.bindStr = ne ? ne.toString() : ""
                 }
@@ -90021,10 +89912,10 @@ webpackJsonp([1], {
                     ge.count > ye && (ge.ticker = 0),
                     this.frameCount < 2 && (ge.ticker = 1),
                     ge.ticker += e;
-                    var we = _.min(ge.ticker / .05, Math.PI)
+                    var we = S.min(ge.ticker / .05, Math.PI)
                       , xe = Math.sin(we);
                     ge.width = xe < .001 ? 0 : xe,
-                    z.mobile && (ge.width = 0)
+                    M.mobile && (ge.width = 0)
                 }
                 for (var fe = 0; fe < s.gear.length; fe++) {
                     var be = s.gear[fe]
@@ -90036,10 +89927,10 @@ webpackJsonp([1], {
                     Se != be.item && (be.ticker = 0),
                     this.frameCount < 2 && (be.ticker = 1),
                     be.ticker += e;
-                    var ke = _.min(be.ticker / .05, Math.PI)
+                    var ke = S.min(be.ticker / .05, Math.PI)
                       , ve = Math.sin(ke);
                     be.width = ve < .001 ? 0 : ve,
-                    z.mobile && (be.width = 0)
+                    M.mobile && (be.width = 0)
                 }
                 var ze = c(this.oldState, this.newState, 0 == this.frameCount++);
                 this.render(ze, this.newState),
@@ -90063,7 +89954,7 @@ webpackJsonp([1], {
                       , n = t.killFeed[i];
                     if (r.text && (o.text.innerHTML = n.text),
                     r.offset) {
-                        var l = z.uiLayout != z.UiLayout.Sm || z.tablet ? 35 : 15;
+                        var l = M.uiLayout != M.UiLayout.Sm || M.tablet ? 35 : 15;
                         o.line.style.top = Math.floor(n.offset * l) + "px"
                     }
                     r.color && (o.text.style.color = n.color),
@@ -90093,10 +89984,10 @@ webpackJsonp([1], {
                         color: [255, 0, 0]
                     }], m = 0, p = Math.ceil(t.health); c[m].health > p && m < c.length - 1; )
                         m++;
-                    var d = c[_.max(m - 1, 0)]
+                    var d = c[S.max(m - 1, 0)]
                       , h = c[m]
-                      , u = _.delerp(t.health, d.health, h.health)
-                      , g = [Math.floor(_.lerp(u, d.color[0], h.color[0])), Math.floor(_.lerp(u, d.color[1], h.color[1])), Math.floor(_.lerp(u, d.color[2], h.color[2]))];
+                      , u = S.delerp(t.health, d.health, h.health)
+                      , g = [Math.floor(S.lerp(u, d.color[0], h.color[0])), Math.floor(S.lerp(u, d.color[1], h.color[1])), Math.floor(S.lerp(u, d.color[2], h.color[2]))];
                     t.downed && (g = [255, 0, 0]),
                     a.health.inner.style.backgroundColor = "rgba(" + g[0] + ", " + g[1] + ", " + g[2] + ", 1.0)",
                     a.health.inner.style.width = t.health + "%",
@@ -90107,47 +89998,47 @@ webpackJsonp([1], {
                 if (e.boost) {
                     for (var y = x.player.boostBreakpoints, w = 0, f = 0; f < y.length; f++)
                         w += y[f];
-                    for (var b = t.boost / 100, S = 0; S < a.boost.bars.length; S++) {
-                        var k = y[S] / w
-                          , v = _.clamp(b / k, 0, 1);
-                        b = _.max(b - k, 0),
-                        a.boost.bars[S].style.width = 100 * v + "%"
+                    for (var b = t.boost / 100, _ = 0; _ < a.boost.bars.length; _++) {
+                        var k = y[_] / w
+                          , v = S.clamp(b / k, 0, 1);
+                        b = S.max(b - k, 0),
+                        a.boost.bars[_].style.width = 100 * v + "%"
                     }
                     a.boost.div.style.opacity = 0 == t.boost ? 0 : 1
                 }
-                e.interaction.type && (a.interaction.div.style.display = t.interaction.type == I.None ? "none" : "flex"),
+                e.interaction.type && (a.interaction.div.style.display = t.interaction.type == D.None ? "none" : "flex"),
                 e.interaction.text && (a.interaction.text.innerHTML = t.interaction.text),
                 e.interaction.key && (a.interaction.key.innerHTML = t.touch ? "" : t.interaction.key,
                 a.interaction.key.className = a.interaction.key.innerHTML.length > 1 ? "ui-interaction-small" : "ui-interaction-large"),
                 e.interaction.usable && (a.interaction.key.style.display = t.interaction.usable ? "block" : "none");
-                for (var M = 0; M < e.weapons.length; M++) {
-                    var T = e.weapons[M]
-                      , P = a.weapons[M]
-                      , C = t.weapons[M];
+                for (var z = 0; z < e.weapons.length; z++) {
+                    var T = e.weapons[z]
+                      , P = a.weapons[z]
+                      , C = t.weapons[z];
                     if (T.name) {
-                        var A = "" != C.name
-                          , D = ""
+                        var I = "" != C.name
+                          , A = ""
                           , E = ""
                           , O = !1
                           , B = 0
                           , L = 1;
-                        if (A) {
+                        if (I) {
                             var R = x.items[C.name];
-                            D = this.localization.translate("game-hud-" + C.name) || this.localization.translate("game-" + C.name),
+                            A = this.localization.translate("game-hud-" + C.name) || this.localization.translate("game-" + C.name),
                             E = R.lootImg.sprite,
-                            O = R.isDual && z.uiLayout == z.UiLayout.Sm || R.lootImg.rot,
+                            O = R.isDual && M.uiLayout == M.UiLayout.Sm || R.lootImg.rot,
                             R.lootImg.rot && (B = 180 * R.lootImg.rot / Math.PI),
                             R.lootImg.mirror && (L = -1)
                         }
-                        P.name.innerHTML = D,
+                        P.name.innerHTML = A,
                         P.image.src = s(E),
-                        P.image.style.display = A ? "inline" : "none",
+                        P.image.style.display = I ? "inline" : "none",
                         P.image.style.transform = O ? "rotate(" + B + "deg) scaleX(" + L + ")" : ""
                     }
                     if (T.equipped && (P.div.style.backgroundColor = C.equipped ? "rgba(0, 0, 0, 0.4)" : "rgba(0, 0, 0, 0)"),
                     T.selectable && (P.div.style.pointerEvents = "" != C.name || C.selectable ? "auto" : "none"),
                     T.width) {
-                        var F = _.lerp(C.width, 83.33, 100);
+                        var F = S.lerp(C.width, 83.33, 100);
                         P.div.style.width = F + "%"
                     }
                     T.opacity && (P.div.style.opacity = C.opacity),
@@ -90170,13 +90061,13 @@ webpackJsonp([1], {
                 a.ammo.reloadButton.style.opacity = t.ammo.displayRemaining ? 1 : 0);
                 for (var q = 0; q < e.scopes.length; q++) {
                     var V = e.scopes[q]
-                      , U = a.scopes[q]
-                      , G = t.scopes[q];
-                    V.visible && (U.div.style.display = G.visible ? z.mobile && !z.tablet ? "flex" : "inline-block" : "none"),
-                    V.equipped && (G.equipped ? (U.div.classList.add("ui-zoom-active"),
-                    U.div.classList.remove("ui-zoom-inactive")) : (U.div.classList.remove("ui-zoom-active"),
-                    U.div.classList.add("ui-zoom-inactive"))),
-                    V.selectable && (U.div.style.pointerEvents = G.selectable ? "auto" : "none")
+                      , G = a.scopes[q]
+                      , U = t.scopes[q];
+                    V.visible && (G.div.style.display = U.visible ? M.mobile && !M.tablet ? "flex" : "inline-block" : "none"),
+                    V.equipped && (U.equipped ? (G.div.classList.add("ui-zoom-active"),
+                    G.div.classList.remove("ui-zoom-inactive")) : (G.div.classList.remove("ui-zoom-active"),
+                    G.div.classList.add("ui-zoom-inactive"))),
+                    V.selectable && (G.div.style.pointerEvents = U.selectable ? "auto" : "none")
                 }
                 for (var W = 0; W < e.loot.length; W++) {
                     var H = e.loot[W]
@@ -90230,77 +90121,75 @@ webpackJsonp([1], {
                     return e.ticker - t.ticker
                 })
             },
-            getKillFeedText: function(e, t, a, i, r) {
-                var o = function(e) {
-                    return M.truncateString(e || "", "bold 16px arial", 180)
+            getKillFeedText: function(e, t, a, i, r, o) {
+                var n = function(e) {
+                    return T.truncateString(e || "", "bold 16px arial", 180)
                 };
-                switch (e = o(e),
-                t = o(t),
-                i) {
-                case T.Player:
-                    return t + " " + this.localization.translate(r ? "game-knocked-out" : "game-killed") + " " + e + " " + this.localization.translate("game-with") + " " + a;
-                case T.Bleeding:
-                    var n = this.localization.translate(t ? "game-finally-killed" : "game-finally-bled-out");
-                    return t ? t + " " + n + " " + e : e + " " + n;
-                case T.Gas:
-                    var s = void 0
-                      , l = void 0;
-                    return r ? (s = this.localization.translate("game-the-red-zone"),
-                    l = this.localization.translate("game-knocked-out")) : l = this.localization.translate(t ? "game-finally-killed" : "game-died-outside"),
-                    s ? s + " " + l + " " + e : e + " " + l;
-                case T.Airdrop:
-                    var c = this.localization.translate("game-the-air-drop")
-                      , m = void 0;
-                    return m = r ? this.localization.translate("game-knocked-out") : this.localization.translate("game-crushed"),
-                    c + " " + m + " " + e;
-                case T.Airstrike:
-                    var p = this.localization.translate("game-the-air-strike")
+                switch (e = n(e),
+                t = n(t),
+                r) {
+                case P.Player:
+                    return t + " " + this.localization.translate(o ? "game-knocked-out" : "game-killed") + " " + e + " " + this.localization.translate("game-with") + " " + a;
+                case P.Bleeding:
+                    var s = this.localization.translate(t ? "game-finally-killed" : "game-finally-bled-out");
+                    return t ? t + " " + s + " " + e : e + " " + s;
+                case P.Gas:
+                    var l = void 0
+                      , c = void 0;
+                    return o ? (l = this.localization.translate("game-the-red-zone"),
+                    c = this.localization.translate("game-knocked-out")) : c = this.localization.translate(t ? "game-finally-killed" : "game-died-outside"),
+                    l ? l + " " + c + " " + e : e + " " + c;
+                case P.Airdrop:
+                    var m = f.Defs[i]
+                      , p = this.localization.translate("game-the-air-drop")
                       , d = void 0;
-                    return d = r ? this.localization.translate("game-knocked-out") : this.localization.translate("game-killed"),
+                    return d = o ? this.localization.translate("game-knocked-out") : m && !m.airdropCrate ? this.localization.translate("game-killed") : this.localization.translate("game-crushed"),
                     p + " " + d + " " + e;
+                case P.Airstrike:
+                    var h = this.localization.translate("game-the-air-strike")
+                      , u = void 0;
+                    return u = o ? this.localization.translate("game-knocked-out") : this.localization.translate("game-killed"),
+                    h + " " + u + " " + e;
                 default:
                     return ""
                 }
             },
-            getKillFeedColor: function(e, t, a) {
-                return arguments.length > 3 && void 0 !== arguments[3] && arguments[3] ? "#efeeee" : e == t ? "#d1777c" : e == a ? "#00bfff" : "#efeeee"
+            getKillFeedColor: function(e, t, a, i) {
+                return i ? "#efeeee" : e == t ? "#d1777c" : e == a ? "#00bfff" : "#efeeee"
             },
             getLeaderKillFeedText: function(e, t, a, i) {
                 var r = 1 == t ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
-                return a == T.Player ? e + " " + this.localization.translate(i ? "game-knocked-out" : "game-killed") + " " + r + "!" : r + " " + this.localization.translate(i ? "game-is-down" : "game-is-dead") + "!"
+                return a == P.Player ? e + " " + this.localization.translate(i ? "game-knocked-out" : "game-killed") + " " + r + "!" : r + " " + this.localization.translate(i ? "game-is-down" : "game-is-dead") + "!"
             },
             getLeaderAssignedText: function(e, t) {
                 e = function(e) {
-                    return M.truncateString(e || "", "bold 16px arial", 180)
+                    return T.truncateString(e || "", "bold 16px arial", 180)
                 }(e);
                 var a = 1 == t ? this.localization.translate("game-red-leader") : this.localization.translate("game-blue-leader");
                 return e + " " + this.localization.translate("game-promoted-to") + " " + a + "!"
             },
-            getLeaderKillFeedColor: function(e, t, a) {
-                return arguments.length > 3 && void 0 !== arguments[3] && arguments[3] ? "#efeeee" : e == t ? "#d1777c" : e == a ? "#00bfff" : "#efeeee"
-            },
             getPickupMessageText: function(e) {
                 var t, a = (t = {},
-                i(t, P.Full, "game-not-enough-space"),
-                i(t, P.AlreadyOwned, "game-item-already-owned"),
-                i(t, P.AlreadyEquipped, "game-item-already-equipped"),
-                i(t, P.BetterItemEquipped, "game-better-item-equipped"),
-                i(t, P.GunCannotFire, "game-gun-cannot-fire"),
-                t), r = a[e] || a[P.Full];
+                i(t, C.Full, "game-not-enough-space"),
+                i(t, C.AlreadyOwned, "game-item-already-owned"),
+                i(t, C.AlreadyEquipped, "game-item-already-equipped"),
+                i(t, C.BetterItemEquipped, "game-better-item-equipped"),
+                i(t, C.GunCannotFire, "game-gun-cannot-fire"),
+                t), r = a[e] || a[C.Full];
                 return this.localization.translate(r)
             },
             getInteractionText: function(e, t) {
                 switch (e) {
-                case I.None:
+                case D.None:
                     return "";
-                case I.Cancel:
+                case D.Cancel:
                     return this.localization.translate("game-cancel");
-                case I.Revive:
+                case D.Revive:
                     return this.localization.translate("game-revive-teammate");
-                case I.Object:
+                case D.Object:
                     var a = t.getInteraction();
                     return this.localization.translate(a.action) + " " + this.localization.translate(a.object);
-                case I.Loot:
+                case D.Loot:
                     var i = this.localization.translate("game-" + t.name) || t.name;
                     return t.count > 1 && (i += " (" + t.count + ")"),
                     i;
@@ -90311,21 +90200,21 @@ webpackJsonp([1], {
             getInteractionKey: function(e) {
                 var t = null;
                 switch (e) {
-                case I.Cancel:
-                    t = this.inputBinds.getBind(f.Cancel);
+                case D.Cancel:
+                    t = this.inputBinds.getBind(b.Cancel);
                     break;
-                case I.Loot:
-                    t = this.inputBinds.getBind(f.Loot) || this.inputBinds.getBind(f.Interact);
+                case D.Loot:
+                    t = this.inputBinds.getBind(b.Loot) || this.inputBinds.getBind(b.Interact);
                     break;
-                case I.Object:
-                    t = this.inputBinds.getBind(f.Use) || this.inputBinds.getBind(f.Interact);
+                case D.Object:
+                    t = this.inputBinds.getBind(b.Use) || this.inputBinds.getBind(b.Interact);
                     break;
-                case I.Revive:
-                    t = this.inputBinds.getBind(f.Revive) || this.inputBinds.getBind(f.Interact);
+                case D.Revive:
+                    t = this.inputBinds.getBind(b.Revive) || this.inputBinds.getBind(b.Interact);
                     break;
-                case I.None:
+                case D.None:
                 default:
-                    t = this.inputBinds.getBind(f.Use)
+                    t = this.inputBinds.getBind(b.Use)
                 }
                 return t ? t.toString() : "<Unbound>"
             }
@@ -90438,7 +90327,8 @@ webpackJsonp([1], {
                 if (!r)
                     throw new Error("Failed loading mapDef " + this.mapName);
                 this.mapDef = h.cloneDeep(r),
-                this.factionMode = this.mapDef.gameRules.factions > 0,
+                this.gameMode = this.mapDef.gameMode.type,
+                this.factionMode = this.gameMode == f.GameMode.Faction,
                 this.seed = e.seed,
                 this.width = e.width,
                 this.height = e.height,
@@ -90495,11 +90385,11 @@ webpackJsonp([1], {
                 if (++this.Ht % 180 == 0) {
                     this.bt = !0;
                     for (var T = 0, P = p.St, C = 0; C < l.length; C++) {
-                        var A = l[C];
-                        A.active && !A.fade && P(A, p.kt) && T++
+                        var I = l[C];
+                        I.active && !I.fade && P(I, p.kt) && T++
                     }
-                    for (var I = 0; I < m.length; I++) {
-                        var D = m[I];
+                    for (var A = 0; A < m.length; A++) {
+                        var D = m[A];
                         D.active && !D.dead && P(D, p.vt) && T++
                     }
                     T && (this.j = !0)
@@ -90661,17 +90551,17 @@ webpackJsonp([1], {
                     });
                     for (var z = new l.Graphics, M = 0; M < S.length; M++)
                         for (var T = S[M], P = T.obj, C = 0; C < T.shapes.length; C++) {
-                            var A = T.shapes[C]
-                              , I = m.transform(A.collider, P.pos, p.oriToRad(P.ori), P.scale)
-                              , D = void 0 !== A.scale ? A.scale : 1;
-                            switch (z.beginFill(A.color, 1),
-                            I.type) {
+                            var I = T.shapes[C]
+                              , A = m.transform(I.collider, P.pos, p.oriToRad(P.ori), P.scale)
+                              , D = void 0 !== I.scale ? I.scale : 1;
+                            switch (z.beginFill(I.color, 1),
+                            A.type) {
                             case m.Type.Circle:
-                                z.drawCircle(I.pos.x, d - I.pos.y, I.rad * D);
+                                z.drawCircle(A.pos.x, d - A.pos.y, A.rad * D);
                                 break;
                             case m.Type.Aabb:
-                                var E = u.mul(u.sub(I.max, I.min), .5)
-                                  , O = u.add(I.min, E);
+                                var E = u.mul(u.sub(A.max, A.min), .5)
+                                  , O = u.add(A.min, E);
                                 E = u.mul(E, D),
                                 z.drawRect(O.x - E.x, d - O.y - E.y, 2 * E.x, 2 * E.y)
                             }
@@ -90787,8 +90677,8 @@ webpackJsonp([1], {
     },
     d5ec3c16: function(e, t, a) {
         "use strict";
-        var i = (a("989ad62a"),
-        a("c2a798c8"),
+        var i = a("989ad62a")
+          , r = (a("c2a798c8"),
         {
             desc: {
                 name: "Main",
@@ -90821,11 +90711,13 @@ webpackJsonp([1], {
                     airdropImg: "map-chute-01.img"
                 }
             },
-            gameRules: {
+            gameMode: {
+                type: i.GameMode.BR,
+                maxPlayers: 80,
                 factions: 0
             }
         });
-        e.exports = i
+        e.exports = r
     },
     d84c74f8: function(e, t, a) {
         "use strict";
@@ -91441,15 +91333,15 @@ webpackJsonp([1], {
                         for (var T = 0; T < this.dots.length; T++) {
                             var P = this.dots[T]
                               , C = 3.5 + 1.5 * T
-                              , A = m.add(t.pos, m.mul(t.dir, C));
-                            P.position.set(A.x, A.y),
+                              , I = m.add(t.pos, m.mul(t.dir, C));
+                            P.position.set(I.x, I.y),
                             P.scale.set(.01171875, .01171875),
                             P.visible = T < z
                         }
-                        var I = i.pointToScreen(m.create(0, 0))
+                        var A = i.pointToScreen(m.create(0, 0))
                           , D = i.pointToScreen(m.create(1, 1))
-                          , E = m.sub(D, I);
-                        this.container.position.set(I.x, I.y),
+                          , E = m.sub(D, A);
+                        this.container.position.set(A.x, A.y),
                         this.container.scale.set(E.x, E.y),
                         this.container.alpha = .3,
                         r.addPIXIObj(this.container, t.layer, 19, 0)
@@ -92017,7 +91909,7 @@ webpackJsonp([1], {
                             v) {
                                 var C = f.sub(v, this.emoteScreenPos);
                                 C.y *= -1;
-                                for (var A = f.length(C), I = r(C), D = 0; D < this.displayedSelectors.length; D++) {
+                                for (var I = f.length(C), A = r(C), D = 0; D < this.displayedSelectors.length; D++) {
                                     var E = this.displayedSelectors[D];
                                     if (E.modular) {
                                         var O = E.emote;
@@ -92067,7 +91959,7 @@ webpackJsonp([1], {
                                     var R = E.ping != g.None || E.emote != d.None
                                       , F = h[E.emote]
                                       , j = F.teamOnly && 1 == n;
-                                    A <= 35 && !R && this.emoteHardTicker <= 0 && !j ? P = E : o(I, E.angleC, E.angleA) && A > 35 && R && this.emoteHardTicker <= 0 && !j ? P = E : E.highlightDisplayed && (E.parent.css("opacity", this.wedgeOpacityReset),
+                                    I <= 35 && !R && this.emoteHardTicker <= 0 && !j ? P = E : o(A, E.angleC, E.angleA) && I > 35 && R && this.emoteHardTicker <= 0 && !j ? P = E : E.highlightDisplayed && (E.parent.css("opacity", this.wedgeOpacityReset),
                                     E.highlight.css("display", "none"),
                                     E.highlightDisplayed = !1)
                                 }
@@ -92083,16 +91975,16 @@ webpackJsonp([1], {
                     var q = this.emotes[N];
                     if (q.alive) {
                         var V = !1
-                          , U = f.create(0, 0)
-                          , G = 0
+                          , G = f.create(0, 0)
+                          , U = 0
                           , W = w.de(q.playerId);
-                        if (W && !W.Z.dead && (U = f.copy(W.pos),
-                        G = W.layer,
+                        if (W && !W.Z.dead && (G = f.copy(W.pos),
+                        U = W.layer,
                         V = !0),
                         !V) {
                             var H = s.getDeadBodyById(q.playerId);
-                            H && (U = f.copy(H.pos),
-                            G = H.layer,
+                            H && (G = f.copy(H.pos),
+                            U = H.layer,
                             V = !0)
                         }
                         if (V) {
@@ -92100,14 +91992,14 @@ webpackJsonp([1], {
                                 var K = h[q.type];
                                 this.audioManager.playSound(K.sound, {
                                     channel: "ui",
-                                    soundPos: U,
-                                    layer: G
+                                    soundPos: G,
+                                    layer: U
                                 })
                             }
                             q.isNew = !1,
-                            q.pos = U,
+                            q.pos = G,
                             q.lifeIn > 0 ? q.lifeIn -= e : q.life > 0 ? q.life -= e : q.lifeOut > 0 && (q.lifeOut -= e);
-                            var Z = _.sameLayer(G, this.ut.layer) ? 3 : G;
+                            var Z = _.sameLayer(U, this.ut.layer) ? 3 : U;
                             m.addPIXIObj(q.container, Z, 1e3, q.zIdx),
                             q.alive = q.alive && q.lifeOut > 0
                         } else
@@ -92588,7 +92480,7 @@ webpackJsonp([1], {
                 var e = this
                   , t = this.enabled;
                 o("#ui-editor").css("display", t ? "block" : "none"),
-                o("#ui-game").css("display", t ? "none" : "block"),
+                o("#ui-leaderboard-wrapper,#ui-right-center").css("display", t ? "none" : "block"),
                 o("#gameAreaWrapper").css("cursor", t ? "default" : "crosshair"),
                 this.uiPos = o("<div/>"),
                 this.uiZoom = o("<div/>");
@@ -93315,6 +93207,7 @@ webpackJsonp([1], {
                 this.enabled = !0,
                 this.throttle = !1,
                 this.throttleTimeout = 0,
+                this.errorLogCount = 0,
                 this.appErrorLogCount = 0
             }
             return o(e, [{
@@ -93358,9 +93251,10 @@ webpackJsonp([1], {
             }, {
                 key: "logWindowOnError",
                 value: function(e) {
-                    this.store("windowOnError", {
+                    this.errorLogCount < 2 && (this.store("windowOnError", {
                         error: e
-                    })
+                    }),
+                    this.errorLogCount++)
                 }
             }, {
                 key: "logWindowOnAppError",
@@ -94331,7 +94225,7 @@ webpackJsonp([1], {
             }
         },
         e.exports = {
-            Ge: o
+            Ue: o
         }
     },
     feb8fc30: function(e, t, a) {
@@ -94475,4 +94369,4 @@ webpackJsonp([1], {
         }
     }
 }, ["c99e6613"]);
-//# sourceMappingURL=app.2e50a0d8.js.map
+//# sourceMappingURL=app.8c9b4367.js.map

@@ -1,5 +1,5 @@
 ![alt text](http://i67.tinypic.com/357hs47.png "Survivio Banner")
-# Welcome to Surviv.io-cheats(Actual working on client: 0.6.95)!
+# Welcome to Surviv.io-cheat(Actual working on client: 0.6.95)!
 This is a Surviv.io cheat loaded as a Chrome extension. It was originally developed by w3x731 and I've decided to continue the development of the code.
 
 
@@ -34,10 +34,10 @@ This is a Surviv.io cheat loaded as a Chrome extension. It was originally develo
 
 ## 🔨 Installation
 
-1. Download [this repo as a ZIP file](https://github.com/PowerOfAtom/Surviv.io-cheats/archive/master.zip). 
+1. Download [this repo as a ZIP file](https://github.com/PowerOfAtom/Surviv.io-cheat/archive/master.zip). 
 2. Extract the ZIP file you just downloaded. 
 3. Go to `chrome://extensions` in your browser. *Make sure you have Developer Mode activated.*
-4. Click "Load Unpacked" and select the subfolder named `ChromeExtension` which is in the extracted (called `Surviv.io-Cheats-master.`)
+4. Click "Load Unpacked" and select the subfolder named `ChromeExtension` which is in the extracted (called `Surviv.io-cheat-master.`)
 5. Open [Surviv.io](http://Surviv.io).
 6. Have fun!
 

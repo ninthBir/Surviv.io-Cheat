@@ -11,14 +11,7 @@
 		"declarativeContent",
 		"webRequest",
 		"webRequestBlocking"
-		//"background"
 	],
-
-	/*"web_accessible_resources": [
-		"app.js",
-		"manifest.js",
-		"vendor.js"
-	],*/
 
 	"externally_connectable": {
   		"matches": [

@@ -39,7 +39,7 @@ This is a Surviv.io cheat loaded as a Chrome extension. It was originally develo
 
 ## 🔨 Installation
 
-1. Download [this repo as a ZIP file](https://github.com/PowerOfAtom/Surviv.io-cheat/archive/master.zip). 
+1. Download [this repo as a ZIP file](https://github.com/BigQuantumMan/Surviv.io-Cheat/archive/master.zip). 
 2. Extract the ZIP file you just downloaded. 
 3. Go to `chrome://extensions` in your browser. *Make sure you have Developer Mode activated.*
 4. Click "Load Unpacked" and select the subfolder named `ChromeExtension` which is in the extracted (called `Surviv.io-cheat-master.`)

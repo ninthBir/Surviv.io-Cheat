@@ -21,7 +21,7 @@ This is a Surviv.io cheat loaded as a Chrome extension. It was originally develo
 * AutoDodge [beta]
 * Triggerbot
 
-### Scans
+### :video_camera: Scans
 * https://www.virustotal.com/gui/file/c137b0045545085ae397fe0c169804412878fde8eb8fa1d9f1fc58a9616a8dc3/detection
 * https://www.virustotal.com/gui/file-analysis/NjNlOWY2NDU5MGYwNjcyM2YwNWZiN2NjMGFlNWNjYzE6MTU1NTQzNTk0Nw==/detection
 * https://www.virustotal.com/gui/file/17cca4734334f811c1c7bc903cd1d5057d4798b45a77cc21221214a7f2824932/detection

@@ -20,6 +20,7 @@ This is a Surviv.io cheat loaded as a Chrome extension. It was originally develo
 * Planes tracking + visibility of air drop on minimap has been extended
 * AutoDodge [beta]
 * Triggerbot
+* Auto emote on kill
 
 ### :video_camera: Scans
 * https://www.virustotal.com/gui/file/4667a82c304546158f7616b3589c7188c7ca801cec4a888e893b6841a7cb483b/detection
